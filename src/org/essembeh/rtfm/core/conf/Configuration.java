@@ -20,11 +20,8 @@
 
 package org.essembeh.rtfm.core.conf;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +38,6 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.FileHandler;
-import org.essembeh.rtfm.core.checkers.FixedChecker;
-import org.essembeh.rtfm.core.checkers.RegexChecker;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.RTFMException;
 import org.essembeh.rtfm.core.tag.RegexTagProvider;
@@ -50,8 +45,9 @@ import org.essembeh.rtfm.core.tag.fields.FixedField;
 import org.essembeh.rtfm.core.tag.fields.OptionalField;
 import org.essembeh.rtfm.core.tag.fields.RegexField;
 import org.essembeh.rtfm.core.utils.XmlUtils;
-import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.interfaces.ITagField;
+import org.essembeh.rtfm.interfaces.ITagProvider;
+import org.essembeh.rtfm.interfaces.ITagWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -102,8 +98,6 @@ public class Configuration {
 	 * Configuration content
 	 */
 	Map<String, String> properties;
-	List<FileHandler> listOfFileHandlers;
-	Map<String, Class<?>> mapOfShellCommands;
 	static Logger logger = Logger.getLogger(Configuration.class);
 
 	/**
@@ -116,39 +110,11 @@ public class Configuration {
 	 */
 	protected Configuration(String filename) throws XPathExpressionException, ParserConfigurationException,
 			SAXException, IOException {
-		this.listOfFileHandlers = new ArrayList<FileHandler>();
-		this.mapOfShellCommands = new HashMap<String, Class<?>>();
 		this.properties = new HashMap<String, String>();
+		logger.debug("################### Begin ###################");
 		logger.debug("Loading configuration file: " + filename);
 		parseConfigurationFile(filename);
-	}
-
-	/**
-	 * 
-	 * @param file
-	 * @return
-	 */
-	public FileHandler getHandlerForFile(File file) {
-		FileHandler handler = null;
-		for (FileHandler currentHandler : this.listOfFileHandlers) {
-			if (currentHandler.doesApplyForFile(file)) {
-				handler = currentHandler;
-				break;
-			}
-		}
-		return handler;
-	}
-
-	/**
-	 * @return the mapOfShellCommands
-	 */
-	public List<String> getListOfShellCommands() {
-		List<String> list = new ArrayList<String>();
-		for (String string : this.mapOfShellCommands.keySet()) {
-			list.add(string);
-		}
-		Collections.sort(list);
-		return list;
+		logger.debug("################### End ###################");
 	}
 
 	/**
@@ -178,7 +144,7 @@ public class Configuration {
 	}
 
 	/**
-	 * Construct the Tagfield with the givent XML Node
+	 * Construct the Tagfield with the given XML Node
 	 * 
 	 * @param element
 	 * @return
@@ -219,25 +185,6 @@ public class Configuration {
 
 	/**
 	 * 
-	 * @param command
-	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 */
-	public ICommand instantiateCommand(String command) throws InstantiationException, IllegalAccessException {
-		ICommand handler = null;
-		for (String currentKey : this.mapOfShellCommands.keySet()) {
-			if (command.equals(currentKey)) {
-				Class<?> clazz = this.mapOfShellCommands.get(currentKey);
-				handler = (ICommand) clazz.newInstance();
-				break;
-			}
-		}
-		return handler;
-	}
-
-	/**
-	 * 
 	 * @param configFileName
 	 * @throws ParserConfigurationException
 	 * @throws IOException
@@ -252,6 +199,8 @@ public class Configuration {
 		Document document;
 		document = documentBuilder.parse(configFile);
 		readProperties(document);
+		readTagWriters(document);
+		readTagProviders(document);
 		readFileHandlers(document);
 		readShellCommands(document);
 	}
@@ -261,78 +210,98 @@ public class Configuration {
 	 * @param document
 	 * @throws XPathExpressionException
 	 */
+	protected void readTagWriters(Document document) throws XPathExpressionException {
+		for (Element currentElement : XmlUtils.getElementsByXPath(document, "//rtfm/tagwriters/tagwriter")) {
+			String id = currentElement.getAttribute("id");
+			String classname = currentElement.getAttribute("classname");
+			try {
+				Class<?> clazz = Class.forName(classname);
+				ITagWriter tagWriter = (ITagWriter) clazz.newInstance();
+				logger.debug("Found tagwritter: " + classname);
+				// Setting properties
+				List<Element> listOfProperties = XmlUtils.getElementsByXPath(currentElement, "property");
+				for (Element elementProperty : listOfProperties) {
+					String name = elementProperty.getAttribute("name");
+					String value = elementProperty.getAttribute("value");
+					tagWriter.setProperty(name, value);
+				}
+				// Register the tag writer
+				Services.instance().addTagWriter(id, tagWriter);
+			} catch (Exception e) {
+				logger.error("Error while creating tagger: " + classname);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param document
+	 * @throws XPathExpressionException
+	 */
+	protected void readTagProviders(Document document) throws XPathExpressionException {
+		for (Element currentElement : XmlUtils.getElementsByXPath(document, "//rtfm/tagproviders/tagprovider")) {
+			String id = currentElement.getAttribute("id");
+			RegexTagProvider regexTagProvider = new RegexTagProvider();
+			ITagField fieldArtist = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "artist"));
+			ITagField fieldAlbum = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "album"));
+			ITagField fieldYear = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "year"));
+			ITagField fieldTracknumber = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "tracknumber"));
+			ITagField fieldTrackname = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "trackname"));
+			ITagField fieldComment = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "comment"));
+			regexTagProvider.setArtist(fieldArtist);
+			regexTagProvider.setAlbum(fieldAlbum);
+			regexTagProvider.setYear(fieldYear);
+			regexTagProvider.setTracknumber(fieldTracknumber);
+			regexTagProvider.setTrackname(fieldTrackname);
+			regexTagProvider.setComment(fieldComment);
+			logger.debug("Found tagprovider: " + regexTagProvider + " with id: " + id);
+			// Register the tag provider
+			Services.instance().addTagProvider(id, regexTagProvider);
+		}
+	}
+
+	/**
+	 * 
+	 * @param document
+	 * @throws XPathExpressionException
+	 */
 	protected void readFileHandlers(Document document) throws XPathExpressionException {
 
-		for (Element currentElementHandler : XmlUtils.getElementsByXPath(document, "//rtfm/handlers/*")) {
-			if ((currentElementHandler != null) && currentElementHandler.getNodeName().equals("handler")) {
-				// Mandatory attributes
-				String id = currentElementHandler.getAttribute("id");
-				String match = currentElementHandler.getAttribute("match");
-				FileHandler currentHandler = new FileHandler(id, Pattern.compile(match));
-				this.listOfFileHandlers.add(currentHandler);
-				logger.debug("Found handler: " + currentHandler);
+		for (Element currentElementHandler : XmlUtils.getElementsByXPath(document, "//rtfm/filehandlers/filehandler")) {
+			// Mandatory attributes
+			String id = currentElementHandler.getAttribute("id");
+			String pattern = currentElementHandler.getAttribute("pattern");
+			FileHandler fileHandler = new FileHandler(id, Pattern.compile(pattern));
 
-				// Optional attribute: Checker
-				Element elementChecker = XmlUtils.getFirstElementByXPath(currentElementHandler, "checker");
-				if (elementChecker != null) {
-					String value = elementChecker.getAttribute("value");
-					if ((value != null) && (value.length() > 0)) {
-						currentHandler.setChecker(new FixedChecker(Boolean.parseBoolean(value)));
-					} else {
-						String pattern = elementChecker.getAttribute("pattern");
-						currentHandler.setChecker(new RegexChecker(Pattern.compile(pattern)));
-					}
-					logger.debug("Found checker: " + currentHandler.getChecker());
+			// Optional attribute: TagProvider
+			Element element0 = XmlUtils.getFirstElementByXPath(currentElementHandler, "tagprovider");
+			if (element0 != null) {
+				String ref = element0.getAttribute("ref");
+				ITagProvider tagProvider = Services.instance().getTagProvider(ref);
+				if (tagProvider == null) {
+					logger.error("The tag provider cannot be found: " + ref);
 				} else {
-					logger.debug("No checker for current handler");
-				}
-
-				// Optional attribute: Tagwritter
-				Element elementTagger = XmlUtils.getFirstElementByXPath(currentElementHandler, "tagwritter");
-				if (elementTagger != null) {
-					String taggerClassname = elementTagger.getAttribute("classname");
-					try {
-						currentHandler.setTagWritter(taggerClassname);
-						logger.debug("Setting tagger: " + taggerClassname + " for Filehandler: " + currentHandler);
-						// Setting properties
-						List<Element> listOfProperties = XmlUtils.getElementsByXPath(elementTagger, "property");
-						for (Element elementProperty : listOfProperties) {
-							String name = elementProperty.getAttribute("name");
-							String value = elementProperty.getAttribute("value");
-							currentHandler.getTagWritter().setProperty(name, value);
-						}
-					} catch (Exception e) {
-						logger.error("Error while creating tagger: " + taggerClassname + " for Filehandler: "
-								+ currentHandler);
-					}
-				} else {
-					logger.debug("No tagger for current handler");
-				}
-
-				// Optional attribute: TagData
-				Element elementTagdata = XmlUtils.getFirstElementByXPath(currentElementHandler, "tagdata");
-				if (elementTagdata != null) {
-					RegexTagProvider regexTagProvider = new RegexTagProvider();
-					ITagField fieldArtist = getTagField(XmlUtils.getFirstElementByXPath(elementTagdata, "artist"));
-					ITagField fieldAlbum = getTagField(XmlUtils.getFirstElementByXPath(elementTagdata, "album"));
-					ITagField fieldYear = getTagField(XmlUtils.getFirstElementByXPath(elementTagdata, "year"));
-					ITagField fieldTracknumber = getTagField(XmlUtils.getFirstElementByXPath(elementTagdata,
-							"tracknumber"));
-					ITagField fieldTrackname = getTagField(XmlUtils.getFirstElementByXPath(elementTagdata, "trackname"));
-					ITagField fieldComment = getTagField(XmlUtils.getFirstElementByXPath(elementTagdata, "comment"));
-					regexTagProvider.setArtist(fieldArtist);
-					regexTagProvider.setAlbum(fieldAlbum);
-					regexTagProvider.setYear(fieldYear);
-					regexTagProvider.setTracknumber(fieldTracknumber);
-					regexTagProvider.setTrackname(fieldTrackname);
-					regexTagProvider.setComment(fieldComment);
-					currentHandler.setTagProvider(regexTagProvider);
-					logger.debug("Found tagdata: " + currentHandler.getTagProvider());
-
-				} else {
-					logger.debug("No tag data for current handler");
+					logger.debug("Found tag provider: " + tagProvider);
+					fileHandler.setTagProvider(tagProvider);
 				}
 			}
+
+			// Optional attribute: TagWriter
+			Element element1 = XmlUtils.getFirstElementByXPath(currentElementHandler, "tagwriter");
+			if (element1 != null) {
+				String ref = element1.getAttribute("ref");
+				ITagWriter tagWriter = Services.instance().getTagWriter(ref);
+				if (tagWriter == null) {
+					logger.error("The tag writer cannot be found: " + ref);
+				} else {
+					logger.debug("Found tag writer: " + tagWriter);
+					fileHandler.setTagWriter(tagWriter);
+				}
+			}
+
+			logger.debug("Found file handler: " + fileHandler);
+			Services.instance().addFileHandler(fileHandler);
+
 		}
 	}
 
@@ -368,7 +337,7 @@ public class Configuration {
 		XPath xpath = XPathFactory.newInstance().newXPath();
 		XPathExpression xPathExpression = xpath.compile("//rtfm/shell/*");
 		NodeList nodeList = (NodeList) xPathExpression.evaluate(document, XPathConstants.NODESET);
-		logger.debug("Found " + nodeList.getLength() + " handlers");
+		logger.debug("Found " + nodeList.getLength() + " commands");
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Element currentElement = (Element) nodeList.item(i);
 			if ((currentElement != null) && currentElement.getNodeName().equals("command")) {
@@ -378,11 +347,11 @@ public class Configuration {
 				try {
 					Class<?> handler = Class.forName(classname);
 					logger.debug("Found command: " + classname + " for id: " + id);
-					this.mapOfShellCommands.put(id, handler);
+					Services.instance().addShellCommand(id, handler);
 					if ((alternative != null) && (alternative.length() > 0)
-							&& !this.mapOfShellCommands.containsKey(alternative)) {
+							&& !Services.instance().getListOfShellCommands().contains(alternative)) {
 						logger.debug("Adding alternative: " + alternative + " to: " + id);
-						this.mapOfShellCommands.put(alternative, handler);
+						Services.instance().addShellCommand(alternative, handler);
 					}
 				} catch (ClassNotFoundException e) {
 					logger.warn("Cannot find command: " + classname);

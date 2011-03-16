@@ -22,7 +22,11 @@ package org.essembeh.rtfm.junit;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+
+import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.conf.Configuration;
 import org.junit.Test;
 
@@ -36,5 +40,17 @@ public class ConfigurationTest {
 		assertNotNull(appName);
 		String plop = conf.getProperty("plop");
 		assertNull(plop);
+	}
+
+	@Test
+	public void testHandlers() throws Exception {
+		Configuration configuration = Configuration.instance();
+		assertNotNull(configuration);
+		File rootFolder = new File("/foo");
+		File testFile = new File("/foo/A/B/01 - C.mp3");
+		MusicFile mf = new MusicFile(testFile, rootFolder);
+		assertNotNull(mf);
+		assertTrue(mf.isTaggable());
+
 	}
 }

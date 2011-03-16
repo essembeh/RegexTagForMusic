@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.conf.Configuration;
+import org.essembeh.rtfm.core.conf.Services;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.shell.Shell;
@@ -44,7 +45,7 @@ public class Help implements ICommand {
 		if (args.size() == 2) {
 			String command = args.get(1);
 			try {
-				ICommand commandHandler = Configuration.instance().instantiateCommand(command);
+				ICommand commandHandler = Services.instance().instantiateCommand(command);
 				if (commandHandler == null) {
 					shell.syserr("Command not found: " + command);
 				} else {
@@ -62,16 +63,10 @@ public class Help implements ICommand {
 	@Override
 	public String getHelp(String command) {
 		StringBuilder out = new StringBuilder();
-
 		out.append("Usage: ").append(command).append(" <command>").append("\n");
 		out.append("Available commands are: ");
-		try {
-			for (String thecommand : Configuration.instance().getListOfShellCommands()) {
-				out.append(thecommand).append(" ");
-			}
-		} catch (ConfigurationException e) {
-			// Cannot happen ... 
-			this.logger.error(e.toString());
+		for (String thecommand : Services.instance().getListOfShellCommands()) {
+			out.append(thecommand).append(" ");
 		}
 		return out.toString();
 	}

@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.Filter;
+import org.essembeh.rtfm.core.Filter.Status;
 import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.Filter.Status;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.ICommand;
@@ -37,7 +37,7 @@ import org.essembeh.rtfm.shell.Shell;
 public class Show implements ICommand {
 
 	enum ShowWhat {
-		ALL, NEW, TAGGED, VALID, INVALID, TAGGABLE, NONTAGGABLE, TYPE
+		ALL, NEW, TAGGED, TAGGABLE, NONTAGGABLE, TYPE
 	}
 
 	Logger logger = Logger.getLogger(getClass());
@@ -124,15 +124,7 @@ public class Show implements ICommand {
 			break;
 		case TAGGED:
 			this.logger.debug("Show taggable and tagged");
-			list.addAll(app.getFilteredFiles(new Filter(Status.ENABLE, Status.ENABLE, Status.ENABLE, null)));
-			break;
-		case VALID:
-			this.logger.debug("Show valid");
-			list.addAll(app.getFilteredFiles(Filter.VALID));
-			break;
-		case INVALID:
-			this.logger.debug("Show invalid");
-			list.addAll(app.getFilteredFiles(Filter.INVALID));
+			list.addAll(app.getFilteredFiles(new Filter(Status.ENABLE, Status.ENABLE, null)));
 			break;
 		case TAGGABLE:
 			this.logger.debug("Show taggable");
@@ -140,14 +132,13 @@ public class Show implements ICommand {
 			break;
 		case NONTAGGABLE:
 			this.logger.debug("Show nontaggable");
-			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.INVERSE, Status.NO_FILTER, null)));
+			list.addAll(app.getFilteredFiles(new Filter(Status.INVERSE, Status.NO_FILTER, null)));
 			break;
 		case TYPE:
-			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.NO_FILTER, Status.NO_FILTER, Pattern
-					.compile(type))));
+			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.NO_FILTER, Pattern.compile(type))));
 			break;
 		}
-		for(int i = 0; i < list.size(); i ++) {
+		for (int i = 0; i < list.size(); i++) {
 			shell.sysout(i + ": " + Shell.fileToString(list.get(i)));
 		}
 		shell.sysout(list.size() + StringUtils.plural(" file", list.size()));

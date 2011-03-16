@@ -8,7 +8,7 @@
 			<param name="ConversionPattern" value="[%-5p] %m %n" />
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
-			<param name="LevelMin" value="INFO" />
+			<param name="LevelMin" value="DEBUG" />
 		</filter>
 	</appender>
 
@@ -23,11 +23,22 @@
 	</appender>
 
 	<logger name="org.essembeh.rtfm" additivity="true">
+		<level value="DEBUG" />
 		<appender-ref ref="console" />
 	</logger>
 
+	<logger name="org.essembeh.rtfm.core.utils" additivity="true">
+		<level value="ERROR" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<logger name="org.essembeh.rtfm.core.tag" additivity="true">
+		<level value="ERROR" />
+		<appender-ref ref="console" />
+	</logger>
+	
 	<root>
-		<level value="debug"/>
+		<level value="debug" />
 		<appender-ref ref="file" />
 	</root>
 

@@ -19,7 +19,7 @@
 -->
 <project basedir="." default="dist">
 	<property name="app.name" value="rtfm" />
-	<property name="app.version" value="1.0alpha1" />
+	<property name="app.version" value="1.0alpha2" />
 	<property name="app.root" value="." />
 	<property name="src.app" value="${app.root}/src" />
 	<property name="src.junit" value="${app.root}/junit" />
@@ -106,5 +106,8 @@
 		</junit>
 	</target>
 
+	<target name="seb" depends="dist">
+		<copy file="${res}/config-seb.xml"  tofile="${dist}/config.xml" overwrite="true" />
+	</target>
 
 </project>

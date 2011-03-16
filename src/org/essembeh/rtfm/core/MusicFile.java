@@ -23,10 +23,12 @@ package org.essembeh.rtfm.core;
 import java.io.File;
 
 import org.apache.log4j.Logger;
+import org.essembeh.rtfm.core.conf.Services;
+import org.essembeh.rtfm.core.exception.ConfigurationException;
+import org.essembeh.rtfm.core.exception.RTFMException;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.core.exception.TagWritterException;
 import org.essembeh.rtfm.core.tag.TagData;
-import org.essembeh.rtfm.interfaces.IChecker;
 
 /**
  * Represent a file in Music Folder. Not only MP3 but every file in the folder,
@@ -48,14 +50,20 @@ public class MusicFile implements Comparable<MusicFile> {
 	private FileHandler handler = null;
 
 	/**
-	 * Create a non taggable file
+	 * Create a Music File
 	 * 
 	 * @param file
+	 * @param rootFolder
+	 * @throws ConfigurationException
 	 */
-	public MusicFile(File file, File rootFolder, FileHandler handler) {
+	public MusicFile(File file, File rootFolder) throws ConfigurationException {
 		this.file = file;
 		this.rootFolder = rootFolder;
-		this.handler = handler;
+		// Search the corresponding handler
+		this.handler = Services.instance().getFileHandlerForFile(getVirtualPath());
+		if (this.handler == null) {
+			throw new ConfigurationException("Could not find handler for file: " + getVirtualPath());
+		}
 	}
 
 	/*
@@ -70,17 +78,15 @@ public class MusicFile implements Comparable<MusicFile> {
 	}
 
 	/**
-	 * If the file is valid, use the regex tag reader in the handler to read
-	 * tag informations from the virtual path.
+	 * If the file is valid, use the regex tag reader in the handler to read tag
+	 * informations from the virtual path.
 	 * 
 	 * @return
 	 * @throws TagNotFoundException
+	 * @throws RTFMException
 	 */
-	public TagData getTagData() throws TagNotFoundException {
-		TagData tag = null;
-		if (isValid() && this.handler.getTagProvider() != null) {
-			tag = this.handler.getTagProvider().getTagData(getVirtualPath());
-		}
+	public TagData getTagData() throws TagNotFoundException, RTFMException {
+		TagData tag = this.handler.getTagData(getVirtualPath());
 		return tag;
 
 	}
@@ -108,7 +114,7 @@ public class MusicFile implements Comparable<MusicFile> {
 	 * @return
 	 */
 	public boolean isTaggable() {
-		return ((this.handler != null) && (this.handler.getTagWritter() != null));
+		return this.handler.canTag();
 	}
 
 	/**
@@ -118,22 +124,6 @@ public class MusicFile implements Comparable<MusicFile> {
 	 */
 	public boolean isTagged() {
 		return this.isTagged;
-	}
-
-	/**
-	 * Returns true if the file is taggable
-	 * 
-	 * @return
-	 */
-	public boolean isValid() {
-		boolean valid = false;
-		IChecker checker = this.handler.getChecker();
-		if (checker != null) {
-			valid = checker.isValid(getVirtualPath());
-		} else {
-			this.logger.warn("No checker in handler, file cannot be validate");
-		}
-		return valid;
 	}
 
 	/**
@@ -151,24 +141,21 @@ public class MusicFile implements Comparable<MusicFile> {
 	 * @return
 	 * @throws TagWritterException
 	 * @throws TagNotFoundException
+	 * @throws RTFMException
 	 */
-	public boolean tagFile(boolean dryrun) throws TagWritterException, TagNotFoundException {
+	public boolean tagFile(boolean dryrun) throws TagWritterException, TagNotFoundException, RTFMException {
 		if (!isTaggable()) {
 			throw new TagWritterException("This file is not taggable");
-		}
-		if (!isValid()) {
-			throw new TagWritterException("This file is not valid");
 		}
 		boolean hasBeenTagged = false;
 		TagData tag = getTagData();
 		this.logger.debug("Tag file: " + toString());
-		this.logger.debug("  with tagger: " + this.handler.getTagWritter());
 		this.logger.debug("  and tagdata: " + tag);
 		if (this.isTagged()) {
 			this.logger.debug("The file is already taged");
 		}
-		this.handler.getTagWritter().removeTag(this.file, dryrun);
-		hasBeenTagged = this.handler.getTagWritter().tag(this.file, tag, dryrun);
+		this.handler.removeTag(this.file, dryrun);
+		hasBeenTagged = this.handler.tag(this.file, tag, dryrun);
 		this.logger.debug("File: " + getVirtualPath() + " successfully tagged");
 		if (hasBeenTagged) {
 			setTagged();
@@ -185,11 +172,6 @@ public class MusicFile implements Comparable<MusicFile> {
 	public String toString() {
 		StringBuilder out = new StringBuilder();
 		out.append("[").append(getType()).append("] ");
-		if (isValid()) {
-			out.append("+valid ");
-		} else {
-			out.append("-valid ");
-		}
 		if (isTaggable()) {
 			if (isTagged()) {
 				out.append("+tagged ");

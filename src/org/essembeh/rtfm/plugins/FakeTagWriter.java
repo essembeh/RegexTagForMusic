@@ -26,9 +26,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.tag.TagData;
-import org.essembeh.rtfm.interfaces.ITagWritter;
+import org.essembeh.rtfm.interfaces.ITagWriter;
 
-public class FakeTagWritter implements ITagWritter {
+public class FakeTagWriter implements ITagWriter {
 
 	List<File> listOfModifiedFiles = new ArrayList<File>();
 
@@ -37,7 +37,7 @@ public class FakeTagWritter implements ITagWritter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.interfaces.ITagWritter#removeTag(java.io.File,
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File,
 	 * boolean)
 	 */
 	@Override
@@ -54,13 +54,13 @@ public class FakeTagWritter implements ITagWritter {
 	 */
 	@Override
 	public void setProperty(String name, String value) {
-		this.logger.debug("Trying to set property fo FakeTagWritter: " + name + "=" + value);
+		this.logger.debug("Trying to set property fo FakeTagWriter: " + name + "=" + value);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.interfaces.ITagWritter#tag(java.io.File,
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#tag(java.io.File,
 	 * org.essembeh.rtfm.model.TagData, boolean)
 	 */
 	@Override

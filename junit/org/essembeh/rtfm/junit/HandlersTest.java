@@ -22,13 +22,12 @@ package org.essembeh.rtfm.junit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.essembeh.rtfm.core.FileHandler;
-import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.conf.Configuration;
+import org.essembeh.rtfm.core.conf.Services;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,48 +42,37 @@ public class HandlersTest {
 	}
 
 	@Test
-	public void testCoverChecker() {
+	public void testCover() {
 		assertNotNull(conf);
-		File root = new File("/m/");
-		Map<String, Boolean> map = new HashMap<String, Boolean>();
-		map.put("/m/a/b/cover.jpg", true);
-		map.put("/m/a/2000 - b/cover.jpg", true);
-		map.put("/m/a/b/cover.jpeg", true);
-		map.put("/m/a/b/cover.png", true);
-		map.put("/m/a/b/c/cover.jpg", false);
-		map.put("/m/a/b/cover2.jpg", false);
-		map.put("/m/a/cover.jpg", false);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("/a/b/cover.jpg", "COVER");
+		map.put("/a/2000 - b/cover.jpg", "COVER");
+		map.put("/a/b/cover.jpeg", "COVER");
+		map.put("/a/b/cover.png", "COVER");
+		map.put("/a/b/c/cover.jpg", "UNKNOWN");
+		map.put("/a/b/cover2.jpg", "UNKNOWN");
+		map.put("/a/cover.jpg", "UNKNOWN");
 		for (String path : map.keySet()) {
-			File file = new File(path);
-			Boolean result = map.get(path);
-			FileHandler handler = conf.getHandlerForFile(file);
+			String result = map.get(path);
+			FileHandler handler = Services.instance().getFileHandlerForFile(path);
 			assertNotNull(handler);
-			MusicFile musicFile = new MusicFile(file, root, handler);
-			assertNotNull(musicFile);
-			assertEquals(musicFile.getType(), "COVER");
-			assertEquals(musicFile.isValid(), result.booleanValue());
+			assertEquals(handler.getId(), result);
 		}
 	}
 
 	@Test
-	public void testMp3Checker() {
+	public void testMp3() {
 		assertNotNull(conf);
-		File root = new File("/m/");
-		Map<String, Boolean> map = new HashMap<String, Boolean>();
-		map.put("/m/a/b/01 - c.mp3", true);
-		map.put("/m/a/2000 - b/01 - c.mp3", true);
-		map.put("/m/a/b/01. c.mp3", false);
-		map.put("/m/Group/1978 - album/01 - Title (feat. plop) [2] ! & #.mp3",
-				true);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("/a/b/01 - c.mp3", "MP3");
+		map.put("/a/2000 - b/01 - c.mp3", "MP3");
+		map.put("/a/b/01. c.mp3", "UNKNOWN");
+		map.put("/Group/1978 - album/01 - Title (feat. plop) [2] ! & #.mp3", "MP3");
 		for (String path : map.keySet()) {
-			File file = new File(path);
-			Boolean result = map.get(path);
-			FileHandler handler = conf.getHandlerForFile(file);
+			String result = map.get(path);
+			FileHandler handler = Services.instance().getFileHandlerForFile(path);
 			assertNotNull(handler);
-			MusicFile musicFile = new MusicFile(file, root, handler);
-			assertNotNull(musicFile);
-			assertEquals(musicFile.getType(), "MP3");
-			assertEquals(musicFile.isValid(), result.booleanValue());
+			assertEquals(handler.getId(), result);
 		}
 		System.out.println("");
 	}

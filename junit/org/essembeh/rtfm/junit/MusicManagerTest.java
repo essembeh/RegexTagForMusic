@@ -28,7 +28,6 @@ import java.io.File;
 
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.Filter.Status;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,15 +35,13 @@ public class MusicManagerTest {
 
 	MusicManager mm;
 
-	File database1 = new File("test/a1.xml");
-	File database2 = new File("test/a2.xml");
+	File database1 = new File("test/default1.xml");
+	File database2 = new File("test/default2.xml");
 
-	File rootFolder = new File("test/a/");
+	File rootFolder = new File("test/default/");
 
 	int totalCount;
 	int taggableCount;
-	int taggableInvalidCount;
-	int taggableValidCount;
 
 	@Before
 	public void testConstructor() throws Throwable {
@@ -56,36 +53,22 @@ public class MusicManagerTest {
 		totalCount = mm.getAllFiles().size();
 		System.out.println("Total: " + totalCount);
 		taggableCount = mm.getFilteredFiles(Filter.TAGGABLE).size();
-		System.out.println("Taggable: " + taggableCount);
-		taggableInvalidCount = mm.getFilteredFiles(
-				new Filter(Status.INVERSE, Status.ENABLE, Status.NO_FILTER,
-						null)).size();
-		System.out.println("Taggable invalid: " + taggableInvalidCount);
-		taggableValidCount = mm
-				.getFilteredFiles(
-						new Filter(Status.ENABLE, Status.ENABLE,
-								Status.NO_FILTER, null)).size();
-		System.out.println("Taggable valid: " + taggableValidCount);
 		assertTrue(taggableCount > 0);
-		assertTrue(taggableCount > taggableInvalidCount);
-		assertTrue(taggableCount == taggableInvalidCount + taggableValidCount);
 		assertTrue(totalCount >= taggableCount);
 	}
 
 	@Test
 	public void testTagDryrun() throws Throwable {
 		int errorCount = mm.tagAllTaggableFiles(true);
-		assertEquals(taggableCount, mm.getFilteredFiles(Filter.NON_TAGGED)
-				.size());
-		assertEquals(taggableInvalidCount, errorCount);
+		assertEquals(taggableCount, mm.getFilteredFiles(Filter.NON_TAGGED).size());
+		assertEquals(0, errorCount);
 	}
 
 	@Test
 	public void testTag() throws Throwable {
 		int errorCount = mm.tagAllTaggableFiles(false);
-		assertEquals(taggableInvalidCount, mm.getFilteredFiles(
-				Filter.NON_TAGGED).size());
-		assertEquals(taggableInvalidCount, errorCount);
+		assertEquals(0, mm.getFilteredFiles(Filter.NON_TAGGED).size());
+		assertEquals(0, errorCount);
 		mm.writeDatabase(database2);
 	}
 
@@ -105,8 +88,7 @@ public class MusicManagerTest {
 		mm.removeAllMusicFiles();
 		mm.readDatabase(database2, true);
 		assertEquals(totalCount, mm.getAllFiles().size());
-		assertEquals(this.taggableInvalidCount, mm.getFilteredFiles(
-				Filter.NON_TAGGED).size());
+		assertEquals(0, mm.getFilteredFiles(Filter.NON_TAGGED).size());
 	}
 
 }

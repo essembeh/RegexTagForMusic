@@ -23,15 +23,17 @@ package org.essembeh.rtfm.core;
 import java.io.File;
 import java.util.regex.Pattern;
 
-import org.essembeh.rtfm.interfaces.IChecker;
+import org.essembeh.rtfm.core.exception.RTFMException;
+import org.essembeh.rtfm.core.exception.TagNotFoundException;
+import org.essembeh.rtfm.core.exception.TagWritterException;
+import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.interfaces.ITagProvider;
-import org.essembeh.rtfm.interfaces.ITagWritter;
+import org.essembeh.rtfm.interfaces.ITagWriter;
 
 public class FileHandler {
 	private String id = null;
-	private IChecker checker = null;
-	private ITagWritter tagWritter = null;
-	private ITagProvider regexTagProvider = null;
+	private ITagWriter tagWriter = null;
+	private ITagProvider tagProvider = null;
 	private Pattern applyPattern;
 
 	/**
@@ -47,20 +49,11 @@ public class FileHandler {
 
 	/**
 	 * 
-	 * @param file
+	 * @param virtualPath
 	 * @return
 	 */
-	public boolean doesApplyForFile(File file) {
-		String filename = file.getName();
-		return this.applyPattern.matcher(filename).matches();
-	}
-
-	/**
-	 * 
-	 * @return the checker
-	 */
-	public IChecker getChecker() {
-		return this.checker;
+	public boolean doesApplyForFile(String virtualPath) {
+		return this.applyPattern.matcher(virtualPath).matches();
 	}
 
 	/**
@@ -71,46 +64,28 @@ public class FileHandler {
 	}
 
 	/**
-	 * @return the regexTagReader
-	 */
-	public ITagProvider getTagProvider() {
-		return this.regexTagProvider;
-	}
-
-	/**
-	 * @return the tagWritter
-	 */
-	public ITagWritter getTagWritter() {
-		return this.tagWritter;
-	}
-
-	/**
-	 * @param checker
-	 *            the checker to set
-	 */
-	public void setChecker(IChecker checker) {
-		this.checker = checker;
-	}
-
-	/**
-	 * @param regexTagProvider
+	 * @param tagProvider
 	 *            the regexTag to set
 	 */
-	public void setTagProvider(ITagProvider regexTagProvider) {
-		this.regexTagProvider = regexTagProvider;
+	public void setTagProvider(ITagProvider tagProvider) {
+		this.tagProvider = tagProvider;
 	}
 
 	/**
-	 * @param tagWritter
-	 *            the tagWritter to set
-	 * @throws ClassNotFoundException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
+	 * @param tagWriter
+	 *            the tagWriter to set
 	 */
-	public void setTagWritter(String taggerClassname) throws ClassNotFoundException, InstantiationException,
-			IllegalAccessException {
-		Class<?> taggerClass = Class.forName(taggerClassname);
-		this.tagWritter = (ITagWritter) taggerClass.newInstance();
+	public void setTagWriter(ITagWriter tagWriter) {
+		this.tagWriter = tagWriter;
+	}
+
+	/**
+	 * Returns true if the file handler can tag its files
+	 * 
+	 * @return
+	 */
+	public boolean canTag() {
+		return this.tagWriter != null && this.tagProvider != null;
 	}
 
 	/*
@@ -120,6 +95,52 @@ public class FileHandler {
 	 */
 	@Override
 	public String toString() {
-		return "FileHandler [id=" + this.id + ", checker=" + this.checker + ", tagWritter=" + this.tagWritter + "]";
+		return "FileHandler [id=" + this.id + ", tagWriter=" + this.tagWriter + ", canTag=" + canTag() + "]";
 	}
+
+	/**
+	 * @param mp3
+	 * @param tag
+	 * @param dryrun
+	 * @return
+	 * @throws TagWritterException
+	 * @throws RTFMException
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#tag(java.io.File,
+	 *      org.essembeh.rtfm.core.tag.TagData, boolean)
+	 */
+	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWritterException, RTFMException {
+		if (!canTag()) {
+			throw new RTFMException("Invalid operation on non taggable file: " + toString());
+		}
+		return tagWriter.tag(mp3, tag, dryrun);
+	}
+
+	/**
+	 * @param path
+	 * @return
+	 * @throws TagNotFoundException
+	 * @throws RTFMException
+	 * @see org.essembeh.rtfm.interfaces.ITagProvider#getTagData(java.lang.String)
+	 */
+	public TagData getTagData(String path) throws TagNotFoundException, RTFMException {
+		if (!canTag()) {
+			throw new RTFMException("Invalid operation on non taggable file: " + toString());
+		}
+		return tagProvider.getTagData(path);
+	}
+
+	/**
+	 * @param mp3
+	 * @param dryrun
+	 * @throws TagWritterException
+	 * @throws RTFMException 
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File, boolean)
+	 */
+	public void removeTag(File mp3, boolean dryrun) throws TagWritterException, RTFMException {
+		if (!canTag()) {
+			throw new RTFMException("Invalid operation on non taggable file: " + toString());
+		}
+		tagWriter.removeTag(mp3, dryrun);
+	}
+
 }

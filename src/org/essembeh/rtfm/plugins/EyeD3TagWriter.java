@@ -31,9 +31,9 @@ import org.essembeh.rtfm.core.exception.TagWritterException;
 import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.core.utils.ProcessUtils;
 import org.essembeh.rtfm.core.utils.StringUtils;
-import org.essembeh.rtfm.interfaces.ITagWritter;
+import org.essembeh.rtfm.interfaces.ITagWriter;
 
-public class EyeD3TagWritter implements ITagWritter {
+public class EyeD3TagWriter implements ITagWriter {
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -105,7 +105,7 @@ public class EyeD3TagWritter implements ITagWritter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.interfaces.ITagWritter#removeTag(java.io.File,
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File,
 	 * boolean)
 	 */
 	@Override
@@ -151,7 +151,7 @@ public class EyeD3TagWritter implements ITagWritter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.interfaces.ITagWritter#tag(java.io.File,
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#tag(java.io.File,
 	 * org.essembeh.rtfm.model.TagData, boolean)
 	 */
 	@Override
@@ -196,6 +196,6 @@ public class EyeD3TagWritter implements ITagWritter {
 	 */
 	@Override
 	public String toString() {
-		return "EyeD3TagWritter: " + this.binary + " " + this.defaultArgs;
+		return "EyeD3TagWriter: " + this.binary + " " + this.defaultArgs;
 	}
 }

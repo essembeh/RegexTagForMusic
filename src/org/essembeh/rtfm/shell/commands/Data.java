@@ -48,12 +48,12 @@ public class Data implements ICommand {
 			try {
 				int filenumber = Integer.parseInt(args.get(1));
 				MusicFile file = app.getAllFiles().get(filenumber);
-				if (file.isValid()) {
+				if (file.isTaggable()) {
 					TagData data = file.getTagData();
 					shell.sysout("File: " + file);
 					shell.sysout("Tag data: " + data);
 				} else {
-					shell.syserr("The file is not valid: " + file);
+					shell.syserr("The file is not taggable: " + file);
 				}
 			} catch (Exception e) {
 				this.logger.error(e.getMessage());

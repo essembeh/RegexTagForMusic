@@ -1,55 +1,48 @@
 <?xml version="1.0"?>
 <rtfm>
-	<handlers>
-		<handler id="MP3" match=".*\.mp3">
-			<checker pattern="/[^/]+/[^/]+/[0-9][0-9] - .*\.mp3" />
-			<tagwritter classname="org.essembeh.rtfm.plugins.EyeD3TagWritter">
-				<property name="eyed3.binary" value="/usr/bin/eyeD3" />
-				<property name="eyed3.default.arguments" value="--no-color" />
-				<property name="force.utf8" value="true" />
-			</tagwritter>
-			<tagdata>
-				<artist      pattern="/(.*)/.*/[0-9][0-9] - .*\.mp3" group="1" />
-				<album       pattern="/.*/(.*)/[0-9][0-9] - .*\.mp3" />
-				<year        pattern="/.*/([12][0-9][0-9][0-9]) - .*/[0-9][0-9] - .*\.mp3" optional="true" />
-				<tracknumber pattern="/.*/.*/([0-9][0-9]) - .*\.mp3" />
-				<trackname   pattern="/.*/.*/[0-9][0-9] - (.*)\.mp3" />
-				<comment     value="Tagged with RegexTagForMusic" />
-			</tagdata>
-		</handler>
-		<handler id="COVER" match=".*\.(jpg|jpeg|png)">
-			<checker pattern="/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" />
-		</handler>
-		<handler id="FLAC" match=".*\.flac">
-			<checker pattern="/[^/]+/[^/]+/[0-9][0-9] - .*\.flac" />
-			<taggerwritter classname="org.essembeh.rtfm.plugins.FakeTagWritter">
-			</taggerwritter>
-			<tagdata>
-				<artist      pattern="/(.*)/.*/[0-9][0-9] - .*\.flac" />
-				<album       pattern="/.*/(.*)/[0-9][0-9] - .*\.flac" />
-				<year        pattern="/.*/([12][0-9][0-9][0-9]) - .*/[0-9][0-9] - .*\.flac" optional="true" />
-				<tracknumber pattern="/.*/.*/([0-9][0-9]) - .*\.flac" />
-				<trackname   pattern="/.*/.*/[0-9][0-9] - (.*)\.flac" />
-				<comment     value="Tagged with RegexTagForMusic" />
-			</tagdata>
-		</handler>
-		<handler id="UNKNOWN" match=".*">
-			<checker value="false" />
-		</handler>
-	</handlers>
+	<tagwriters>
+		<tagwriter id="eyeD3" classname="org.essembeh.rtfm.plugins.EyeD3TagWriter">
+			<property name="eyed3.binary" value="/usr/bin/eyeD3" />
+			<property name="eyed3.default.arguments" value="--no-color" />
+			<property name="force.utf8" value="true" />
+		</tagwriter>
+		<tagwriter id="fake" classname="org.essembeh.rtfm.plugins.FakeTagWriter">
+		</tagwriter>
+	</tagwriters>
+
+	<tagproviders>
+		<tagprovider id="default">
+			<artist pattern="/(.*)/.*/[0-9][0-9] - .*\.mp3" group="1" />
+			<album pattern="/.*/(.*)/[0-9][0-9] - .*\.mp3" />
+			<year pattern="/.*/([12][0-9][0-9][0-9]) - .*/[0-9][0-9] - .*\.mp3" optional="true" />
+			<tracknumber pattern="/.*/.*/([0-9][0-9]) - .*\.mp3" />
+			<trackname pattern="/.*/.*/[0-9][0-9] - (.*)\.mp3" />
+			<comment value="Tagged with RegexTagForMusic" />
+		</tagprovider>
+	</tagproviders>
+
+	<filehandlers>
+		<filehandler id="MP3" pattern="/[^/]+/[^/]+/[0-9][0-9] - .*\.mp3">
+			<tagwriter ref="eyeD3" />
+			<tagprovider ref="default" />
+		</filehandler>
+		<filehandler id="COVER" pattern="/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" />
+		<filehandler id="UNKNOWN" pattern=".*" />
+	</filehandlers>
+
 	<shell>
-		<command id="scan"  alternative="s" classname="org.essembeh.rtfm.shell.commands.Scan" />
-		<command id="read"  alternative="r" classname="org.essembeh.rtfm.shell.commands.ReadDB" />
+		<command id="scan" alternative="s" classname="org.essembeh.rtfm.shell.commands.Scan" />
+		<command id="read" alternative="r" classname="org.essembeh.rtfm.shell.commands.ReadDB" />
 		<command id="write" alternative="w" classname="org.essembeh.rtfm.shell.commands.WriteDB" />
-		<command id="tag"   alternative="t" classname="org.essembeh.rtfm.shell.commands.Tag" />
-		<command id="data"  alternative="d" classname="org.essembeh.rtfm.shell.commands.Data" />
-		<command id="ls"    alternative="l" classname="org.essembeh.rtfm.shell.commands.Show" />
-		<command id="help"  alternative="h" classname="org.essembeh.rtfm.shell.commands.Help" />
-		<command id="quit"  alternative="q" classname="org.essembeh.rtfm.shell.commands.Quit" />
+		<command id="tag" alternative="t" classname="org.essembeh.rtfm.shell.commands.Tag" />
+		<command id="data" alternative="d" classname="org.essembeh.rtfm.shell.commands.Data" />
+		<command id="ls" alternative="l" classname="org.essembeh.rtfm.shell.commands.Show" />
+		<command id="help" alternative="h" classname="org.essembeh.rtfm.shell.commands.Help" />
+		<command id="quit" alternative="q" classname="org.essembeh.rtfm.shell.commands.Quit" />
 	</shell>
 	<properties>
 		<property name="app.name" value="RegexTagForMusic" />
-		<property name="app.version" value="1.0alpha1" />
+		<property name="app.version" value="1.0alpha2" />
 		<property name="app.default.mode" value="shell" />
 		<property name="scan.hidden.files" value="true" />
 	</properties>

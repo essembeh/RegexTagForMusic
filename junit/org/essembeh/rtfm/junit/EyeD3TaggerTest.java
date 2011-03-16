@@ -27,9 +27,9 @@ import java.io.File;
 import junit.framework.Assert;
 
 import org.essembeh.rtfm.core.tag.TagData;
-import org.essembeh.rtfm.interfaces.ITagWritter;
+import org.essembeh.rtfm.interfaces.ITagWriter;
 import org.essembeh.rtfm.junit.utils.BinaryUtils;
-import org.essembeh.rtfm.plugins.EyeD3TagWritter;
+import org.essembeh.rtfm.plugins.EyeD3TagWriter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,13 +37,13 @@ public class EyeD3TaggerTest {
 
 	private static final int HEADER_SIZE = 2048;
 
-	ITagWritter tagger;
+	ITagWriter tagger;
 
-	File mp3 = new File("test/a/dummy.mp3");
+	File mp3 = new File("test/default/dummy.mp3");
 
 	@Before
 	public void init() {
-		tagger = new EyeD3TagWritter();
+		tagger = new EyeD3TagWriter();
 		tagger.setProperty("eyed3.binary", "/usr/bin/eyeD3");
 		tagger.setProperty("eyed3.default.arguments", "--no-color");
 		tagger.setProperty("force.utf8", "true");

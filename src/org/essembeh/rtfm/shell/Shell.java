@@ -31,8 +31,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.conf.Configuration;
-import org.essembeh.rtfm.core.exception.ConfigurationException;
+import org.essembeh.rtfm.core.conf.Services;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.ICommand;
@@ -154,7 +153,7 @@ public class Shell {
 		this.logger.debug("Process command: " + StringUtils.arrayToString(args.toArray(), " "));
 		try {
 			String commandName = args.get(0);
-			ICommand command = Configuration.instance().instantiateCommand(commandName);
+			ICommand command = Services.instance().instantiateCommand(commandName);
 			if (command != null) {
 				try {
 					int rc = command.execute(this, this.app, args);
@@ -166,9 +165,6 @@ public class Shell {
 			} else {
 				this.logger.warn("Cannot find command: " + commandName);
 			}
-		} catch (ConfigurationException e) {
-			this.logger.error("Error with configuration: " + e.toString());
-			quit();
 		} catch (Exception e) {
 			this.logger.error("Error instantiating command: " + e.toString());
 			quit();
@@ -205,11 +201,6 @@ public class Shell {
 	 */
 	public static String fileToString(MusicFile file) {
 		StringBuilder out = new StringBuilder();
-		if (file.isValid()) {
-			out.append("  ");
-		} else {
-			out.append("! ");
-		}
 		if (file.isTaggable()) {
 			if (file.isTagged()) {
 				out.append("+ ");

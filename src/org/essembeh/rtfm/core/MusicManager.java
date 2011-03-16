@@ -200,13 +200,12 @@ public class MusicManager {
 		List<File> allFiles = FileUtils.searchFilesInFolder(this.rootFolder, Boolean.parseBoolean(scanHiddenFiles));
 
 		for (File file : allFiles) {
-			FileHandler handler = Configuration.instance().getHandlerForFile(file);
-			if (handler != null) {
-				MusicFile musicFile = new MusicFile(file, theRootFolder, handler);
+			try {
+				MusicFile musicFile = new MusicFile(file, theRootFolder);
 				logger.debug("Adding: " + musicFile);
 				this.listOfFiles.add(musicFile);
-			} else {
-				logger.warn("Cannot find Handler for file: " + file);
+			} catch (ConfigurationException e) {
+				logger.warn(e.toString());
 			}
 		}
 		// Sort the list
@@ -244,16 +243,22 @@ public class MusicManager {
 		Iterator<MusicFile> it = listOfMF.iterator();
 		while (it.hasNext()) {
 			MusicFile currentMusicFile = it.next();
-			try {
-				currentMusicFile.tagFile(dryrun);
-				logger.info("File tagged: " + currentMusicFile.getVirtualPath());
-				// Remove it from the list
-				it.remove();
-			} catch (TagWritterException e) {
-				logger.error("Error while tagging file: " + currentMusicFile.getVirtualPath() + ": " + e.getMessage());
-			} catch (TagNotFoundException e) {
-				logger.error("Error getting tag data for file: " + currentMusicFile.getVirtualPath() + ": "
-						+ e.getMessage());
+			if (currentMusicFile.isTaggable()) {
+				try {
+					currentMusicFile.tagFile(dryrun);
+					logger.info("File tagged: " + currentMusicFile.getVirtualPath());
+					// Remove it from the list
+					it.remove();
+				} catch (TagWritterException e) {
+					logger.error("Error while tagging file: " + currentMusicFile.getVirtualPath() + ": "
+							+ e.getMessage());
+				} catch (TagNotFoundException e) {
+					logger.error("Error getting tag data for file: " + currentMusicFile.getVirtualPath() + ": "
+							+ e.getMessage());
+				} catch (RTFMException e) {
+					logger.error("Error while tagging file: " + currentMusicFile.getVirtualPath() + ": "
+							+ e.getMessage());
+				}
 			}
 
 		}
@@ -276,7 +281,7 @@ public class MusicManager {
 		Element rootElement = document.createElement("music");
 		rootElement.setAttribute("path", this.rootFolder.getAbsolutePath());
 		// Iterate
-		for (MusicFile file : getFilteredFiles(Filter.VALID)) {
+		for (MusicFile file : getAllFiles()) {
 			Element currentElement = document.createElement("file");
 			String path = file.getVirtualPath();
 			currentElement.setAttribute("path", path);

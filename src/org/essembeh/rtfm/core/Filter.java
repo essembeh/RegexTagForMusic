@@ -23,50 +23,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-
 public class Filter {
 
 	/** COMMON FILTERS **/
-	public static Filter VALID = new Filter(Status.ENABLE, Status.NO_FILTER, Status.NO_FILTER, null);
-	public static Filter INVALID = new Filter(Status.INVERSE, Status.NO_FILTER, Status.NO_FILTER, null);
-	public static Filter TAGGABLE = new Filter(Status.NO_FILTER, Status.ENABLE, Status.NO_FILTER, null);
-	public static Filter NON_TAGGED = new Filter(Status.NO_FILTER, Status.ENABLE, Status.INVERSE, null);
-	
+	public static Filter INVALID = new Filter(Status.NO_FILTER, Status.NO_FILTER, null);
+	public static Filter TAGGABLE = new Filter(Status.ENABLE, Status.NO_FILTER, null);
+	public static Filter NON_TAGGED = new Filter(Status.ENABLE, Status.INVERSE, null);
+
 	public enum Status {
 		ENABLE, INVERSE, NO_FILTER
 	}
 
-	protected Status valid;
 	protected Status taggable;
 	protected Status tagged;
 	protected Pattern type;
 
 	public Filter() {
-		this.valid = Status.NO_FILTER;
 		this.taggable = Status.NO_FILTER;
 		this.tagged = Status.NO_FILTER;
 		this.type = null;
 	}
 
 	/**
-	 * @param valid
 	 * @param taggable
 	 * @param tagged
 	 * @param type
 	 */
-	public Filter(Status valid, Status taggable, Status tagged, Pattern type) {
-		this.valid = valid;
+	public Filter(Status taggable, Status tagged, Pattern type) {
 		this.taggable = taggable;
 		this.tagged = tagged;
 		this.type = type;
-	}
-
-	/**
-	 * @param valid
-	 *            the valid to set
-	 */
-	public void setValid(Status valid) {
-		this.valid = valid;
 	}
 
 	/**
@@ -118,8 +104,7 @@ public class Filter {
 		List<MusicFile> result = new ArrayList<MusicFile>();
 
 		for (MusicFile musicFile : list) {
-			if (matches(musicFile.isValid(), this.valid) && matches(musicFile.isTaggable(), this.taggable)
-					&& matches(musicFile.isTagged(), this.tagged)) {
+			if (matches(musicFile.isTaggable(), this.taggable) && matches(musicFile.isTagged(), this.tagged)) {
 				if (this.type == null || this.type.matcher(musicFile.getType()).matches()) {
 					result.add(musicFile);
 				}

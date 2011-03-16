@@ -17,32 +17,39 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.checkers;
 
-import org.essembeh.rtfm.interfaces.IChecker;
+package org.essembeh.rtfm.interfaces;
 
-public class FixedChecker implements IChecker {
+import java.io.File;
 
-	boolean isValid;
+import org.essembeh.rtfm.core.exception.TagWritterException;
+import org.essembeh.rtfm.core.tag.TagData;
+
+public interface ITagWriter {
 
 	/**
-	 * Constructor
 	 * 
+	 * @param mp3
+	 * @param dryrun
+	 * @throws TagWritterException
+	 */
+	public void removeTag(File mp3, boolean dryrun) throws TagWritterException;
+
+	/**
+	 * Configure the service with the given property
+	 * 
+	 * @param name
 	 * @param value
-	 *            : the fixed value
 	 */
-	public FixedChecker(boolean value) {
-		this.isValid = value;
-	}
+	void setProperty(String name, String value);
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see org.essembeh.rtfm.interfaces.IChecker#isValid(java.lang.String)
+	 * @param mp3
+	 * @param tag
+	 * @param dryrun
+	 * @return
+	 * @throws TagWritterException
 	 */
-	@Override
-	public boolean isValid(String path) {
-		return this.isValid;
-	}
-
+	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWritterException;
 }

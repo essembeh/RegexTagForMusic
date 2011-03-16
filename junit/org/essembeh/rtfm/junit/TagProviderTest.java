@@ -19,19 +19,19 @@
  */
 package org.essembeh.rtfm.junit;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.io.File;
 
-
-import org.essembeh.rtfm.core.FileHandler;
 import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.conf.Configuration;
 import org.essembeh.rtfm.core.tag.TagData;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-public class TagDataTest {
+public class TagProviderTest {
 
 	static Configuration conf;
 
@@ -46,9 +46,7 @@ public class TagDataTest {
 		assertNotNull(conf);
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/3000 - the album/01 - the song.mp3");
-		FileHandler handler = conf.getHandlerForFile(mp3);
-		assertNotNull(handler);
-		MusicFile musicFile = new MusicFile(mp3, root, handler);
+		MusicFile musicFile = new MusicFile(mp3, root);
 		TagData tag = musicFile.getTagData();
 		assertNotNull(tag);
 		assertEquals("the artist", tag.getArtist());
@@ -64,9 +62,7 @@ public class TagDataTest {
 		assertNotNull(conf);
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/the album/01 - the song.mp3");
-		FileHandler handler = conf.getHandlerForFile(mp3);
-		assertNotNull(handler);
-		MusicFile musicFile = new MusicFile(mp3, root, handler);
+		MusicFile musicFile = new MusicFile(mp3, root);
 		TagData tag = musicFile.getTagData();
 		assertNotNull(tag);
 		assertEquals("the artist", tag.getArtist());
@@ -82,9 +78,7 @@ public class TagDataTest {
 		assertNotNull(conf);
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/2000 - the album/01 - the song.mp3");
-		FileHandler handler = conf.getHandlerForFile(mp3);
-		assertNotNull(handler);
-		MusicFile musicFile = new MusicFile(mp3, root, handler);
+		MusicFile musicFile = new MusicFile(mp3, root);
 		TagData tag = musicFile.getTagData();
 		assertNotNull(tag);
 		assertEquals("the artist", tag.getArtist());
