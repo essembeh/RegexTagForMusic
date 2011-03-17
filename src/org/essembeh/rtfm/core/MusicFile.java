@@ -163,6 +163,14 @@ public class MusicFile implements Comparable<MusicFile> {
 		return hasBeenTagged;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isExportableToDatabase() {
+		return this.handler.isExportableToDatabase();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

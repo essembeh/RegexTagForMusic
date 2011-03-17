@@ -35,6 +35,7 @@ public class FileHandler {
 	private ITagWriter tagWriter = null;
 	private ITagProvider tagProvider = null;
 	private Pattern applyPattern;
+	private boolean isExportableToDatabase = true;
 
 	/**
 	 * Constructor
@@ -133,8 +134,9 @@ public class FileHandler {
 	 * @param mp3
 	 * @param dryrun
 	 * @throws TagWritterException
-	 * @throws RTFMException 
-	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File, boolean)
+	 * @throws RTFMException
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File,
+	 *      boolean)
 	 */
 	public void removeTag(File mp3, boolean dryrun) throws TagWritterException, RTFMException {
 		if (!canTag()) {
@@ -143,4 +145,20 @@ public class FileHandler {
 		tagWriter.removeTag(mp3, dryrun);
 	}
 
+	/**
+	 * If true, the file will be exported while writting database.
+	 * 
+	 * @param value
+	 */
+	public void setExportableToDatabase(boolean value) {
+		this.isExportableToDatabase = value;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isExportableToDatabase() {
+		return this.isExportableToDatabase;
+	}
 }

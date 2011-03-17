@@ -22,12 +22,12 @@
 	</tagproviders>
 
 	<filehandlers>
-		<filehandler id="MP3" pattern="/[^/]+/[^/]+/[0-9][0-9] - .*\.mp3">
+		<filehandler id="MP3" pattern="/[^/]+/[^/]+/[0-9][0-9] - .*\.mp3" database="true">
 			<tagwriter ref="eyeD3" />
 			<tagprovider ref="default" />
 		</filehandler>
 		<filehandler id="COVER" pattern="/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" />
-		<filehandler id="UNKNOWN" pattern=".*" />
+		<filehandler id="UNKNOWN" pattern=".*" database="false" />
 	</filehandlers>
 
 	<shell>

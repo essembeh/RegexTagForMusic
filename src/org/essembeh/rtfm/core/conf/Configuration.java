@@ -272,6 +272,10 @@ public class Configuration {
 			String id = currentElementHandler.getAttribute("id");
 			String pattern = currentElementHandler.getAttribute("pattern");
 			FileHandler fileHandler = new FileHandler(id, Pattern.compile(pattern));
+			String exportToDB = currentElementHandler.getAttribute("database");
+			if (exportToDB.length() > 0) {
+				fileHandler.setExportableToDatabase(Boolean.parseBoolean(exportToDB));
+			}
 
 			// Optional attribute: TagProvider
 			Element element0 = XmlUtils.getFirstElementByXPath(currentElementHandler, "tagprovider");

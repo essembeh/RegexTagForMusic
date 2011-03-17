@@ -282,15 +282,19 @@ public class MusicManager {
 		rootElement.setAttribute("path", this.rootFolder.getAbsolutePath());
 		// Iterate
 		for (MusicFile file : getAllFiles()) {
-			Element currentElement = document.createElement("file");
-			String path = file.getVirtualPath();
-			currentElement.setAttribute("path", path);
-			String type = file.getType();
-			currentElement.setAttribute("type", type);
-			if (file.isTaggable()) {
-				currentElement.setAttribute("tagged", new Boolean(file.isTagged()).toString());
+			if (file.isExportableToDatabase()) {
+				Element currentElement = document.createElement("file");
+				String path = file.getVirtualPath();
+				currentElement.setAttribute("path", path);
+				String type = file.getType();
+				currentElement.setAttribute("type", type);
+				if (file.isTaggable()) {
+					currentElement.setAttribute("tagged", new Boolean(file.isTagged()).toString());
+				}
+				rootElement.appendChild(currentElement);
+			} else {
+				logger.debug("The file is not exportable to database: " + file);
 			}
-			rootElement.appendChild(currentElement);
 		}
 		document.appendChild(rootElement);
 		// Prepare the DOM document for writing
