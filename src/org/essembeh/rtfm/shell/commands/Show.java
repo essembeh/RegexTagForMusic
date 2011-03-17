@@ -111,33 +111,43 @@ public class Show implements ICommand {
 	 * @param showWhat2
 	 * @param type
 	 */
-	private void show(Shell shell, MusicManager app, ShowWhat showWhat, String type) {
+	protected void show(Shell shell, MusicManager app, ShowWhat showWhat, String type) {
 		List<MusicFile> list = new ArrayList<MusicFile>();
 		switch (showWhat) {
 		case ALL:
-			this.logger.debug("Show all");
+			this.logger.debug("Filter: all");
 			list.addAll(app.getAllFiles());
 			break;
 		case NEW:
-			this.logger.debug("Show taggable non tagged");
+			this.logger.debug("Filter: taggable non tagged");
 			list.addAll(app.getFilteredFiles(Filter.NON_TAGGED));
 			break;
 		case TAGGED:
-			this.logger.debug("Show taggable and tagged");
+			this.logger.debug("Filter: taggable and tagged");
 			list.addAll(app.getFilteredFiles(new Filter(Status.ENABLE, Status.ENABLE, null)));
 			break;
 		case TAGGABLE:
-			this.logger.debug("Show taggable");
+			this.logger.debug("Filter: taggable");
 			list.addAll(app.getFilteredFiles(Filter.TAGGABLE));
 			break;
 		case NONTAGGABLE:
-			this.logger.debug("Show nontaggable");
+			this.logger.debug("Filter: nontaggable");
 			list.addAll(app.getFilteredFiles(new Filter(Status.INVERSE, Status.NO_FILTER, null)));
 			break;
 		case TYPE:
 			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.NO_FILTER, Pattern.compile(type))));
 			break;
 		}
+		executeOnList(shell, app, list);
+	}
+	
+	/**
+	 * 
+	 * @param shell
+	 * @param app
+	 * @param list
+	 */
+	protected void executeOnList(Shell shell, MusicManager app, List<MusicFile> list) {
 		for (int i = 0; i < list.size(); i++) {
 			shell.sysout(i + ": " + Shell.fileToString(list.get(i)));
 		}
