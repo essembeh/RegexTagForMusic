@@ -37,11 +37,29 @@ import org.essembeh.rtfm.interfaces.ITagWriter;
  */
 public class Services {
 
-	protected Logger logger = Logger.getLogger(getClass());
+	/**
+	 * Class logger
+	 */
+	static Logger logger = Logger.getLogger(Services.class);
 	
+	/**
+	 * The tag writers 
+	 */
 	protected Map<String, ITagWriter> tagWriters;
+	
+	/**
+	 * The tag providers
+	 */
 	protected Map<String, ITagProvider> tagProviders;
+	
+	/**
+	 * All file handlers found in configuration file
+	 */
 	protected List<FileHandler> fileHandlers;
+	
+	/**
+	 * All shell commands 
+	 */
 	protected Map<String, Class<?>> shellCommands;
 
 	/**

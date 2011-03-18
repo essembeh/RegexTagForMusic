@@ -22,15 +22,12 @@ package org.essembeh.rtfm.shell.commands;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.shell.Shell;
 
 public class Tag extends Show {
-
-	Logger logger = Logger.getLogger(getClass());
 
 	/**
 	 * 
@@ -50,5 +47,4 @@ public class Tag extends Show {
 			}
 		}
 	}
-
 }

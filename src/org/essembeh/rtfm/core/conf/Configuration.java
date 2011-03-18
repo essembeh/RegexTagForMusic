@@ -54,15 +54,28 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * This class handle the configuration file. It also create the file handlers.
+ * This class handle the configuration file. 
  * 
  * @author seb
  * 
  */
 public class Configuration {
 
-	/*************** SiNGLETON ***************/
+	/**
+	 * Class logger
+	 */
+	static Logger logger = Logger.getLogger(Configuration.class);
+	
+	/**
+	 * Singleton
+	 */
 	static protected Configuration instance = null;
+	
+	/**
+	 * Configuration content
+	 */
+	Map<String, String> properties;
+
 
 	/**
 	 * Get the singleton on the Configuration
@@ -91,14 +104,6 @@ public class Configuration {
 		}
 		return instance;
 	}
-
-	/*************** CONSTRUCTION ***************/
-
-	/**
-	 * Configuration content
-	 */
-	Map<String, String> properties;
-	static Logger logger = Logger.getLogger(Configuration.class);
 
 	/**
 	 * Constructor

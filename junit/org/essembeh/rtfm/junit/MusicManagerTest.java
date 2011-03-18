@@ -45,50 +45,50 @@ public class MusicManagerTest {
 
 	@Before
 	public void testConstructor() throws Throwable {
-		mm = new MusicManager();
-		assertNotNull(mm);
-		assertTrue(rootFolder.exists());
-		assertTrue(rootFolder.isDirectory());
-		mm.scanMusicFolder(rootFolder);
-		totalCount = mm.getAllFiles().size();
-		System.out.println("Total: " + totalCount);
-		taggableCount = mm.getFilteredFiles(Filter.TAGGABLE).size();
-		assertTrue(taggableCount > 0);
-		assertTrue(totalCount >= taggableCount);
+		this.mm = new MusicManager();
+		assertNotNull(this.mm);
+		assertTrue(this.rootFolder.exists());
+		assertTrue(this.rootFolder.isDirectory());
+		this.mm.scanMusicFolder(this.rootFolder);
+		this.totalCount = this.mm.getAllFiles().size();
+		System.out.println("Total: " + this.totalCount);
+		this.taggableCount = this.mm.getFilteredFiles(Filter.TAGGABLE).size();
+		assertTrue(this.taggableCount > 0);
+		assertTrue(this.totalCount >= this.taggableCount);
 	}
 
 	@Test
 	public void testTagDryrun() throws Throwable {
-		int errorCount = mm.tagAllTaggableFiles(true);
-		assertEquals(taggableCount, mm.getFilteredFiles(Filter.NON_TAGGED).size());
+		int errorCount = this.mm.tagAllTaggableFiles(true);
+		assertEquals(this.taggableCount, this.mm.getFilteredFiles(Filter.NON_TAGGED).size());
 		assertEquals(0, errorCount);
 	}
 
 	@Test
 	public void testTag() throws Throwable {
-		int errorCount = mm.tagAllTaggableFiles(false);
-		assertEquals(0, mm.getFilteredFiles(Filter.NON_TAGGED).size());
+		int errorCount = this.mm.tagAllTaggableFiles(false);
+		assertEquals(0, this.mm.getFilteredFiles(Filter.NON_TAGGED).size());
 		assertEquals(0, errorCount);
-		mm.writeDatabase(database2);
+		this.mm.writeDatabase(this.database2);
 	}
 
 	@Test
 	public void testWrite() throws Exception {
-		mm.writeDatabase(database1);
+		this.mm.writeDatabase(this.database1);
 	}
 
 	@Test
 	public void testClear() throws Exception {
-		mm.removeAllMusicFiles();
-		assertEquals(0, mm.getAllFiles().size());
+		this.mm.removeAllMusicFiles();
+		assertEquals(0, this.mm.getAllFiles().size());
 	}
 
 	@Test
 	public void testRead() throws Exception {
-		mm.removeAllMusicFiles();
-		mm.readDatabase(database2, true);
-		assertEquals(totalCount, mm.getAllFiles().size());
-		assertEquals(0, mm.getFilteredFiles(Filter.NON_TAGGED).size());
+		this.mm.removeAllMusicFiles();
+		this.mm.readDatabase(this.database2, true);
+		assertEquals(this.totalCount, this.mm.getAllFiles().size());
+		assertEquals(0, this.mm.getFilteredFiles(Filter.NON_TAGGED).size());
 	}
 
 }

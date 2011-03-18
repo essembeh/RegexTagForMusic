@@ -30,11 +30,35 @@ import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.interfaces.ITagProvider;
 import org.essembeh.rtfm.interfaces.ITagWriter;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class FileHandler {
+	/**
+	 * The unique identifier of the FileHandler
+	 */
 	private String id = null;
+
+	/**
+	 * The tag writer of the file type. Can be null for non taggable file type.
+	 */
 	private ITagWriter tagWriter = null;
+
+	/**
+	 * The tag provider. Can be null for non taggable file type.
+	 */
 	private ITagProvider tagProvider = null;
+
+	/**
+	 * The pattern to match for the file type.
+	 */
 	private Pattern applyPattern;
+
+	/**
+	 * A flag to write files or not in the Database.
+	 */
 	private boolean isExportableToDatabase = true;
 
 	/**
@@ -113,7 +137,7 @@ public class FileHandler {
 		if (!canTag()) {
 			throw new RTFMException("Invalid operation on non taggable file: " + toString());
 		}
-		return tagWriter.tag(mp3, tag, dryrun);
+		return this.tagWriter.tag(mp3, tag, dryrun);
 	}
 
 	/**
@@ -127,7 +151,7 @@ public class FileHandler {
 		if (!canTag()) {
 			throw new RTFMException("Invalid operation on non taggable file: " + toString());
 		}
-		return tagProvider.getTagData(path);
+		return this.tagProvider.getTagData(path);
 	}
 
 	/**
@@ -142,7 +166,7 @@ public class FileHandler {
 		if (!canTag()) {
 			throw new RTFMException("Invalid operation on non taggable file: " + toString());
 		}
-		tagWriter.removeTag(mp3, dryrun);
+		this.tagWriter.removeTag(mp3, dryrun);
 	}
 
 	/**

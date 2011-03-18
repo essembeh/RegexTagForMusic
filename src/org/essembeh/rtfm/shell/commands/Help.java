@@ -24,9 +24,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.conf.Configuration;
 import org.essembeh.rtfm.core.conf.Services;
-import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.shell.Shell;
 
