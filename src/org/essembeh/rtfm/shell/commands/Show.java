@@ -37,7 +37,7 @@ import org.essembeh.rtfm.shell.Shell;
 public class Show implements ICommand {
 
 	enum ShowWhat {
-		ALL, NEW, TAGGED, TAGGABLE, NONTAGGABLE, TYPE
+		ALL, NEW, TAGGED, TAGGABLE, NONTAGGABLE, TYPE, PATH
 	}
 
 	Logger logger = Logger.getLogger(getClass());
@@ -54,7 +54,7 @@ public class Show implements ICommand {
 		int rc = 0;
 
 		ShowWhat showWhat = null;
-		String type = null;
+		String pattern = null;
 
 		if (args.size() > 3) {
 			throw new ShellCommandInvalidArgument();
@@ -67,9 +67,9 @@ public class Show implements ICommand {
 			} catch (IllegalArgumentException e) {
 				throw new ShellCommandInvalidArgument(1);
 			}
-			if (showWhat == ShowWhat.TYPE) {
+			if (showWhat == ShowWhat.TYPE || showWhat == ShowWhat.PATH) {
 				if (args.size() == 3) {
-					type = args.get(2);
+					pattern = args.get(2);
 				} else {
 					throw new ShellCommandInvalidArgument(2);
 				}
@@ -80,7 +80,7 @@ public class Show implements ICommand {
 			}
 		}
 
-		show(shell, app, showWhat, type);
+		show(shell, app, showWhat, pattern);
 
 		return rc;
 	}
@@ -108,10 +108,10 @@ public class Show implements ICommand {
 	 * 
 	 * @param shell
 	 * @param app
-	 * @param showWhat2
-	 * @param type
+	 * @param showWhat
+	 * @param pattern
 	 */
-	protected void show(Shell shell, MusicManager app, ShowWhat showWhat, String type) {
+	protected void show(Shell shell, MusicManager app, ShowWhat showWhat, String pattern) {
 		List<MusicFile> list = new ArrayList<MusicFile>();
 		switch (showWhat) {
 		case ALL:
@@ -124,7 +124,7 @@ public class Show implements ICommand {
 			break;
 		case TAGGED:
 			this.logger.debug("Filter: taggable and tagged");
-			list.addAll(app.getFilteredFiles(new Filter(Status.ENABLE, Status.ENABLE, null)));
+			list.addAll(app.getFilteredFiles(new Filter(Status.ENABLE, Status.ENABLE)));
 			break;
 		case TAGGABLE:
 			this.logger.debug("Filter: taggable");
@@ -132,10 +132,13 @@ public class Show implements ICommand {
 			break;
 		case NONTAGGABLE:
 			this.logger.debug("Filter: nontaggable");
-			list.addAll(app.getFilteredFiles(new Filter(Status.INVERSE, Status.NO_FILTER, null)));
+			list.addAll(app.getFilteredFiles(new Filter(Status.INVERSE, Status.NO_FILTER)));
 			break;
 		case TYPE:
-			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.NO_FILTER, Pattern.compile(type))));
+			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.NO_FILTER, Pattern.compile(pattern), null)));
+			break;
+		case PATH:
+			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.NO_FILTER, null, Pattern.compile(pattern))));
 			break;
 		}
 		executeOnList(shell, app, list);
@@ -149,7 +152,7 @@ public class Show implements ICommand {
 	 */
 	protected void executeOnList(Shell shell, MusicManager app, List<MusicFile> list) {
 		for (int i = 0; i < list.size(); i++) {
-			shell.sysout(i + ": " + Shell.fileToString(list.get(i)));
+			shell.sysout(Shell.fileToString(list.get(i)));
 		}
 		shell.sysout(list.size() + StringUtils.plural(" file", list.size()));
 	}

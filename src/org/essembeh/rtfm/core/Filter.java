@@ -23,12 +23,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 public class Filter {
 
+	/**
+	 * Class logger
+	 */
+	static Logger logger = Logger.getLogger(Filter.class);
+	
 	/** COMMON FILTERS **/
-	public static Filter INVALID = new Filter(Status.NO_FILTER, Status.NO_FILTER, null);
-	public static Filter TAGGABLE = new Filter(Status.ENABLE, Status.NO_FILTER, null);
-	public static Filter NON_TAGGED = new Filter(Status.ENABLE, Status.INVERSE, null);
+	public static Filter INVALID = new Filter(Status.NO_FILTER, Status.NO_FILTER);
+	public static Filter TAGGABLE = new Filter(Status.ENABLE, Status.NO_FILTER);
+	public static Filter NON_TAGGED = new Filter(Status.ENABLE, Status.INVERSE);
 
 	public enum Status {
 		ENABLE, INVERSE, NO_FILTER
@@ -37,11 +44,25 @@ public class Filter {
 	protected Status taggable;
 	protected Status tagged;
 	protected Pattern type;
+	protected Pattern path;
 
 	public Filter() {
 		this.taggable = Status.NO_FILTER;
 		this.tagged = Status.NO_FILTER;
 		this.type = null;
+		this.path = null;
+	}
+
+	/**
+	 * 
+	 * @param taggable
+	 * @param tagged
+	 */
+	public Filter(Status taggable, Status tagged) {
+		this.taggable = taggable;
+		this.tagged = tagged;
+		this.type = null;
+		this.path = null;
 	}
 
 	/**
@@ -49,10 +70,11 @@ public class Filter {
 	 * @param tagged
 	 * @param type
 	 */
-	public Filter(Status taggable, Status tagged, Pattern type) {
+	public Filter(Status taggable, Status tagged, Pattern type, Pattern path) {
 		this.taggable = taggable;
 		this.tagged = tagged;
 		this.type = type;
+		this.path = path;
 	}
 
 	/**
@@ -80,6 +102,14 @@ public class Filter {
 	}
 
 	/**
+	 * @param path
+	 *            the path to set
+	 */
+	public void setPath(Pattern path) {
+		this.path = path;
+	}
+
+	/**
 	 * 
 	 * @param condition
 	 * @param status
@@ -102,10 +132,15 @@ public class Filter {
 	 */
 	public List<MusicFile> filter(List<MusicFile> list) {
 		List<MusicFile> result = new ArrayList<MusicFile>();
-
 		for (MusicFile musicFile : list) {
 			if (matches(musicFile.isTaggable(), this.taggable) && matches(musicFile.isTagged(), this.tagged)) {
-				if (this.type == null || this.type.matcher(musicFile.getType()).matches()) {
+				if (this.type != null && !this.type.matcher(musicFile.getType()).matches()) {
+					Filter.logger.debug("Type do not match filter: " + musicFile.getType());
+					continue;
+				} else if (this.path != null && !this.path.matcher(musicFile.getVirtualPath()).matches()) {
+					Filter.logger.debug("Virtual Path do not match filter: " + musicFile.getVirtualPath());
+					continue;
+				} else {
 					result.add(musicFile);
 				}
 			}
