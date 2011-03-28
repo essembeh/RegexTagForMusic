@@ -20,7 +20,9 @@
 
 package org.essembeh.rtfm.plugins;
 
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +46,7 @@ public class EyeD3TagWriter implements ITagWriter {
 	private String removeTagArgs = "--remove-v1 --remove-v2 --remove-all --remove-images --remove-lyrics --remove-comments";
 
 	private boolean forceUtf8 = false;
-	
+
 	/**
 	 * Execute a command in a Process and return the exit code. If dryrun is
 	 * set, the process is not started, 0 is returned.
@@ -66,15 +68,43 @@ public class EyeD3TagWriter implements ITagWriter {
 				p = pb.start();
 				rc = p.waitFor();
 				this.logger.debug("Exit code: " + rc);
+				if (rc != 0) {
+					this.logger.debug("Proccess exited with value: " + rc);
+
+					this.logger.debug("Sysout: " + ProcessUtils.getProcessSysOut(p, false));
+					this.logger.debug("Syserr: " + ProcessUtils.getProcessSysOut(p, true));
+
+				}
 			} catch (Exception e) {
 				throw new TagWritterException(e);
-			}
-			if (rc != 0) {
-				this.logger.debug("Proccess exited with value: " + rc);
-
-				this.logger.debug("Sysout: " + ProcessUtils.getProcessSysOut(p, false));
-				this.logger.debug("Syserr: " + ProcessUtils.getProcessSysOut(p, true));
-
+			} finally {
+				// Bug "Too many open files": Close all streams
+				if (p != null) {
+					Closeable c = p.getOutputStream();
+					if (c != null) {
+						try {
+							c.close();
+						} catch (IOException e) {
+							this.logger.debug("Error while closing stream: " + e.getMessage());
+						}
+					}
+					c = p.getInputStream();
+					if (c != null) {
+						try {
+							c.close();
+						} catch (IOException e) {
+							this.logger.debug("Error while closing stream: " + e.getMessage());
+						}
+					}
+					c = p.getErrorStream();
+					if (c != null) {
+						try {
+							c.close();
+						} catch (IOException e) {
+							this.logger.debug("Error while closing stream: " + e.getMessage());
+						}
+					}
+				}
 			}
 		}
 		return rc;
@@ -180,11 +210,12 @@ public class EyeD3TagWriter implements ITagWriter {
 		command.add(mp3.getAbsolutePath());
 		int rc = executeCommand(command, dryrun);
 		if (rc != 0) {
-			throw new TagWritterException("Error tagging: " + mp3.getAbsolutePath() + " with: " + tag + ", rc was: " + rc);
+			throw new TagWritterException("Error tagging: " + mp3.getAbsolutePath() + " with: " + tag + ", rc was: "
+					+ rc);
 		}
 		// Force UTF8 only option is set
 		if (this.forceUtf8) {
-			forceUtf8(mp3, dryrun);	
+			forceUtf8(mp3, dryrun);
 		}
 		return !dryrun;
 	}
