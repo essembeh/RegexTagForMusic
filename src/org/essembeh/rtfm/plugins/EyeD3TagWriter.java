@@ -47,6 +47,8 @@ public class EyeD3TagWriter implements ITagWriter {
 
 	private boolean forceUtf8 = false;
 
+	private boolean dumpProcessOutput = false;
+
 	/**
 	 * Execute a command in a Process and return the exit code. If dryrun is
 	 * set, the process is not started, 0 is returned.
@@ -70,9 +72,10 @@ public class EyeD3TagWriter implements ITagWriter {
 				this.logger.debug("Exit code: " + rc);
 				if (rc != 0) {
 					this.logger.debug("Proccess exited with value: " + rc);
-
-					this.logger.debug("Sysout: " + ProcessUtils.getProcessSysOut(p, false));
-					this.logger.debug("Syserr: " + ProcessUtils.getProcessSysOut(p, true));
+					if (this.dumpProcessOutput) {
+						this.logger.debug("Sysout: " + ProcessUtils.getProcessSysOut(p, false));
+						this.logger.debug("Syserr: " + ProcessUtils.getProcessSysOut(p, true));
+					}
 
 				}
 			} catch (Exception e) {
@@ -173,6 +176,8 @@ public class EyeD3TagWriter implements ITagWriter {
 			this.defaultArgs = value;
 		} else if ("force.utf8".equals(name)) {
 			this.forceUtf8 = Boolean.parseBoolean(value);
+		} else if ("debug.process.ouput".equals(name)) {
+			this.dumpProcessOutput  = Boolean.parseBoolean(value);
 		} else {
 			this.logger.warn("Invalid property for tagger: " + name + "=" + value);
 		}

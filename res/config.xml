@@ -5,6 +5,7 @@
 			<property name="eyed3.binary" value="/usr/bin/eyeD3" />
 			<property name="eyed3.default.arguments" value="--no-color" />
 			<property name="force.utf8" value="true" />
+			<property name="debug.process.ouput" value="false"/>
 		</tagwriter>
 		<tagwriter id="fake" classname="org.essembeh.rtfm.plugins.FakeTagWriter">
 		</tagwriter>
