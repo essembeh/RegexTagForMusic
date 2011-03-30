@@ -48,6 +48,7 @@ import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.core.exception.TagWritterException;
 import org.essembeh.rtfm.core.utils.FileUtils;
 import org.essembeh.rtfm.core.utils.XmlUtils;
+import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -80,8 +81,8 @@ public class MusicManager {
 	 * 
 	 * @return the listOfFiles
 	 */
-	public List<MusicFile> getAllFiles() {
-		List<MusicFile> list = new ArrayList<MusicFile>();
+	public List<IMusicFile> getAllFiles() {
+		List<IMusicFile> list = new ArrayList<IMusicFile>();
 		for (MusicFile musicFile : this.listOfFiles) {
 			list.add(musicFile);
 		}
@@ -94,8 +95,12 @@ public class MusicManager {
 	 * @param filter
 	 * @return
 	 */
-	public List<MusicFile> getFilteredFiles(Filter filter) {
-		return filter.filter(this.listOfFiles);
+	public List<IMusicFile> getFilteredFiles(Filter filter) {
+		List<IMusicFile> list = new ArrayList<IMusicFile>();
+		for (MusicFile musicFile : filter.filter(this.listOfFiles)) {
+			list.add(musicFile);
+		}
+		return list;
 	}
 
 	/**
@@ -214,30 +219,13 @@ public class MusicManager {
 	}
 
 	/**
-	 * 
-	 * @param dryrun
-	 * @return
-	 */
-	public int tagAllTaggableFiles(boolean dryrun) {
-		return tagList(getFilteredFiles(Filter.TAGGABLE), dryrun);
-	}
-
-	/**
-	 * 
-	 * @param dryrun
-	 * @return
-	 */
-	public int tagAllTaggableNonTaggedFiles(boolean dryrun) {
-		return tagList(getFilteredFiles(Filter.NON_TAGGED), dryrun);
-	}
-
-	/**
 	 * Tag all Music Files that are taggable and valid in the list given in
 	 * argument.
 	 * 
 	 * @param listOfMF
 	 * @param dryrun
 	 * @return
+	 * @deprecated
 	 */
 	public int tagList(List<MusicFile> listOfMF, boolean dryrun) {
 		Iterator<MusicFile> it = listOfMF.iterator();
@@ -267,6 +255,30 @@ public class MusicManager {
 
 	/**
 	 * 
+	 * @param musicFile
+	 * @param dryrun
+	 * @return
+	 * @throws TagWritterException
+	 * @throws TagNotFoundException
+	 * @throws RTFMException
+	 */
+	public boolean tagFile(IMusicFile musicFile, boolean dryrun) throws TagWritterException, TagNotFoundException,
+			RTFMException {
+		// Search the MusicFile
+		MusicFile mf = null;
+		for (MusicFile currentMusicFile : this.listOfFiles) {
+			if (musicFile == currentMusicFile) {
+				mf = currentMusicFile;
+			}
+		}
+		if (mf == null) {
+			throw new RTFMException("The file cannot be found in MusicManager: " + musicFile);
+		} 
+		return mf.tagFile(dryrun);
+	}
+
+	/**
+	 * 
 	 * @param database
 	 * @throws DatabaseException
 	 */
@@ -281,7 +293,7 @@ public class MusicManager {
 		Element rootElement = document.createElement("music");
 		rootElement.setAttribute("path", this.rootFolder.getAbsolutePath());
 		// Iterate
-		for (MusicFile file : getAllFiles()) {
+		for (IMusicFile file : getAllFiles()) {
 			if (file.isExportableToDatabase()) {
 				Element currentElement = document.createElement("file");
 				String path = file.getVirtualPath();

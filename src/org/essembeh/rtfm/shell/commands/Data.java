@@ -23,11 +23,11 @@ package org.essembeh.rtfm.shell.commands;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.interfaces.ICommand;
+import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.essembeh.rtfm.shell.Shell;
 
 public class Data implements ICommand {
@@ -47,13 +47,13 @@ public class Data implements ICommand {
 		if (args.size() == 2) {
 			try {
 				int filenumber = Integer.parseInt(args.get(1));
-				MusicFile file = app.getAllFiles().get(filenumber);
+				IMusicFile file = app.getAllFiles().get(filenumber);
 				if (file.isTaggable()) {
 					TagData data = file.getTagData();
-					shell.sysout("File: " + file);
-					shell.sysout("Tag data: " + data);
+					shell.println("File: " + file);
+					shell.println("Tag data: " + data);
 				} else {
-					shell.syserr("The file is not taggable: " + file);
+					shell.println("The file is not taggable: " + file);
 				}
 			} catch (Exception e) {
 				this.logger.error(e.getMessage());

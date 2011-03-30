@@ -24,10 +24,10 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.interfaces.ICommand;
+import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.essembeh.rtfm.shell.Shell;
 
 public class Scan implements ICommand {
@@ -48,9 +48,9 @@ public class Scan implements ICommand {
 			try {
 				File folder = new File(args.get(1));
 				app.scanMusicFolder(folder);
-				List<MusicFile> list = app.getAllFiles();
-				shell.sysout("Folder successfully scanned: " + folder.getAbsolutePath());
-				shell.sysout(list.size() + " files found");
+				List<IMusicFile> list = app.getAllFiles();
+				shell.println("Folder successfully scanned: " + folder.getAbsolutePath());
+				shell.println(list.size() + " files found");
 			} catch (Exception e) {
 				this.logger.error(e.getMessage());
 				rc = -1;

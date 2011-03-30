@@ -45,15 +45,15 @@ public class Help implements ICommand {
 			try {
 				ICommand commandHandler = Services.instance().instantiateCommand(command);
 				if (commandHandler == null) {
-					shell.syserr("Command not found: " + command);
+					shell.println("Command not found: " + command);
 				} else {
-					shell.sysout(commandHandler.getHelp(command));
+					shell.println(commandHandler.getHelp(command));
 				}
 			} catch (Exception e) {
-				shell.syserr(e.getMessage());
+				shell.println(e.getMessage());
 			}
 		} else {
-			shell.sysout(getHelp(args.get(0)));
+			shell.println(getHelp(args.get(0)));
 		}
 		return 0;
 	}

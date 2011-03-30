@@ -22,9 +22,8 @@ package org.essembeh.rtfm.shell.commands;
 
 import java.util.List;
 
-import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.utils.StringUtils;
+import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.essembeh.rtfm.shell.Shell;
 
 public class Tag extends Show {
@@ -35,15 +34,15 @@ public class Tag extends Show {
 	 * @param app
 	 * @param list
 	 */
-	protected void executeOnList(Shell shell, MusicManager app, List<MusicFile> list) {
+	protected void executeOnList(Shell shell, MusicManager app, List<IMusicFile> list) {
 		int totalCount = list.size();
-		int errorCount = app.tagList(list, false);
-		shell.sysout("Tagged " + totalCount + StringUtils.plural(" file", totalCount) + " with " + errorCount
-				+ StringUtils.plural(" error", errorCount));
-		if (errorCount > 0) {
-			shell.sysout("List of non tagged files: ");
-			for (MusicFile musicFile : list) {
-				shell.sysout(Shell.fileToString(musicFile));
+		for (int i = 0; i < list.size(); i++) {
+			shell.print("[" + (i+1) + "/" + (totalCount+1) + "] Tagging file " + list.get(i).getVirtualPath());
+			try {
+				app.tagFile(list.get(i), false);
+				shell.println(": OK");
+			} catch (Exception e) {
+				shell.println(": ERROR " + e.getMessage());
 			}
 		}
 	}

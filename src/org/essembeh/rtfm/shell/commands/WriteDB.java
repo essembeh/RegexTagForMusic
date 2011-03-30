@@ -46,9 +46,9 @@ public class WriteDB implements ICommand {
 			try {
 				File database = new File(args.get(1));
 				app.writeDatabase(database);
-				shell.sysout("Database successfully written: " + database.getAbsolutePath());
+				shell.println("Database successfully written: " + database.getAbsolutePath());
 			} catch (Exception e) {
-				shell.syserr(e.getMessage());
+				shell.println(e.getMessage());
 				rc = 1;
 			}
 		} else {

@@ -25,9 +25,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.List;
 
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
+import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,14 +61,30 @@ public class MusicManagerTest {
 
 	@Test
 	public void testTagDryrun() throws Throwable {
-		int errorCount = this.mm.tagAllTaggableFiles(true);
+		List<IMusicFile> list = this.mm.getFilteredFiles(Filter.TAGGABLE);
+		int errorCount = 0;
+		for (IMusicFile musicFile : list) {
+			try {
+				this.mm.tagFile(musicFile, true);
+			} catch (Exception e) {
+				errorCount++;
+			}
+		}
 		assertEquals(this.taggableCount, this.mm.getFilteredFiles(Filter.NON_TAGGED).size());
 		assertEquals(0, errorCount);
 	}
 
 	@Test
 	public void testTag() throws Throwable {
-		int errorCount = this.mm.tagAllTaggableFiles(false);
+		List<IMusicFile> list = this.mm.getFilteredFiles(Filter.TAGGABLE);
+		int errorCount = 0;
+		for (IMusicFile musicFile : list) {
+			try {
+				this.mm.tagFile(musicFile, false);
+			} catch (Exception e) {
+				errorCount++;
+			}
+		}
 		assertEquals(0, this.mm.getFilteredFiles(Filter.NON_TAGGED).size());
 		assertEquals(0, errorCount);
 		this.mm.writeDatabase(this.database2);

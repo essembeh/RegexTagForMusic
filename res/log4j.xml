@@ -8,7 +8,7 @@
 			<param name="ConversionPattern" value="[%-5p] %m %n" />
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
-			<param name="LevelMin" value="INFO" />
+			<param name="LevelMin" value="WARN" />
 		</filter>
 	</appender>
 
@@ -18,7 +18,7 @@
 			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %C:   %m %n" />
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
-			<param name="LevelMin" value="DEBUG" />
+			<param name="LevelMin" value="INFO" />
 		</filter>
 	</appender>
 

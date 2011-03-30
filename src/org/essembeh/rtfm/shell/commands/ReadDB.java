@@ -46,10 +46,10 @@ public class ReadDB implements ICommand {
 			try {
 				File database = new File(args.get(1));
 				app.readDatabase(database, true);
-				shell.sysout("Database successfully loaded: " + database.getAbsolutePath());
-				shell.sysout(app.getAllFiles().size() + " files found");
+				shell.println("Database successfully loaded: " + database.getAbsolutePath());
+				shell.println(app.getAllFiles().size() + " files found");
 			} catch (Exception e) {
-				shell.syserr(e.getMessage());
+				shell.println(e.getMessage());
 				rc = 1;
 			}
 		} else {

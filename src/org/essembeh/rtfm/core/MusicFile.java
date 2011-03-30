@@ -29,6 +29,7 @@ import org.essembeh.rtfm.core.exception.RTFMException;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.core.exception.TagWritterException;
 import org.essembeh.rtfm.core.tag.TagData;
+import org.essembeh.rtfm.interfaces.IMusicFile;
 
 /**
  * Represent a file in Music Folder. Not only MP3 but every file in the folder,
@@ -37,7 +38,7 @@ import org.essembeh.rtfm.core.tag.TagData;
  * @author seb
  * 
  */
-public class MusicFile implements Comparable<MusicFile> {
+public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -77,51 +78,44 @@ public class MusicFile implements Comparable<MusicFile> {
 		return ret;
 	}
 
-	/**
-	 * If the file is valid, use the regex tag reader in the handler to read tag
-	 * informations from the virtual path.
-	 * 
-	 * @return
-	 * @throws TagNotFoundException
-	 * @throws RTFMException
+	/* (non-Javadoc)
+	 * @see org.essembeh.rtfm.core.IMusicFile#getTagData()
 	 */
+	@Override
 	public TagData getTagData() throws TagNotFoundException, RTFMException {
 		TagData tag = this.handler.getTagData(getVirtualPath());
 		return tag;
 
 	}
 
-	/**
-	 * Return the ID of handler
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.essembeh.rtfm.core.IMusicFile#getType()
 	 */
+	@Override
 	public String getType() {
 		return this.handler.getId();
 	}
 
-	/**
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.essembeh.rtfm.core.IMusicFile#getVirtualPath()
 	 */
+	@Override
 	public String getVirtualPath() {
 		return this.file.getAbsolutePath().replaceFirst(this.rootFolder.getAbsolutePath(), "");
 	}
 
-	/**
-	 * Returns true if the file is taggable
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.essembeh.rtfm.core.IMusicFile#isTaggable()
 	 */
+	@Override
 	public boolean isTaggable() {
 		return this.handler.canTag();
 	}
 
-	/**
-	 * Return true if the file is set as tagged.
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.essembeh.rtfm.core.IMusicFile#isTagged()
 	 */
+	@Override
 	public boolean isTagged() {
 		return this.isTagged;
 	}
@@ -163,10 +157,10 @@ public class MusicFile implements Comparable<MusicFile> {
 		return hasBeenTagged;
 	}
 
-	/**
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.essembeh.rtfm.core.IMusicFile#isExportableToDatabase()
 	 */
+	@Override
 	public boolean isExportableToDatabase() {
 		return this.handler.isExportableToDatabase();
 	}

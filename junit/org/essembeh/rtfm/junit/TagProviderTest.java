@@ -28,6 +28,7 @@ import java.io.File;
 import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.conf.Configuration;
 import org.essembeh.rtfm.core.tag.TagData;
+import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +47,7 @@ public class TagProviderTest {
 		assertNotNull(conf);
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/3000 - the album/01 - the song.mp3");
-		MusicFile musicFile = new MusicFile(mp3, root);
+		IMusicFile musicFile = new MusicFile(mp3, root);
 		TagData tag = musicFile.getTagData();
 		assertNotNull(tag);
 		assertEquals("the artist", tag.getArtist());
@@ -62,7 +63,7 @@ public class TagProviderTest {
 		assertNotNull(conf);
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/the album/01 - the song.mp3");
-		MusicFile musicFile = new MusicFile(mp3, root);
+		IMusicFile musicFile = new MusicFile(mp3, root);
 		TagData tag = musicFile.getTagData();
 		assertNotNull(tag);
 		assertEquals("the artist", tag.getArtist());
@@ -78,7 +79,7 @@ public class TagProviderTest {
 		assertNotNull(conf);
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/2000 - the album/01 - the song.mp3");
-		MusicFile musicFile = new MusicFile(mp3, root);
+		IMusicFile musicFile = new MusicFile(mp3, root);
 		TagData tag = musicFile.getTagData();
 		assertNotNull(tag);
 		assertEquals("the artist", tag.getArtist());

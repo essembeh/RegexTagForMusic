@@ -29,12 +29,12 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.conf.Services;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.ICommand;
+import org.essembeh.rtfm.interfaces.IMusicFile;
 
 public class Shell {
 
@@ -159,8 +159,8 @@ public class Shell {
 					int rc = command.execute(this, this.app, args);
 					this.logger.debug("Command: " + command + " exited with rc=" + rc);
 				} catch (ShellCommandInvalidArgument e) {
-					sysout("Invalid usage of command");
-					sysout(command.getHelp(commandName));
+					println("Invalid usage of command");
+					println(command.getHelp(commandName));
 				}
 			} else {
 				this.logger.warn("Cannot find command: " + commandName);
@@ -182,16 +182,16 @@ public class Shell {
 	 * 
 	 * @param message
 	 */
-	public void syserr(String message) {
-		this.buffer.append(message).append("\n");
+	public void print(String message) {
+		this.buffer.append(message);
 	}
 
 	/**
 	 * 
 	 * @param message
 	 */
-	public void sysout(String message) {
-		this.buffer.append(message).append("\n");
+	public void println(String message) {
+		print(message + "\n");
 	}
 
 	/**
@@ -199,7 +199,7 @@ public class Shell {
 	 * @param file
 	 * @return
 	 */
-	public static String fileToString(MusicFile file) {
+	public static String fileToString(IMusicFile file) {
 		StringBuilder out = new StringBuilder();
 		if (file.isTaggable()) {
 			if (file.isTagged()) {

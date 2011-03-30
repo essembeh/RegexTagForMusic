@@ -27,11 +27,11 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.Filter.Status;
-import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.ICommand;
+import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.essembeh.rtfm.shell.Shell;
 
 public class Show implements ICommand {
@@ -112,7 +112,7 @@ public class Show implements ICommand {
 	 * @param pattern
 	 */
 	protected void show(Shell shell, MusicManager app, ShowWhat showWhat, String pattern) {
-		List<MusicFile> list = new ArrayList<MusicFile>();
+		List<IMusicFile> list = new ArrayList<IMusicFile>();
 		switch (showWhat) {
 		case ALL:
 			this.logger.debug("Filter: all");
@@ -150,10 +150,10 @@ public class Show implements ICommand {
 	 * @param app
 	 * @param list
 	 */
-	protected void executeOnList(Shell shell, MusicManager app, List<MusicFile> list) {
+	protected void executeOnList(Shell shell, MusicManager app, List<IMusicFile> list) {
 		for (int i = 0; i < list.size(); i++) {
-			shell.sysout(Shell.fileToString(list.get(i)));
+			shell.println(Shell.fileToString(list.get(i)));
 		}
-		shell.sysout(list.size() + StringUtils.plural(" file", list.size()));
+		shell.println(list.size() + StringUtils.plural(" file", list.size()));
 	}
 }

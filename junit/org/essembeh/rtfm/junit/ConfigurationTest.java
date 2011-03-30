@@ -28,6 +28,7 @@ import java.io.File;
 
 import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.conf.Configuration;
+import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.junit.Test;
 
 public class ConfigurationTest {
@@ -48,7 +49,7 @@ public class ConfigurationTest {
 		assertNotNull(configuration);
 		File rootFolder = new File("/foo");
 		File testFile = new File("/foo/A/B/01 - C.mp3");
-		MusicFile mf = new MusicFile(testFile, rootFolder);
+		IMusicFile mf = new MusicFile(testFile, rootFolder);
 		assertNotNull(mf);
 		assertTrue(mf.isTaggable());
 
