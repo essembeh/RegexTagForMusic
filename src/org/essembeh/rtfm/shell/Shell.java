@@ -30,7 +30,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
+import org.essembeh.rtfm.core.conf.Configuration;
 import org.essembeh.rtfm.core.conf.Services;
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.ICommand;
@@ -56,13 +58,17 @@ public class Shell {
 
 	protected Mode mode;
 
+	private boolean useBuffer = false;
+
 	/**
 	 * 
 	 * @param app
+	 * @throws ConfigurationException
 	 */
-	public Shell(MusicManager app) {
+	public Shell(MusicManager app) throws ConfigurationException {
 		this.app = app;
 		this.endOfLoop = false;
+		this.useBuffer = Boolean.getBoolean(Configuration.instance().getProperty("shell.buffer"));
 	}
 
 	/**
@@ -134,7 +140,9 @@ public class Shell {
 	 * 
 	 */
 	protected void postExecute() {
-		System.out.println(this.buffer.toString());
+		if (this.useBuffer) {
+			System.out.println(this.buffer.toString());
+		}
 		System.out.println();
 	}
 
@@ -183,7 +191,11 @@ public class Shell {
 	 * @param message
 	 */
 	public void print(String message) {
-		this.buffer.append(message);
+		if (this.useBuffer) {
+			this.buffer.append(message);
+		} else {
+			System.out.print(message);
+		}
 	}
 
 	/**

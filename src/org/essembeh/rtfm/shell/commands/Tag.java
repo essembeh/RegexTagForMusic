@@ -37,7 +37,7 @@ public class Tag extends Show {
 	protected void executeOnList(Shell shell, MusicManager app, List<IMusicFile> list) {
 		int totalCount = list.size();
 		for (int i = 0; i < list.size(); i++) {
-			shell.print("[" + (i+1) + "/" + (totalCount+1) + "] Tagging file " + list.get(i).getVirtualPath());
+			shell.print("[" + (i+1) + "/" + (totalCount) + "] Tagging file " + list.get(i).getVirtualPath());
 			try {
 				app.tagFile(list.get(i), false);
 				shell.println(": OK");

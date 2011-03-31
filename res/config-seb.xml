@@ -68,5 +68,6 @@
 		<property name="app.version" value="1.0alpha1" />
 		<property name="app.default.mode" value="shell" />
 		<property name="scan.hidden.files" value="true" />
+		<property name="shell.buffer" value="true" />
 	</properties>
 </rtfm>

@@ -37,7 +37,7 @@ public class MainClass {
 		SHELL, SCRIPT, GUI
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ConfigurationException {
 		MusicManager app = new MusicManager();
 
 		String arg0Mode = null;
