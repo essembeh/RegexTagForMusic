@@ -22,11 +22,18 @@ package org.essembeh.rtfm.shell.commands;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
+import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.essembeh.rtfm.shell.Shell;
 
 public class Tag extends Show {
+
+	/**
+	 * Class logger
+	 */
+	static Logger logger = Logger.getLogger(Tag.class);
 
 	/**
 	 * Default constructor to set default argument.
@@ -34,7 +41,7 @@ public class Tag extends Show {
 	public Tag() {
 		this.defaultArg = ShowWhat.NEW;
 	}
-	
+
 	/**
 	 * 
 	 * @param shell
@@ -43,14 +50,20 @@ public class Tag extends Show {
 	 */
 	protected void executeOnList(Shell shell, MusicManager app, List<IMusicFile> list) {
 		int totalCount = list.size();
+		int errorCount = 0;
 		for (int i = 0; i < list.size(); i++) {
-			shell.print("[" + (i+1) + "/" + (totalCount) + "] Tagging file " + list.get(i).getVirtualPath());
+			shell.print("[" + (i + 1) + "/" + (totalCount) + "] Tagging file " + list.get(i).getVirtualPath());
 			try {
 				app.tagFile(list.get(i), false);
 				shell.println(": OK");
 			} catch (Exception e) {
+				errorCount++;
+				logger.error("Error while tagging file: " + list.get(i));
+				logger.error(" Error: " + e.getMessage());
 				shell.println(": ERROR " + e.getMessage());
 			}
+			shell.print(totalCount + StringUtils.plural("file", totalCount) + " tagged");
+			shell.println(" with " + errorCount + StringUtils.plural("error", errorCount));
 		}
 	}
 }
