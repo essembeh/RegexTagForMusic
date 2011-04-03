@@ -29,6 +29,13 @@ import org.essembeh.rtfm.shell.Shell;
 public class Tag extends Show {
 
 	/**
+	 * Default constructor to set default argument.
+	 */
+	public Tag() {
+		this.defaultArg = ShowWhat.NEW;
+	}
+	
+	/**
 	 * 
 	 * @param shell
 	 * @param app

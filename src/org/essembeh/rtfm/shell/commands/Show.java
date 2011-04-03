@@ -39,6 +39,8 @@ public class Show implements ICommand {
 	enum ShowWhat {
 		ALL, NEW, TAGGED, TAGGABLE, NONTAGGABLE, TYPE, PATH
 	}
+	
+	protected ShowWhat defaultArg = ShowWhat.ALL;
 
 	Logger logger = Logger.getLogger(getClass());
 
@@ -60,7 +62,7 @@ public class Show implements ICommand {
 			throw new ShellCommandInvalidArgument();
 		}
 		if (args.size() == 1) {
-			showWhat = ShowWhat.ALL;
+			showWhat = this.defaultArg;
 		} else if (args.size() > 1) {
 			try {
 				showWhat = ShowWhat.valueOf(args.get(1).toUpperCase());
