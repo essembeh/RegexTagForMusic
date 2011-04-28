@@ -62,8 +62,8 @@ public class Tag extends Show {
 				logger.error(" Error: " + e.getMessage());
 				shell.println(": ERROR " + e.getMessage());
 			}
-			shell.print(totalCount + StringUtils.plural("file", totalCount) + " tagged");
-			shell.println(" with " + errorCount + StringUtils.plural("error", errorCount));
 		}
+		shell.print(totalCount + StringUtils.plural(" file", totalCount) + " tagged");
+		shell.println(" with " + errorCount + StringUtils.plural(" error", errorCount));
 	}
 }
