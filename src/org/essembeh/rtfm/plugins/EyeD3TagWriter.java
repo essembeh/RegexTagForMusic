@@ -37,6 +37,13 @@ import org.essembeh.rtfm.interfaces.ITagWriter;
 
 public class EyeD3TagWriter implements ITagWriter {
 
+	/**
+	 * Used to manage which ID3 tag version to use
+	 */
+	private enum TagVersion {
+		ID3V2_3, ID3V2_4
+	}
+
 	private Logger logger = Logger.getLogger(getClass());
 
 	private String binary;
@@ -48,6 +55,8 @@ public class EyeD3TagWriter implements ITagWriter {
 	private boolean forceUtf8 = false;
 
 	private boolean dumpProcessOutput = false;
+
+	protected TagVersion tagVersion = TagVersion.ID3V2_4;
 
 	/**
 	 * Execute a command in a Process and return the exit code. If dryrun is
@@ -119,6 +128,34 @@ public class EyeD3TagWriter implements ITagWriter {
 	 * @param dryrun
 	 * @throws TagWritterException
 	 */
+	protected void forceVersion(File mp3, boolean dryrun) throws TagWritterException {
+		this.logger.debug("Force Tag Version to: " + this.tagVersion);
+		// Build the command
+		List<String> command = new ArrayList<String>();
+		command.add(this.binary);
+		command.addAll(StringUtils.stringToList(this.defaultArgs, " "));
+		switch (this.tagVersion) {
+		case ID3V2_3:
+			command.add("--to-v2.3");
+			break;
+		case ID3V2_4:
+		default:
+			command.add("--to-v2.4");
+			break;
+		}
+		command.add(mp3.getAbsolutePath());
+		int rc = executeCommand(command, dryrun);
+		if (rc != 0) {
+			throw new TagWritterException("Error setting tag version: " + mp3.getAbsolutePath() + ", rc was: " + rc);
+		}
+	}
+
+	/**
+	 * 
+	 * @param mp3
+	 * @param dryrun
+	 * @throws TagWritterException
+	 */
 	protected void forceUtf8(File mp3, boolean dryrun) throws TagWritterException {
 		this.logger.debug("Force UTF8 for current file tags");
 		// Build the command
@@ -132,7 +169,6 @@ public class EyeD3TagWriter implements ITagWriter {
 		if (rc != 0) {
 			throw new TagWritterException("Error setting UTF-8 on file: " + mp3.getAbsolutePath() + ", rc was: " + rc);
 		}
-
 	}
 
 	/*
@@ -176,8 +212,10 @@ public class EyeD3TagWriter implements ITagWriter {
 			this.defaultArgs = value;
 		} else if ("force.utf8".equals(name)) {
 			this.forceUtf8 = Boolean.parseBoolean(value);
+		} else if ("tag.version".equals(name)) {
+			this.tagVersion = TagVersion.valueOf(value);
 		} else if ("debug.process.ouput".equals(name)) {
-			this.dumpProcessOutput  = Boolean.parseBoolean(value);
+			this.dumpProcessOutput = Boolean.parseBoolean(value);
 		} else {
 			this.logger.warn("Invalid property for tagger: " + name + "=" + value);
 		}
@@ -218,8 +256,10 @@ public class EyeD3TagWriter implements ITagWriter {
 			throw new TagWritterException("Error tagging: " + mp3.getAbsolutePath() + " with: " + tag + ", rc was: "
 					+ rc);
 		}
+		// Set the tag version
+		forceVersion(mp3, dryrun);
 		// Force UTF8 only option is set
-		if (this.forceUtf8) {
+		if (this.forceUtf8 && this.tagVersion == TagVersion.ID3V2_4) {
 			forceUtf8(mp3, dryrun);
 		}
 		return !dryrun;
