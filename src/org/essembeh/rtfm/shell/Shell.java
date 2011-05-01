@@ -40,6 +40,8 @@ import org.essembeh.rtfm.interfaces.IMusicFile;
 
 public class Shell {
 
+	private static final String COMMENT_START = "#";
+
 	public enum Mode {
 		INTERACTIVE, BATCH
 	}
@@ -124,6 +126,8 @@ public class Shell {
 			String command = in.readLine();
 			if (command == null) {
 				quit();
+			} else if (command.trim().startsWith(COMMENT_START)){ 
+				this.logger.debug("Comment, do nothing");
 			} else {
 				if (this.mode != Mode.INTERACTIVE) {
 					System.out.println(command);
