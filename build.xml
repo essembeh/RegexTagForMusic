@@ -20,84 +20,72 @@
 <project basedir="." default="dist">
 	<property name="app.name" value="rtfm" />
 	<property name="app.version" value="1.0alpha2" />
-	<property name="app.root" value="." />
-	<property name="src.app" value="${app.root}/src" />
-	<property name="src.junit" value="${app.root}/junit" />
-	<property name="lib" value="${app.root}/lib" />
-	<property name="res" value="${app.root}/res" />
-	<property name="dist" value="${app.root}/dist" />
-	<property name="build" value="${dist}/build" />
-	<property name="build.app" value="${build}/app" />
-	<property name="build.junit" value="${build}/junit" />
+	<property name="build.path" value="dist/build/" />
+	<property name="junit.path" value="dist/junit/" />
+	<property name="app.folder" value="dist/RegexTagForMusic.app/" />
+	<property name="rtfm.jar" value="${app.folder}/lib/${app.name}-${app.version}.jar" />
 	<property name="mf.builtby" value="Sebastien M-B: essembeh@gmail.com" />
-	<property name="mf.mainclass" value="org.essembeh.rtfm.starter.MainClass" />
-	<property name="jar" value="${dist}/${app.name}-${app.version}.jar" />
 
+	<!-- Clean -->
 	<target name="clean">
-		<delete dir="${build}" />
-		<delete dir="${dist}" />
+		<delete dir="dist" />
 	</target>
 
-	<!--
-		BUILDING
-	-->
-	<path id="app.classpath">
-		<fileset dir="${lib}">
+	<!-- BUILDING -->
+	<path id="build.classpath">
+		<fileset dir="lib/">
 			<include name="*.jar" />
 		</fileset>
 	</path>
-
-	<target name="buildapp" depends="">
-		<mkdir dir="${build}" />
-		<mkdir dir="${build.app}" />
-		<mkdir dir="${build.junit}" />
-		<javac srcdir="${src.app}" destdir="${build.app}" includes="**" includeantruntime="no">
-			<classpath refid="app.classpath" />
-		</javac>
-		<copy file="res/log4j.xml" todir="${build.app}" overwrite="true" />
-	</target>
-
-
-	<target name="dist" depends="buildapp">
-		<mkdir dir="${dist}" />
-		<copy todir="${dist}">
-			<fileset file="${lib}/log4j*.jar" />
+	<target name="prepare">
+		<mkdir dir="${app.folder}" />
+		<copy todir="${app.folder}/bin">
+			<fileset dir="bin" includes="**" />
 		</copy>
-		<copy file="res/config.xml" todir="${dist}" overwrite="true" />
-		<!-- Convert project class path to string property -->
-		<pathconvert property="mf.classpath" pathsep=" ">
-			<path refid="app.classpath" />
-			<flattenmapper />
-		</pathconvert>
-		<jar basedir="${build.app}" destfile="${jar}">
+		<copy todir="${app.folder}/lib">
+			<fileset dir="lib" includes="**" />
+		</copy>
+		<copy todir="${app.folder}/config">
+			<fileset dir="config" includes="**" />
+		</copy>
+		<copy todir="${app.folder}/resources">
+			<fileset dir="resources" includes="**" />
+		</copy>
+	</target>
+	<target name="build" depends="prepare">
+		<mkdir dir="${build.path}" />
+		<javac srcdir="src/" destdir="${build.path}" includes="**" includeantruntime="no">
+			<classpath refid="build.classpath" />
+		</javac>
+	</target>
+	<target name="dist" depends="build">
+		<jar basedir="${build.path}" destfile="${rtfm.jar}">
 			<manifest>
 				<attribute name="Built-By" value="${mf.builtby}" />
-				<attribute name="Main-Class" value="${mf.mainclass}" />
-				<attribute name="Class-Path" value=". ${mf.classpath}" />
 			</manifest>
 		</jar>
 	</target>
 
-	<!--
-		JUNIT
-	-->
+	<!-- JUNIT -->
 	<path id="junit.classpath">
-		<fileset dir="${lib}">
+		<fileset dir="lib">
 			<include name="*.jar" />
 		</fileset>
-		<pathelement location="${build.app}" />
-		<pathelement location="${build.junit}" />
-		<pathelement location="${res}" />
+		<pathelement location="${build.path}" />
+		<pathelement location="${junit.path}" />
+		<pathelement location="config/" />
+		<pathelement location="resources/" />
 	</path>
-	<target name="buildjunit" depends="buildapp">
-		<javac srcdir="${src.junit}" destdir="${build.junit}" includes="**" includeantruntime="no">
+	<target name="build.junit" depends="build">
+		<mkdir dir="${junit.path}" />
+		<javac srcdir="junit/" destdir="${junit.path}" includes="**" includeantruntime="no">
 			<classpath refid="junit.classpath" />
 		</javac>
 	</target>
-	<target name="test" depends="buildjunit">
+	<target name="junit" depends="build.junit">
 		<junit fork="yes" haltonfailure="no">
-			<batchtest fork="yes" todir="${build}">
-				<fileset dir="${build.junit}">
+			<batchtest fork="yes" todir="${junit.path}">
+				<fileset dir="${junit.path}">
 					<include name="**/*Test.class" />
 				</fileset>
 			</batchtest>
@@ -106,8 +94,9 @@
 		</junit>
 	</target>
 
+	<!-- Specific target to use my configuration file -->
 	<target name="seb" depends="dist">
-		<copy file="${res}/config-seb.xml"  tofile="${dist}/config.xml" overwrite="true" />
+		<copy file="${app.folder}/config/config-seb.xml" tofile="${app.folder}/config/config.xml" overwrite="true" />
 	</target>
 
 </project>
