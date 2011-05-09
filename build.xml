@@ -51,6 +51,7 @@
 		<copy todir="${app.folder}/resources">
 			<fileset dir="resources" includes="**" />
 		</copy>
+		<chmod dir="${app.folder}/bin" perm="ugo+rx" includes="*.sh"/>
 	</target>
 	<target name="build" depends="prepare">
 		<mkdir dir="${build.path}" />

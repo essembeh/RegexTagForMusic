@@ -2,19 +2,18 @@
 
 JAVA=$(which java)
 RTFM_MAINCLASS="org.essembeh.rtfm.starter.MainClass"
+RTFM_APP="$(dirname $0)/../"
 RTFM_HOME="$HOME/.rtfm/"
-
 
 ## configuration folder in user home folder
 if [ -d "$RTFM_HOME" ]; then
-	export CLASSPATH=$RTFM_HOME
+	export CLASSPATH=$CLASSPATH:$RTFM_HOME
 fi
 
-for JAR in ../lib/*jar; do 
-	export CLASSPATH=$CLASSPATH:../lib/$JAR
+for JAR in $RTFM_APP/lib/*jar; do 
+	export CLASSPATH=$CLASSPATH:$JAR
 done
-export CLASSPATH=$CLASSPATH:../config:../resources
 
-echo "Using classpath: $CLASSPATH"
+export CLASSPATH=$CLASSPATH:$RTFM_APP/config:$RTFM_APP/resources
 
 $JAVA -cp $CLASSPATH $RTFM_MAINCLASS $@
