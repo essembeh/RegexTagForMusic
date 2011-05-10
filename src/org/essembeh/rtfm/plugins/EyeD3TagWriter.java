@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.exception.TagWritterException;
+import org.essembeh.rtfm.core.exception.TagWriterException;
 import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.core.utils.ProcessUtils;
 import org.essembeh.rtfm.core.utils.StringUtils;
@@ -65,9 +65,9 @@ public class EyeD3TagWriter implements ITagWriter {
 	 * @param command
 	 * @param dryRun
 	 * @return
-	 * @throws TagWritterException
+	 * @throws TagWriterException
 	 */
-	protected int executeCommand(List<String> command, boolean dryRun) throws TagWritterException {
+	protected int executeCommand(List<String> command, boolean dryRun) throws TagWriterException {
 		int rc = 0;
 		this.logger.debug("Executing command: " + StringUtils.arrayToString(command.toArray(), " "));
 		if (dryRun) {
@@ -88,7 +88,7 @@ public class EyeD3TagWriter implements ITagWriter {
 
 				}
 			} catch (Exception e) {
-				throw new TagWritterException(e);
+				throw new TagWriterException(e);
 			} finally {
 				// Bug "Too many open files": Close all streams
 				if (p != null) {
@@ -126,9 +126,9 @@ public class EyeD3TagWriter implements ITagWriter {
 	 * 
 	 * @param mp3
 	 * @param dryrun
-	 * @throws TagWritterException
+	 * @throws TagWriterException
 	 */
-	protected void forceVersion(File mp3, boolean dryrun) throws TagWritterException {
+	protected void forceVersion(File mp3, boolean dryrun) throws TagWriterException {
 		this.logger.debug("Force Tag Version to: " + this.tagVersion);
 		// Build the command
 		List<String> command = new ArrayList<String>();
@@ -146,7 +146,7 @@ public class EyeD3TagWriter implements ITagWriter {
 		command.add(mp3.getAbsolutePath());
 		int rc = executeCommand(command, dryrun);
 		if (rc != 0) {
-			throw new TagWritterException("Error setting tag version: " + mp3.getAbsolutePath() + ", rc was: " + rc);
+			throw new TagWriterException("Error setting tag version: " + mp3.getAbsolutePath() + ", rc was: " + rc);
 		}
 	}
 
@@ -154,9 +154,9 @@ public class EyeD3TagWriter implements ITagWriter {
 	 * 
 	 * @param mp3
 	 * @param dryrun
-	 * @throws TagWritterException
+	 * @throws TagWriterException
 	 */
-	protected void forceUtf8(File mp3, boolean dryrun) throws TagWritterException {
+	protected void forceUtf8(File mp3, boolean dryrun) throws TagWriterException {
 		this.logger.debug("Force UTF8 for current file tags");
 		// Build the command
 		List<String> command = new ArrayList<String>();
@@ -167,7 +167,7 @@ public class EyeD3TagWriter implements ITagWriter {
 		command.add(mp3.getAbsolutePath());
 		int rc = executeCommand(command, dryrun);
 		if (rc != 0) {
-			throw new TagWritterException("Error setting UTF-8 on file: " + mp3.getAbsolutePath() + ", rc was: " + rc);
+			throw new TagWriterException("Error setting UTF-8 on file: " + mp3.getAbsolutePath() + ", rc was: " + rc);
 		}
 	}
 
@@ -178,7 +178,7 @@ public class EyeD3TagWriter implements ITagWriter {
 	 * boolean)
 	 */
 	@Override
-	public void removeTag(File mp3, boolean dryrun) throws TagWritterException {
+	public void removeTag(File mp3, boolean dryrun) throws TagWriterException {
 		// Build the command
 		List<String> command = new ArrayList<String>();
 		command.add(this.binary);
@@ -193,7 +193,7 @@ public class EyeD3TagWriter implements ITagWriter {
 			// OK
 			this.logger.debug("Cannot remove inexistant tag");
 		} else {
-			throw new TagWritterException("Error removing tag of: " + mp3.getAbsolutePath() + ", rc was: " + rc);
+			throw new TagWriterException("Error removing tag of: " + mp3.getAbsolutePath() + ", rc was: " + rc);
 		}
 	}
 
@@ -228,7 +228,7 @@ public class EyeD3TagWriter implements ITagWriter {
 	 * org.essembeh.rtfm.model.TagData, boolean)
 	 */
 	@Override
-	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWritterException {
+	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWriterException {
 		// Build the command
 		List<String> command = new ArrayList<String>();
 		command.add(this.binary);
@@ -253,7 +253,7 @@ public class EyeD3TagWriter implements ITagWriter {
 		command.add(mp3.getAbsolutePath());
 		int rc = executeCommand(command, dryrun);
 		if (rc != 0) {
-			throw new TagWritterException("Error tagging: " + mp3.getAbsolutePath() + " with: " + tag + ", rc was: "
+			throw new TagWriterException("Error tagging: " + mp3.getAbsolutePath() + " with: " + tag + ", rc was: "
 					+ rc);
 		}
 		// Set the tag version

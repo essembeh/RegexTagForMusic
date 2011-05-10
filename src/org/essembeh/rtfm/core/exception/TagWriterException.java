@@ -20,15 +20,15 @@
 
 package org.essembeh.rtfm.core.exception;
 
-public class TagWritterException extends Exception {
+public class TagWriterException extends Exception {
 
 	private static final long serialVersionUID = 8582936880673801228L;
 
-	public TagWritterException(String s) {
+	public TagWriterException(String s) {
 		super(s);
 	}
 
-	public TagWritterException(Throwable e) {
+	public TagWriterException(Throwable e) {
 		super(e);
 	}
 }

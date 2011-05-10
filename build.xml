@@ -39,13 +39,13 @@
 	</path>
 	<target name="prepare">
 		<mkdir dir="${app.folder}" />
-		<copy todir="${app.folder}/bin">
+		<copy todir="${app.folder}/bin" overwrite="true">
 			<fileset dir="bin" includes="**" />
 		</copy>
 		<copy todir="${app.folder}/lib">
 			<fileset dir="lib" includes="**" />
 		</copy>
-		<copy todir="${app.folder}/config">
+		<copy todir="${app.folder}/config" overwrite="true">
 			<fileset dir="config" includes="**" />
 		</copy>
 		<copy todir="${app.folder}/resources">

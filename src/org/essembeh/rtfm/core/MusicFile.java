@@ -27,7 +27,7 @@ import org.essembeh.rtfm.core.conf.Services;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.RTFMException;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
-import org.essembeh.rtfm.core.exception.TagWritterException;
+import org.essembeh.rtfm.core.exception.TagWriterException;
 import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 
@@ -133,13 +133,13 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 	 * 
 	 * @param dryrun
 	 * @return
-	 * @throws TagWritterException
+	 * @throws TagWriterException
 	 * @throws TagNotFoundException
 	 * @throws RTFMException
 	 */
-	public boolean tagFile(boolean dryrun) throws TagWritterException, TagNotFoundException, RTFMException {
+	public boolean tagFile(boolean dryrun) throws TagWriterException, TagNotFoundException, RTFMException {
 		if (!isTaggable()) {
-			throw new TagWritterException("This file is not taggable");
+			throw new TagWriterException("This file is not taggable");
 		}
 		boolean hasBeenTagged = false;
 		TagData tag = getTagData();

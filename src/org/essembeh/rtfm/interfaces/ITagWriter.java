@@ -22,7 +22,7 @@ package org.essembeh.rtfm.interfaces;
 
 import java.io.File;
 
-import org.essembeh.rtfm.core.exception.TagWritterException;
+import org.essembeh.rtfm.core.exception.TagWriterException;
 import org.essembeh.rtfm.core.tag.TagData;
 
 public interface ITagWriter {
@@ -31,9 +31,9 @@ public interface ITagWriter {
 	 * 
 	 * @param mp3
 	 * @param dryrun
-	 * @throws TagWritterException
+	 * @throws TagWriterException
 	 */
-	public void removeTag(File mp3, boolean dryrun) throws TagWritterException;
+	public void removeTag(File mp3, boolean dryrun) throws TagWriterException;
 
 	/**
 	 * Configure the service with the given property
@@ -49,7 +49,7 @@ public interface ITagWriter {
 	 * @param tag
 	 * @param dryrun
 	 * @return
-	 * @throws TagWritterException
+	 * @throws TagWriterException
 	 */
-	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWritterException;
+	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWriterException;
 }

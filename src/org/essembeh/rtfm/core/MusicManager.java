@@ -45,7 +45,7 @@ import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.DatabaseException;
 import org.essembeh.rtfm.core.exception.RTFMException;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
-import org.essembeh.rtfm.core.exception.TagWritterException;
+import org.essembeh.rtfm.core.exception.TagWriterException;
 import org.essembeh.rtfm.core.utils.FileUtils;
 import org.essembeh.rtfm.core.utils.XmlUtils;
 import org.essembeh.rtfm.interfaces.IMusicFile;
@@ -237,7 +237,7 @@ public class MusicManager {
 					logger.info("File tagged: " + currentMusicFile.getVirtualPath());
 					// Remove it from the list
 					it.remove();
-				} catch (TagWritterException e) {
+				} catch (TagWriterException e) {
 					logger.error("Error while tagging file: " + currentMusicFile.getVirtualPath() + ": "
 							+ e.getMessage());
 				} catch (TagNotFoundException e) {
@@ -258,11 +258,11 @@ public class MusicManager {
 	 * @param musicFile
 	 * @param dryrun
 	 * @return
-	 * @throws TagWritterException
+	 * @throws TagWriterException
 	 * @throws TagNotFoundException
 	 * @throws RTFMException
 	 */
-	public boolean tagFile(IMusicFile musicFile, boolean dryrun) throws TagWritterException, TagNotFoundException,
+	public boolean tagFile(IMusicFile musicFile, boolean dryrun) throws TagWriterException, TagNotFoundException,
 			RTFMException {
 		// Search the MusicFile
 		MusicFile mf = null;
