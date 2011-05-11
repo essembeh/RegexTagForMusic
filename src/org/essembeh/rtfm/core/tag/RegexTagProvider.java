@@ -35,7 +35,9 @@ public class RegexTagProvider implements ITagProvider {
 	protected ITagField trackname = null;
 	protected ITagField comment = null;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.essembeh.rtfm.core.tag.ITagProvider#getTagData(java.lang.String)
 	 */
 	public TagData getTagData(String path) throws TagNotFoundException {
@@ -117,7 +119,8 @@ public class RegexTagProvider implements ITagProvider {
 	 */
 	@Override
 	public String toString() {
-		return "RegexTagProvider [artist=" + this.artist + ", album=" + this.album + ", year=" + this.year + ", tracknumber="
-				+ this.tracknumber + ", trackname=" + this.trackname + ", comment=" + this.comment + "]";
+		return "RegexTagProvider [artist=" + this.artist + ", album=" + this.album + ", year=" + this.year
+				+ ", tracknumber=" + this.tracknumber + ", trackname=" + this.trackname + ", comment=" + this.comment
+				+ "]";
 	}
 }

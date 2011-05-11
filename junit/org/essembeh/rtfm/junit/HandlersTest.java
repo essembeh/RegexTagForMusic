@@ -33,17 +33,13 @@ import org.junit.Test;
 
 public class HandlersTest {
 
-	static Configuration conf;
-
 	@Before
 	public void testConfiguration() throws Throwable {
-		conf = Configuration.instance();
-		assertNotNull(conf);
+		assertNotNull(Configuration.init());
 	}
 
 	@Test
 	public void testCover() {
-		assertNotNull(conf);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("/a/b/cover.jpg", "COVER");
 		map.put("/a/2000 - b/cover.jpg", "COVER");
@@ -62,7 +58,6 @@ public class HandlersTest {
 
 	@Test
 	public void testMp3() {
-		assertNotNull(conf);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("/a/b/01 - c.mp3", "MP3");
 		map.put("/a/2000 - b/01 - c.mp3", "MP3");

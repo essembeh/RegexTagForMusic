@@ -34,17 +34,13 @@ import org.junit.Test;
 
 public class TagProviderTest {
 
-	static Configuration conf;
-
 	@Before
 	public void testConf() throws Exception {
-		conf = Configuration.instance();
-		assertNotNull(conf);
+		assertNotNull(Configuration.init());
 	}
 
 	@Test
 	public void testWithInvalidYear() throws Exception {
-		assertNotNull(conf);
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/3000 - the album/01 - the song.mp3");
 		IMusicFile musicFile = new MusicFile(mp3, root);
@@ -60,7 +56,6 @@ public class TagProviderTest {
 
 	@Test
 	public void testWithoutYear() throws Exception {
-		assertNotNull(conf);
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/the album/01 - the song.mp3");
 		IMusicFile musicFile = new MusicFile(mp3, root);
@@ -76,7 +71,6 @@ public class TagProviderTest {
 
 	@Test
 	public void testWithYear() throws Exception {
-		assertNotNull(conf);
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/2000 - the album/01 - the song.mp3");
 		IMusicFile musicFile = new MusicFile(mp3, root);

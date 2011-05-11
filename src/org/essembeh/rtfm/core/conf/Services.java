@@ -41,24 +41,24 @@ public class Services {
 	 * Class logger
 	 */
 	static Logger logger = Logger.getLogger(Services.class);
-	
+
 	/**
-	 * The tag writers 
+	 * The tag writers
 	 */
 	protected Map<String, ITagWriter> tagWriters;
-	
+
 	/**
 	 * The tag providers
 	 */
 	protected Map<String, ITagProvider> tagProviders;
-	
+
 	/**
 	 * All file handlers found in configuration file
 	 */
 	protected List<FileHandler> fileHandlers;
-	
+
 	/**
-	 * All shell commands 
+	 * All shell commands
 	 */
 	protected Map<String, Class<?>> shellCommands;
 

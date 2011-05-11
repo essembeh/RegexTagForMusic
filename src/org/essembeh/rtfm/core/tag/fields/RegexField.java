@@ -77,7 +77,7 @@ public class RegexField implements ITagField {
 	 */
 	@Override
 	public String toString() {
-		return "RegexField [pattern=" + this.pattern + ", group=" + this.group + "]";
+		return "RegexField";
 	}
 
 }

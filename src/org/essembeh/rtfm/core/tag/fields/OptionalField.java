@@ -60,7 +60,7 @@ public class OptionalField implements ITagField {
 	 */
 	@Override
 	public String toString() {
-		return "OptionalField: " + this.field.toString();
+		return "OptionalField";
 	}
 
 }

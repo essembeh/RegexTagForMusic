@@ -25,6 +25,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.conf.Configuration;
+import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.shell.Shell;
@@ -38,6 +39,7 @@ public class MainClass {
 	}
 
 	public static void main(String[] args) throws ConfigurationException {
+		Configuration.init();
 		MusicManager app = new MusicManager();
 
 		String arg0Mode = null;
@@ -46,7 +48,7 @@ public class MainClass {
 			arg0Mode = args[0];
 		} else {
 			try {
-				arg0Mode = Configuration.instance().getMandatoryProperty("app.default.mode");
+				arg0Mode = RTFMProperties.getMandatoryProperty("app.default.mode");
 				logger.info("No mod specified, using default: " + arg0Mode);
 			} catch (ConfigurationException e) {
 				logger.error(e.getMessage());

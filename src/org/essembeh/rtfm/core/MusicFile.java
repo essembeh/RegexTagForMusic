@@ -78,7 +78,9 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 		return ret;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.essembeh.rtfm.core.IMusicFile#getTagData()
 	 */
 	@Override
@@ -88,7 +90,9 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.essembeh.rtfm.core.IMusicFile#getType()
 	 */
 	@Override
@@ -96,7 +100,9 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 		return this.handler.getId();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.essembeh.rtfm.core.IMusicFile#getVirtualPath()
 	 */
 	@Override
@@ -104,7 +110,9 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 		return this.file.getAbsolutePath().replaceFirst(this.rootFolder.getAbsolutePath(), "");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.essembeh.rtfm.core.IMusicFile#isTaggable()
 	 */
 	@Override
@@ -112,7 +120,9 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 		return this.handler.canTag();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.essembeh.rtfm.core.IMusicFile#isTagged()
 	 */
 	@Override
@@ -157,7 +167,9 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 		return hasBeenTagged;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.essembeh.rtfm.core.IMusicFile#isExportableToDatabase()
 	 */
 	@Override
@@ -172,16 +184,6 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder out = new StringBuilder();
-		out.append("[").append(getType()).append("] ");
-		if (isTaggable()) {
-			if (isTagged()) {
-				out.append("+tagged ");
-			} else {
-				out.append("-tagged ");
-			}
-		}
-		out.append(getVirtualPath());
-		return out.toString();
+		return getVirtualPath();
 	}
 }

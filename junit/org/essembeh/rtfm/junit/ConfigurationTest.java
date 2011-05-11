@@ -23,30 +23,39 @@ package org.essembeh.rtfm.junit;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 
 import org.essembeh.rtfm.core.MusicFile;
 import org.essembeh.rtfm.core.conf.Configuration;
+import org.essembeh.rtfm.core.conf.RTFMProperties;
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.junit.Test;
 
 public class ConfigurationTest {
 
 	@Test
+	public void testConfiguration() throws Exception {
+		assertNotNull(Configuration.init());
+	}
+
+	@Test
 	public void testProperties() throws Throwable {
-		Configuration conf = Configuration.instance();
-		assertNotNull(conf);
-		String appName = conf.getProperty("app.version");
-		assertNotNull(appName);
-		String plop = conf.getProperty("plop");
-		assertNull(plop);
+		assertNotNull(RTFMProperties.getProperty("app.version"));
+		assertNull(RTFMProperties.getProperty("plop"));
+		try {
+			RTFMProperties.getMandatoryProperty("plop");
+			fail();
+		} catch (ConfigurationException e) {
+			// OK
+		}
 	}
 
 	@Test
 	public void testHandlers() throws Exception {
-		Configuration configuration = Configuration.instance();
-		assertNotNull(configuration);
+		assertNotNull(Configuration.init());
 		File rootFolder = new File("/foo");
 		File testFile = new File("/foo/A/B/01 - C.mp3");
 		IMusicFile mf = new MusicFile(testFile, rootFolder);

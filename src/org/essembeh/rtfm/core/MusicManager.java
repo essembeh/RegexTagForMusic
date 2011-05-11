@@ -40,7 +40,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.conf.Configuration;
+import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.DatabaseException;
 import org.essembeh.rtfm.core.exception.RTFMException;
@@ -71,8 +71,10 @@ public class MusicManager {
 
 	/**
 	 * Constructor, only initialize attributes.
+	 * 
+	 * @throws ConfigurationException
 	 */
-	public MusicManager() {
+	public MusicManager() throws ConfigurationException {
 		this.listOfFiles = new ArrayList<MusicFile>();
 	}
 
@@ -201,7 +203,7 @@ public class MusicManager {
 		this.rootFolder = theRootFolder;
 
 		// Search all files
-		String scanHiddenFiles = Configuration.instance().getProperty("scan.hidden.files");
+		String scanHiddenFiles = RTFMProperties.getProperty("scan.hidden.files");
 		List<File> allFiles = FileUtils.searchFilesInFolder(this.rootFolder, Boolean.parseBoolean(scanHiddenFiles));
 
 		for (File file : allFiles) {
@@ -273,7 +275,7 @@ public class MusicManager {
 		}
 		if (mf == null) {
 			throw new RTFMException("The file cannot be found in MusicManager: " + musicFile);
-		} 
+		}
 		return mf.tagFile(dryrun);
 	}
 

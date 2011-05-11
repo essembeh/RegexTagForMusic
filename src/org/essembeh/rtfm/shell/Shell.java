@@ -30,7 +30,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.conf.Configuration;
+import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.conf.Services;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
@@ -70,7 +70,7 @@ public class Shell {
 	public Shell(MusicManager app) throws ConfigurationException {
 		this.app = app;
 		this.endOfLoop = false;
-		this.useBuffer = Boolean.getBoolean(Configuration.instance().getProperty("shell.buffer"));
+		this.useBuffer = Boolean.getBoolean(RTFMProperties.getProperty("shell.buffer"));
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class Shell {
 			String command = in.readLine();
 			if (command == null) {
 				quit();
-			} else if (command.trim().startsWith(COMMENT_START)){ 
+			} else if (command.trim().startsWith(COMMENT_START)) {
 				this.logger.debug("Comment, do nothing");
 			} else {
 				if (this.mode != Mode.INTERACTIVE) {

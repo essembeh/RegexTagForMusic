@@ -50,7 +50,7 @@ public class FixedField implements ITagField {
 	 */
 	@Override
 	public String toString() {
-		return "FixedField [fixedValue=" + this.fixedValue + "]";
+		return "FixedField";
 	}
 
 }
