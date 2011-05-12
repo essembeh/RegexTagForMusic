@@ -20,7 +20,7 @@
 package org.essembeh.rtfm.starter;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
@@ -29,79 +29,73 @@ import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.shell.Shell;
+import org.essembeh.rtfm.shell.io.ConsoleInputReader;
+import org.essembeh.rtfm.shell.io.ConsoleOutputWriter;
+import org.essembeh.rtfm.shell.io.ScriptInputReader;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class MainClass {
 
-	static Logger logger = Logger.getLogger(MainClass.class);
+	/**
+	 * 
+	 */
+	static private Logger logger = Logger.getLogger(MainClass.class);
 
-	enum Mode {
+	/**
+	 * 
+	 */
+	private enum Mode {
 		SHELL, SCRIPT, GUI
 	}
 
-	public static void main(String[] args) throws ConfigurationException {
+	/**
+	 * 
+	 * @param args
+	 * @throws ConfigurationException
+	 * @throws FileNotFoundException
+	 */
+	public static void main(String[] args) throws ConfigurationException, FileNotFoundException {
 		Configuration.init();
 		MusicManager app = new MusicManager();
 
-		String arg0Mode = null;
-		String arg1File = null;
+		String appMode = null;
 		if (args.length > 0) {
-			arg0Mode = args[0];
+			appMode = args[0];
 		} else {
-			try {
-				arg0Mode = RTFMProperties.getMandatoryProperty("app.default.mode");
-				logger.info("No mod specified, using default: " + arg0Mode);
-			} catch (ConfigurationException e) {
-				logger.error(e.getMessage());
-			}
+			appMode = RTFMProperties.getMandatoryProperty("app.default.mode");
+			logger.info("No mod specified, using default: " + appMode);
 		}
 
-		if (arg0Mode != null) {
-			if (args.length > 1) {
-				arg1File = args[1];
-				logger.debug("Using scriptfile: " + arg1File);
-			}
-
-			logger.info("Using mode: " + arg0Mode);
-			Mode mode = null;
-			try {
-				mode = Mode.valueOf(arg0Mode.toUpperCase());
-			} catch (IllegalArgumentException e) {
-				logger.error("Unknown mode: " + arg0Mode);
-				logger.info("Available modes are: " + StringUtils.arrayToString(Mode.values(), "|"));
-			}
-			if (mode != null) {
-				switch (mode) {
-				case GUI:
-					logger.error("Not yet implemented");
-					break;
-				case SCRIPT:
-					if (arg1File == null) {
-						logger.error("Missing script file argument");
-					} else {
-						Shell shell = new Shell(app);
-						try {
-							shell.runScriptFile(new File(arg1File));
-						} catch (IOException e) {
-							logger.error(e.getMessage());
-						}
-					}
-					break;
-				case SHELL:
-					Shell shell = new Shell(app);
-					if (arg1File != null) {
-						try {
-							shell.runScriptFile(new File(arg1File));
-						} catch (IOException e) {
-							logger.error(e.getMessage());
-						}
-					}
-					try {
-						shell.runInteractive();
-					} catch (IOException e) {
-						logger.error(e.getMessage());
-					}
-					break;
+		Mode mode = null;
+		try {
+			mode = Mode.valueOf(appMode.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			logger.error("Unknown mode: " + appMode);
+			logger.info("Available modes are: " + StringUtils.arrayToString(Mode.values(), "|"));
+		}
+		if (mode != null) {
+			switch (mode) {
+			case GUI:
+				logger.error("Not yet implemented");
+				break;
+			case SCRIPT:
+				if (args.length == 2) {
+					File script = new File(args[1]);
+					logger.debug("Script: " + script.getAbsolutePath());
+					Shell shell = new Shell(app, new ScriptInputReader(script), new ConsoleOutputWriter());
+					shell.loop();
+				} else {
+					logger.error("Missing script file argument");
 				}
+				break;
+			case SHELL:
+				Shell shell = new Shell(app, new ConsoleInputReader(), new ConsoleOutputWriter());
+				shell.loop();
+				break;
 			}
 		}
 	}

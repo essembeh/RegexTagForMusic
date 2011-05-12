@@ -27,9 +27,17 @@ import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class ProcessUtils {
 
-	static Logger logger = Logger.getLogger(ProcessUtils.class);
+	/**
+	 * 
+	 */
+	static protected Logger logger = Logger.getLogger(ProcessUtils.class);
 
 	/**
 	 * 

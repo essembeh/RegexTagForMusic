@@ -19,6 +19,11 @@
  */
 package org.essembeh.rtfm.core.exception;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class ConfigurationException extends Exception {
 
 	/**

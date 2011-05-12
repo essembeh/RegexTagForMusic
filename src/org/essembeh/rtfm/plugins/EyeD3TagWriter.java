@@ -35,27 +35,53 @@ import org.essembeh.rtfm.core.utils.ProcessUtils;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.ITagWriter;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class EyeD3TagWriter implements ITagWriter {
 
 	/**
 	 * Used to manage which ID3 tag version to use
 	 */
-	private enum TagVersion {
+	protected enum TagVersion {
 		ID3V2_3, ID3V2_4
 	}
 
-	private Logger logger = Logger.getLogger(getClass());
+	/**
+	 * 
+	 */
+	static protected Logger logger = Logger.getLogger(EyeD3TagWriter.class);
 
-	private String binary;
+	/**
+	 * 
+	 */
+	protected String binary;
 
-	private String defaultArgs;
+	/**
+	 * 
+	 */
+	protected String defaultArgs;
 
-	private String removeTagArgs = "--remove-v1 --remove-v2 --remove-all --remove-images --remove-lyrics --remove-comments";
+	/**
+	 * 
+	 */
+	protected String removeTagArgs = "--remove-v1 --remove-v2 --remove-all --remove-images --remove-lyrics --remove-comments";
 
-	private boolean forceUtf8 = false;
+	/**
+	 * 
+	 */
+	protected boolean forceUtf8 = false;
 
-	private boolean dumpProcessOutput = false;
+	/**
+	 * 
+	 */
+	protected boolean dumpProcessOutput = false;
 
+	/**
+	 * 
+	 */
 	protected TagVersion tagVersion = TagVersion.ID3V2_4;
 
 	/**
@@ -69,21 +95,21 @@ public class EyeD3TagWriter implements ITagWriter {
 	 */
 	protected int executeCommand(List<String> command, boolean dryRun) throws TagWriterException {
 		int rc = 0;
-		this.logger.debug("Executing command: " + StringUtils.arrayToString(command.toArray(), " "));
+		EyeD3TagWriter.logger.debug("Executing command: " + StringUtils.arrayToString(command.toArray(), " "));
 		if (dryRun) {
-			this.logger.debug("Dry run mode, the command is not executed");
+			EyeD3TagWriter.logger.debug("Dry run mode, the command is not executed");
 		} else {
 			ProcessBuilder pb = new ProcessBuilder(command);
 			Process p = null;
 			try {
 				p = pb.start();
 				rc = p.waitFor();
-				this.logger.debug("Exit code: " + rc);
+				EyeD3TagWriter.logger.debug("Exit code: " + rc);
 				if (rc != 0) {
-					this.logger.debug("Proccess exited with value: " + rc);
+					EyeD3TagWriter.logger.debug("Proccess exited with value: " + rc);
 					if (this.dumpProcessOutput) {
-						this.logger.debug("Sysout: " + ProcessUtils.getProcessSysOut(p, false));
-						this.logger.debug("Syserr: " + ProcessUtils.getProcessSysOut(p, true));
+						EyeD3TagWriter.logger.debug("Sysout: " + ProcessUtils.getProcessSysOut(p, false));
+						EyeD3TagWriter.logger.debug("Syserr: " + ProcessUtils.getProcessSysOut(p, true));
 					}
 
 				}
@@ -97,7 +123,7 @@ public class EyeD3TagWriter implements ITagWriter {
 						try {
 							c.close();
 						} catch (IOException e) {
-							this.logger.debug("Error while closing stream: " + e.getMessage());
+							EyeD3TagWriter.logger.debug("Error while closing stream: " + e.getMessage());
 						}
 					}
 					c = p.getInputStream();
@@ -105,7 +131,7 @@ public class EyeD3TagWriter implements ITagWriter {
 						try {
 							c.close();
 						} catch (IOException e) {
-							this.logger.debug("Error while closing stream: " + e.getMessage());
+							EyeD3TagWriter.logger.debug("Error while closing stream: " + e.getMessage());
 						}
 					}
 					c = p.getErrorStream();
@@ -113,7 +139,7 @@ public class EyeD3TagWriter implements ITagWriter {
 						try {
 							c.close();
 						} catch (IOException e) {
-							this.logger.debug("Error while closing stream: " + e.getMessage());
+							EyeD3TagWriter.logger.debug("Error while closing stream: " + e.getMessage());
 						}
 					}
 				}
@@ -129,7 +155,7 @@ public class EyeD3TagWriter implements ITagWriter {
 	 * @throws TagWriterException
 	 */
 	protected void forceVersion(File mp3, boolean dryrun) throws TagWriterException {
-		this.logger.debug("Force Tag Version to: " + this.tagVersion);
+		EyeD3TagWriter.logger.debug("Force Tag Version to: " + this.tagVersion);
 		// Build the command
 		List<String> command = new ArrayList<String>();
 		command.add(this.binary);
@@ -157,7 +183,7 @@ public class EyeD3TagWriter implements ITagWriter {
 	 * @throws TagWriterException
 	 */
 	protected void forceUtf8(File mp3, boolean dryrun) throws TagWriterException {
-		this.logger.debug("Force UTF8 for current file tags");
+		EyeD3TagWriter.logger.debug("Force UTF8 for current file tags");
 		// Build the command
 		List<String> command = new ArrayList<String>();
 		command.add(this.binary);
@@ -191,7 +217,7 @@ public class EyeD3TagWriter implements ITagWriter {
 			// OK
 		} else if (rc == 255) {
 			// OK
-			this.logger.debug("Cannot remove inexistant tag");
+			EyeD3TagWriter.logger.debug("Cannot remove inexistant tag");
 		} else {
 			throw new TagWriterException("Error removing tag of: " + mp3.getAbsolutePath() + ", rc was: " + rc);
 		}
@@ -217,7 +243,7 @@ public class EyeD3TagWriter implements ITagWriter {
 		} else if ("debug.process.ouput".equals(name)) {
 			this.dumpProcessOutput = Boolean.parseBoolean(value);
 		} else {
-			this.logger.warn("Invalid property for tagger: " + name + "=" + value);
+			EyeD3TagWriter.logger.warn("Invalid property for tagger: " + name + "=" + value);
 		}
 	}
 

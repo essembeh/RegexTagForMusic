@@ -69,9 +69,8 @@ public class MusicManager {
 	/**
 	 * Constructor, only initialize attributes.
 	 * 
-	 * @throws ConfigurationException
 	 */
-	public MusicManager() throws ConfigurationException {
+	public MusicManager() {
 		this.listOfFiles = new ArrayList<MusicFile>();
 	}
 
@@ -168,7 +167,7 @@ public class MusicManager {
 	/**
 	 * Remove all Music files from MusicManager instance
 	 */
-	public void removeAllMusicFiles() {
+	public void clear() {
 		if (this.listOfFiles.size() > 0) {
 			logger.info("Remove all MusicFile from MusicManager");
 		}
@@ -187,14 +186,14 @@ public class MusicManager {
 	public void scanMusicFolder(File theRootFolder) throws ConfigurationException, RTFMException {
 
 		if (theRootFolder == null) {
-			throw new RTFMException("The Music root folder has not been set");
+			throw new RTFMException("The Music root folder is null");
 		}
 		if (!theRootFolder.exists() || !theRootFolder.isDirectory()) {
 			throw new RTFMException("The root folder is invalid: " + theRootFolder.getAbsolutePath());
 		}
 
 		// Clean the previous musicfiles
-		removeAllMusicFiles();
+		clear();
 
 		// Set root folder
 		this.rootFolder = theRootFolder;
@@ -205,8 +204,9 @@ public class MusicManager {
 
 		for (File file : allFiles) {
 			try {
+				logger.debug("Found: " + file.getAbsolutePath());
 				MusicFile musicFile = new MusicFile(file, theRootFolder);
-				logger.debug("Adding: " + musicFile);
+				logger.debug("MusicFile created: " + musicFile);
 				this.listOfFiles.add(musicFile);
 			} catch (ConfigurationException e) {
 				logger.warn(e.toString());
@@ -224,7 +224,7 @@ public class MusicManager {
 	 */
 	public void writeDatabase(File database) throws DatabaseException {
 		logger.debug("Write database: " + database.getAbsolutePath());
-		Document document;
+		Document document = null;
 		try {
 			document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		} catch (ParserConfigurationException e) {

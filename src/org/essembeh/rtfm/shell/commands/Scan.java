@@ -23,36 +23,39 @@ package org.essembeh.rtfm.shell.commands;
 import java.io.File;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.interfaces.IMusicFile;
-import org.essembeh.rtfm.shell.Shell;
+import org.essembeh.rtfm.shell.io.IShellOutputWriter;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class Scan implements ICommand {
-
-	Logger logger = Logger.getLogger(getClass());
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * org.essembeh.rtfm.interfaces.ICommand#execute(org.essembeh.rtfm.shell
-	 * .Shell, org.essembeh.rtfm.core.MusicManager, java.util.List)
+	 * .io.IShellOutputWriter, org.essembeh.rtfm.core.MusicManager,
+	 * java.util.List)
 	 */
 	@Override
-	public int execute(Shell shell, MusicManager app, List<String> args) throws ShellCommandInvalidArgument {
+	public int execute(IShellOutputWriter out, MusicManager app, List<String> args) throws ShellCommandInvalidArgument {
 		int rc = 0;
 		if (args.size() == 2) {
 			try {
 				File folder = new File(args.get(1));
 				app.scanMusicFolder(folder);
 				List<IMusicFile> list = app.getAllFiles();
-				shell.println("Folder successfully scanned: " + folder.getAbsolutePath());
-				shell.println(list.size() + " files found");
+				out.printMessage("Folder successfully scanned: " + folder.getAbsolutePath());
+				out.printMessage(list.size() + " files found");
 			} catch (Exception e) {
-				this.logger.error(e.getMessage());
+				out.printException(e);
 				rc = -1;
 			}
 		} else {

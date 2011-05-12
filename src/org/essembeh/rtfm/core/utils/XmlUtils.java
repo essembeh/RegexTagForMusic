@@ -33,9 +33,17 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class XmlUtils {
 
-	static Logger logger = Logger.getLogger(XmlUtils.class);
+	/**
+	 * 
+	 */
+	static protected Logger logger = Logger.getLogger(XmlUtils.class);
 
 	/**
 	 * 

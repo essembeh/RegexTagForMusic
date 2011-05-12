@@ -20,10 +20,22 @@
 
 package org.essembeh.rtfm.core.exception;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class TagNotFoundException extends Exception {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = -6612833542603630028L;
 
+	/**
+	 * 
+	 * @param s
+	 */
 	public TagNotFoundException(String s) {
 		super(s);
 	}

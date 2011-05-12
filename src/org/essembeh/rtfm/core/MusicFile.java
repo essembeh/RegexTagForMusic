@@ -40,15 +40,40 @@ import org.essembeh.rtfm.interfaces.IMusicFile;
  */
 public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 
+	/**
+	 * 
+	 */
 	protected static Logger logger = Logger.getLogger(MusicFile.class);
 
+	/**
+	 * 
+	 */
 	protected File file;
 
-	protected File rootFolder;
+	/**
+	 * 
+	 */
+	protected String virtualPath;
 
+	/**
+	 * 
+	 */
 	protected boolean isTagged = false;
 
+	/**
+	 * 
+	 */
 	protected FileHandler handler = null;
+
+	/**
+	 * Create a Music File
+	 * 
+	 * @param file
+	 * @throws ConfigurationException
+	 */
+	public MusicFile(File file) throws ConfigurationException {
+		this(file, null);
+	}
 
 	/**
 	 * Create a Music File
@@ -59,12 +84,20 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 	 */
 	public MusicFile(File file, File rootFolder) throws ConfigurationException {
 		this.file = file;
-		this.rootFolder = rootFolder;
+		// Set the virtualPath
+		if (rootFolder != null) {
+			this.virtualPath = this.file.getAbsolutePath().replaceFirst(rootFolder.getAbsolutePath(), "");
+		} else {
+			this.virtualPath = this.file.getAbsolutePath();
+		}
+		// For compatibility, replace \ by /
+		this.virtualPath = this.virtualPath.replaceAll("\\\\", "/");
 		// Search the corresponding handler
 		this.handler = Services.instance().getFileHandlerForFile(getVirtualPath());
 		if (this.handler == null) {
-			throw new ConfigurationException("Could not find handler for file: " + getVirtualPath());
+			throw new ConfigurationException("Could not find handler for file: " + toString());
 		}
+		logger.debug("Created MusicFile: " + toString());
 	}
 
 	/*
@@ -107,7 +140,7 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 	 */
 	@Override
 	public String getVirtualPath() {
-		return this.file.getAbsolutePath().replaceFirst(this.rootFolder.getAbsolutePath(), "");
+		return this.virtualPath;
 	}
 
 	/*
@@ -157,7 +190,7 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 		MusicFile.logger.debug("Tag file: " + toString());
 		MusicFile.logger.debug("  and tagdata: " + tag);
 		if (this.isTagged()) {
-			MusicFile.logger.info("The file is already taged");
+			MusicFile.logger.info("The file is already tagged");
 		}
 		this.handler.removeTag(this.file, dryrun);
 		hasBeenTagged = this.handler.tag(this.file, tag, dryrun);

@@ -40,7 +40,7 @@ public class Services {
 	/**
 	 * Class logger
 	 */
-	static Logger logger = Logger.getLogger(Services.class);
+	static protected Logger logger = Logger.getLogger(Services.class);
 
 	/**
 	 * The tag writers
@@ -60,7 +60,7 @@ public class Services {
 	/**
 	 * All shell commands
 	 */
-	protected Map<String, Class<?>> shellCommands;
+	protected Map<String, ICommand> shellCommands;
 
 	/**
 	 * Private constructor for Singleton design pattern.
@@ -69,7 +69,7 @@ public class Services {
 		this.tagProviders = new HashMap<String, ITagProvider>();
 		this.tagWriters = new HashMap<String, ITagWriter>();
 		this.fileHandlers = new ArrayList<FileHandler>();
-		this.shellCommands = new HashMap<String, Class<?>>();
+		this.shellCommands = new HashMap<String, ICommand>();
 	}
 
 	/**
@@ -155,10 +155,13 @@ public class Services {
 	 * Add a shell command to the services
 	 * 
 	 * @param id
-	 * @param clazz
+	 * @param command
 	 */
-	public void addShellCommand(String id, Class<?> clazz) {
-		this.shellCommands.put(id, clazz);
+	public void addShellCommand(String id, ICommand command, String alternative) {
+		this.shellCommands.put(id, command);
+		if (alternative != null && alternative.length() > 0) {
+			this.shellCommands.put(alternative, command);
+		}
 	}
 
 	/**
@@ -166,9 +169,7 @@ public class Services {
 	 */
 	public List<String> getListOfShellCommands() {
 		List<String> list = new ArrayList<String>();
-		for (String string : this.shellCommands.keySet()) {
-			list.add(string);
-		}
+		list.addAll(this.shellCommands.keySet());
 		Collections.sort(list);
 		return list;
 	}
@@ -180,15 +181,8 @@ public class Services {
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	public ICommand instantiateCommand(String command) throws InstantiationException, IllegalAccessException {
-		ICommand handler = null;
-		for (String currentKey : this.shellCommands.keySet()) {
-			if (command.equals(currentKey)) {
-				Class<?> clazz = this.shellCommands.get(currentKey);
-				handler = (ICommand) clazz.newInstance();
-				break;
-			}
-		}
+	public ICommand getCommand(String command) {
+		ICommand handler = this.shellCommands.get(command);
 		return handler;
 	}
 

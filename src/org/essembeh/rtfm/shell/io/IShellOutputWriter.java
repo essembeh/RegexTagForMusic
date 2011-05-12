@@ -17,32 +17,35 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.exception;
+package org.essembeh.rtfm.shell.io;
 
 /**
  * 
  * @author seb
  * 
  */
-public class ShellCommandInvalidArgument extends Exception {
+public interface IShellOutputWriter {
+
+	/**
+	 * 
+	 * @param message
+	 */
+	void printMessage(String message);
+
+	/**
+	 * 
+	 * @param message
+	 */
+	void printError(String message);
+
+	/**
+	 * 
+	 * @param e
+	 */
+	void printException(Exception e);
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1878428704830091083L;
-
-	/**
-	 * 
-	 */
-	public ShellCommandInvalidArgument() {
-		super("Invalid arguments");
-	}
-
-	/**
-	 * Constructor
-	 */
-	public ShellCommandInvalidArgument(int index) {
-		super("Invalid argument at index: " + index);
-	}
-
+	void prompt();
 }

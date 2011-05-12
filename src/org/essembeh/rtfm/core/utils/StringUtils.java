@@ -25,9 +25,17 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class StringUtils {
 
-	static Logger logger = Logger.getLogger(StringUtils.class);
+	/**
+	 * 
+	 */
+	static protected Logger logger = Logger.getLogger(StringUtils.class);
 
 	/**
 	 * 

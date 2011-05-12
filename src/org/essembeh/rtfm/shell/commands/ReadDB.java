@@ -23,33 +23,32 @@ package org.essembeh.rtfm.shell.commands;
 import java.io.File;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.interfaces.ICommand;
-import org.essembeh.rtfm.shell.Shell;
+import org.essembeh.rtfm.shell.io.IShellOutputWriter;
 
 public class ReadDB implements ICommand {
-
-	Logger logger = Logger.getLogger(getClass());
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.shell.commands.ICommand#execute(org.essembeh.rtfm.
-	 * MusicManager, java.util.List)
+	 * @see
+	 * org.essembeh.rtfm.interfaces.ICommand#execute(org.essembeh.rtfm.shell
+	 * .io.IShellOutputWriter, org.essembeh.rtfm.core.MusicManager,
+	 * java.util.List)
 	 */
 	@Override
-	public int execute(Shell shell, MusicManager app, List<String> args) throws ShellCommandInvalidArgument {
+	public int execute(IShellOutputWriter out, MusicManager app, List<String> args) throws ShellCommandInvalidArgument {
 		int rc = 0;
 		if (args.size() == 2) {
 			try {
 				File database = new File(args.get(1));
 				app.readDatabase(database, true);
-				shell.println("Database successfully loaded: " + database.getAbsolutePath());
-				shell.println(app.getAllFiles().size() + " files found");
+				out.printMessage("Database successfully loaded: " + database.getAbsolutePath());
+				out.printMessage(app.getAllFiles().size() + " files found");
 			} catch (Exception e) {
-				shell.println(e.getMessage());
+				out.printException(e);
 				rc = 1;
 			}
 		} else {

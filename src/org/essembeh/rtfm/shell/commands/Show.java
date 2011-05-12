@@ -33,26 +33,42 @@ import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.essembeh.rtfm.shell.Shell;
+import org.essembeh.rtfm.shell.io.IShellOutputWriter;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class Show implements ICommand {
 
-	enum ShowWhat {
+	/**
+	 * 
+	 */
+	protected enum ShowWhat {
 		ALL, NEW, TAGGED, TAGGABLE, NONTAGGABLE, TYPE, PATH
 	}
-	
+
+	/**
+	 * 
+	 */
 	protected ShowWhat defaultArg = ShowWhat.ALL;
 
-	Logger logger = Logger.getLogger(getClass());
+	/**
+	 * 
+	 */
+	static protected Logger logger = Logger.getLogger(Show.class);
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * org.essembeh.rtfm.interfaces.ICommand#execute(org.essembeh.rtfm.shell
-	 * .Shell, org.essembeh.rtfm.core.MusicManager, java.util.List)
+	 * .io.IShellOutputWriter, org.essembeh.rtfm.core.MusicManager,
+	 * java.util.List)
 	 */
 	@Override
-	public int execute(Shell shell, MusicManager app, List<String> args) throws ShellCommandInvalidArgument {
+	public int execute(IShellOutputWriter out, MusicManager app, List<String> args) throws ShellCommandInvalidArgument {
 		int rc = 0;
 
 		ShowWhat showWhat = null;
@@ -82,7 +98,7 @@ public class Show implements ICommand {
 			}
 		}
 
-		show(shell, app, showWhat, pattern);
+		doAction(out, app, showWhat, pattern);
 
 		return rc;
 	}
@@ -108,54 +124,56 @@ public class Show implements ICommand {
 
 	/**
 	 * 
-	 * @param shell
+	 * @param out
 	 * @param app
 	 * @param showWhat
 	 * @param pattern
 	 */
-	protected void show(Shell shell, MusicManager app, ShowWhat showWhat, String pattern) {
+	protected void doAction(IShellOutputWriter out, MusicManager app, ShowWhat showWhat, String pattern) {
 		List<IMusicFile> list = new ArrayList<IMusicFile>();
 		switch (showWhat) {
 		case ALL:
-			this.logger.debug("Filter: all");
+			Show.logger.debug("Filter: all");
 			list.addAll(app.getAllFiles());
 			break;
 		case NEW:
-			this.logger.debug("Filter: taggable non tagged");
+			Show.logger.debug("Filter: taggable non tagged");
 			list.addAll(app.getFilteredFiles(Filter.NON_TAGGED));
 			break;
 		case TAGGED:
-			this.logger.debug("Filter: taggable and tagged");
+			Show.logger.debug("Filter: taggable and tagged");
 			list.addAll(app.getFilteredFiles(new Filter(Status.ENABLE, Status.ENABLE)));
 			break;
 		case TAGGABLE:
-			this.logger.debug("Filter: taggable");
+			Show.logger.debug("Filter: taggable");
 			list.addAll(app.getFilteredFiles(Filter.TAGGABLE));
 			break;
 		case NONTAGGABLE:
-			this.logger.debug("Filter: nontaggable");
+			Show.logger.debug("Filter: nontaggable");
 			list.addAll(app.getFilteredFiles(new Filter(Status.INVERSE, Status.NO_FILTER)));
 			break;
 		case TYPE:
-			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.NO_FILTER, Pattern.compile(pattern), null)));
+			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.NO_FILTER, Pattern.compile(pattern),
+					null)));
 			break;
 		case PATH:
-			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.NO_FILTER, null, Pattern.compile(pattern))));
+			list.addAll(app.getFilteredFiles(new Filter(Status.NO_FILTER, Status.NO_FILTER, null, Pattern
+					.compile(pattern))));
 			break;
 		}
-		executeOnList(shell, app, list);
+		executeOnList(out, app, list);
 	}
-	
+
 	/**
 	 * 
-	 * @param shell
+	 * @param out
 	 * @param app
 	 * @param list
 	 */
-	protected void executeOnList(Shell shell, MusicManager app, List<IMusicFile> list) {
+	protected void executeOnList(IShellOutputWriter out, MusicManager app, List<IMusicFile> list) {
 		for (int i = 0; i < list.size(); i++) {
-			shell.println(Shell.fileToString(list.get(i)));
+			out.printMessage(Shell.fileToString(list.get(i)));
 		}
-		shell.println(list.size() + StringUtils.plural(" file", list.size()));
+		out.printMessage(list.size() + StringUtils.plural(" file", list.size()));
 	}
 }

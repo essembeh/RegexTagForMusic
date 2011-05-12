@@ -28,10 +28,21 @@ import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.interfaces.ITagWriter;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class FakeTagWriter implements ITagWriter {
 
+	/**
+	 * 
+	 */
 	List<File> listOfModifiedFiles = new ArrayList<File>();
 
+	/**
+	 * 
+	 */
 	Logger logger = Logger.getLogger(getClass());
 
 	/*

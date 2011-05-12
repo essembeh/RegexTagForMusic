@@ -24,25 +24,17 @@ package org.essembeh.rtfm.core.exception;
  * @author seb
  * 
  */
-public class ShellCommandInvalidArgument extends Exception {
+public class ShellQuit extends Exception {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1878428704830091083L;
-
-	/**
-	 * 
-	 */
-	public ShellCommandInvalidArgument() {
-		super("Invalid arguments");
-	}
+	private static final long serialVersionUID = 2878428704830091083L;
 
 	/**
 	 * Constructor
 	 */
-	public ShellCommandInvalidArgument(int index) {
-		super("Invalid argument at index: " + index);
+	public ShellQuit() {
 	}
 
 }

@@ -20,141 +20,82 @@
 
 package org.essembeh.rtfm.shell;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.conf.Services;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
+import org.essembeh.rtfm.core.exception.ShellQuit;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.interfaces.IMusicFile;
+import org.essembeh.rtfm.shell.io.IShellInputReader;
+import org.essembeh.rtfm.shell.io.IShellOutputWriter;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class Shell {
 
-	private static final String COMMENT_START = "#";
+	/**
+	 * 
+	 */
+	private static Logger logger = Logger.getLogger(Shell.class);
 
-	public enum Mode {
-		INTERACTIVE, BATCH
-	}
-
-	protected Logger logger = Logger.getLogger(getClass());
-
+	/**
+	 * 
+	 */
 	protected MusicManager app;
 
-	protected String prompt = "rtfm$ ";
+	/**
+	 * 
+	 */
+	protected IShellInputReader in;
 
-	protected boolean endOfLoop;
+	/**
+	 * 
+	 */
+	protected IShellOutputWriter out;
 
-	protected InputStream inputstream;
-
-	protected StringBuilder buffer = new StringBuilder();
-
-	protected Mode mode;
-
-	private boolean useBuffer = false;
+	/**
+	 * 
+	 */
+	protected boolean endOfLoop = false;
 
 	/**
 	 * 
 	 * @param app
+	 * @param in
+	 * @param out
 	 * @throws ConfigurationException
 	 */
-	public Shell(MusicManager app) throws ConfigurationException {
+	public Shell(MusicManager app, IShellInputReader reader, IShellOutputWriter writer) throws ConfigurationException {
 		this.app = app;
-		this.endOfLoop = false;
-		this.useBuffer = Boolean.getBoolean(RTFMProperties.getProperty("shell.buffer"));
+		this.out = writer;
+		this.in = reader;
 	}
 
 	/**
 	 * 
 	 */
-	protected void displayPrompt() {
-		// Wait logs before displaying prompt
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			this.logger.debug(e.toString());
-		}
-		System.out.print(this.prompt);
-	}
-
-	/**
-	 * Run the shell
-	 * 
-	 * @throws IOException
-	 */
-	public void runInteractive() throws IOException {
-		System.out.println("----- START INTERACTIVE MODE -----");
-		this.mode = Mode.INTERACTIVE;
-		this.inputstream = System.in;
-		loop();
-		System.out.println("----- END INTERACTIVE MODE -----");
-	}
-
-	/**
-	 * Run the shell
-	 * 
-	 * @throws IOException
-	 * 
-	 */
-	public void runScriptFile(File script) throws IOException {
-		System.out.println("----- START SCRIPT MODE -----");
-		this.mode = Mode.BATCH;
-		this.inputstream = new FileInputStream(script);
-		loop();
-		System.out.println("----- END SCRIPT MODE -----");
-	}
-
-	/**
-	 * @throws IOException
-	 * 
-	 */
-	public void loop() throws IOException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(this.inputstream));
-		this.logger.info("Starting shell loop");
+	public void loop() {
+		logger.info("Begin shell loop");
 		this.endOfLoop = false;
 		while (!this.endOfLoop) {
-			displayPrompt();
-			String command = in.readLine();
+			this.out.printMessage("");
+			String command = this.in.readCommand(this.out);
 			if (command == null) {
+				logger.debug("Null command so quit loop");
 				quit();
-			} else if (command.trim().startsWith(COMMENT_START)) {
-				this.logger.debug("Comment, do nothing");
 			} else {
-				if (this.mode != Mode.INTERACTIVE) {
-					System.out.println(command);
-				}
-				preExecute();
 				processCommand(StringUtils.stringToList(command, " "));
-				postExecute();
 			}
 		}
-		this.logger.info("End shell loop");
-	}
-
-	/**
-	 * 
-	 */
-	protected void postExecute() {
-		if (this.useBuffer) {
-			System.out.println(this.buffer.toString());
-		}
-		System.out.println();
-	}
-
-	/**
-	 * 
-	 */
-	protected void preExecute() {
-		this.buffer = new StringBuilder();
+		logger.info("End shell loop");
 	}
 
 	/**
@@ -162,52 +103,23 @@ public class Shell {
 	 * @param command
 	 */
 	protected void processCommand(List<String> args) {
-		this.logger.debug("Process command: " + StringUtils.arrayToString(args.toArray(), " "));
-		try {
-			String commandName = args.get(0);
-			ICommand command = Services.instance().instantiateCommand(commandName);
-			if (command != null) {
-				try {
-					int rc = command.execute(this, this.app, args);
-					this.logger.debug("Command: " + command + " exited with rc=" + rc);
-				} catch (ShellCommandInvalidArgument e) {
-					println("Invalid usage of command");
-					println(command.getHelp(commandName));
-				}
-			} else {
-				this.logger.warn("Cannot find command: " + commandName);
+		Shell.logger.debug("Process command: " + StringUtils.arrayToString(args.toArray(), " "));
+		String commandName = args.get(0);
+		ICommand command = Services.instance().getCommand(commandName);
+		if (command != null) {
+			try {
+				int rc = command.execute(this.out, this.app, args);
+				logger.debug("Command: " + command + " exited with rc=" + rc);
+			} catch (ShellCommandInvalidArgument e) {
+				this.out.printError("Invalid usage of command");
+				this.out.printError(command.getHelp(commandName));
+			} catch (ShellQuit e) {
+				this.out.printMessage("Quit shell");
+				quit();
 			}
-		} catch (Exception e) {
-			this.logger.error("Error instantiating command: " + e.toString());
-			quit();
-		}
-	}
-
-	/**
-	 * 
-	 */
-	public void quit() {
-		this.endOfLoop = true;
-	}
-
-	/**
-	 * 
-	 * @param message
-	 */
-	public void print(String message) {
-		if (this.useBuffer) {
-			this.buffer.append(message);
 		} else {
-			System.out.print(message);
+			Shell.logger.warn("Cannot find command: " + commandName);
 		}
-	}
-
-	/**
-	 * 
-	 * @param message
-	 */
-	public void println(String message) {
-		print(message + "\n");
 	}
 
 	/**
@@ -230,6 +142,13 @@ public class Shell {
 		String formatedId = String.format("%-10s", id);
 		out.append(formatedId).append(file.getVirtualPath());
 		return out.toString();
+	}
+
+	/**
+	 * 
+	 */
+	public void quit() {
+		this.endOfLoop = true;
 	}
 
 }

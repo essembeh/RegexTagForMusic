@@ -24,15 +24,46 @@ import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.interfaces.ITagField;
 import org.essembeh.rtfm.interfaces.ITagProvider;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class RegexTagProvider implements ITagProvider {
 
-	protected Logger logger = Logger.getLogger(getClass());
+	/**
+	 * 
+	 */
+	static protected Logger logger = Logger.getLogger(RegexTagProvider.class);
 
+	/**
+	 * 
+	 */
 	protected ITagField artist = null;
+
+	/**
+	 * 
+	 */
 	protected ITagField album = null;
+
+	/**
+	 * 
+	 */
 	protected ITagField year = null;
+
+	/**
+	 * 
+	 */
 	protected ITagField tracknumber = null;
+
+	/**
+	 * 
+	 */
 	protected ITagField trackname = null;
+
+	/**
+	 * 
+	 */
 	protected ITagField comment = null;
 
 	/*
@@ -41,7 +72,7 @@ public class RegexTagProvider implements ITagProvider {
 	 * @see org.essembeh.rtfm.core.tag.ITagProvider#getTagData(java.lang.String)
 	 */
 	public TagData getTagData(String path) throws TagNotFoundException {
-		this.logger.debug("Parse for tardata: " + path + " with fields: " + toString());
+		logger.debug("Parse for tardata: " + path + " with fields: " + toString());
 		TagData tag = new TagData();
 		if (this.artist != null) {
 			tag.setArtist(this.artist.getValue(path));

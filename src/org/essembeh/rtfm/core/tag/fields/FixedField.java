@@ -21,8 +21,16 @@ package org.essembeh.rtfm.core.tag.fields;
 
 import org.essembeh.rtfm.interfaces.ITagField;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class FixedField implements ITagField {
 
+	/**
+	 * 
+	 */
 	protected String fixedValue;
 
 	/**

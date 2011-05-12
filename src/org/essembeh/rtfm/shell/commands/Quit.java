@@ -22,25 +22,29 @@ package org.essembeh.rtfm.shell.commands;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
+import org.essembeh.rtfm.core.exception.ShellQuit;
 import org.essembeh.rtfm.interfaces.ICommand;
-import org.essembeh.rtfm.shell.Shell;
+import org.essembeh.rtfm.shell.io.IShellOutputWriter;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class Quit implements ICommand {
-
-	Logger logger = Logger.getLogger(getClass());
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.shell.commands.ICommand#execute(org.essembeh.rtfm.
-	 * MusicManager, java.util.List)
+	 * @see
+	 * org.essembeh.rtfm.interfaces.ICommand#execute(org.essembeh.rtfm.shell
+	 * .io.IShellOutputWriter, org.essembeh.rtfm.core.MusicManager,
+	 * java.util.List)
 	 */
 	@Override
-	public int execute(Shell shell, MusicManager app, List<String> args) {
-		shell.quit();
-		return 0;
+	public int execute(IShellOutputWriter out, MusicManager app, List<String> args) throws ShellQuit {
+		throw new ShellQuit();
 	}
 
 	@Override

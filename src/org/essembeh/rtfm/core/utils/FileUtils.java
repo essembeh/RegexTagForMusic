@@ -26,9 +26,17 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class FileUtils {
 
-	static Logger logger = Logger.getLogger(FileUtils.class);
+	/**
+	 * 
+	 */
+	static protected Logger logger = Logger.getLogger(FileUtils.class);
 
 	/**
 	 * 

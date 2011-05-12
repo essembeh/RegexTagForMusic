@@ -24,19 +24,27 @@ import java.util.List;
 
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
-import org.essembeh.rtfm.shell.Shell;
+import org.essembeh.rtfm.core.exception.ShellQuit;
+import org.essembeh.rtfm.shell.io.IShellOutputWriter;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public interface ICommand {
 
 	/**
 	 * 
-	 * @param shell
+	 * @param out
 	 * @param app
 	 * @param args
 	 * @return
 	 * @throws ShellCommandInvalidArgument
+	 * @throws ShellQuit
 	 */
-	public int execute(Shell shell, MusicManager app, List<String> args) throws ShellCommandInvalidArgument;
+	public int execute(IShellOutputWriter out, MusicManager app, List<String> args) throws ShellCommandInvalidArgument,
+			ShellQuit;
 
 	/**
 	 * 

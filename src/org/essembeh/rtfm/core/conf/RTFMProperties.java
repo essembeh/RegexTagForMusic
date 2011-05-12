@@ -34,12 +34,12 @@ import org.essembeh.rtfm.core.exception.RTFMException;
 public class RTFMProperties {
 
 	/**
-	 * 
+	 * The logger.
 	 */
-	static Logger logger = Logger.getLogger(RTFMProperties.class);
+	static protected Logger logger = Logger.getLogger(RTFMProperties.class);
 
 	/**
-	 * 
+	 * The filename of the properties file.
 	 */
 	public static final String RTFM_PROPERTIES = "rtfm.properties";
 

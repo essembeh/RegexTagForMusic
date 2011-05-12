@@ -25,7 +25,7 @@ import java.util.List;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.IMusicFile;
-import org.essembeh.rtfm.shell.Shell;
+import org.essembeh.rtfm.shell.io.IShellOutputWriter;
 
 public class Tag extends Show {
 
@@ -36,28 +36,31 @@ public class Tag extends Show {
 		this.defaultArg = ShowWhat.NEW;
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param shell
-	 * @param app
-	 * @param list
+	 * @see
+	 * org.essembeh.rtfm.shell.commands.Show#executeOnList(org.essembeh.rtfm
+	 * .shell.io.IShellOutputWriter, org.essembeh.rtfm.core.MusicManager,
+	 * java.util.List)
 	 */
-	protected void executeOnList(Shell shell, MusicManager app, List<IMusicFile> list) {
+	@Override
+	protected void executeOnList(IShellOutputWriter out, MusicManager app, List<IMusicFile> list) {
 		int totalCount = list.size();
 		int errorCount = 0;
 		for (int i = 0; i < list.size(); i++) {
-			shell.print("[" + (i + 1) + "/" + (totalCount) + "] Tagging file " + list.get(i).getVirtualPath());
+			String message = "[" + (i + 1) + "/" + (totalCount) + "] Tagging file " + list.get(i).getVirtualPath();
 			try {
 				list.get(i).tag(false);
-				shell.println(": OK");
+				out.printMessage(message + ": OK");
 			} catch (Exception e) {
 				errorCount++;
-				this.logger.error("Error while tagging file: " + list.get(i));
-				this.logger.error(" Error: " + e.getMessage());
-				shell.println(": ERROR " + e.getMessage());
+				logger.error("Error while tagging file: " + list.get(i) + ", Error: " + e.getMessage());
+				out.printError(message + ": FAIL");
+				out.printException(e);
 			}
 		}
-		shell.print(totalCount + StringUtils.plural(" file", totalCount) + " tagged");
-		shell.println(" with " + errorCount + StringUtils.plural(" error", errorCount));
+		out.printMessage(totalCount + StringUtils.plural(" file", totalCount) + " tagged with " + errorCount
+				+ StringUtils.plural(" error", errorCount));
 	}
 }

@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration>
-<!-- 	<appender name="console" class="org.apache.log4j.ConsoleAppender"> -->
-<!-- 		<param name="Target" value="System.out" /> -->
-<!-- 		<layout class="org.apache.log4j.PatternLayout"> -->
-<!-- 			<param name="ConversionPattern" value="[%-5p] %m %n" /> -->
-<!-- 		</layout> -->
-<!-- 		<filter class="org.apache.log4j.varia.LevelRangeFilter"> -->
-<!-- 			<param name="LevelMin" value="WARN" /> -->
-<!-- 		</filter> -->
-<!-- 	</appender> -->
 	<appender name="file" class="org.apache.log4j.FileAppender">
 		<param name="file" value="${java.io.tmpdir}/rtfm.log" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %C:   %m %n" />
 		</layout>
-		<filter class="org.apache.log4j.varia.LevelRangeFilter">
-			<param name="LevelMin" value="DEBUG" />
-		</filter>
 	</appender>
-	<root>
+	<logger name="org.essembeh.rtfm.core.utils" additivity="true">
 		<level value="INFO" />
+		<appender-ref ref="file" />
+	</logger>
+	<root>
+		<level value="DEBUG" />
 		<appender-ref ref="file" />
 	</root>
 </log4j:configuration>

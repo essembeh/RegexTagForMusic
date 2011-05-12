@@ -20,14 +20,30 @@
 
 package org.essembeh.rtfm.core.exception;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class TagWriterException extends Exception {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 8582936880673801228L;
 
+	/**
+	 * 
+	 * @param s
+	 */
 	public TagWriterException(String s) {
 		super(s);
 	}
 
+	/**
+	 * 
+	 * @param e
+	 */
 	public TagWriterException(Throwable e) {
 		super(e);
 	}

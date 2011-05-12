@@ -43,6 +43,7 @@ import org.essembeh.rtfm.core.tag.fields.FixedField;
 import org.essembeh.rtfm.core.tag.fields.OptionalField;
 import org.essembeh.rtfm.core.tag.fields.RegexField;
 import org.essembeh.rtfm.core.utils.XmlUtils;
+import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.interfaces.ITagField;
 import org.essembeh.rtfm.interfaces.ITagProvider;
 import org.essembeh.rtfm.interfaces.ITagWriter;
@@ -62,7 +63,7 @@ public class Configuration {
 	/**
 	 * Class logger
 	 */
-	static Logger logger = Logger.getLogger(Configuration.class);
+	static protected Logger logger = Logger.getLogger(Configuration.class);
 
 	/**
 	 * Singleton
@@ -279,16 +280,12 @@ public class Configuration {
 				String classname = currentElement.getAttribute("classname");
 				String alternative = currentElement.getAttribute("alternative");
 				try {
-					Class<?> handler = Class.forName(classname);
-					logger.debug("Found command: " + classname + " for id: " + id);
-					Services.instance().addShellCommand(id, handler);
-					if ((alternative != null) && (alternative.length() > 0)
-							&& !Services.instance().getListOfShellCommands().contains(alternative)) {
-						logger.debug("Adding alternative: " + alternative + " to: " + id);
-						Services.instance().addShellCommand(alternative, handler);
-					}
-				} catch (ClassNotFoundException e) {
-					logger.warn("Cannot find command: " + classname);
+					Class<?> clazz = Class.forName(classname);
+					ICommand shellCommand = (ICommand) clazz.newInstance();
+					logger.debug("Found shell command: " + classname);
+					Services.instance().addShellCommand(id, shellCommand, alternative);
+				} catch (Exception e) {
+					logger.error("Cannot create shell command: " + classname);
 				}
 			}
 		}

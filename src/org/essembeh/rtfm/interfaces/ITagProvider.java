@@ -3,6 +3,11 @@ package org.essembeh.rtfm.interfaces;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.core.tag.TagData;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public interface ITagProvider {
 
 	/**

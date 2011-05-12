@@ -1,0 +1,5 @@
+# this is a comment
+ # also a comment
+scan test/default
+tag all
+

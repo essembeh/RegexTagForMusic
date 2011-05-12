@@ -20,6 +20,11 @@
 
 package org.essembeh.rtfm.core.exception;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class DatabaseException extends Exception {
 
 	private static final long serialVersionUID = -6612833542603630028L;

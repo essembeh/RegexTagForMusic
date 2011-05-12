@@ -65,7 +65,7 @@ public class MusicManagerTest {
 		int errorCount = 0;
 		for (IMusicFile musicFile : list) {
 			try {
-				this.mm.tagFile(musicFile, true);
+				musicFile.tag(true);
 			} catch (Exception e) {
 				errorCount++;
 			}
@@ -80,7 +80,7 @@ public class MusicManagerTest {
 		int errorCount = 0;
 		for (IMusicFile musicFile : list) {
 			try {
-				this.mm.tagFile(musicFile, false);
+				musicFile.tag(false);
 			} catch (Exception e) {
 				errorCount++;
 			}
@@ -97,13 +97,13 @@ public class MusicManagerTest {
 
 	@Test
 	public void testClear() throws Exception {
-		this.mm.removeAllMusicFiles();
+		this.mm.clear();
 		assertEquals(0, this.mm.getAllFiles().size());
 	}
 
 	@Test
 	public void testRead() throws Exception {
-		this.mm.removeAllMusicFiles();
+		this.mm.clear();
 		this.mm.readDatabase(this.database2, true);
 		assertEquals(this.totalCount, this.mm.getAllFiles().size());
 		assertEquals(0, this.mm.getFilteredFiles(Filter.NON_TAGGED).size());

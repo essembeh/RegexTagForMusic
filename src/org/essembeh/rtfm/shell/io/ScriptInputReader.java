@@ -17,20 +17,27 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.exception;
+package org.essembeh.rtfm.shell.io;
 
-public class ShellException extends Exception {
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2878428704830091083L;
+/**
+ * 
+ * @author seb
+ * 
+ */
+public class ScriptInputReader extends ConsoleInputReader {
 
 	/**
 	 * Constructor
+	 * 
+	 * @throws FileNotFoundException
 	 */
-	public ShellException(String s) {
-		super(s);
+	public ScriptInputReader(File script) throws FileNotFoundException {
+		this.br = new BufferedReader(new InputStreamReader(new FileInputStream(script)));
 	}
-
 }

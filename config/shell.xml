@@ -5,7 +5,6 @@
 		<command id="read" alternative="r" classname="org.essembeh.rtfm.shell.commands.ReadDB" />
 		<command id="write" alternative="w" classname="org.essembeh.rtfm.shell.commands.WriteDB" />
 		<command id="tag" alternative="t" classname="org.essembeh.rtfm.shell.commands.Tag" />
-		<command id="data" alternative="d" classname="org.essembeh.rtfm.shell.commands.Data" />
 		<command id="ls" alternative="l" classname="org.essembeh.rtfm.shell.commands.Show" />
 		<command id="help" alternative="h" classname="org.essembeh.rtfm.shell.commands.Help" />
 		<command id="quit" alternative="q" classname="org.essembeh.rtfm.shell.commands.Quit" />

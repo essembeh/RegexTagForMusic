@@ -1,0 +1,4 @@
+read database.xml
+tag new
+write database.xml
+

@@ -26,12 +26,26 @@ import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.interfaces.ITagField;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class RegexField implements ITagField {
 
+	/**
+	 * 
+	 */
 	static protected Logger logger = Logger.getLogger(RegexField.class);
 
+	/**
+	 * 
+	 */
 	protected Pattern pattern;
 
+	/**
+	 * 
+	 */
 	protected int group;
 
 	/**

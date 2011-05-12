@@ -5,6 +5,11 @@ import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.core.exception.TagWriterException;
 import org.essembeh.rtfm.core.tag.TagData;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public interface IMusicFile {
 
 	/**

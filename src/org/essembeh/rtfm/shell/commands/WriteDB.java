@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.interfaces.ICommand;
-import org.essembeh.rtfm.shell.Shell;
+import org.essembeh.rtfm.shell.io.IShellOutputWriter;
 
 public class WriteDB implements ICommand {
 
@@ -36,19 +36,21 @@ public class WriteDB implements ICommand {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.shell.commands.ICommand#execute(org.essembeh.rtfm.
-	 * MusicManager, java.util.List)
+	 * @see
+	 * org.essembeh.rtfm.interfaces.ICommand#execute(org.essembeh.rtfm.shell
+	 * .io.IShellOutputWriter, org.essembeh.rtfm.core.MusicManager,
+	 * java.util.List)
 	 */
 	@Override
-	public int execute(Shell shell, MusicManager app, List<String> args) throws ShellCommandInvalidArgument {
+	public int execute(IShellOutputWriter out, MusicManager app, List<String> args) throws ShellCommandInvalidArgument {
 		int rc = 0;
 		if (args.size() == 2) {
 			try {
 				File database = new File(args.get(1));
 				app.writeDatabase(database);
-				shell.println("Database successfully written: " + database.getAbsolutePath());
+				out.printMessage("Database successfully written: " + database.getAbsolutePath());
 			} catch (Exception e) {
-				shell.println(e.getMessage());
+				out.printException(e);
 				rc = 1;
 			}
 		} else {

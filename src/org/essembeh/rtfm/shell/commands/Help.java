@@ -22,42 +22,47 @@ package org.essembeh.rtfm.shell.commands;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.conf.Services;
 import org.essembeh.rtfm.interfaces.ICommand;
-import org.essembeh.rtfm.shell.Shell;
+import org.essembeh.rtfm.shell.io.IShellOutputWriter;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class Help implements ICommand {
-
-	Logger logger = Logger.getLogger(getClass());
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.shell.commands.ICommand#execute(org.essembeh.rtfm.
-	 * MusicManager, java.util.List)
+	 * @see
+	 * org.essembeh.rtfm.interfaces.ICommand#execute(org.essembeh.rtfm.shell
+	 * .io.IShellOutputWriter, org.essembeh.rtfm.core.MusicManager,
+	 * java.util.List)
 	 */
 	@Override
-	public int execute(Shell shell, MusicManager app, List<String> args) {
+	public int execute(IShellOutputWriter out, MusicManager app, List<String> args) {
 		if (args.size() == 2) {
 			String command = args.get(1);
-			try {
-				ICommand commandHandler = Services.instance().instantiateCommand(command);
-				if (commandHandler == null) {
-					shell.println("Command not found: " + command);
-				} else {
-					shell.println(commandHandler.getHelp(command));
-				}
-			} catch (Exception e) {
-				shell.println(e.getMessage());
+			ICommand commandHandler = Services.instance().getCommand(command);
+			if (commandHandler == null) {
+				out.printMessage("Command not found: " + command);
+			} else {
+				out.printMessage(commandHandler.getHelp(command));
 			}
 		} else {
-			shell.println(getHelp(args.get(0)));
+			out.printMessage(getHelp(args.get(0)));
 		}
 		return 0;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.interfaces.ICommand#getHelp(java.lang.String)
+	 */
 	@Override
 	public String getHelp(String command) {
 		StringBuilder out = new StringBuilder();

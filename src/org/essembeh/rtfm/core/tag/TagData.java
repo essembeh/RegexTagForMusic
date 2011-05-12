@@ -22,16 +22,51 @@ package org.essembeh.rtfm.core.tag;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class TagData {
 
-	Logger logger = Logger.getLogger(getClass());
+	/**
+	 * 
+	 */
+	protected static Logger logger = Logger.getLogger(TagData.class);
 
+	/**
+	 * 
+	 */
 	protected String artist;
+
+	/**
+	 * 
+	 */
 	protected String album;
+
+	/**
+	 * 
+	 */
 	protected String year;
+
+	/**
+	 * 
+	 */
 	protected String trackNumber;
+
+	/**
+	 * 
+	 */
 	protected String trackName;
+
+	/**
+	 * 
+	 */
 	protected String comment;
+
+	/**
+	 * 
+	 */
 	protected String genre;
 
 	/**
@@ -44,8 +79,13 @@ public class TagData {
 	 * @param comment
 	 * @param genre
 	 */
-	public TagData(String artist, String year, String album, String trackNumber, String trackName, String comment,
-			String genre) {
+	public TagData(	String artist,
+					String year,
+					String album,
+					String trackNumber,
+					String trackName,
+					String comment,
+					String genre) {
 		this.artist = artist;
 		this.album = album;
 		this.year = year;
@@ -71,8 +111,8 @@ public class TagData {
 	@Override
 	public boolean equals(Object obj) {
 		// TODO un peu porc quand meme non :)
-		this.logger.debug("Test equality: " + this.toString());
-		this.logger.debug("          and: " + obj.toString());
+		logger.debug("Test equality: " + this.toString());
+		logger.debug("          and: " + obj.toString());
 		return toString().equals(obj.toString());
 	}
 

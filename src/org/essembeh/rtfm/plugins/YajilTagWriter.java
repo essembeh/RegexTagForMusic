@@ -39,8 +39,14 @@ public class YajilTagWriter implements ITagWriter {
 	/**
 	 * Class logger
 	 */
-	static Logger logger = Logger.getLogger(YajilTagWriter.class);
+	static protected Logger logger = Logger.getLogger(YajilTagWriter.class);
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File,
+	 * boolean)
+	 */
 	@Override
 	public void removeTag(File mp3, boolean dryrun) throws TagWriterException {
 		if (!dryrun) {
@@ -69,11 +75,24 @@ public class YajilTagWriter implements ITagWriter {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.essembeh.rtfm.interfaces.ITagWriter#setProperty(java.lang.String,
+	 * java.lang.String)
+	 */
 	@Override
 	public void setProperty(String name, String value) {
 		logger.warn("Invalid property for tagger: " + name + "=" + value);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#tag(java.io.File,
+	 * org.essembeh.rtfm.core.tag.TagData, boolean)
+	 */
 	@Override
 	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWriterException {
 		if (dryrun) {

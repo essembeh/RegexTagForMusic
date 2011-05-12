@@ -20,14 +20,30 @@
 
 package org.essembeh.rtfm.core.exception;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class RTFMException extends Exception {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = -3194354565123158025L;
 
+	/**
+	 * 
+	 * @param s
+	 */
 	public RTFMException(String s) {
 		super(s);
 	}
 
+	/**
+	 * 
+	 * @param e
+	 */
 	public RTFMException(Throwable e) {
 		super(e);
 	}

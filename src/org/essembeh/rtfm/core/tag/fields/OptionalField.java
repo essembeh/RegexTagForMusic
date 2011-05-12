@@ -23,10 +23,21 @@ import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.interfaces.ITagField;
 
+/**
+ * 
+ * @author seb
+ * 
+ */
 public class OptionalField implements ITagField {
 
+	/**
+	 * 
+	 */
 	static protected Logger logger = Logger.getLogger(OptionalField.class);
 
+	/**
+	 * 
+	 */
 	protected ITagField field;
 
 	/**
