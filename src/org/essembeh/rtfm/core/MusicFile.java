@@ -40,15 +40,15 @@ import org.essembeh.rtfm.interfaces.IMusicFile;
  */
 public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 
-	private Logger logger = Logger.getLogger(getClass());
+	protected static Logger logger = Logger.getLogger(MusicFile.class);
 
-	private File file;
+	protected File file;
 
-	private File rootFolder;
+	protected File rootFolder;
 
-	private boolean isTagged = false;
+	protected boolean isTagged = false;
 
-	private FileHandler handler = null;
+	protected FileHandler handler = null;
 
 	/**
 	 * Create a Music File
@@ -147,20 +147,21 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 	 * @throws TagNotFoundException
 	 * @throws RTFMException
 	 */
-	public boolean tagFile(boolean dryrun) throws TagWriterException, TagNotFoundException, RTFMException {
+	@Override
+	public boolean tag(boolean dryrun) throws TagWriterException, TagNotFoundException, RTFMException {
 		if (!isTaggable()) {
 			throw new TagWriterException("This file is not taggable");
 		}
 		boolean hasBeenTagged = false;
 		TagData tag = getTagData();
-		this.logger.debug("Tag file: " + toString());
-		this.logger.debug("  and tagdata: " + tag);
+		MusicFile.logger.debug("Tag file: " + toString());
+		MusicFile.logger.debug("  and tagdata: " + tag);
 		if (this.isTagged()) {
-			this.logger.debug("The file is already taged");
+			MusicFile.logger.info("The file is already taged");
 		}
 		this.handler.removeTag(this.file, dryrun);
 		hasBeenTagged = this.handler.tag(this.file, tag, dryrun);
-		this.logger.debug("File: " + getVirtualPath() + " successfully tagged");
+		MusicFile.logger.debug("File: " + getVirtualPath() + " successfully tagged");
 		if (hasBeenTagged) {
 			setTagged();
 		}

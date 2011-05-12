@@ -24,7 +24,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,8 +43,6 @@ import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.DatabaseException;
 import org.essembeh.rtfm.core.exception.RTFMException;
-import org.essembeh.rtfm.core.exception.TagNotFoundException;
-import org.essembeh.rtfm.core.exception.TagWriterException;
 import org.essembeh.rtfm.core.utils.FileUtils;
 import org.essembeh.rtfm.core.utils.XmlUtils;
 import org.essembeh.rtfm.interfaces.IMusicFile;
@@ -218,65 +215,6 @@ public class MusicManager {
 		// Sort the list
 		Collections.sort(this.listOfFiles);
 		logger.info("Found " + this.listOfFiles.size() + " files in folder: " + this.rootFolder.getAbsolutePath());
-	}
-
-	/**
-	 * Tag all Music Files that are taggable and valid in the list given in
-	 * argument.
-	 * 
-	 * @param listOfMF
-	 * @param dryrun
-	 * @return
-	 * @deprecated
-	 */
-	public int tagList(List<MusicFile> listOfMF, boolean dryrun) {
-		Iterator<MusicFile> it = listOfMF.iterator();
-		while (it.hasNext()) {
-			MusicFile currentMusicFile = it.next();
-			if (currentMusicFile.isTaggable()) {
-				try {
-					currentMusicFile.tagFile(dryrun);
-					logger.info("File tagged: " + currentMusicFile.getVirtualPath());
-					// Remove it from the list
-					it.remove();
-				} catch (TagWriterException e) {
-					logger.error("Error while tagging file: " + currentMusicFile.getVirtualPath() + ": "
-							+ e.getMessage());
-				} catch (TagNotFoundException e) {
-					logger.error("Error getting tag data for file: " + currentMusicFile.getVirtualPath() + ": "
-							+ e.getMessage());
-				} catch (RTFMException e) {
-					logger.error("Error while tagging file: " + currentMusicFile.getVirtualPath() + ": "
-							+ e.getMessage());
-				}
-			}
-
-		}
-		return listOfMF.size();
-	}
-
-	/**
-	 * 
-	 * @param musicFile
-	 * @param dryrun
-	 * @return
-	 * @throws TagWriterException
-	 * @throws TagNotFoundException
-	 * @throws RTFMException
-	 */
-	public boolean tagFile(IMusicFile musicFile, boolean dryrun) throws TagWriterException, TagNotFoundException,
-			RTFMException {
-		// Search the MusicFile
-		MusicFile mf = null;
-		for (MusicFile currentMusicFile : this.listOfFiles) {
-			if (musicFile == currentMusicFile) {
-				mf = currentMusicFile;
-			}
-		}
-		if (mf == null) {
-			throw new RTFMException("The file cannot be found in MusicManager: " + musicFile);
-		}
-		return mf.tagFile(dryrun);
 	}
 
 	/**
