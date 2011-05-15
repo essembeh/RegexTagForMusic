@@ -25,7 +25,6 @@ import java.util.List;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.core.exception.ShellQuit;
-import org.essembeh.rtfm.shell.io.IShellOutputWriter;
 
 /**
  * 

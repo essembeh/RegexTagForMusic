@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
+import org.essembeh.rtfm.interfaces.IShellInputReader;
+import org.essembeh.rtfm.interfaces.IShellOutputWriter;
 
 /**
  * 

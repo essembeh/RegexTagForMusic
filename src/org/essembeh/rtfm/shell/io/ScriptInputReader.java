@@ -23,7 +23,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
+
+import org.apache.log4j.Logger;
+import org.essembeh.rtfm.interfaces.IShellOutputWriter;
 
 /**
  * 
@@ -33,11 +37,44 @@ import java.io.InputStreamReader;
 public class ScriptInputReader extends ConsoleInputReader {
 
 	/**
+	 * Logger.
+	 */
+	private static Logger logger = Logger.getLogger(ScriptInputReader.class);
+
+	/**
 	 * Constructor
 	 * 
 	 * @throws FileNotFoundException
 	 */
 	public ScriptInputReader(File script) throws FileNotFoundException {
 		this.br = new BufferedReader(new InputStreamReader(new FileInputStream(script)));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.essembeh.rtfm.shell.io.ConsoleInputReader#readCommand(org.essembeh
+	 * .rtfm.interfaces.IShellOutputWriter)
+	 */
+	@Override
+	public String readCommand(IShellOutputWriter out) {
+		String command = null;
+		try {
+			do {
+				command = this.br.readLine();
+				if (command != null) {
+					command = command.trim();
+				}
+			} while (!isValidCommand(command));
+		} catch (IOException e) {
+			logger.error("Error while reading the next command: " + e.getMessage());
+			command = null;
+		}
+		if (command != null) {
+			out.prompt();
+			out.printMessage(command);
+		}
+		return command;
 	}
 }

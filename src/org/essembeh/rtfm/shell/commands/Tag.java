@@ -25,7 +25,7 @@ import java.util.List;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.IMusicFile;
-import org.essembeh.rtfm.shell.io.IShellOutputWriter;
+import org.essembeh.rtfm.interfaces.IShellOutputWriter;
 
 public class Tag extends Show {
 

@@ -27,7 +27,7 @@ import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.interfaces.IMusicFile;
-import org.essembeh.rtfm.shell.io.IShellOutputWriter;
+import org.essembeh.rtfm.interfaces.IShellOutputWriter;
 
 /**
  * 

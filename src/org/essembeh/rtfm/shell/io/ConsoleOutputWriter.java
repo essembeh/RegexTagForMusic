@@ -20,6 +20,7 @@
 package org.essembeh.rtfm.shell.io;
 
 import org.essembeh.rtfm.core.conf.RTFMProperties;
+import org.essembeh.rtfm.interfaces.IShellOutputWriter;
 
 /**
  * 

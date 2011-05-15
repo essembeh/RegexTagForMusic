@@ -25,7 +25,7 @@ import java.util.List;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.conf.Services;
 import org.essembeh.rtfm.interfaces.ICommand;
-import org.essembeh.rtfm.shell.io.IShellOutputWriter;
+import org.essembeh.rtfm.interfaces.IShellOutputWriter;
 
 /**
  * 

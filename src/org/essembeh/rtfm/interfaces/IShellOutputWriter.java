@@ -17,7 +17,7 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.shell.io;
+package org.essembeh.rtfm.interfaces;
 
 /**
  * 
