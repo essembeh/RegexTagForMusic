@@ -9,7 +9,7 @@ if [ -z "$RTFM_HOME" -o ! -d "$RTFM_HOME" ]; then
 	    RTFM_BIN="$(dirname "$RTFM_BIN")/$(readlink "$RTFM_BIN")"
 	done
 	echo "RegexTagForMusic binary: $RTFM_BIN"
-	RTFM_HOME="$(dirname "$(dirname $RTFM_BIN)")"
+	RTFM_HOME="$(dirname $RTFM_BIN)/../"
 fi
 echo "Using RTFM_HOME: $RTFM_HOME"
 
