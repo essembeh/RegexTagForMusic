@@ -15,7 +15,7 @@
 		</filehandler>
 		<filehandler id="COVER" pattern="/Albums/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" database="true">
 		</filehandler>
-		<filehandler id="INVALID" pattern=".*" database="false">
+		<filehandler id="UNKNOWN" pattern=".*" database="false">
 		</filehandler>
 	</filehandlers>
 </rtfm>

@@ -37,7 +37,11 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.FileHandler;
+import org.essembeh.rtfm.core.Filter;
+import org.essembeh.rtfm.core.Filter.Status;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
+import org.essembeh.rtfm.core.services.FileHandlerService;
+import org.essembeh.rtfm.core.services.Services;
 import org.essembeh.rtfm.core.tag.RegexTagProvider;
 import org.essembeh.rtfm.core.tag.fields.FixedField;
 import org.essembeh.rtfm.core.tag.fields.OptionalField;
@@ -102,6 +106,7 @@ public class Configuration {
 		readTagProviders(openXMLFile(RTFMProperties.getMandatoryProperty("configuration.tagproviders.filename")));
 		readFileHandlers(openXMLFile(RTFMProperties.getMandatoryProperty("configuration.filehandlers.filename")));
 		readShellCommands(openXMLFile(RTFMProperties.getMandatoryProperty("configuration.shell.filename")));
+		readGUIConfiguration(openXMLFile(RTFMProperties.getMandatoryProperty("configuration.gui.filename")));
 	}
 
 	/**
@@ -135,6 +140,25 @@ public class Configuration {
 		}
 		logger.debug("Found tagfield: " + field);
 		return field;
+	}
+
+	/**
+	 * 
+	 * @param element
+	 * @return
+	 */
+	protected Filter getFilter(Element element) {
+		Filter filter = null;
+		if (element != null) {
+			String taggable = element.getAttribute("taggable");
+			String tagged = element.getAttribute("tagged");
+			String path = element.getAttribute("path");
+			String type = element.getAttribute("type");
+			filter = new Filter(Status.valueOf(taggable), Status.valueOf(tagged), Pattern.compile(type),
+					Pattern.compile(path));
+		}
+		logger.debug("Found filter: " + filter);
+		return filter;
 	}
 
 	/**
@@ -178,7 +202,7 @@ public class Configuration {
 					tagWriter.setProperty(name, value);
 				}
 				// Register the tag writer
-				Services.instance().addTagWriter(id, tagWriter);
+				Services.getTagWriterService().add(id, tagWriter);
 			} catch (Exception e) {
 				logger.error("Error while creating tagger: " + classname);
 			}
@@ -194,13 +218,13 @@ public class Configuration {
 		logger.debug("Reading Tag Providers");
 		for (Element currentElement : XmlUtils.getElementsByXPath(document, "//rtfm/tagproviders/tagprovider")) {
 			String id = currentElement.getAttribute("id");
-			RegexTagProvider regexTagProvider = new RegexTagProvider();
 			ITagField fieldArtist = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "artist"));
 			ITagField fieldAlbum = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "album"));
 			ITagField fieldYear = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "year"));
 			ITagField fieldTracknumber = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "tracknumber"));
 			ITagField fieldTrackname = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "trackname"));
 			ITagField fieldComment = getTagField(XmlUtils.getFirstElementByXPath(currentElement, "comment"));
+			RegexTagProvider regexTagProvider = new RegexTagProvider();
 			regexTagProvider.setArtist(fieldArtist);
 			regexTagProvider.setAlbum(fieldAlbum);
 			regexTagProvider.setYear(fieldYear);
@@ -209,7 +233,7 @@ public class Configuration {
 			regexTagProvider.setComment(fieldComment);
 			logger.debug("Found tagprovider: " + regexTagProvider + " with id: " + id);
 			// Register the tag provider
-			Services.instance().addTagProvider(id, regexTagProvider);
+			Services.getTagProviderService().add(id, regexTagProvider);
 		}
 	}
 
@@ -234,7 +258,7 @@ public class Configuration {
 			Element element0 = XmlUtils.getFirstElementByXPath(currentElementHandler, "tagprovider");
 			if (element0 != null) {
 				String ref = element0.getAttribute("ref");
-				ITagProvider tagProvider = Services.instance().getTagProvider(ref);
+				ITagProvider tagProvider = Services.getTagProviderService().get(ref);
 				if (tagProvider == null) {
 					logger.error("The tag provider cannot be found: " + ref);
 				} else {
@@ -247,7 +271,7 @@ public class Configuration {
 			Element element1 = XmlUtils.getFirstElementByXPath(currentElementHandler, "tagwriter");
 			if (element1 != null) {
 				String ref = element1.getAttribute("ref");
-				ITagWriter tagWriter = Services.instance().getTagWriter(ref);
+				ITagWriter tagWriter = Services.getTagWriterService().get(ref);
 				if (tagWriter == null) {
 					logger.error("The tag writer cannot be found: " + ref);
 				} else {
@@ -257,7 +281,7 @@ public class Configuration {
 			}
 
 			logger.debug("Found file handler: " + fileHandler);
-			Services.instance().addFileHandler(fileHandler);
+			FileHandlerService.add(fileHandler);
 
 		}
 	}
@@ -283,9 +307,32 @@ public class Configuration {
 					Class<?> clazz = Class.forName(classname);
 					ICommand shellCommand = (ICommand) clazz.newInstance();
 					logger.debug("Found shell command: " + classname);
-					Services.instance().addShellCommand(id, shellCommand, alternative);
+					Services.getShellCommandService().add(id, shellCommand, alternative);
 				} catch (Exception e) {
 					logger.error("Cannot create shell command: " + classname);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param openXMLFile
+	 * @throws XPathExpressionException
+	 */
+	protected void readGUIConfiguration(Document document) throws XPathExpressionException {
+		logger.debug("Reading GUI Configuration");
+		XPath xpath = XPathFactory.newInstance().newXPath();
+		XPathExpression xPathExpression = xpath.compile("//rtfm/gui/tabs/*");
+		NodeList nodeList = (NodeList) xPathExpression.evaluate(document, XPathConstants.NODESET);
+		logger.debug("Found " + nodeList.getLength() + " tabs");
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Element currentElement = (Element) nodeList.item(i);
+			if ((currentElement != null) && currentElement.getNodeName().equals("tab")) {
+				String id = currentElement.getAttribute("id");
+				Filter filter = getFilter(XmlUtils.getFirstElementByXPath(currentElement, "filter"));
+				if (filter != null) {
+					Services.getTabService().addTabFilter(id, filter);
 				}
 			}
 		}

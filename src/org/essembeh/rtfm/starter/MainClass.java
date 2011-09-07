@@ -28,6 +28,8 @@ import org.essembeh.rtfm.core.conf.Configuration;
 import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.utils.StringUtils;
+import org.essembeh.rtfm.gui.MainWindow;
+import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.essembeh.rtfm.shell.Shell;
 import org.essembeh.rtfm.shell.io.ConsoleInputReader;
 import org.essembeh.rtfm.shell.io.ConsoleOutputWriter;
@@ -60,7 +62,6 @@ public class MainClass {
 	 */
 	public static void main(String[] args) throws ConfigurationException, FileNotFoundException {
 		Configuration.init();
-		MusicManager app = new MusicManager();
 
 		String appMode = null;
 		if (args.length > 0) {
@@ -78,9 +79,12 @@ public class MainClass {
 			logger.info("Available modes are: " + StringUtils.arrayToString(Mode.values(), "|"));
 		}
 		if (mode != null) {
+			MusicManager app = new MusicManager();
 			switch (mode) {
 			case GUI:
-				logger.error("Not yet implemented");
+				RTFMController controller = new RTFMController(app);
+				MainWindow window = new MainWindow(controller.getMainPanel());
+				window.setVisible(true);
 				break;
 			case SCRIPT:
 				if (args.length == 2) {

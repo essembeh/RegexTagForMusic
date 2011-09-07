@@ -23,11 +23,11 @@ package org.essembeh.rtfm.core;
 import java.io.File;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.conf.Services;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.RTFMException;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.core.exception.TagWriterException;
+import org.essembeh.rtfm.core.services.Services;
 import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 
@@ -93,7 +93,7 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 		// For compatibility, replace \ by /
 		this.virtualPath = this.virtualPath.replaceAll("\\\\", "/");
 		// Search the corresponding handler
-		this.handler = Services.instance().getFileHandlerForFile(getVirtualPath());
+		this.handler = Services.getFilehandlerService().getFileHandlerForFile(getVirtualPath());
 		if (this.handler == null) {
 			throw new ConfigurationException("Could not find handler for file: " + toString());
 		}

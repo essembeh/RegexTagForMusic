@@ -1,4 +1,4 @@
-read database.xml
+read /home/seb/database.xml
 tag new
-write database.xml
+write /home/seb/database.xml
 

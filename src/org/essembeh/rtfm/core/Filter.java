@@ -26,14 +26,13 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 public class Filter {
-
 	/**
 	 * Class logger
 	 */
 	static Logger logger = Logger.getLogger(Filter.class);
-	
+
 	/** COMMON FILTERS **/
-	public static Filter INVALID = new Filter(Status.NO_FILTER, Status.NO_FILTER);
+	public static Filter ALL = new Filter(Status.NO_FILTER, Status.NO_FILTER);
 	public static Filter TAGGABLE = new Filter(Status.ENABLE, Status.NO_FILTER);
 	public static Filter NON_TAGGED = new Filter(Status.ENABLE, Status.INVERSE);
 
@@ -148,4 +147,48 @@ public class Filter {
 		return result;
 	}
 
+	/**
+	 * @return the taggable
+	 */
+	public Status getTaggable() {
+		return this.taggable;
+	}
+
+	/**
+	 * @return the tagged
+	 */
+	public Status getTagged() {
+		return this.tagged;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public Pattern getType() {
+		return this.type;
+	}
+
+	/**
+	 * @return the path
+	 */
+	public Pattern getPath() {
+		return this.path;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[Filter:");
+		sb.append(" Taggable=").append(this.taggable);
+		sb.append(", Tagged=").append(this.tagged);
+		sb.append(", path=").append(this.path.pattern());
+		sb.append(", type=").append(this.type.pattern());
+		sb.append("]");
+		return sb.toString();
+	}
 }

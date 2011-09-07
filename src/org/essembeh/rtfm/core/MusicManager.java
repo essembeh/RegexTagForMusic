@@ -95,8 +95,12 @@ public class MusicManager {
 	 */
 	public List<IMusicFile> getFilteredFiles(Filter filter) {
 		List<IMusicFile> list = new ArrayList<IMusicFile>();
-		for (MusicFile musicFile : filter.filter(this.listOfFiles)) {
-			list.add(musicFile);
+		if (filter == null) {
+			list.addAll(getAllFiles());
+		} else {
+			for (MusicFile musicFile : filter.filter(this.listOfFiles)) {
+				list.add(musicFile);
+			}
 		}
 		return list;
 	}
@@ -265,5 +269,14 @@ public class MusicManager {
 			throw new DatabaseException("Error writting database: " + database.getAbsolutePath());
 		}
 		logger.info("Database written in: " + database.getAbsolutePath());
+	}
+
+	/**
+	 * Returns the root folder
+	 * 
+	 * @return
+	 */
+	public File getRootFolder() {
+		return this.rootFolder;
 	}
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<rtfm>
+	<gui>
+		<tabs>
+			<!-- A default tab with manual filter will be automatically created -->
+			<tab id="All Taggable files">
+				<filter taggable="ENABLE" tagged="NO_FILTER" path=".*" type=".*" />
+			</tab>
+			<tab id="Non tagged files">
+				<filter taggable="ENABLE" tagged="INVERSE" path=".*" type=".*" />
+			</tab>
+			<tab id="Covers">
+				<filter taggable="NO_FILTER" tagged="NO_FILTER" path=".*" type="COVER" />
+			</tab>
+			<tab id="Unknown">
+				<filter taggable="NO_FILTER" tagged="NO_FILTER" path=".*" type="UNKNOWN" />
+			</tab>
+		</tabs>
+	</gui>
+</rtfm>

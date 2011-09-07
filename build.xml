@@ -19,7 +19,7 @@
 -->
 <project basedir="." default="dist">
 	<property name="app.name" value="rtfm" />
-	<property name="app.version" value="1.0alpha2" />
+	<property name="app.version" value="1.0beta1" />
 	<property name="build.path" value="dist/build/" />
 	<property name="junit.path" value="dist/junit/" />
 	<property name="app.folder" value="dist/RegexTagForMusic.app/" />
@@ -45,6 +45,10 @@
 		<copy todir="${app.folder}/lib">
 			<fileset dir="lib" includes="**" />
 		</copy>
+		<!-- remove previous version of rtfm -->
+		<delete>
+			<fileset dir="${app.folder}/lib/" includes="${app.name}*.jar" />
+		</delete>
 		<copy todir="${app.folder}/config" overwrite="true">
 			<fileset dir="config" includes="**" />
 		</copy>
@@ -53,13 +57,13 @@
 		</copy>
 		<chmod dir="${app.folder}/bin" perm="ugo+rx" includes="*.sh" />
 	</target>
-	<target name="build" depends="prepare">
+	<target name="build">
 		<mkdir dir="${build.path}" />
 		<javac srcdir="src/" destdir="${build.path}" includes="**" includeantruntime="no">
 			<classpath refid="build.classpath" />
 		</javac>
 	</target>
-	<target name="dist" depends="build">
+	<target name="dist" depends="prepare,build">
 		<jar basedir="${build.path}" destfile="${rtfm.jar}">
 			<manifest>
 				<attribute name="Built-By" value="${mf.builtby}" />
@@ -95,7 +99,7 @@
 		</junit>
 	</target>
 
-	<!-- Specific target to use my configuration file -->
+	<!-- Specific target to use my configuration files -->
 	<target name="seb" depends="dist">
 		<copy todir="${app.folder}/config/" overwrite="true">
 			<fileset dir="${app.folder}/config/seb/" includes="*.xml" />

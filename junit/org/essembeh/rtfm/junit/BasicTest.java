@@ -1,6 +1,6 @@
 package org.essembeh.rtfm.junit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +27,7 @@ public class BasicTest {
 		valuesToTest.put("12a", false);
 		for (String motif : valuesToTest.keySet()) {
 			Boolean res = valuesToTest.get(motif);
-			assertEquals(BinaryUtils.findSequenceInArray(buffer.getBytes(),
-					motif.getBytes()), res);
+			assertEquals(BinaryUtils.findSequenceInArray(buffer.getBytes(), motif.getBytes()), res);
 			System.out.println("Searched motif: " + motif);
 		}
 	}

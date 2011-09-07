@@ -23,7 +23,7 @@ package org.essembeh.rtfm.shell.commands;
 import java.util.List;
 
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.conf.Services;
+import org.essembeh.rtfm.core.services.Services;
 import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.interfaces.IShellOutputWriter;
 
@@ -46,7 +46,7 @@ public class Help implements ICommand {
 	public int execute(IShellOutputWriter out, MusicManager app, List<String> args) {
 		if (args.size() == 2) {
 			String command = args.get(1);
-			ICommand commandHandler = Services.instance().getCommand(command);
+			ICommand commandHandler = Services.getShellCommandService().get(command);
 			if (commandHandler == null) {
 				out.printMessage("Command not found: " + command);
 			} else {
@@ -68,7 +68,7 @@ public class Help implements ICommand {
 		StringBuilder out = new StringBuilder();
 		out.append("Usage: ").append(command).append(" <command>").append("\n");
 		out.append("Available commands are: ");
-		for (String thecommand : Services.instance().getListOfShellCommands()) {
+		for (String thecommand : Services.getShellCommandService().getListOfShellCommands()) {
 			out.append(thecommand).append(" ");
 		}
 		return out.toString();

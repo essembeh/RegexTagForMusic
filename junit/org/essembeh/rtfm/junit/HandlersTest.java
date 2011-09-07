@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.essembeh.rtfm.core.FileHandler;
 import org.essembeh.rtfm.core.conf.Configuration;
-import org.essembeh.rtfm.core.conf.Services;
+import org.essembeh.rtfm.core.services.Services;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,7 +50,7 @@ public class HandlersTest {
 		map.put("/a/cover.jpg", "UNKNOWN");
 		for (String path : map.keySet()) {
 			String result = map.get(path);
-			FileHandler handler = Services.instance().getFileHandlerForFile(path);
+			FileHandler handler = Services.getFilehandlerService().getFileHandlerForFile(path);
 			assertNotNull(handler);
 			assertEquals(handler.getId(), result);
 		}
@@ -65,7 +65,7 @@ public class HandlersTest {
 		map.put("/Group/1978 - album/01 - Title (feat. plop) [2] ! & #.mp3", "MP3");
 		for (String path : map.keySet()) {
 			String result = map.get(path);
-			FileHandler handler = Services.instance().getFileHandlerForFile(path);
+			FileHandler handler = Services.getFilehandlerService().getFileHandlerForFile(path);
 			assertNotNull(handler);
 			assertEquals(handler.getId(), result);
 		}

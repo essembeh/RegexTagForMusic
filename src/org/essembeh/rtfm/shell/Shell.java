@@ -24,10 +24,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.conf.Services;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.ShellCommandInvalidArgument;
 import org.essembeh.rtfm.core.exception.ShellQuit;
+import org.essembeh.rtfm.core.services.Services;
 import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.interfaces.IMusicFile;
@@ -105,7 +105,7 @@ public class Shell {
 	protected void processCommand(List<String> args) {
 		Shell.logger.debug("Process command: " + StringUtils.arrayToString(args.toArray(), " "));
 		String commandName = args.get(0);
-		ICommand command = Services.instance().getCommand(commandName);
+		ICommand command = Services.getShellCommandService().get(commandName);
 		if (command != null) {
 			try {
 				int rc = command.execute(this.out, this.app, args);

@@ -33,8 +33,7 @@ public class BinaryUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static boolean checkFileContainsBytes(File f, byte[] bytes,
-			int headSize) throws IOException {
+	public static boolean checkFileContainsBytes(File f, byte[] bytes, int headSize) throws IOException {
 		boolean result = false;
 		FileInputStream fis = new FileInputStream(f);
 		byte[] bytesFromFile = new byte[headSize];
@@ -63,8 +62,7 @@ public class BinaryUtils {
 	 * @param sequenceIndex
 	 * @return
 	 */
-	protected static boolean findSequenceInArray(byte[] buffer, int bufferIndex,
-			byte[] sequence, int sequenceIndex) {
+	protected static boolean findSequenceInArray(byte[] buffer, int bufferIndex, byte[] sequence, int sequenceIndex) {
 		boolean result = false;
 		if (sequenceIndex >= sequence.length) {
 			// OK is sequence is totally read
@@ -75,13 +73,11 @@ public class BinaryUtils {
 		} else {
 			if (buffer[bufferIndex] == sequence[sequenceIndex]) {
 				// Try to find the end of sequence
-				result = findSequenceInArray(buffer, bufferIndex + 1, sequence,
-						sequenceIndex + 1);
+				result = findSequenceInArray(buffer, bufferIndex + 1, sequence, sequenceIndex + 1);
 			}
 			if (!result) {
 				// try to find sequence forward
-				result = findSequenceInArray(buffer, bufferIndex + 1, sequence,
-						0);
+				result = findSequenceInArray(buffer, bufferIndex + 1, sequence, 0);
 			}
 		}
 		return result;

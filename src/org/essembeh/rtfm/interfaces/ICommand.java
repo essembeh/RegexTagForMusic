@@ -17,7 +17,6 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-
 package org.essembeh.rtfm.interfaces;
 
 import java.util.List;
