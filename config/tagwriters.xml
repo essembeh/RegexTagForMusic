@@ -17,6 +17,7 @@
 		<tagwriter id="yajil" classname="org.essembeh.rtfm.plugins.YajilTagWriter">
 		</tagwriter>
 		<tagwriter id="fake" classname="org.essembeh.rtfm.plugins.FakeTagWriter">
+			<property name="sleep" value="100" />
 		</tagwriter>
 	</tagwriters>
 </rtfm>

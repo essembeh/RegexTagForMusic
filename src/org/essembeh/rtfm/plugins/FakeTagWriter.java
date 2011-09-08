@@ -45,6 +45,8 @@ public class FakeTagWriter implements ITagWriter {
 	 */
 	Logger logger = Logger.getLogger(getClass());
 
+	long sleep = 0l;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -65,7 +67,11 @@ public class FakeTagWriter implements ITagWriter {
 	 */
 	@Override
 	public void setProperty(String name, String value) {
-		this.logger.debug("Trying to set property fo FakeTagWriter: " + name + "=" + value);
+		this.logger.debug("Trying to set property fo FakeTagWriter: " + name
+				+ "=" + value);
+		if ("sleep".equals(name)) {
+			this.sleep = Long.parseLong(value);
+		}
 	}
 
 	/*
@@ -81,7 +87,11 @@ public class FakeTagWriter implements ITagWriter {
 		if (!this.listOfModifiedFiles.contains(mp3)) {
 			this.listOfModifiedFiles.add(mp3);
 		}
+		try {
+			Thread.sleep(this.sleep);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return !dryrun;
 	}
-
 }
