@@ -26,11 +26,8 @@ import javax.swing.JPanel;
 
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.DatabaseException;
-import org.essembeh.rtfm.core.exception.RTFMException;
-import org.essembeh.rtfm.core.exception.TagNotFoundException;
-import org.essembeh.rtfm.core.exception.TagWriterException;
+import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.gui.model.MusicManagerModel;
 import org.essembeh.rtfm.gui.panel.MainPanel;
 import org.essembeh.rtfm.interfaces.IMusicFile;
@@ -74,9 +71,11 @@ public class RTFMController {
 		try {
 			this.app.scanMusicFolder(folder);
 			this.model.updateWithFilter(null);
-		} catch (ConfigurationException e) {
-			e.printStackTrace();
-		} catch (RTFMException e) {
+			displayStatusMessage("Folder scanned: "
+					+ this.app.getRootFolder().getAbsolutePath(), false);
+
+		} catch (Exception e) {
+			displayStatusMessage(e.getMessage(), true);
 			e.printStackTrace();
 		}
 		updateInformationPanel();
@@ -92,11 +91,10 @@ public class RTFMController {
 		try {
 			this.app.readDatabase(databaseFile, true);
 			this.model.updateWithFilter(null);
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-		} catch (ConfigurationException e) {
-			e.printStackTrace();
-		} catch (RTFMException e) {
+			displayStatusMessage("Database read: "
+					+ databaseFile.getAbsolutePath(), false);
+		} catch (Exception e) {
+			displayStatusMessage(e.getMessage(), true);
 			e.printStackTrace();
 		}
 		updateInformationPanel();
@@ -111,7 +109,10 @@ public class RTFMController {
 	public void doWriteDatabase(File file) {
 		try {
 			this.app.writeDatabase(file);
+			displayStatusMessage("Database written: " + file.getAbsolutePath(),
+					false);
 		} catch (DatabaseException e) {
+			displayStatusMessage(e.getMessage(), true);
 			e.printStackTrace();
 		}
 
@@ -121,7 +122,6 @@ public class RTFMController {
 	 * Tags all file in the current tab
 	 */
 	public void doTagAllFiles() {
-		System.out.println("Tag ...");
 		List<IMusicFile> list = this.mainPanel.getAllFiles();
 		tagListOfFiles(list);
 	}
@@ -130,7 +130,6 @@ public class RTFMController {
 	 * Tags files that are selected in the current tab
 	 */
 	public void doTagSelectedFiles() {
-		System.out.println("Tag ...");
 		List<IMusicFile> list = this.mainPanel.getCurrentSelectionOfFiles();
 		tagListOfFiles(list);
 	}
@@ -176,18 +175,44 @@ public class RTFMController {
 	 * @param list
 	 */
 	protected void tagListOfFiles(List<IMusicFile> list) {
+		int totalCount = list.size();
+		int errorCount = 0;
 		for (IMusicFile file : list) {
 			if (file.isTaggable()) {
 				try {
 					file.tag(false);
-				} catch (TagNotFoundException e) {
-					e.printStackTrace();
-				} catch (RTFMException e) {
-					e.printStackTrace();
-				} catch (TagWriterException e) {
+					displayStatusMessage("Tagging: " + file.getVirtualPath(),
+							false);
+				} catch (Exception e) {
+					errorCount++;
 					e.printStackTrace();
 				}
 			}
+		}
+		if (errorCount == 0) {
+			displayStatusMessage(totalCount
+					+ StringUtils.plural(" file", totalCount) + " tagged",
+					false);
+		} else {
+			displayStatusMessage(totalCount
+					+ StringUtils.plural(" file", totalCount) + " tagged with "
+					+ errorCount + StringUtils.plural(" error", errorCount),
+					true);
+
+		}
+	}
+
+	/**
+	 * Display a message in the status bar of the panel
+	 * 
+	 * @param message
+	 * @param isAnError
+	 */
+	protected void displayStatusMessage(String message, boolean isAnError) {
+		if (isAnError) {
+			this.mainPanel.statusPrintError(message);
+		} else {
+			this.mainPanel.statusPrintMessage(message);
 		}
 	}
 }

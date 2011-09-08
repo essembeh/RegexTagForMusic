@@ -46,7 +46,7 @@ public class Informations extends JXTaskPane {
 	 */
 	public void update(MusicManager app) {
 		removeAll();
-		if (app.getRootFolder() != null) {
+		if (app != null && app.getRootFolder() != null) {
 			String rootFolder = app.getRootFolder().getName();
 			int totalCount = app.getAllFiles().size();
 			int nonTaggedCount = app.getFilteredFiles(Filter.NON_TAGGED).size();

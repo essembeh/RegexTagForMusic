@@ -41,6 +41,7 @@ public class MainPanel extends JPanel {
 	 */
 	protected SidePanel sidePanel;
 	protected TabManager tabManager;
+	protected StatusBar statusBar;
 
 	/**
 	 * Constructor
@@ -52,8 +53,10 @@ public class MainPanel extends JPanel {
 		setLayout(new BorderLayout());
 		this.sidePanel = new SidePanel(controller);
 		this.tabManager = new TabManager(controller);
+		this.statusBar = new StatusBar();
 		add(this.sidePanel, BorderLayout.EAST);
 		add(this.tabManager, BorderLayout.CENTER);
+		add(this.statusBar, BorderLayout.SOUTH);
 	}
 
 	/**
@@ -90,5 +93,23 @@ public class MainPanel extends JPanel {
 	 */
 	public void updateInformationPanel(MusicManager app) {
 		this.sidePanel.updateInformationPanel(app);
+	}
+
+	/**
+	 * Set the text of the status bar.
+	 * 
+	 * @param line
+	 */
+	public void statusPrintMessage(String line) {
+		this.statusBar.printMessage(line);
+	}
+
+	/**
+	 * Set the text of the status bar.
+	 * 
+	 * @param line
+	 */
+	public void statusPrintError(String line) {
+		this.statusBar.printError(line);
 	}
 }
