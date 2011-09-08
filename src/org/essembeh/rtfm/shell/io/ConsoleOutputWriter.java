@@ -39,6 +39,7 @@ public class ConsoleOutputWriter implements IShellOutputWriter {
 	@Override
 	public void printMessage(String message) {
 		System.out.println(message);
+		System.out.flush();
 	}
 
 	/*
@@ -51,6 +52,7 @@ public class ConsoleOutputWriter implements IShellOutputWriter {
 	@Override
 	public void printError(String message) {
 		System.err.println(message);
+		System.err.flush();
 	}
 
 	/*
@@ -77,5 +79,6 @@ public class ConsoleOutputWriter implements IShellOutputWriter {
 			prompt = "$ ";
 		}
 		System.out.print(prompt);
+		System.out.flush();
 	}
 }
