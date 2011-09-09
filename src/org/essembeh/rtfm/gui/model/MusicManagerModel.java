@@ -42,12 +42,12 @@ public class MusicManagerModel extends AbstractTableModel {
 	/**
 	 * The Application containing data
 	 */
-	MusicManager app;
+	MusicManager app = null;
 
 	/**
 	 * The current list of filtered files by the Application
 	 */
-	List<IMusicFile> list;
+	List<IMusicFile> list = null;
 
 	/**
 	 * Constuctor

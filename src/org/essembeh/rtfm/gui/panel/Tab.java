@@ -38,12 +38,12 @@ public class Tab extends JPanel {
 	/**
 	 * The panel for filtering files
 	 */
-	protected FilterPane filterPane;
+	protected FilterPane filterPane = null;
 
 	/**
 	 * The table that displays music files
 	 */
-	protected MusicTable table;
+	protected MusicTable table = null;
 
 	/**
 	 * Constructor
@@ -61,10 +61,12 @@ public class Tab extends JPanel {
 	 * @param filter
 	 * @param disableFilterEdition
 	 */
-	public Tab(RTFMController controller, Filter filter, boolean disableFilterEdition) {
+	public Tab(RTFMController controller, Filter filter,
+			boolean disableFilterEdition) {
 		setLayout(new BorderLayout());
 		this.table = new MusicTable(controller);
-		this.filterPane = new FilterPane(controller, filter, disableFilterEdition);
+		this.filterPane = new FilterPane(controller, filter,
+				disableFilterEdition);
 		add(this.table, BorderLayout.CENTER);
 		add(this.filterPane, BorderLayout.SOUTH);
 	}

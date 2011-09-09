@@ -38,7 +38,7 @@ public class WriteDBAction extends AbstractAction {
 	/**
 	 * The controller
 	 */
-	protected RTFMController controller;
+	protected RTFMController controller = null;
 
 	/**
 	 * Constructor

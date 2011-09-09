@@ -35,7 +35,7 @@ public class SidePanel extends JPanel {
 	/**
 	 * The panel that displays informations
 	 */
-	protected Informations informations;
+	protected MusicManagerInformations informations = null;
 
 	/**
 	 * Constructeur
@@ -44,7 +44,7 @@ public class SidePanel extends JPanel {
 	 */
 	public SidePanel(RTFMController controller) {
 		setLayout(new VerticalLayout(10));
-		this.informations = new Informations();
+		this.informations = new MusicManagerInformations();
 		add(new FileCommands(controller));
 		add(this.informations);
 		add(new TagCommands(controller));

@@ -40,7 +40,7 @@ public class MusicTable extends JScrollPane {
 	/**
 	 * UI Elements
 	 */
-	protected JXTable table;
+	protected JXTable table = null;
 
 	/**
 	 * Constructor

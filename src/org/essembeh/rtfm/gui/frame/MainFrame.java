@@ -17,12 +17,12 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.gui;
+package org.essembeh.rtfm.gui.frame;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class MainWindow extends JFrame {
+public class MainFrame extends JFrame {
 
 	/**
 	 * UID
@@ -34,7 +34,7 @@ public class MainWindow extends JFrame {
 	 * 
 	 * @param panel
 	 */
-	public MainWindow(JPanel panel) {
+	public MainFrame(JPanel panel) {
 		super("RegexTagForMusic");
 		setSize(800, 600);
 		setLocationRelativeTo(null);

@@ -22,17 +22,19 @@ package org.essembeh.rtfm.gui.controller;
 import java.io.File;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker.StateValue;
 
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.DatabaseException;
-import org.essembeh.rtfm.core.exception.RTFMException;
-import org.essembeh.rtfm.core.exception.TagNotFoundException;
-import org.essembeh.rtfm.core.exception.TagWriterException;
+import org.essembeh.rtfm.core.tag.TagData;
+import org.essembeh.rtfm.gui.dialog.FileInspectorDialog;
+import org.essembeh.rtfm.gui.listener.TagJobListener;
 import org.essembeh.rtfm.gui.model.MusicManagerModel;
 import org.essembeh.rtfm.gui.panel.MainPanel;
+import org.essembeh.rtfm.gui.worker.TagJob;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 
 public class RTFMController {
@@ -40,17 +42,22 @@ public class RTFMController {
 	/**
 	 * The application
 	 */
-	protected MusicManager app;
+	protected MusicManager app = null;
 
 	/**
 	 * The model, used for table view
 	 */
-	protected MusicManagerModel model;
+	protected MusicManagerModel model = null;
 
 	/**
 	 * The main panel
 	 */
-	protected MainPanel mainPanel;
+	protected MainPanel mainPanel = null;
+
+	/**
+	 * The thread used to tag
+	 */
+	protected TagJob tagWorker = null;
 
 	/**
 	 * Constructor
@@ -74,9 +81,11 @@ public class RTFMController {
 		try {
 			this.app.scanMusicFolder(folder);
 			this.model.updateWithFilter(null);
-		} catch (ConfigurationException e) {
-			e.printStackTrace();
-		} catch (RTFMException e) {
+			displayStatusMessage("Folder scanned: "
+					+ this.app.getRootFolder().getAbsolutePath(), false);
+
+		} catch (Exception e) {
+			displayStatusMessage(e.getMessage(), true);
 			e.printStackTrace();
 		}
 		updateInformationPanel();
@@ -92,11 +101,10 @@ public class RTFMController {
 		try {
 			this.app.readDatabase(databaseFile, true);
 			this.model.updateWithFilter(null);
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-		} catch (ConfigurationException e) {
-			e.printStackTrace();
-		} catch (RTFMException e) {
+			displayStatusMessage("Database read: "
+					+ databaseFile.getAbsolutePath(), false);
+		} catch (Exception e) {
+			displayStatusMessage(e.getMessage(), true);
 			e.printStackTrace();
 		}
 		updateInformationPanel();
@@ -111,7 +119,10 @@ public class RTFMController {
 	public void doWriteDatabase(File file) {
 		try {
 			this.app.writeDatabase(file);
+			displayStatusMessage("Database written: " + file.getAbsolutePath(),
+					false);
 		} catch (DatabaseException e) {
+			displayStatusMessage(e.getMessage(), true);
 			e.printStackTrace();
 		}
 
@@ -121,7 +132,6 @@ public class RTFMController {
 	 * Tags all file in the current tab
 	 */
 	public void doTagAllFiles() {
-		System.out.println("Tag ...");
 		List<IMusicFile> list = this.mainPanel.getAllFiles();
 		tagListOfFiles(list);
 	}
@@ -130,7 +140,6 @@ public class RTFMController {
 	 * Tags files that are selected in the current tab
 	 */
 	public void doTagSelectedFiles() {
-		System.out.println("Tag ...");
 		List<IMusicFile> list = this.mainPanel.getCurrentSelectionOfFiles();
 		tagListOfFiles(list);
 	}
@@ -163,7 +172,7 @@ public class RTFMController {
 	}
 
 	/**
-	 * Update information in the information panel with the current Application
+	 * Updates information in the information panel with the current Application
 	 * informations
 	 */
 	protected void updateInformationPanel() {
@@ -176,17 +185,50 @@ public class RTFMController {
 	 * @param list
 	 */
 	protected void tagListOfFiles(List<IMusicFile> list) {
-		for (IMusicFile file : list) {
-			if (file.isTaggable()) {
-				try {
-					file.tag(false);
-				} catch (TagNotFoundException e) {
-					e.printStackTrace();
-				} catch (RTFMException e) {
-					e.printStackTrace();
-				} catch (TagWriterException e) {
-					e.printStackTrace();
+		if (this.tagWorker != null
+				&& this.tagWorker.getState() != StateValue.DONE) {
+			// Job already running
+			JOptionPane.showMessageDialog(this.getMainPanel(),
+					"A job is already running", "Warning",
+					JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			this.tagWorker = new TagJob(list, this.mainPanel.getStatusBar());
+			this.tagWorker.addPropertyChangeListener(new TagJobListener(
+					this.mainPanel.getStatusBar().getProgressBar()));
+			this.tagWorker.execute();
+		}
+	}
+
+	/**
+	 * Displays a message in the status bar of the panel
+	 * 
+	 * @param message
+	 * @param isAnError
+	 */
+	public void displayStatusMessage(String message, boolean isAnError) {
+		if (isAnError) {
+			this.mainPanel.statusPrintError(message);
+		} else {
+			this.mainPanel.statusPrintMessage(message);
+		}
+	}
+
+	/**
+	 * Opens a window to display informations about the selected MusicFiles.
+	 */
+	public void inspectMusicFile() {
+		List<IMusicFile> file = this.mainPanel.getCurrentSelectionOfFiles();
+		for (IMusicFile iMusicFile : file) {
+			try {
+				TagData tagData = null;
+				if (iMusicFile.isTaggable()) {
+					tagData = iMusicFile.getTagData();
 				}
+				FileInspectorDialog dialog = new FileInspectorDialog(iMusicFile, tagData);
+				dialog.setVisible(true);
+			} catch (Exception e) {
+				displayStatusMessage(e.getMessage(), true);
+				e.printStackTrace();
 			}
 		}
 	}
