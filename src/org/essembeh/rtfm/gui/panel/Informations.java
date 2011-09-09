@@ -20,9 +20,12 @@
 package org.essembeh.rtfm.gui.panel;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SpringLayout;
 
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
+import org.essembeh.rtfm.gui.utils.SpringUtilities;
 import org.jdesktop.swingx.JXTaskPane;
 
 public class Informations extends JXTaskPane {
@@ -47,13 +50,32 @@ public class Informations extends JXTaskPane {
 	public void update(MusicManager app) {
 		removeAll();
 		if (app != null && app.getRootFolder() != null) {
+			JPanel panel = new JPanel();
+			panel.setLayout(new SpringLayout());
+			add(panel);
 			String rootFolder = app.getRootFolder().getName();
 			int totalCount = app.getAllFiles().size();
 			int nonTaggedCount = app.getFilteredFiles(Filter.NON_TAGGED).size();
 
-			add(new JLabel("Music folder: " + rootFolder));
-			add(new JLabel("File count: " + totalCount));
-			add(new JLabel("Non tagged count: " + nonTaggedCount));
+			addRow(panel, "Music folder", rootFolder);
+			addRow(panel, "File count", "" + totalCount);
+			addRow(panel, "Non tagged", "" + nonTaggedCount);
+			// Lay out the panel.
+			SpringUtilities.makeCompactGrid(panel, // parent
+					3, 2, // rows, cols
+					1, 1, // initX, initY
+					1, 1); // xPad, yPad
 		}
+
+	}
+
+	/**
+	 * 
+	 * @param name
+	 * @param value
+	 */
+	protected void addRow(JPanel panel, String name, String value) {
+		panel.add(new JLabel(name + ": ", JLabel.TRAILING));
+		panel.add(new JLabel(value));
 	}
 }
