@@ -27,7 +27,9 @@ import javax.swing.JPanel;
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.DatabaseException;
+import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.core.utils.StringUtils;
+import org.essembeh.rtfm.gui.dialog.TagDataDialog;
 import org.essembeh.rtfm.gui.model.MusicManagerModel;
 import org.essembeh.rtfm.gui.panel.MainPanel;
 import org.essembeh.rtfm.interfaces.IMusicFile;
@@ -213,6 +215,26 @@ public class RTFMController {
 			this.mainPanel.statusPrintError(message);
 		} else {
 			this.mainPanel.statusPrintMessage(message);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void inspectMusicFile() {
+		List<IMusicFile> file = this.mainPanel.getCurrentSelectionOfFiles();
+		for (IMusicFile iMusicFile : file) {
+			try {
+				TagData tagData = null;
+				if (iMusicFile.isTaggable()) {
+					tagData = iMusicFile.getTagData();
+				}
+				TagDataDialog dialog = new TagDataDialog(iMusicFile, tagData);
+				dialog.setVisible(true);
+			} catch (Exception e) {
+				displayStatusMessage(e.getMessage(), true);
+				e.printStackTrace();
+			}
 		}
 	}
 }

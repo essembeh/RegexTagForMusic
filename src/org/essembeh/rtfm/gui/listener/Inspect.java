@@ -48,8 +48,7 @@ public class Inspect implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if ((e.getButton() == 1 && e.getClickCount() == 2)) {
-			// TODO implement something
-			System.out.println("double click:");
+			this.controller.inspectMusicFile();
 		}
 	}
 
