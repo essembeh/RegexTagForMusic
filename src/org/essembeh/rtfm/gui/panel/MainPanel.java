@@ -112,4 +112,13 @@ public class MainPanel extends JPanel {
 	public void statusPrintError(String line) {
 		this.statusBar.printError(line);
 	}
+
+	/**
+	 * Returns the status bar
+	 * 
+	 * @return
+	 */
+	public StatusBar getStatusBar() {
+		return this.statusBar;
+	}
 }

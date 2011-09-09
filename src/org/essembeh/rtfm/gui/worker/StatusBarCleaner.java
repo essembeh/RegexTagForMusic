@@ -19,10 +19,11 @@
  */
 package org.essembeh.rtfm.gui.worker;
 
-import javax.swing.JLabel;
 import javax.swing.SwingWorker;
 
-public class JLabelDelayedMessage extends SwingWorker<String, Object> {
+import org.essembeh.rtfm.gui.panel.StatusBar;
+
+public class StatusBarCleaner extends SwingWorker<Void, Void> {
 
 	/**
 	 * Time out in seconds
@@ -30,27 +31,19 @@ public class JLabelDelayedMessage extends SwingWorker<String, Object> {
 	protected int timeoutInSeconds = 0;
 
 	/**
-	 * The label to set text
+	 * The status bar to clean
 	 */
-	protected JLabel label = null;
-
-	/**
-	 * The message to set after timeout
-	 */
-	protected String message = null;
+	protected StatusBar statusBar = null;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param label
+	 * @param statusBar
 	 * @param timeoutInSeconds
-	 * @param messageToSet
 	 */
-	public JLabelDelayedMessage(JLabel label, int timeoutInSeconds,
-			String messageToSet) {
+	public StatusBarCleaner(StatusBar statusBar, int timeoutInSeconds) {
 		this.timeoutInSeconds = timeoutInSeconds;
-		this.label = label;
-		this.message = messageToSet;
+		this.statusBar = statusBar;
 	}
 
 	/*
@@ -59,13 +52,11 @@ public class JLabelDelayedMessage extends SwingWorker<String, Object> {
 	 * @see javax.swing.SwingWorker#doInBackground()
 	 */
 	@Override
-	protected String doInBackground() throws Exception {
-		String oldValue = null;
-		if (this.label != null && timeoutInSeconds > 0) {
+	protected Void doInBackground() throws Exception {
+		if (timeoutInSeconds > 0) {
 			Thread.sleep(this.timeoutInSeconds * 1000);
-			oldValue = this.label.getText();
-			this.label.setText(this.message);
+			this.statusBar.clear();
 		}
-		return oldValue;
+		return null;
 	}
 }

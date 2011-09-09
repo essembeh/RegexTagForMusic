@@ -22,16 +22,19 @@ package org.essembeh.rtfm.gui.controller;
 import java.io.File;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker.StateValue;
 
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.DatabaseException;
 import org.essembeh.rtfm.core.tag.TagData;
-import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.gui.dialog.TagDataDialog;
+import org.essembeh.rtfm.gui.listener.TagJobListener;
 import org.essembeh.rtfm.gui.model.MusicManagerModel;
 import org.essembeh.rtfm.gui.panel.MainPanel;
+import org.essembeh.rtfm.gui.worker.TagJob;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 
 public class RTFMController {
@@ -50,6 +53,11 @@ public class RTFMController {
 	 * The main panel
 	 */
 	protected MainPanel mainPanel;
+
+	/**
+	 * The thread used to tag
+	 */
+	protected TagJob tagWorker;
 
 	/**
 	 * Constructor
@@ -177,30 +185,18 @@ public class RTFMController {
 	 * @param list
 	 */
 	protected void tagListOfFiles(List<IMusicFile> list) {
-		int totalCount = list.size();
-		int errorCount = 0;
-		for (IMusicFile file : list) {
-			if (file.isTaggable()) {
-				try {
-					file.tag(false);
-					displayStatusMessage("Tagging: " + file.getVirtualPath(),
-							false);
-				} catch (Exception e) {
-					errorCount++;
-					e.printStackTrace();
-				}
-			}
-		}
-		if (errorCount == 0) {
-			displayStatusMessage(totalCount
-					+ StringUtils.plural(" file", totalCount) + " tagged",
-					false);
+		if (this.tagWorker != null
+				&& this.tagWorker.getState() != StateValue.DONE) {
+			// Job already running
+			JOptionPane.showMessageDialog(this.getMainPanel(),
+					"A job is already running", "Warning",
+					JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			displayStatusMessage(totalCount
-					+ StringUtils.plural(" file", totalCount) + " tagged with "
-					+ errorCount + StringUtils.plural(" error", errorCount),
-					true);
-
+			this.tagWorker = new TagJob(list, this.mainPanel
+					.getStatusBar());
+			this.tagWorker.addPropertyChangeListener(new TagJobListener(
+					this.mainPanel.getStatusBar().getProgressBar()));
+			this.tagWorker.execute();
 		}
 	}
 
@@ -210,7 +206,7 @@ public class RTFMController {
 	 * @param message
 	 * @param isAnError
 	 */
-	protected void displayStatusMessage(String message, boolean isAnError) {
+	public void displayStatusMessage(String message, boolean isAnError) {
 		if (isAnError) {
 			this.mainPanel.statusPrintError(message);
 		} else {
