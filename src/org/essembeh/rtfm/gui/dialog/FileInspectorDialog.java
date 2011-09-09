@@ -27,10 +27,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 
 import org.essembeh.rtfm.core.tag.TagData;
-import org.essembeh.rtfm.gui.panel.TagDataPane;
+import org.essembeh.rtfm.gui.panel.FileInformations;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 
-public class TagDataDialog extends JDialog {
+public class FileInspectorDialog extends JDialog {
 
 	/**
 	 * UID
@@ -43,9 +43,9 @@ public class TagDataDialog extends JDialog {
 	 * @param file
 	 * @param data
 	 */
-	public TagDataDialog(IMusicFile file, TagData data) {
+	public FileInspectorDialog(IMusicFile file, TagData data) {
 		setLayout(new BorderLayout());
-		add(new TagDataPane(file, data), BorderLayout.CENTER);
+		add(new FileInformations(file, data), BorderLayout.CENTER);
 		JButton closeButton = new JButton("Close");
 		closeButton.addActionListener(new ActionListener() {
 			@Override

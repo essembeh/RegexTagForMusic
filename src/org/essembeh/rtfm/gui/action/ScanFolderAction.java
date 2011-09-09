@@ -38,7 +38,7 @@ public class ScanFolderAction extends AbstractAction {
 	/**
 	 * The controller
 	 */
-	protected RTFMController controller;
+	protected RTFMController controller = null;
 
 	/**
 	 * Constructor

@@ -30,7 +30,7 @@ import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.core.exception.DatabaseException;
 import org.essembeh.rtfm.core.tag.TagData;
-import org.essembeh.rtfm.gui.dialog.TagDataDialog;
+import org.essembeh.rtfm.gui.dialog.FileInspectorDialog;
 import org.essembeh.rtfm.gui.listener.TagJobListener;
 import org.essembeh.rtfm.gui.model.MusicManagerModel;
 import org.essembeh.rtfm.gui.panel.MainPanel;
@@ -42,22 +42,22 @@ public class RTFMController {
 	/**
 	 * The application
 	 */
-	protected MusicManager app;
+	protected MusicManager app = null;
 
 	/**
 	 * The model, used for table view
 	 */
-	protected MusicManagerModel model;
+	protected MusicManagerModel model = null;
 
 	/**
 	 * The main panel
 	 */
-	protected MainPanel mainPanel;
+	protected MainPanel mainPanel = null;
 
 	/**
 	 * The thread used to tag
 	 */
-	protected TagJob tagWorker;
+	protected TagJob tagWorker = null;
 
 	/**
 	 * Constructor
@@ -172,7 +172,7 @@ public class RTFMController {
 	}
 
 	/**
-	 * Update information in the information panel with the current Application
+	 * Updates information in the information panel with the current Application
 	 * informations
 	 */
 	protected void updateInformationPanel() {
@@ -192,8 +192,7 @@ public class RTFMController {
 					"A job is already running", "Warning",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			this.tagWorker = new TagJob(list, this.mainPanel
-					.getStatusBar());
+			this.tagWorker = new TagJob(list, this.mainPanel.getStatusBar());
 			this.tagWorker.addPropertyChangeListener(new TagJobListener(
 					this.mainPanel.getStatusBar().getProgressBar()));
 			this.tagWorker.execute();
@@ -201,7 +200,7 @@ public class RTFMController {
 	}
 
 	/**
-	 * Display a message in the status bar of the panel
+	 * Displays a message in the status bar of the panel
 	 * 
 	 * @param message
 	 * @param isAnError
@@ -215,7 +214,7 @@ public class RTFMController {
 	}
 
 	/**
-	 * 
+	 * Opens a window to display informations about the selected MusicFiles.
 	 */
 	public void inspectMusicFile() {
 		List<IMusicFile> file = this.mainPanel.getCurrentSelectionOfFiles();
@@ -225,7 +224,7 @@ public class RTFMController {
 				if (iMusicFile.isTaggable()) {
 					tagData = iMusicFile.getTagData();
 				}
-				TagDataDialog dialog = new TagDataDialog(iMusicFile, tagData);
+				FileInspectorDialog dialog = new FileInspectorDialog(iMusicFile, tagData);
 				dialog.setVisible(true);
 			} catch (Exception e) {
 				displayStatusMessage(e.getMessage(), true);

@@ -29,7 +29,7 @@ public class Inspect implements MouseListener {
 	/**
 	 * The controller
 	 */
-	protected RTFMController controller;
+	protected RTFMController controller = null;
 
 	/**
 	 * Constructor

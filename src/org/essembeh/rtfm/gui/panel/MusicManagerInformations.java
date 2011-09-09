@@ -28,7 +28,7 @@ import org.essembeh.rtfm.core.MusicManager;
 import org.essembeh.rtfm.gui.utils.SpringUtilities;
 import org.jdesktop.swingx.JXTaskPane;
 
-public class Informations extends JXTaskPane {
+public class MusicManagerInformations extends JXTaskPane {
 
 	/**
 	 * UID
@@ -38,7 +38,7 @@ public class Informations extends JXTaskPane {
 	/**
 	 * Constructor
 	 */
-	public Informations() {
+	public MusicManagerInformations() {
 		super("Informations");
 	}
 

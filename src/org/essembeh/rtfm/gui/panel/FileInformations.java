@@ -28,7 +28,7 @@ import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.gui.utils.SpringUtilities;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 
-public class TagDataPane extends JPanel {
+public class FileInformations extends JPanel {
 
 	/**
 	 * UID
@@ -43,7 +43,7 @@ public class TagDataPane extends JPanel {
 	 * @param file
 	 * @param data
 	 */
-	public TagDataPane(final IMusicFile file, TagData data) {
+	public FileInformations(final IMusicFile file, TagData data) {
 		setLayout(new SpringLayout());
 		addRow("Virtual path", file.getVirtualPath());
 		addRow("Type", file.getType());

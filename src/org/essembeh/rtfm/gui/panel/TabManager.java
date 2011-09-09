@@ -40,7 +40,7 @@ public class TabManager extends JTabbedPane {
 	/**
 	 * The list of tabs
 	 */
-	protected List<Tab> listOfTab;
+	protected List<Tab> listOfTab = null;
 
 	/**
 	 * Constructor

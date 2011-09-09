@@ -29,7 +29,7 @@ public class TagJobListener implements PropertyChangeListener {
 	/**
 	 * The progress bar to update
 	 */
-	protected JProgressBar progressBar;
+	protected JProgressBar progressBar = null;
 
 	/**
 	 * Constructor
