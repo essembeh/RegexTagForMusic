@@ -19,6 +19,7 @@
  */
 package org.essembeh.rtfm.gui.panel;
 
+import org.essembeh.rtfm.gui.action.InspectAction;
 import org.essembeh.rtfm.gui.action.TagAllAction;
 import org.essembeh.rtfm.gui.action.TagSelectionAction;
 import org.essembeh.rtfm.gui.controller.RTFMController;
@@ -37,7 +38,8 @@ public class TagCommands extends JXTaskPane {
 	 * @param controller
 	 */
 	public TagCommands(RTFMController controller) {
-		super("Tag files");
+		super("Tag operations");
+		add(new InspectAction(controller));
 		add(new TagSelectionAction(controller));
 		add(new TagAllAction(controller));
 	}
