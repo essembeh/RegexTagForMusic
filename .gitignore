@@ -1,1 +1,7 @@
 dist/
+.classpath
+.project
+.settings/
+build/
+test/
+
