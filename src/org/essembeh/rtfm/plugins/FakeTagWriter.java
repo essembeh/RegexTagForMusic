@@ -67,8 +67,7 @@ public class FakeTagWriter implements ITagWriter {
 	 */
 	@Override
 	public void setProperty(String name, String value) {
-		this.logger.debug("Trying to set property fo FakeTagWriter: " + name
-				+ "=" + value);
+		this.logger.debug("Trying to set property fo FakeTagWriter: " + name + "=" + value);
 		if ("sleep".equals(name)) {
 			this.sleep = Long.parseLong(value);
 		}

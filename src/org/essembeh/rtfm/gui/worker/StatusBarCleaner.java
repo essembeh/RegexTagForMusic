@@ -53,7 +53,7 @@ public class StatusBarCleaner extends SwingWorker<Void, Void> {
 	 */
 	@Override
 	protected Void doInBackground() throws Exception {
-		if (timeoutInSeconds > 0) {
+		if (this.timeoutInSeconds > 0) {
 			Thread.sleep(this.timeoutInSeconds * 1000);
 			this.statusBar.clear();
 		}

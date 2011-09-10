@@ -22,6 +22,7 @@ package org.essembeh.rtfm.gui.panel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
@@ -75,7 +76,7 @@ public class MusicManagerInformations extends JXTaskPane {
 	 * @param value
 	 */
 	protected void addRow(JPanel panel, String name, String value) {
-		panel.add(new JLabel(name + ": ", JLabel.TRAILING));
+		panel.add(new JLabel(name + ": ", SwingConstants.TRAILING));
 		panel.add(new JLabel(value));
 	}
 }

@@ -56,7 +56,7 @@ public class TagJob extends SwingWorker<Void, Void> {
 	 */
 	@Override
 	protected Void doInBackground() throws Exception {
-		int totalCount = listOfFilesToTag.size();
+		int totalCount = this.listOfFilesToTag.size();
 		int errorCount = 0;
 		setProgress(0);
 		for (int i = 0; i < this.listOfFilesToTag.size(); i++) {
@@ -73,11 +73,9 @@ public class TagJob extends SwingWorker<Void, Void> {
 		}
 		setProgress(100);
 		if (errorCount == 0) {
-			this.statusBar.printMessage(totalCount
-					+ StringUtils.plural(" file", totalCount) + " tagged");
+			this.statusBar.printMessage(totalCount + StringUtils.plural(" file", totalCount) + " tagged");
 		} else {
-			this.statusBar.printError(totalCount
-					+ StringUtils.plural(" file", totalCount) + " tagged with "
+			this.statusBar.printError(totalCount + StringUtils.plural(" file", totalCount) + " tagged with "
 					+ errorCount + StringUtils.plural(" error", errorCount));
 
 		}

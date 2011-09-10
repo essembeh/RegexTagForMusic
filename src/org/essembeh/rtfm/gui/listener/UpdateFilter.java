@@ -29,8 +29,7 @@ import javax.swing.event.ChangeListener;
 
 import org.essembeh.rtfm.gui.controller.RTFMController;
 
-public class UpdateFilter implements ActionListener, KeyListener,
-		ChangeListener {
+public class UpdateFilter implements ActionListener, KeyListener, ChangeListener {
 
 	/**
 	 * The controller

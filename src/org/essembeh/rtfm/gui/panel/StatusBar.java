@@ -58,10 +58,8 @@ public class StatusBar extends JPanel {
 		this.progressBar = new JProgressBar(0, 100);
 		this.progressBar.setValue(100);
 		this.progressBar.setStringPainted(true);
-		this.statusMessage.setFont(new Font(Font.MONOSPACED, Font.ITALIC,
-				this.statusMessage.getFont().getSize() - 1));
-		printMessage(RTFMProperties.getProperty("app.name") + " "
-				+ RTFMProperties.getProperty("app.version"));
+		this.statusMessage.setFont(new Font(Font.MONOSPACED, Font.ITALIC, this.statusMessage.getFont().getSize() - 1));
+		printMessage(RTFMProperties.getProperty("app.name") + " " + RTFMProperties.getProperty("app.version"));
 	}
 
 	/**
@@ -126,7 +124,7 @@ public class StatusBar extends JPanel {
 			this.cleaner.cancel(true);
 		}
 		this.cleaner = new StatusBarCleaner(this, timeout);
-		cleaner.execute();
+		this.cleaner.execute();
 	}
 
 	/**

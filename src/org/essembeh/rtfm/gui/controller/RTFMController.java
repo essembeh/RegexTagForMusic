@@ -81,8 +81,7 @@ public class RTFMController {
 		try {
 			this.app.scanMusicFolder(folder);
 			this.model.updateWithFilter(null);
-			displayStatusMessage("Folder scanned: "
-					+ this.app.getRootFolder().getAbsolutePath(), false);
+			displayStatusMessage("Folder scanned: " + this.app.getRootFolder().getAbsolutePath(), false);
 
 		} catch (Exception e) {
 			displayStatusMessage(e.getMessage(), true);
@@ -101,8 +100,7 @@ public class RTFMController {
 		try {
 			this.app.readDatabase(databaseFile, true);
 			this.model.updateWithFilter(null);
-			displayStatusMessage("Database read: "
-					+ databaseFile.getAbsolutePath(), false);
+			displayStatusMessage("Database read: " + databaseFile.getAbsolutePath(), false);
 		} catch (Exception e) {
 			displayStatusMessage(e.getMessage(), true);
 			e.printStackTrace();
@@ -119,8 +117,7 @@ public class RTFMController {
 	public void doWriteDatabase(File file) {
 		try {
 			this.app.writeDatabase(file);
-			displayStatusMessage("Database written: " + file.getAbsolutePath(),
-					false);
+			displayStatusMessage("Database written: " + file.getAbsolutePath(), false);
 		} catch (DatabaseException e) {
 			displayStatusMessage(e.getMessage(), true);
 			e.printStackTrace();
@@ -185,16 +182,14 @@ public class RTFMController {
 	 * @param list
 	 */
 	protected void tagListOfFiles(List<IMusicFile> list) {
-		if (this.tagWorker != null
-				&& this.tagWorker.getState() != StateValue.DONE) {
+		if (this.tagWorker != null && this.tagWorker.getState() != StateValue.DONE) {
 			// Job already running
-			JOptionPane.showMessageDialog(this.getMainPanel(),
-					"A job is already running", "Warning",
+			JOptionPane.showMessageDialog(this.getMainPanel(), "A job is already running", "Warning",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			this.tagWorker = new TagJob(list, this.mainPanel.getStatusBar());
-			this.tagWorker.addPropertyChangeListener(new TagJobListener(
-					this.mainPanel.getStatusBar().getProgressBar()));
+			this.tagWorker
+					.addPropertyChangeListener(new TagJobListener(this.mainPanel.getStatusBar().getProgressBar()));
 			this.tagWorker.execute();
 		}
 	}

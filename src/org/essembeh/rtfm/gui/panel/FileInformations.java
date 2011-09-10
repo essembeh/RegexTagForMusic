@@ -23,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 
 import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.gui.utils.SpringUtilities;
@@ -70,7 +71,7 @@ public class FileInformations extends JPanel {
 	 * @param value
 	 */
 	protected void addRow(String name, String value) {
-		add(new JLabel(name + ": ", JLabel.TRAILING));
+		add(new JLabel(name + ": ", SwingConstants.TRAILING));
 		JTextField text = new JTextField(value);
 		add(text);
 		this.rowCount++;
