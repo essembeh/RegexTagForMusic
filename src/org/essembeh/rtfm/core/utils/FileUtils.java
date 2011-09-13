@@ -59,4 +59,34 @@ public class FileUtils {
 		}
 		return list;
 	}
+
+	/**
+	 * Make standard path, a Unix path.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public static String makeNormalPath(String path) {
+		String cleanPath = path.replace("\\", "/");
+		return cleanPath;
+	}
+
+	/**
+	 * 
+	 * @param child
+	 * @param parent
+	 * @return
+	 */
+	public static String extractRelativePath(File child, File parent) {
+		byte[] parentPath = parent.getAbsolutePath().getBytes();
+		byte[] childPath = child.getAbsolutePath().getBytes();
+		int i = 0;
+		while (i < parentPath.length && i < child.length()) {
+			if (parentPath[i] != childPath[i]) {
+				break;
+			}
+			i++;
+		}
+		return child.getAbsolutePath().substring(i);
+	}
 }

@@ -29,6 +29,7 @@ import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.core.exception.TagWriterException;
 import org.essembeh.rtfm.core.services.Services;
 import org.essembeh.rtfm.core.tag.TagData;
+import org.essembeh.rtfm.core.utils.FileUtils;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 
 /**
@@ -85,13 +86,9 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 	public MusicFile(File file, File rootFolder) throws ConfigurationException {
 		this.file = file;
 		// Set the virtualPath
-		if (rootFolder != null) {
-			this.virtualPath = this.file.getAbsolutePath().replaceFirst(rootFolder.getAbsolutePath(), "");
-		} else {
-			this.virtualPath = this.file.getAbsolutePath();
-		}
+		String tmpPath = FileUtils.extractRelativePath(file, rootFolder);
 		// For compatibility, replace \ by /
-		this.virtualPath = this.virtualPath.replaceAll("\\\\", "/");
+		this.virtualPath = FileUtils.makeNormalPath(tmpPath);
 		// Search the corresponding handler
 		this.handler = Services.getFilehandlerService().getFileHandlerForFile(getVirtualPath());
 		if (this.handler == null) {

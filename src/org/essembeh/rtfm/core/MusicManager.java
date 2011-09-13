@@ -210,7 +210,6 @@ public class MusicManager {
 			try {
 				logger.debug("Found: " + file.getAbsolutePath());
 				MusicFile musicFile = new MusicFile(file, theRootFolder);
-				logger.debug("MusicFile created: " + musicFile);
 				this.listOfFiles.add(musicFile);
 			} catch (ConfigurationException e) {
 				logger.warn(e.toString());

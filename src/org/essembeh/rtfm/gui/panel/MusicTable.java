@@ -19,7 +19,6 @@
  */
 package org.essembeh.rtfm.gui.panel;
 
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,10 +49,7 @@ public class MusicTable extends JScrollPane {
 	public MusicTable(RTFMController controller) {
 		this.table = new JXTable(controller.getModel());
 		this.table.addMouseListener(new Inspect(controller));
-		setPreferredSize(new Dimension(580, 200));
 		setViewportView(this.table);
-		// Set columns width
-		this.table.getColumn(1).setPreferredWidth(400);
 	}
 
 	/**
