@@ -6,10 +6,11 @@
 if [ -z "$RTFM_HOME" -o ! -d "$RTFM_HOME" ]; then
 	RTFM_BIN="$0"
 	while [ -L "$RTFM_BIN" ]; do
-	    if echo "$RTFM_BIN" | grep -q "^/"; then
-			RTFM_BIN="$(readlink "$RTFM_BIN")"
+		LINK="$(readlink "$RTFM_BIN")"
+		if echo "$LINK" | grep -q "^/"; then
+			RTFM_BIN="$LINK"
 		else
-			RTFM_BIN="$(dirname "$RTFM_BIN")/$(readlink "$RTFM_BIN")"
+			RTFM_BIN="$(dirname "$RTFM_BIN")/$LINK"
 		fi
 	done
 	echo "RegexTagForMusic binary: $RTFM_BIN"
