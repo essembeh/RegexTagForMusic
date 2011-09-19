@@ -94,35 +94,46 @@ public class YajilTagWriter implements ITagWriter {
 	 * org.essembeh.rtfm.core.tag.TagData, boolean)
 	 */
 	@Override
-	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWriterException {
+	public boolean tag(File mp3, TagData tag, boolean dryrun)
+			throws TagWriterException {
 		if (dryrun) {
 			logger.debug("Dry run mode");
 		} else {
+			// Set the tag content
+			ID3v2Tag theTag = new ID3v2Tag();
+			if (tag.getArtist() != null) {
+				theTag.setArtist(tag.getArtist());
+			}
+			if (tag.getAlbum() != null) {
+				theTag.setAlbum(tag.getAlbum());
+			}
+			if (tag.getYear() != null) {
+				theTag.setYear(tag.getYear());
+			}
+			if (tag.getTrackNumber() != null) {
+				theTag.setTrack(tag.getTrackNumber());
+			}
+			if (tag.getTrackName() != null) {
+				theTag.setTitle(tag.getTrackName());
+			}
+			if (tag.getGenre() != null) {
+				theTag.setGenre(tag.getGenre());
+			}
+			MP3File theMp3File = null;
 			try {
-				// Set the tag content
-				ID3v2Tag theTag = new ID3v2Tag();
-				if (tag.getArtist() != null) {
-					theTag.setArtist(tag.getArtist());
-				}
-				if (tag.getAlbum() != null) {
-					theTag.setAlbum(tag.getAlbum());
-				}
-				if (tag.getYear() != null) {
-					theTag.setYear(tag.getYear());
-				}
-				if (tag.getTrackNumber() != null) {
-					theTag.setTrack(tag.getTrackNumber());
-				}
-				if (tag.getTrackName() != null) {
-					theTag.setTitle(tag.getTrackName());
-				}
-				if (tag.getGenre() != null) {
-					theTag.setGenre(tag.getGenre());
-				}
-				MP3File theMp3File = new MP3File(mp3, "rw", true);
+				theMp3File = new MP3File(mp3, "rw", true);
 				theMp3File.writeID3v2Tag(theTag);
 			} catch (Exception e) {
 				throw new TagWriterException(e);
+			} finally {
+				// Try to close the file
+				if (theMp3File != null) {
+					try {
+						theMp3File.close();
+					} catch (IOException e) {
+						throw new TagWriterException(e);
+					}
+				}
 			}
 		}
 		return true;
