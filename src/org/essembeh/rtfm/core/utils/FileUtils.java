@@ -52,7 +52,8 @@ public class FileUtils {
 			for (File file : ls) {
 				if (file.isFile() && (listHidden || (!file.isHidden()))) {
 					list.add(file);
-				} else if (file.isDirectory() && (listHidden || (!file.isHidden()))) {
+				} else if (file.isDirectory()
+						&& (listHidden || (!file.isHidden()))) {
 					list.addAll(searchFilesInFolder(file, listHidden));
 				}
 			}
@@ -81,7 +82,7 @@ public class FileUtils {
 		byte[] parentPath = parent.getAbsolutePath().getBytes();
 		byte[] childPath = child.getAbsolutePath().getBytes();
 		int i = 0;
-		while (i < parentPath.length && i < child.length()) {
+		while (i < parentPath.length && i < childPath.length) {
 			if (parentPath[i] != childPath[i]) {
 				break;
 			}
