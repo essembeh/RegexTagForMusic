@@ -19,6 +19,7 @@
  */
 package org.essembeh.rtfm.gui.panel;
 
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.action.InspectAction;
 import org.essembeh.rtfm.gui.action.TagAllAction;
 import org.essembeh.rtfm.gui.action.TagSelectionAction;
@@ -36,8 +37,9 @@ public class TagCommands extends JXTaskPane {
 	 * Constructor
 	 * 
 	 * @param controller
+	 * @throws ConfigurationException
 	 */
-	public TagCommands(RTFMController controller) {
+	public TagCommands(RTFMController controller) throws ConfigurationException {
 		super("Tag operations");
 		add(new InspectAction(controller));
 		add(new TagSelectionAction(controller));

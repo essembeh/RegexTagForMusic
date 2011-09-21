@@ -6,6 +6,7 @@
 			<tagprovider ref="default" />
 		</filehandler>
 		<filehandler id="COVER" pattern="/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" />
+		<filehandler id="PLAYLIST" pattern="/[^/]+/[^/]+/playlist\.m3u" />
 		<filehandler id="UNKNOWN" pattern=".*" database="false" />
 	</filehandlers>
 </rtfm>

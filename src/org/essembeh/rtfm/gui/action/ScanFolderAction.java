@@ -24,6 +24,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
+import org.essembeh.rtfm.core.conf.RTFMProperties;
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.essembeh.rtfm.gui.utils.Image;
 import org.essembeh.rtfm.gui.utils.ImageUtils;
@@ -44,10 +46,11 @@ public class ScanFolderAction extends AbstractAction {
 	 * Constructor
 	 * 
 	 * @param controller
+	 * @throws ConfigurationException
 	 */
-	public ScanFolderAction(RTFMController controller) {
+	public ScanFolderAction(RTFMController controller) throws ConfigurationException {
 		this.controller = controller;
-		putValue(NAME, "New");
+		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.scan"));
 		try {
 			putValue(SMALL_ICON, new ImageUtils(Image.FILE_NEW).getIcon());
 		} catch (Exception e) {

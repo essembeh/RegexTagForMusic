@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.essembeh.rtfm.interfaces.IMusicFile;
 
@@ -48,8 +49,9 @@ public class MainPanel extends JPanel {
 	 * 
 	 * @param controller
 	 *            the controller
+	 * @throws ConfigurationException
 	 */
-	public MainPanel(RTFMController controller) {
+	public MainPanel(RTFMController controller) throws ConfigurationException {
 		setLayout(new BorderLayout());
 		this.sidePanel = new SidePanel(controller);
 		this.tabManager = new TabManager(controller);

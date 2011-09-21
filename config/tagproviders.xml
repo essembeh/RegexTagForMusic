@@ -3,7 +3,7 @@
 	<tagproviders>
 		<tagprovider id="default">
 			<artist pattern="/(.*)/.*/[0-9][0-9] - .*\.mp3" group="1" />
-			<album pattern="/.*/(.*)/[0-9][0-9] - .*\.mp3" />
+			<album pattern="/.*/([12][0-9][0-9][0-9] - )?(.*)/[0-9][0-9] - .*\.mp3" group="2" />
 			<year pattern="/.*/([12][0-9][0-9][0-9]) - .*/[0-9][0-9] - .*\.mp3" optional="true" />
 			<tracknumber pattern="/.*/.*/([0-9][0-9]) - .*\.mp3" />
 			<trackname pattern="/.*/.*/[0-9][0-9] - (.*)\.mp3" />

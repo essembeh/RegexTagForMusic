@@ -23,6 +23,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import org.essembeh.rtfm.core.conf.RTFMProperties;
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.essembeh.rtfm.gui.utils.Image;
 import org.essembeh.rtfm.gui.utils.ImageUtils;
@@ -43,10 +45,11 @@ public class TagSelectionAction extends AbstractAction {
 	 * Constructor
 	 * 
 	 * @param controller
+	 * @throws ConfigurationException
 	 */
-	public TagSelectionAction(RTFMController controller) {
+	public TagSelectionAction(RTFMController controller) throws ConfigurationException {
 		this.controller = controller;
-		putValue(NAME, "Tag selection");
+		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.tagselection"));
 		try {
 			putValue(SMALL_ICON, new ImageUtils(Image.RUN).getIcon());
 		} catch (Exception e) {

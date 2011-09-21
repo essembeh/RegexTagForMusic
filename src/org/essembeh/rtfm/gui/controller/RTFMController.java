@@ -28,6 +28,7 @@ import javax.swing.SwingWorker.StateValue;
 
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.DatabaseException;
 import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.gui.dialog.FileInspectorDialog;
@@ -64,8 +65,9 @@ public class RTFMController {
 	 * 
 	 * @param app
 	 *            the application
+	 * @throws ConfigurationException
 	 */
-	public RTFMController(MusicManager app) {
+	public RTFMController(MusicManager app) throws ConfigurationException {
 		this.app = app;
 		this.model = new MusicManagerModel(app);
 		this.mainPanel = new MainPanel(this);
@@ -81,7 +83,8 @@ public class RTFMController {
 		try {
 			this.app.scanMusicFolder(folder);
 			this.model.updateWithFilter(null);
-			displayStatusMessage("Folder scanned: " + this.app.getRootFolder().getAbsolutePath(), false);
+			displayStatusMessage("Folder scanned: "
+					+ this.app.getRootFolder().getAbsolutePath(), false);
 
 		} catch (Exception e) {
 			displayStatusMessage(e.getMessage(), true);
@@ -100,7 +103,8 @@ public class RTFMController {
 		try {
 			this.app.readDatabase(databaseFile, true);
 			this.model.updateWithFilter(null);
-			displayStatusMessage("Database read: " + databaseFile.getAbsolutePath(), false);
+			displayStatusMessage("Database read: "
+					+ databaseFile.getAbsolutePath(), false);
 		} catch (Exception e) {
 			displayStatusMessage(e.getMessage(), true);
 			e.printStackTrace();
@@ -117,7 +121,8 @@ public class RTFMController {
 	public void doWriteDatabase(File file) {
 		try {
 			this.app.writeDatabase(file);
-			displayStatusMessage("Database written: " + file.getAbsolutePath(), false);
+			displayStatusMessage("Database written: " + file.getAbsolutePath(),
+					false);
 		} catch (DatabaseException e) {
 			displayStatusMessage(e.getMessage(), true);
 			e.printStackTrace();
@@ -182,14 +187,16 @@ public class RTFMController {
 	 * @param list
 	 */
 	protected void tagListOfFiles(List<IMusicFile> list) {
-		if (this.tagWorker != null && this.tagWorker.getState() != StateValue.DONE) {
+		if (this.tagWorker != null
+				&& this.tagWorker.getState() != StateValue.DONE) {
 			// Job already running
-			JOptionPane.showMessageDialog(this.getMainPanel(), "A job is already running", "Warning",
+			JOptionPane.showMessageDialog(this.getMainPanel(),
+					"A job is already running", "Warning",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			this.tagWorker = new TagJob(list, this.mainPanel.getStatusBar());
-			this.tagWorker
-					.addPropertyChangeListener(new TagJobListener(this.mainPanel.getStatusBar().getProgressBar()));
+			this.tagWorker.addPropertyChangeListener(new TagJobListener(
+					this.mainPanel.getStatusBar().getProgressBar()));
 			this.tagWorker.execute();
 		}
 	}
@@ -219,7 +226,8 @@ public class RTFMController {
 				if (iMusicFile.isTaggable()) {
 					tagData = iMusicFile.getTagData();
 				}
-				FileInspectorDialog dialog = new FileInspectorDialog(iMusicFile, tagData);
+				FileInspectorDialog dialog = new FileInspectorDialog(
+						iMusicFile, tagData);
 				dialog.setVisible(true);
 			} catch (Exception e) {
 				displayStatusMessage(e.getMessage(), true);

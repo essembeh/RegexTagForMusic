@@ -22,6 +22,7 @@ package org.essembeh.rtfm.gui.panel;
 import javax.swing.JPanel;
 
 import org.essembeh.rtfm.core.MusicManager;
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.jdesktop.swingx.VerticalLayout;
 
@@ -41,8 +42,9 @@ public class SidePanel extends JPanel {
 	 * Constructeur
 	 * 
 	 * @param controller
+	 * @throws ConfigurationException
 	 */
-	public SidePanel(RTFMController controller) {
+	public SidePanel(RTFMController controller) throws ConfigurationException {
 		setLayout(new VerticalLayout(10));
 		this.informations = new MusicManagerInformations();
 		add(new FileCommands(controller));

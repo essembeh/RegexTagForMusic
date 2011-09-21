@@ -23,6 +23,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import org.essembeh.rtfm.core.conf.RTFMProperties;
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.essembeh.rtfm.gui.utils.Image;
 import org.essembeh.rtfm.gui.utils.ImageUtils;
@@ -43,10 +45,11 @@ public class InspectAction extends AbstractAction {
 	 * Constructor
 	 * 
 	 * @param controller
+	 * @throws ConfigurationException
 	 */
-	public InspectAction(RTFMController controller) {
+	public InspectAction(RTFMController controller) throws ConfigurationException {
 		this.controller = controller;
-		putValue(NAME, "Inspect selection");
+		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.inspect"));
 		try {
 			putValue(SMALL_ICON, new ImageUtils(Image.RUN).getIcon());
 		} catch (Exception e) {

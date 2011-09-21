@@ -19,6 +19,7 @@
  */
 package org.essembeh.rtfm.gui.panel;
 
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.action.ReadDBAction;
 import org.essembeh.rtfm.gui.action.ScanFolderAction;
 import org.essembeh.rtfm.gui.action.WriteDBAction;
@@ -36,8 +37,9 @@ public class FileCommands extends JXTaskPane {
 	 * Constructor
 	 * 
 	 * @param controller
+	 * @throws ConfigurationException
 	 */
-	public FileCommands(RTFMController controller) {
+	public FileCommands(RTFMController controller) throws ConfigurationException {
 		super("Music management");
 		add(new ScanFolderAction(controller));
 		add(new ReadDBAction(controller));
