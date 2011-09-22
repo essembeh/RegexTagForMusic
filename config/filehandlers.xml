@@ -1,9 +1,13 @@
 <?xml version="1.0"?>
 <rtfm>
 	<filehandlers>
-		<filehandler id="MP3" pattern="/[^/]+/[^/]+/[0-9][0-9] - .*\.mp3" database="true">
+		<filehandler id="MP3_DASH" pattern="/[^/]+/[^/]+/[0-9][0-9] - .*\.mp3" database="true">
 			<tagwriter ref="yajil" />
-			<tagprovider ref="default" />
+			<tagprovider ref="ALBUM_DASH" />
+		</filehandler>
+		<filehandler id="MP3_DOT" pattern="/[^/]+/[^/]+/[0-9][0-9]\..*\.mp3" database="true">
+			<tagwriter ref="yajil" />
+			<tagprovider ref="ALBUM_DOT" />
 		</filehandler>
 		<filehandler id="COVER" pattern="/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" />
 		<filehandler id="PLAYLIST" pattern="/[^/]+/[^/]+/playlist\.m3u" />

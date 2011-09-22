@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.interfaces.ITagField;
 
@@ -80,6 +81,11 @@ public class RegexField implements ITagField {
 			logger.debug("Regex : " + this.pattern.pattern() + " matches path: " + path + ", result: " + value);
 		} else {
 			throw new TagNotFoundException("Cannot match: " + this.pattern.pattern() + " on path: " + path);
+		}
+		if ("true".equalsIgnoreCase(RTFMProperties.getProperty("tag.regexfield.replace_underscore_by_space"))) {
+			if (value != null) {
+				value = value.replace("_", " ");
+			}
 		}
 		return value;
 	}
