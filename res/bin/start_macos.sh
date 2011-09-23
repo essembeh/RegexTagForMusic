@@ -40,7 +40,7 @@ done
 ##
 ## Adding resources folder and config folder to classpath
 ##
-export CLASSPATH=$CLASSPATH:$RTFM_HOME/config:$RTFM_HOME/resources
+export CLASSPATH=$CLASSPATH:$RTFM_HOME/config:$RTFM_HOME/share
 
 
 ##
