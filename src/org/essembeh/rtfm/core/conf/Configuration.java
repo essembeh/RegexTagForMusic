@@ -40,7 +40,6 @@ import org.essembeh.rtfm.core.FileHandler;
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.Filter.Status;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
-import org.essembeh.rtfm.core.services.FileHandlerService;
 import org.essembeh.rtfm.core.services.Services;
 import org.essembeh.rtfm.core.tag.RegexTagProvider;
 import org.essembeh.rtfm.core.tag.fields.FixedField;
@@ -49,7 +48,6 @@ import org.essembeh.rtfm.core.tag.fields.RegexField;
 import org.essembeh.rtfm.core.utils.XmlUtils;
 import org.essembeh.rtfm.interfaces.ICommand;
 import org.essembeh.rtfm.interfaces.ITagField;
-import org.essembeh.rtfm.interfaces.ITagProvider;
 import org.essembeh.rtfm.interfaces.ITagWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -154,8 +152,8 @@ public class Configuration {
 			String tagged = element.getAttribute("tagged");
 			String path = element.getAttribute("path");
 			String type = element.getAttribute("type");
-			filter = new Filter(Status.valueOf(taggable), Status.valueOf(tagged), Pattern.compile(type),
-					Pattern.compile(path));
+			filter = new Filter(Status.valueOf(taggable), Status.valueOf(tagged), Pattern.compile(type), Pattern
+					.compile(path));
 		}
 		logger.debug("Found filter: " + filter);
 		return filter;
@@ -258,30 +256,17 @@ public class Configuration {
 			Element element0 = XmlUtils.getFirstElementByXPath(currentElementHandler, "tagprovider");
 			if (element0 != null) {
 				String ref = element0.getAttribute("ref");
-				ITagProvider tagProvider = Services.getTagProviderService().get(ref);
-				if (tagProvider == null) {
-					logger.error("The tag provider cannot be found: " + ref);
-				} else {
-					logger.debug("Found tag provider: " + tagProvider);
-					fileHandler.setTagProvider(tagProvider);
-				}
+				fileHandler.setTagProviderId(ref);
 			}
 
 			// Optional attribute: TagWriterFactory
 			Element element1 = XmlUtils.getFirstElementByXPath(currentElementHandler, "tagwriter");
 			if (element1 != null) {
 				String ref = element1.getAttribute("ref");
-				ITagWriter tagWriter = Services.getTagWriterService().get(ref);
-				if (tagWriter == null) {
-					logger.error("The tag writer cannot be found: " + ref);
-				} else {
-					logger.debug("Found tag writer: " + tagWriter);
-					fileHandler.setTagWriter(tagWriter);
-				}
+				fileHandler.setTagWriterId(ref);
 			}
-
 			logger.debug("Found file handler: " + fileHandler);
-			FileHandlerService.add(fileHandler);
+			Services.getFilehandlerService().add(fileHandler);
 
 		}
 	}

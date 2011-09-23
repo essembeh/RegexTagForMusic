@@ -35,7 +35,7 @@ public class FileHandlerService {
 	/**
 	 * The data
 	 */
-	protected static List<FileHandler> data = new ArrayList<FileHandler>();
+	protected List<FileHandler> data = new ArrayList<FileHandler>();
 
 	/**
 	 * Finds a file handler that applies for the given virtual path.
@@ -61,8 +61,21 @@ public class FileHandlerService {
 	 * @param object
 	 *            the tag provider
 	 */
-	public static void add(FileHandler object) {
-		data.add(object);
+	public void add(FileHandler object) {
+		this.data.add(object);
 		logger.debug("Adding new FileHandler: " + object);
+	}
+
+	/**
+	 * Return the list Of All FileHandlers ID
+	 * 
+	 * @return
+	 */
+	public List<String> getAllIds() {
+		List<String> listOfId = new ArrayList<String>();
+		for (FileHandler fh : this.data) {
+			listOfId.add(fh.getId());
+		}
+		return listOfId;
 	}
 }

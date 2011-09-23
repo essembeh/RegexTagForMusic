@@ -68,7 +68,7 @@ public class Help implements ICommand {
 		StringBuilder out = new StringBuilder();
 		out.append("Usage: ").append(command).append(" <command>").append("\n");
 		out.append("Available commands are: ");
-		for (String thecommand : Services.getShellCommandService().getListOfShellCommands()) {
+		for (String thecommand : Services.getShellCommandService().getAllIds()) {
 			out.append(thecommand).append(" ");
 		}
 		return out.toString();

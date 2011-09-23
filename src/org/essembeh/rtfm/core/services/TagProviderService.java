@@ -19,7 +19,9 @@
  */
 package org.essembeh.rtfm.core.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -60,5 +62,14 @@ public class TagProviderService {
 		ITagProvider object = this.data.get(id);
 		logger.debug("Get the ITagProvider, id: " + id + ", Object: " + object);
 		return object;
+	}
+
+	/**
+	 * Return the list Of All Tag Providers ID
+	 * 
+	 * @return
+	 */
+	public List<String> getAllIds() {
+		return new ArrayList<String>(this.data.keySet());
 	}
 }

@@ -114,8 +114,8 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 	 * @see org.essembeh.rtfm.core.IMusicFile#getTagData()
 	 */
 	@Override
-	public TagData getTagData() throws TagNotFoundException, RTFMException {
-		TagData tag = this.handler.getTagData(getVirtualPath());
+	public TagData getTagData() throws TagNotFoundException, RTFMException, ConfigurationException {
+		TagData tag = this.handler.parseTagData(getVirtualPath());
 		return tag;
 
 	}
@@ -169,16 +169,14 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 		}
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param dryrun
-	 * @return
-	 * @throws TagWriterException
-	 * @throws TagNotFoundException
-	 * @throws RTFMException
+	 * @see org.essembeh.rtfm.interfaces.IMusicFile#tag(boolean)
 	 */
 	@Override
-	public boolean tag(boolean dryrun) throws TagWriterException, TagNotFoundException, RTFMException {
+	public boolean tag(boolean dryrun) throws TagWriterException, TagNotFoundException, RTFMException,
+			ConfigurationException {
 		if (!isTaggable()) {
 			throw new TagWriterException("This file is not taggable");
 		}

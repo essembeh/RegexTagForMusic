@@ -74,9 +74,9 @@ public class ShellCommandService {
 	/**
 	 * Returns all commands available.
 	 * 
-	 * @return the list
+	 * @return the sorted list
 	 */
-	public List<String> getListOfShellCommands() {
+	public List<String> getAllIds() {
 		List<String> list = new ArrayList<String>();
 		list.addAll(this.data.keySet());
 		Collections.sort(list);

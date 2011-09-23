@@ -19,6 +19,7 @@
  */
 package org.essembeh.rtfm.interfaces;
 
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.RTFMException;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
 import org.essembeh.rtfm.core.exception.TagWriterException;
@@ -38,8 +39,9 @@ public interface IMusicFile {
 	 * @return
 	 * @throws TagNotFoundException
 	 * @throws RTFMException
+	 * @throws ConfigurationException
 	 */
-	public TagData getTagData() throws TagNotFoundException, RTFMException;
+	public TagData getTagData() throws TagNotFoundException, RTFMException, ConfigurationException;
 
 	/**
 	 * Tag the file.
@@ -49,8 +51,10 @@ public interface IMusicFile {
 	 * @throws TagWriterException
 	 * @throws TagNotFoundException
 	 * @throws RTFMException
+	 * @throws ConfigurationException
 	 */
-	public boolean tag(boolean dryrun) throws TagWriterException, TagNotFoundException, RTFMException;
+	public boolean tag(boolean dryrun) throws TagWriterException, TagNotFoundException, RTFMException,
+			ConfigurationException;
 
 	/**
 	 * Return the ID of handler
