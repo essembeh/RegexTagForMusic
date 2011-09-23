@@ -101,7 +101,7 @@
 	<!-- Specific target to use my configuration files -->
 	<target name="seb" depends="dist">
 		<copy todir="${app.folder}/config/" overwrite="true">
-			<fileset dir="${res.path}/examples/config-seb/" includes="*.xml" />
+			<fileset dir="${res.path}/examples/config/seb/" includes="*.xml" />
 		</copy>
 	</target>
 

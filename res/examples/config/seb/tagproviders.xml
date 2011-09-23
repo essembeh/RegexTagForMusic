@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<rtfm>
+	<tagproviders>
+		<tagprovider id="album">
+			<artist pattern="/Albums/(.*)/.*/[0-9][0-9] - .*\.mp3" group="1" />
+			<album pattern="/Albums/.*/(.*)/[0-9][0-9] - .*\.mp3" />
+			<year pattern="/Albums/.*/([12][0-9][0-9][0-9]) - .*/[0-9][0-9] - .*\.mp3" optional="true" />
+			<tracknumber pattern="/Albums/.*/.*/([0-9][0-9]) - .*\.mp3" />
+			<trackname pattern="/Albums/.*/.*/[0-9][0-9] - (.*)\.mp3" />
+			<comment value="Tagged with RegexTagForMusic" />
+		</tagprovider>
+		<tagprovider id="misc">
+			<artist value="#Misc" />
+			<album pattern="/Misc/([^/]+) - ([^/]+)\.mp3" group="1" />
+			<trackname pattern="/Misc/([^/]+) - ([^/]+)\.mp3" group="2" />
+			<comment value="Tagged with RegexTagForMusic" />
+		</tagprovider>
+		<tagprovider id="saga">
+			<artist value="#Saga" />
+			<album pattern="/Saga/([^/]+)/([^/]+)\.mp3" group="1" />
+			<trackname pattern="/Saga/([^/]+)/([^/]+)\.mp3" group="2" />
+			<comment value="Tagged with RegexTagForMusic" />
+		</tagprovider>
+	</tagproviders>
+</rtfm>

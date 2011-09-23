@@ -1,0 +1,30 @@
+DESCRIPTION:
+------------
+This configuration works if you store you music as follow:
+ - Like the "default" configuration but with only lowacase 
+    - For the album folder between year and name
+	- For songs files between number and title
+
+
+TREE STRUCTURE:
+---------------
+example-tree/
+|-- Alice
+|   |-- 2000.First Album
+|   |   |-- 01.Track One.mp3
+|   |   |-- 02.Track Two.mp3
+|   |   |-- 03.Track Three.mp3
+|   |   |-- cover.jpg
+|   |   `-- playlist.m3u
+|   `-- 2001.Second Album
+|       |-- 01.Track One.mp3
+|       |-- 02.Track Two.mp3
+|       |-- 03.Track Three.mp3
+|       |-- cover.jpg
+|       `-- playlist.m3u
+`-- Bob
+    `-- The Album
+        |-- 01.Track One.mp3
+        |-- 02.Track Two.mp3
+        `-- 03.Track Three.mp3
+

@@ -1,0 +1,7 @@
+The folders contains configuration files to allow RegexTagForMusic manage different ways to manage Music.
+In each folder, a README describes the specificities and an example tree.
+
+If a configuration match the way you manage music
+ - Copy the XML files to the "config/" folder of RegexTagForMusic and overwrite the default files
+ - Or copy them into a folder names "$HOME/.rtfm", this works only on GNU/Linux or MacOSX
+   File in this personal folder will "overide" files in the application configuration folder 

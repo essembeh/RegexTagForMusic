@@ -1,0 +1,29 @@
+DESCRIPTION:
+------------
+This configuration works if you store you music as follow:
+ - Like the dot configuration but replacing with underscore instead of spaces 
+    - For all folders and files
+
+
+TREE STRUCTURE:
+---------------
+example-tree/
+|-- Alice
+|   |-- 2000.First_Album
+|   |   |-- 01.Track_One.mp3
+|   |   |-- 02.Track_Two.mp3
+|   |   |-- 03.Track_Three.mp3
+|   |   |-- cover.jpg
+|   |   `-- playlist.m3u
+|   `-- 2001.Second_Album
+|       |-- 01.Track_One.mp3
+|       |-- 02.Track_Two.mp3
+|       |-- 03.Track_Three.mp3
+|       |-- cover.jpg
+|       `-- playlist.m3u
+`-- Bob
+    `-- The_Album
+        |-- 01.Track_One.mp3
+        |-- 02.Track_Two.mp3
+        `-- 03.Track_Three.mp3
+

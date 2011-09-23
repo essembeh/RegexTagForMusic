@@ -1,0 +1,36 @@
+DESCRIPTION:
+------------
+The default configuration works if you store you music as follow:
+ - One folder per artist
+ - One folder per album
+    - In the artist folder
+    - With an optional year starting the album folder name (with separator " - ")
+ - Files in an album folder can be
+    - An MP3 file (.mp3 case sensitive) with a 2 digits number starting the filename (with separator " - ")
+	- A cover names cover.jpg or cover.png (case sensitive)
+	- A playlist named playlist.m3u (case sensitive)
+
+This is the default configuration and the default behaviour. No need to copy any configuration file.
+
+TREE STRUCTURE:
+---------------
+example-tree/
+|-- Alice
+|   |-- 2000 - First Album
+|   |   |-- 01 - Track.mp3
+|   |   |-- 02 - Track.mp3
+|   |   |-- 03 - Track.mp3
+|   |   |-- cover.jpg
+|   |   `-- playlist.m3u
+|   `-- 2001 - Second Album
+|       |-- 01 - Track.mp3
+|       |-- 02 - Track.mp3
+|       |-- 03 - Track.mp3
+|       |-- cover.jpg
+|       `-- playlist.m3u
+`-- Bob
+    `-- The Album
+        |-- 01 - Track.mp3
+        |-- 02 - Track.mp3
+        `-- 03 - Track.mp3
+
