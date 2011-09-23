@@ -21,6 +21,8 @@ package org.essembeh.rtfm.gui.action;
 
 import java.awt.event.ActionEvent;
 
+import java.io.File;
+
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
@@ -70,6 +72,7 @@ public class ScanFolderAction extends AbstractAction {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setDialogTitle("Select the folder containing your Music");
+		fileChooser.setCurrentDirectory(new File("."));
 		int rc = fileChooser.showOpenDialog(null);
 		if (rc == JFileChooser.APPROVE_OPTION) {
 			this.controller.doScanFolder(fileChooser.getSelectedFile());
