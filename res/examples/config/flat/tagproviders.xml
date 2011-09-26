@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<rtfm>
+	<tagproviders>
+		<tagprovider id="ALBUM">
+			<artist pattern="/(.*) - .*/[0-9][0-9] - .*\.mp3" group="1" />
+			<album pattern="/.* - ([12][0-9][0-9][0-9] - )?(.*)/[0-9][0-9] - .*\.mp3" group="2" />
+			<year pattern="/.* - ([12][0-9][0-9][0-9]) - .*/[0-9][0-9] - .*\.mp3" optional="true" />
+			<tracknumber pattern="/.* - .*/([0-9][0-9]) - .*\.mp3" />
+			<trackname pattern="/.* - .*/[0-9][0-9] - (.*)\.mp3" />
+			<comment value="Tagged with RegexTagForMusic" />
+		</tagprovider>
+	</tagproviders>
+</rtfm>
