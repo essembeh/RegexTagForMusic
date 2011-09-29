@@ -45,7 +45,7 @@ public class FileHandlerService {
 	 */
 	public FileHandler getFileHandlerForFile(String virtualPath) {
 		FileHandler fileHandler = null;
-		for (FileHandler currentFileHandler : data) {
+		for (FileHandler currentFileHandler : this.data) {
 			if (currentFileHandler.doesApplyForFile(virtualPath)) {
 				fileHandler = currentFileHandler;
 				break;

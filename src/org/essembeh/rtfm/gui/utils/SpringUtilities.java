@@ -72,6 +72,7 @@ public class SpringUtilities {
 	 * @param yPad
 	 *            y padding between cells
 	 */
+	@SuppressWarnings("null")
 	public static void makeGrid(Container parent, int rows, int cols, int initialX, int initialY, int xPad, int yPad) {
 		SpringLayout layout;
 		try {

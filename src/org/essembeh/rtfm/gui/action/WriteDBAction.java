@@ -20,6 +20,7 @@
 package org.essembeh.rtfm.gui.action;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
@@ -69,6 +70,15 @@ public class WriteDBAction extends AbstractAction {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setDialogTitle("Select the Database File");
+		// Set File chooser default directory to current
+		File currentDirectory = new File(".");
+		// If a DB has been opened, set the chooser default directory to
+		// the directory containing the database.
+		File currentDB = this.controller.getCurrentDatabase();
+		if (currentDB != null) {
+			currentDirectory = currentDB.getParentFile();
+		}
+		fileChooser.setCurrentDirectory(currentDirectory);
 		int rc = fileChooser.showOpenDialog(null);
 		if (rc == JFileChooser.APPROVE_OPTION) {
 			this.controller.doWriteDatabase(fileChooser.getSelectedFile());

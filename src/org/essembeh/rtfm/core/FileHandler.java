@@ -80,7 +80,7 @@ public class FileHandler {
 	 * @return the tagProviderId
 	 */
 	public String getTagProviderId() {
-		return tagProviderId;
+		return this.tagProviderId;
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class FileHandler {
 	 * @return the applyPattern
 	 */
 	public Pattern getApplyPattern() {
-		return applyPattern;
+		return this.applyPattern;
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class FileHandler {
 	 * @return the tagWriterId
 	 */
 	public String getTagWriterId() {
-		return tagWriterId;
+		return this.tagWriterId;
 	}
 
 	/**
