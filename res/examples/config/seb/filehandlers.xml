@@ -2,15 +2,15 @@
 <rtfm>
 	<filehandlers>
 		<filehandler id="ALBUM" pattern="/Albums/[^/]+/[^/]+/[0-9][0-9] - .*\.mp3" database="true">
-			<tagwriter ref="eyeD3-2.4" />
+			<tagwriter ref="eyeD3-ID3v2.4@UTF8" />
 			<tagprovider ref="album" />
 		</filehandler>
 		<filehandler id="MISC" pattern="/Misc/([^/]+) - ([^/]+)\.mp3" database="true">
-			<tagwriter ref="eyeD3-2.4" />
+			<tagwriter ref="eyeD3-ID3v2.4@UTF8" />
 			<tagprovider ref="misc" />
 		</filehandler>
 		<filehandler id="SAGA" pattern="/Saga/([^/]+)/([^/]+)\.mp3" database="true">
-			<tagwriter ref="eyeD3-2.4" />
+			<tagwriter ref="eyeD3-ID3v2.4@UTF8" />
 			<tagprovider ref="saga" />
 		</filehandler>
 		<filehandler id="COVER" pattern="/Albums/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" database="true">

@@ -21,6 +21,7 @@
 package org.essembeh.rtfm.core.utils;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -41,15 +42,22 @@ public class ProcessUtils {
 
 	/**
 	 * 
+	 */
+	public enum STDOUT {
+		stdout, stderr
+	};
+
+	/**
+	 * 
 	 * @param p
-	 * @param getSysErrInsteadOfSysOut
+	 * @param what
 	 * @return
 	 */
-	public static String getProcessSysOut(Process p, boolean getSysErrInsteadOfSysOut) {
+	public static String getProcessSysOut(Process p, STDOUT what) {
 		StringBuilder out = new StringBuilder();
 		if (p != null) {
 			InputStream stream = null;
-			if (getSysErrInsteadOfSysOut) {
+			if (what == STDOUT.stderr) {
 				stream = p.getErrorStream();
 			} else {
 				stream = p.getInputStream();
@@ -61,9 +69,51 @@ public class ProcessUtils {
 				}
 			} catch (IOException e) {
 				logger.error(e.getMessage());
+			} finally {
+				try {
+					if (br != null) {
+						br.close();
+					}
+				} catch (IOException e) {
+					// Do nothing
+				}
 			}
 		}
 		return out.toString();
+	}
+
+	/**
+	 * Try to close stdout, stderr and stdin
+	 * 
+	 * @param p
+	 */
+	public static void closeStreams(Process p) {
+		if (p != null) {
+			Closeable stdout = p.getOutputStream();
+			Closeable stdin = p.getInputStream();
+			Closeable stderr = p.getErrorStream();
+			if (stdout != null) {
+				try {
+					stdout.close();
+				} catch (IOException e) {
+					// Do nothing
+				}
+			}
+			if (stdin != null) {
+				try {
+					stdin.close();
+				} catch (IOException e) {
+					// Do nothing
+				}
+			}
+			if (stderr != null) {
+				try {
+					stderr.close();
+				} catch (IOException e) {
+					// Do nothing
+				}
+			}
+		}
 	}
 
 }

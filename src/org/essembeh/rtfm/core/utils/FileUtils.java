@@ -52,8 +52,7 @@ public class FileUtils {
 			for (File file : ls) {
 				if (file.isFile() && (listHidden || (!file.isHidden()))) {
 					list.add(file);
-				} else if (file.isDirectory()
-						&& (listHidden || (!file.isHidden()))) {
+				} else if (file.isDirectory() && (listHidden || (!file.isHidden()))) {
 					list.addAll(searchFilesInFolder(file, listHidden));
 				}
 			}
@@ -90,4 +89,5 @@ public class FileUtils {
 		}
 		return child.getAbsolutePath().substring(i);
 	}
+
 }

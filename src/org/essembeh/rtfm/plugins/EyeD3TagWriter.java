@@ -20,9 +20,7 @@
 
 package org.essembeh.rtfm.plugins;
 
-import java.io.Closeable;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +31,7 @@ import org.essembeh.rtfm.core.exception.TagWriterException;
 import org.essembeh.rtfm.core.tag.TagData;
 import org.essembeh.rtfm.core.utils.ProcessUtils;
 import org.essembeh.rtfm.core.utils.StringUtils;
+import org.essembeh.rtfm.core.utils.ProcessUtils.STDOUT;
 import org.essembeh.rtfm.interfaces.ITagWriter;
 
 /**
@@ -108,8 +107,8 @@ public class EyeD3TagWriter implements ITagWriter {
 				if (rc != 0) {
 					EyeD3TagWriter.logger.debug("Proccess exited with value: " + rc);
 					if (this.dumpProcessOutput) {
-						EyeD3TagWriter.logger.debug("Sysout: " + ProcessUtils.getProcessSysOut(p, false));
-						EyeD3TagWriter.logger.debug("Syserr: " + ProcessUtils.getProcessSysOut(p, true));
+						EyeD3TagWriter.logger.debug("Sysout: " + ProcessUtils.getProcessSysOut(p, STDOUT.stdout));
+						EyeD3TagWriter.logger.debug("Syserr: " + ProcessUtils.getProcessSysOut(p, STDOUT.stderr));
 					}
 
 				}
@@ -117,32 +116,7 @@ public class EyeD3TagWriter implements ITagWriter {
 				throw new TagWriterException(e);
 			} finally {
 				// Bug "Too many open files": Close all streams
-				if (p != null) {
-					Closeable c = p.getOutputStream();
-					if (c != null) {
-						try {
-							c.close();
-						} catch (IOException e) {
-							EyeD3TagWriter.logger.debug("Error while closing stream: " + e.getMessage());
-						}
-					}
-					c = p.getInputStream();
-					if (c != null) {
-						try {
-							c.close();
-						} catch (IOException e) {
-							EyeD3TagWriter.logger.debug("Error while closing stream: " + e.getMessage());
-						}
-					}
-					c = p.getErrorStream();
-					if (c != null) {
-						try {
-							c.close();
-						} catch (IOException e) {
-							EyeD3TagWriter.logger.debug("Error while closing stream: " + e.getMessage());
-						}
-					}
-				}
+				ProcessUtils.closeStreams(p);
 			}
 		}
 		return rc;

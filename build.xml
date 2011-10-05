@@ -55,6 +55,7 @@
 		</delete>
 		<!-- Set scripts executable -->
 		<chmod dir="${app.folder}/bin" perm="ugo+rx" includes="*.sh" />
+		<chmod dir="${app.folder}/share/scripts" perm="ugo+rx" includes="*.sh" />
 	</target>
 	<target name="build">
 		<mkdir dir="${build.path}" />
