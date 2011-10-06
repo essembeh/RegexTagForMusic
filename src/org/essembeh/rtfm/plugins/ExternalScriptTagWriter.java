@@ -77,7 +77,7 @@ public class ExternalScriptTagWriter implements ITagWriter {
 			String[] array = value.split("=");
 			if (array.length == 2) {
 				logger.debug("Adding to env: " + array[0] + "=" + array[1]);
-				addToEnv.put(array[0], array[1]);
+				this.addToEnv.put(array[0], array[1]);
 			} else {
 				logger.warn("Cannot add to env: " + value);
 			}
@@ -101,12 +101,12 @@ public class ExternalScriptTagWriter implements ITagWriter {
 		// Build env.
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		Map<String, String> processBuilderEnv = processBuilder.environment();
-		processBuilderEnv.put("RTFM_ARTIST", tag.getArtist());
-		processBuilderEnv.put("RTFM_ALBUM", tag.getAlbum());
-		processBuilderEnv.put("RTFM_YEAR", tag.getYear());
-		processBuilderEnv.put("RTFM_TRACKNAME", tag.getTrackName());
-		processBuilderEnv.put("RTFM_TRACKNUMBER", tag.getTrackNumber());
-		processBuilderEnv.put("RTFM_COMMENT", tag.getComment());
+		addIfValueNotNull(processBuilderEnv, "RTFM_ARTIST", tag.getArtist());
+		addIfValueNotNull(processBuilderEnv, "RTFM_ALBUM", tag.getAlbum());
+		addIfValueNotNull(processBuilderEnv, "RTFM_YEAR", tag.getYear());
+		addIfValueNotNull(processBuilderEnv, "RTFM_TRACKNAME", tag.getTrackName());
+		addIfValueNotNull(processBuilderEnv, "RTFM_TRACKNUMBER", tag.getTrackNumber());
+		addIfValueNotNull(processBuilderEnv, "RTFM_COMMENT", tag.getComment());
 		// Set custom env
 		for (String key : this.addToEnv.keySet()) {
 			processBuilderEnv.put(key, this.addToEnv.get(key));
@@ -158,6 +158,19 @@ public class ExternalScriptTagWriter implements ITagWriter {
 	@Override
 	public void removeTag(File mp3, boolean dryrun) throws TagWriterException {
 		// Do nothing because everything is done in the script
-		logger.info("ExternalScriptTagWriter do nothing for removing tags");
+		logger.debug("ExternalScriptTagWriter do nothing for removing tags");
+	}
+
+	/**
+	 * Add a key/value in map if the value is not null
+	 * 
+	 * @param env
+	 * @param key
+	 * @param value
+	 */
+	protected static void addIfValueNotNull(Map<String, String> env, String key, String value) {
+		if (value != null) {
+			env.put(key, value);
+		}
 	}
 }
