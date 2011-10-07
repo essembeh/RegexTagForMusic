@@ -22,13 +22,10 @@ package org.essembeh.rtfm.gui.panel;
 import java.awt.BorderLayout;
 import java.util.List;
 
-import javax.swing.JPanel;
-
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.gui.controller.RTFMController;
-import org.essembeh.rtfm.interfaces.IMusicFile;
 
-public class Tab extends JPanel {
+public class FilterableTab extends Tab {
 
 	/**
 	 * UID
@@ -38,21 +35,7 @@ public class Tab extends JPanel {
 	/**
 	 * The panel for filtering files
 	 */
-	protected Filter filter = null;
-
-	/**
-	 * The table that displays music files
-	 */
-	protected MusicTablePane table = null;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param controller
-	 */
-	public Tab(RTFMController controller) {
-		this(controller, Filter.ALL);
-	}
+	protected FilterPane filterPane = null;
 
 	/**
 	 * Constructor
@@ -61,11 +44,11 @@ public class Tab extends JPanel {
 	 * @param filter
 	 * @param disableFilterEdition
 	 */
-	public Tab(RTFMController controller, Filter filter) {
-		this.filter = filter;
-		this.table = new MusicTablePane(controller);
-		setLayout(new BorderLayout());
-		add(this.table, BorderLayout.CENTER);
+	public FilterableTab(RTFMController controller) {
+		super(controller);
+		// Create a filter pane at bottom
+		this.filterPane = new FilterPane(controller);
+		add(this.filterPane, BorderLayout.SOUTH);
 	}
 
 	/**
@@ -73,22 +56,15 @@ public class Tab extends JPanel {
 	 * @return
 	 */
 	public Filter getFilter() {
-		return this.filter;
+		this.filter = this.filterPane.getFilter();
+		return super.getFilter();
 	}
 
 	/**
 	 * 
-	 * @return
+	 * @param list
 	 */
-	public List<IMusicFile> getSelectionOfFiles() {
-		return this.table.getSelectedMusicFiles();
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public List<IMusicFile> getAllFiles() {
-		return this.table.getAllFiles();
+	public void setTypeList(List<String> list) {
+		this.filterPane.setTypeList(list);
 	}
 }

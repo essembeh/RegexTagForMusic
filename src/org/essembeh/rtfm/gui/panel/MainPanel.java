@@ -123,4 +123,12 @@ public class MainPanel extends JPanel {
 	public StatusBar getStatusBar() {
 		return this.statusBar;
 	}
+
+	/**
+	 * 
+	 * @param modelTypes
+	 */
+	public void setTypeList(List<String> list) {
+		this.tabManager.setTypeList(list);
+	}
 }

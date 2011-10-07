@@ -152,8 +152,8 @@ public class Configuration {
 			String tagged = element.getAttribute("tagged");
 			String path = element.getAttribute("path");
 			String type = element.getAttribute("type");
-			filter = new Filter(Status.valueOf(taggable), Status.valueOf(tagged), Pattern.compile(type), Pattern
-					.compile(path));
+			filter = new Filter(Status.valueOf(taggable), Status.valueOf(tagged), Pattern.compile(type),
+					Pattern.compile(path));
 		}
 		logger.debug("Found filter: " + filter);
 		return filter;

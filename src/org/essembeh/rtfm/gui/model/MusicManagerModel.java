@@ -19,6 +19,7 @@
  */
 package org.essembeh.rtfm.gui.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -163,5 +164,22 @@ public class MusicManagerModel extends AbstractTableModel {
 	@Override
 	public boolean isCellEditable(int arg0, int arg1) {
 		return false;
+	}
+
+	/**
+	 * Returns the list of all Types
+	 * 
+	 * @return
+	 */
+	public List<String> getTypeList() {
+		List<String> listOfTypes = new ArrayList<String>();
+		if (this.app != null) {
+			for (IMusicFile musicFile : this.app.getAllFiles()) {
+				if (!listOfTypes.contains(musicFile.getType())) {
+					listOfTypes.add(musicFile.getType());
+				}
+			}
+		}
+		return listOfTypes;
 	}
 }

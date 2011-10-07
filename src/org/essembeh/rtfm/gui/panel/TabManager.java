@@ -38,9 +38,10 @@ public class TabManager extends JTabbedPane {
 	private static final long serialVersionUID = -5563787269249312695L;
 
 	/**
-	 * The list of tabs
+	 * The tabs
 	 */
-	protected List<Tab> listOfTab = null;
+	protected FilterableTab filterableTab = null;
+	protected List<Tab> listOfTabs = null;
 
 	/**
 	 * Constructor
@@ -48,16 +49,16 @@ public class TabManager extends JTabbedPane {
 	 * @param controller
 	 */
 	public TabManager(RTFMController controller) {
-		this.listOfTab = new ArrayList<Tab>();
-
-		this.listOfTab.add(new Tab(controller));
-		add("All", this.listOfTab.get(0));
+		this.filterableTab = new FilterableTab(controller);
+		this.listOfTabs = new ArrayList<Tab>();
+		this.listOfTabs.add(this.filterableTab);
+		add("All", this.listOfTabs.get(0));
 
 		for (int i = 0; i < Services.getTabService().getTabCount(); i++) {
 			String name = Services.getTabService().getTabName(i);
 			Filter filter = Services.getTabService().getTabFilter(i);
-			this.listOfTab.add(new Tab(controller, filter, true));
-			add(name, this.listOfTab.get(i + 1));
+			this.listOfTabs.add(new Tab(controller, filter));
+			add(name, this.listOfTabs.get(i + 1));
 		}
 		addChangeListener(new UpdateFilter(controller));
 	}
@@ -69,7 +70,7 @@ public class TabManager extends JTabbedPane {
 	 */
 	public Filter getCurrentFilter() {
 		int sel = this.getSelectedIndex();
-		return this.listOfTab.get(sel).getFilter();
+		return this.listOfTabs.get(sel).getFilter();
 	}
 
 	/**
@@ -79,7 +80,7 @@ public class TabManager extends JTabbedPane {
 	 */
 	public List<IMusicFile> getCurrentSelectionOfFiles() {
 		int sel = this.getSelectedIndex();
-		return this.listOfTab.get(sel).getSelectionOfFiles();
+		return this.listOfTabs.get(sel).getSelectionOfFiles();
 	}
 
 	/**
@@ -89,6 +90,14 @@ public class TabManager extends JTabbedPane {
 	 */
 	public List<IMusicFile> getAllFiles() {
 		int sel = this.getSelectedIndex();
-		return this.listOfTab.get(sel).getAllFiles();
+		return this.listOfTabs.get(sel).getAllFiles();
+	}
+
+	/**
+	 * 
+	 * @param list
+	 */
+	public void setTypeList(List<String> list) {
+		this.filterableTab.setTypeList(list);
 	}
 }

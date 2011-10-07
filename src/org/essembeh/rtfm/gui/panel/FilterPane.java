@@ -23,6 +23,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -30,6 +31,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.Filter;
@@ -63,10 +65,10 @@ public class FilterPane extends JPanel {
 	/**
 	 * UI Items
 	 */
-	JComboBox taggable;
-	JComboBox tagged;
-	JTextField pathRegex;
-	JTextField typeRegex;
+	JComboBox taggableComboBox;
+	JComboBox taggedComboBox;
+	JTextField pathRegexTextField;
+	JComboBox typeComboBox;
 
 	/**
 	 * The controller
@@ -80,10 +82,8 @@ public class FilterPane extends JPanel {
 	 *            the controller
 	 * @param filter
 	 *            the filter to show
-	 * @param disableFilterEdition
-	 *            if true, the filter will be disabled for the user
 	 */
-	public FilterPane(final RTFMController controller, Filter filter, boolean disableFilterEdition) {
+	public FilterPane(final RTFMController controller) {
 
 		this.controller = controller;
 
@@ -96,42 +96,40 @@ public class FilterPane extends JPanel {
 		this.taggedStrings.put(Status.NO_FILTER, "All");
 
 		// Create UI
-		this.taggable = new JComboBox();
-		this.taggable.setEditable(false);
-		this.taggable.addItem(this.taggableStrings.get(Status.NO_FILTER));
-		this.taggable.addItem(this.taggableStrings.get(Status.ENABLE));
-		this.taggable.addItem(this.taggableStrings.get(Status.INVERSE));
-		this.tagged = new JComboBox();
-		this.tagged.setEditable(false);
-		this.tagged.addItem(this.taggedStrings.get(Status.NO_FILTER));
-		this.tagged.addItem(this.taggedStrings.get(Status.ENABLE));
-		this.tagged.addItem(this.taggedStrings.get(Status.INVERSE));
-		this.pathRegex = new JTextField();
-		this.typeRegex = new JTextField();
+		this.taggableComboBox = new JComboBox();
+		this.taggableComboBox.setEditable(false);
+		this.taggableComboBox.addItem(this.taggableStrings.get(Status.NO_FILTER));
+		this.taggableComboBox.addItem(this.taggableStrings.get(Status.ENABLE));
+		this.taggableComboBox.addItem(this.taggableStrings.get(Status.INVERSE));
+		this.taggedComboBox = new JComboBox();
+		this.taggedComboBox.setEditable(false);
+		this.taggedComboBox.addItem(this.taggedStrings.get(Status.NO_FILTER));
+		this.taggedComboBox.addItem(this.taggedStrings.get(Status.ENABLE));
+		this.taggedComboBox.addItem(this.taggedStrings.get(Status.INVERSE));
+		this.pathRegexTextField = new JTextField();
+		this.typeComboBox = new JComboBox();
 
 		setLayout(new GridLayout(2, 4));
-		add(new JLabel("Taggable"));
-		add(this.taggable);
-		add(new JLabel("Tagged"));
-		add(this.tagged);
-		add(new JLabel("Regex on path"));
-		add(this.pathRegex);
-		add(new JLabel("Type"));
-		add(this.typeRegex);
-
-		setFilter(filter, disableFilterEdition);
+		add(new JLabel("Taggable ", SwingConstants.RIGHT));
+		add(this.taggableComboBox);
+		add(new JLabel("Tagged ", SwingConstants.RIGHT));
+		add(this.taggedComboBox);
+		add(new JLabel("Path contains ", SwingConstants.RIGHT));
+		add(this.pathRegexTextField);
+		add(new JLabel("Type ", SwingConstants.RIGHT));
+		add(this.typeComboBox);
 
 		// Set listeners
-		this.taggable.addActionListener(new UpdateFilter(controller));
-		this.tagged.addActionListener(new UpdateFilter(controller));
-		this.typeRegex.addActionListener(new UpdateFilter(controller));
-		this.pathRegex.addKeyListener(new UpdateFilter(controller));
+		this.taggableComboBox.addActionListener(new UpdateFilter(controller));
+		this.taggedComboBox.addActionListener(new UpdateFilter(controller));
+		this.typeComboBox.addActionListener(new UpdateFilter(controller));
+		this.pathRegexTextField.addKeyListener(new UpdateFilter(controller));
 		// Anonymous listener because only does nothing interesting
-		this.tagged.addActionListener(new ActionListener() {
+		this.taggedComboBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (FilterPane.this.tagged.getSelectedIndex() > 0) {
-					FilterPane.this.taggable.setSelectedIndex(1);
+				if (FilterPane.this.taggedComboBox.getSelectedIndex() > 0) {
+					FilterPane.this.taggableComboBox.setSelectedIndex(1);
 				}
 			}
 		});
@@ -144,15 +142,16 @@ public class FilterPane extends JPanel {
 	 */
 	public Filter getFilter() {
 		String pathPattern = ANYTHING;
-		if (this.pathRegex.getText().length() > 0) {
-			pathPattern = ANYTHING + this.pathRegex.getText() + ANYTHING;
+		if (this.pathRegexTextField.getText().length() > 0) {
+			pathPattern = ANYTHING + this.pathRegexTextField.getText() + ANYTHING;
 		}
 		String typePattern = ANYTHING;
-		if (this.typeRegex.getText().length() > 0) {
-			typePattern = this.typeRegex.getText();
+		if (this.typeComboBox.getSelectedIndex() > 0) {
+			typePattern = this.typeComboBox.getSelectedItem().toString();
 		}
-		Filter f = new Filter(getStatusFromCombobox(this.taggable, this.taggableStrings), getStatusFromCombobox(
-				this.tagged, this.taggedStrings), Pattern.compile(typePattern), Pattern.compile(pathPattern));
+		Filter f = new Filter(getStatusFromCombobox(this.taggableComboBox, this.taggableStrings),
+				getStatusFromCombobox(this.taggedComboBox, this.taggedStrings), Pattern.compile(typePattern),
+				Pattern.compile(pathPattern));
 
 		logger.debug("Filter: " + f);
 		return f;
@@ -178,32 +177,15 @@ public class FilterPane extends JPanel {
 	}
 
 	/**
-	 * Change the filtering options
 	 * 
-	 * @param filter
-	 * @param disableFilterEdition
+	 * @param list
 	 */
-	public void setFilter(Filter filter, boolean disableFilterEdition) {
-		this.taggable.setSelectedItem(this.taggableStrings.get(filter.getTaggable()));
-		this.tagged.setSelectedItem(this.taggedStrings.get(filter.getTagged()));
-		Pattern patternOnPath = filter.getPath();
-		if (patternOnPath != null) {
-			this.pathRegex.setText(patternOnPath.pattern());
-		} else {
-			this.pathRegex.setText("");
+	public void setTypeList(List<String> list) {
+		this.typeComboBox.removeAllItems();
+		this.typeComboBox.addItem("All");
+		for (String string : list) {
+			this.typeComboBox.addItem(string);
 		}
-		Pattern patternOnType = filter.getType();
-		if (patternOnType != null) {
-			this.typeRegex.setText(patternOnType.pattern());
-		} else {
-			this.typeRegex.setText("");
-		}
-
-		if (disableFilterEdition) {
-			this.pathRegex.setEnabled(false);
-			this.typeRegex.setEnabled(false);
-			this.taggable.setEnabled(false);
-			this.tagged.setEnabled(false);
-		}
+		this.typeComboBox.setSelectedIndex(0);
 	}
 }

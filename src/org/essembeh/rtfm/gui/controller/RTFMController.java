@@ -184,6 +184,7 @@ public class RTFMController {
 	 */
 	protected void updateInformationPanel() {
 		this.mainPanel.updateInformationPanel(this.app);
+		this.mainPanel.setTypeList(getModelTypes());
 	}
 
 	/**
@@ -245,5 +246,13 @@ public class RTFMController {
 	 */
 	public File getCurrentDatabase() {
 		return this.currentDatabase;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getModelTypes() {
+		return this.model.getTypeList();
 	}
 }
