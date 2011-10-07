@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.TagNotFoundException;
+import org.essembeh.rtfm.core.utils.StringUtils;
 import org.essembeh.rtfm.interfaces.ITagField;
 
 /**
@@ -82,12 +83,7 @@ public class RegexField implements ITagField {
 		} else {
 			throw new TagNotFoundException("Cannot match: " + this.pattern.pattern() + " on path: " + path);
 		}
-		if ("true".equalsIgnoreCase(RTFMProperties.getProperty("tag.regexfield.replace_underscore_by_space"))) {
-			if (value != null) {
-				value = value.replace("_", " ");
-			}
-		}
-		return value;
+		return updateString(value);
 	}
 
 	/*
@@ -98,6 +94,27 @@ public class RegexField implements ITagField {
 	@Override
 	public String toString() {
 		return "RegexField";
+	}
+
+	/**
+	 * Update the given string with users options (replace _, capitalize ...)
+	 * 
+	 * @param str
+	 * @return
+	 */
+	protected String updateString(String input) {
+		String output = input;
+		if (input != null) {
+			// sed "s/_/ /g
+			if ("true".equalsIgnoreCase(RTFMProperties.getProperty("tag.regexfield.replace_underscore_by_space"))) {
+				output = output.replace("_", " ");
+			}
+			// Capitalize
+			if ("true".equalsIgnoreCase(RTFMProperties.getProperty("tag.regexfield.capitalize_first_letters"))) {
+				output = StringUtils.capitalizeFirstLetters(output, true);
+			}
+		}
+		return output;
 	}
 
 }

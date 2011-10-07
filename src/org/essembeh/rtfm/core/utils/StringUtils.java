@@ -107,4 +107,29 @@ public class StringUtils {
 		}
 		return list;
 	}
+
+	/**
+	 * Capitalize
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public static String capitalizeFirstLetters(String input, boolean allWords) {
+		String output = input;
+		if (input != null) {
+			char[] array = input.toCharArray();
+			boolean doUpperCase = true;
+			for (int i = 0; i < input.length(); i++) {
+				if (doUpperCase) {
+					array[i] = Character.toUpperCase(array[i]);
+					doUpperCase = false;
+				} else {
+					doUpperCase = allWords && !Character.isLetterOrDigit(array[i]);
+				}
+			}
+			output = new String(array);
+		}
+		return output;
+
+	}
 }
