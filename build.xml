@@ -19,7 +19,7 @@
 -->
 <project basedir="." default="dist">
 	<property name="app.name" value="rtfm" />
-	<property name="app.version" value="1.0beta1" />
+	<property name="app.version" value="1.0beta2" />
 	<property name="res.path" value="res/" />
 	<property name="build.path" value="dist/build/" />
 	<property name="junit.path" value="dist/junit/" />
