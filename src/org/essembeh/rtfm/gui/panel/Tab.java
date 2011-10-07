@@ -43,7 +43,7 @@ public class Tab extends JPanel {
 	/**
 	 * The table that displays music files
 	 */
-	protected MusicTable table = null;
+	protected MusicTablePane table = null;
 
 	/**
 	 * Constructor
@@ -63,7 +63,7 @@ public class Tab extends JPanel {
 	 */
 	public Tab(RTFMController controller, Filter filter, boolean disableFilterEdition) {
 		setLayout(new BorderLayout());
-		this.table = new MusicTable(controller);
+		this.table = new MusicTablePane(controller);
 		this.filterPane = new FilterPane(controller, filter, disableFilterEdition);
 		add(this.table, BorderLayout.CENTER);
 		add(this.filterPane, BorderLayout.SOUTH);

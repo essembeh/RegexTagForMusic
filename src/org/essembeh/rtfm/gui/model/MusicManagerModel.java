@@ -67,7 +67,7 @@ public class MusicManagerModel extends AbstractTableModel {
 	 */
 	public void updateWithFilter(Filter currentFilter) {
 		this.list = this.app.getFilteredFiles(currentFilter);
-		fireTableStructureChanged();
+		fireTableDataChanged();
 	}
 
 	/*
@@ -78,8 +78,18 @@ public class MusicManagerModel extends AbstractTableModel {
 	@Override
 	public Class<?> getColumnClass(int arg0) {
 		Class<?> clazz = String.class;
-		if (arg0 == 1) {
+		switch (arg0) {
+		case 0:
+			clazz = String.class;
+			break;
+		case 1:
 			clazz = IMusicFile.class;
+			break;
+		case 2:
+			clazz = Boolean.class;
+			break;
+		default:
+			break;
 		}
 		return clazz;
 	}
@@ -124,14 +134,22 @@ public class MusicManagerModel extends AbstractTableModel {
 		Object object = "";
 		if (arg0 < this.list.size()) {
 			IMusicFile mf = this.list.get(arg0);
-			if (arg1 == 0) {
+			switch (arg1) {
+			case 0:
 				object = mf.getType();
-			} else if (arg1 == 1) {
+				break;
+			case 1:
 				object = mf;
-			} else {
-				if (mf.isTaggable()) {
-					object = "" + mf.isTagged();
+				break;
+			case 2:
+				if (!mf.isTaggable()) {
+					object = null;
+				} else {
+					object = new Boolean(mf.isTagged());
 				}
+				break;
+			default:
+				break;
 			}
 		}
 		return object;

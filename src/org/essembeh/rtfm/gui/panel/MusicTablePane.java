@@ -25,11 +25,10 @@ import java.util.List;
 import javax.swing.JScrollPane;
 
 import org.essembeh.rtfm.gui.controller.RTFMController;
-import org.essembeh.rtfm.gui.listener.Inspect;
+import org.essembeh.rtfm.gui.tables.MusicTable;
 import org.essembeh.rtfm.interfaces.IMusicFile;
-import org.jdesktop.swingx.JXTable;
 
-public class MusicTable extends JScrollPane {
+public class MusicTablePane extends JScrollPane {
 
 	/**
 	 * UID
@@ -39,16 +38,15 @@ public class MusicTable extends JScrollPane {
 	/**
 	 * UI Elements
 	 */
-	protected JXTable table = null;
+	protected MusicTable table = null;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param controller
 	 */
-	public MusicTable(RTFMController controller) {
-		this.table = new JXTable(controller.getModel());
-		this.table.addMouseListener(new Inspect(controller));
+	public MusicTablePane(RTFMController controller) {
+		this.table = new MusicTable(controller);
 		setViewportView(this.table);
 	}
 
