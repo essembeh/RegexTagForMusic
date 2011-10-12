@@ -50,6 +50,7 @@ public class SidePanel extends JPanel {
 		add(new FileCommands(controller));
 		add(this.informations);
 		add(new TagCommands(controller));
+		add(new PropertiesCommands(controller));
 	}
 
 	/**

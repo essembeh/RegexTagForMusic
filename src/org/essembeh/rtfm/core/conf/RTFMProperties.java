@@ -91,4 +91,13 @@ public class RTFMProperties {
 		init();
 		return properties.getProperty(string);
 	}
+
+	/**
+	 * 
+	 * @param name
+	 * @param value
+	 */
+	public static void updateProperty(String name, String value) {
+		properties.setProperty(name, value);
+	}
 }

@@ -28,6 +28,7 @@ import javax.swing.SwingWorker.StateValue;
 
 import org.essembeh.rtfm.core.Filter;
 import org.essembeh.rtfm.core.MusicManager;
+import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.DatabaseException;
 import org.essembeh.rtfm.core.tag.TagData;
@@ -254,5 +255,14 @@ public class RTFMController {
 	 */
 	public List<String> getModelTypes() {
 		return this.model.getTypeList();
+	}
+
+	/**
+	 * 
+	 * @param name
+	 * @param value
+	 */
+	public void updateProperty(String name, String value) {
+		RTFMProperties.updateProperty(name, value);
 	}
 }
