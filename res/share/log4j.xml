@@ -5,27 +5,24 @@
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %C:   %m %n" />
 		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+        	<param name="levelMin" value="DEBUG" />
+			<param name="levelMax" value="FATAL" />
+		</filter>
 	</appender>
 	<appender name="file" class="org.apache.log4j.FileAppender">
 		<param name="file" value="${java.io.tmpdir}/rtfm.log" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %C:   %m %n" />
 		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+        	<param name="levelMin" value="INFO" />
+			<param name="levelMax" value="FATAL" />
+		</filter>
 	</appender>
-	<logger name="org.essembeh.rtfm.core" additivity="false">
-		<level value="INFO" />
-		<appender-ref ref="file" />
-	</logger>
-	<logger name="org.essembeh.rtfm.gui" additivity="false">
-		<level value="INFO" />
-		<appender-ref ref="file" />
-	</logger>
-	<logger name="org.essembeh.rtfm.plugins" additivity="false">
-		<level value="INFO" />
-		<appender-ref ref="file" />
-	</logger>
-	<logger name="org.essembeh.shell" additivity="false">
-		<level value="INFO" />
+	<logger name="org.essembeh.rtfm" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="console" />
 		<appender-ref ref="file" />
 	</logger>
 	<root>

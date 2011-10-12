@@ -51,7 +51,7 @@ public class InspectAction extends AbstractAction {
 		this.controller = controller;
 		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.inspect"));
 		try {
-			putValue(SMALL_ICON, new ImageUtils(Image.RUN).getIcon());
+			putValue(SMALL_ICON, new ImageUtils(Image.INSPECT).getIcon());
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}

@@ -27,6 +27,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.graphics.GraphicsUtilities;
 
 public class ImageUtils {
@@ -36,6 +37,14 @@ public class ImageUtils {
 	 */
 	public static final String ICONS_FOLDER = "icons/";
 
+	/**
+	 * Logger
+	 */
+	private static Logger logger = Logger.getLogger(ImageUtils.class);
+
+	/**
+	 * Attributes
+	 */
 	protected String filename;
 
 	/**
@@ -67,6 +76,9 @@ public class ImageUtils {
 	public BufferedImage getImage() throws IOException {
 		String theFilename = ICONS_FOLDER + this.filename;
 		InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(theFilename);
+		if (stream == null) {
+			logger.warn("Cannot find image: " + this.filename);
+		}
 		return ImageIO.read(stream);
 	}
 

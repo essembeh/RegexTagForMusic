@@ -51,7 +51,7 @@ public class TagAllAction extends AbstractAction {
 		this.controller = controller;
 		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.tagall"));
 		try {
-			putValue(SMALL_ICON, new ImageUtils(Image.RUN).getIcon());
+			putValue(SMALL_ICON, new ImageUtils(Image.RUN_ALL).getIcon());
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}

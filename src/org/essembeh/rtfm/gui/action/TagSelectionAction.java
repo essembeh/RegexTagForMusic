@@ -51,7 +51,7 @@ public class TagSelectionAction extends AbstractAction {
 		this.controller = controller;
 		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.tagselection"));
 		try {
-			putValue(SMALL_ICON, new ImageUtils(Image.RUN).getIcon());
+			putValue(SMALL_ICON, new ImageUtils(Image.RUN_SELECTION).getIcon());
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}

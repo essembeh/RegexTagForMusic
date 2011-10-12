@@ -21,7 +21,14 @@ package org.essembeh.rtfm.gui.utils;
 
 public enum Image {
 
-	FILE_OPEN("document-open.png"), FILE_SAVE("document-save.png"), FILE_NEW("document-new.png"), RUN("gnome-run.png");
+	FILE_NEW("document-new.png"),
+	FILE_OPEN("document-open.png"),
+	FILE_SAVE("document-save.png"),
+	INSPECT("inspect.png"),
+	RUN_SELECTION("run-selection.png"),
+	RUN_ALL("run-all.png"),
+	ADD("add.png"),
+	CANCEL("cancel.png");
 
 	/**
 	 * Image file name
