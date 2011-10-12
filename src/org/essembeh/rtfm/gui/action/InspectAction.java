@@ -21,25 +21,16 @@ package org.essembeh.rtfm.gui.action;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
-
-import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.essembeh.rtfm.gui.utils.Image;
-import org.essembeh.rtfm.gui.utils.ImageUtils;
 
-public class InspectAction extends AbstractAction {
+public class InspectAction extends GenericAction {
 
 	/**
 	 * UID
 	 */
 	private static final long serialVersionUID = 1517407682888362629L;
-
-	/**
-	 * The controller
-	 */
-	protected RTFMController controller = null;
 
 	/**
 	 * Constructor
@@ -48,13 +39,7 @@ public class InspectAction extends AbstractAction {
 	 * @throws ConfigurationException
 	 */
 	public InspectAction(RTFMController controller) throws ConfigurationException {
-		this.controller = controller;
-		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.inspect"));
-		try {
-			putValue(SMALL_ICON, new ImageUtils(Image.INSPECT).getIcon());
-		} catch (Exception e) {
-			System.err.println(e.toString());
-		}
+		super(controller, "string.gui.inspect", Image.INSPECT);
 	}
 
 	/*

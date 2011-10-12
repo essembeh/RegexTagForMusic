@@ -20,29 +20,20 @@
 package org.essembeh.rtfm.gui.action;
 
 import java.awt.event.ActionEvent;
-
 import java.io.File;
 
-import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
-import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.essembeh.rtfm.gui.utils.Image;
-import org.essembeh.rtfm.gui.utils.ImageUtils;
 
-public class ScanFolderAction extends AbstractAction {
+public class ScanFolderAction extends GenericAction {
 
 	/**
 	 * UID
 	 */
 	private static final long serialVersionUID = 8763175742264301763L;
-
-	/**
-	 * The controller
-	 */
-	protected RTFMController controller = null;
 
 	/**
 	 * Constructor
@@ -51,13 +42,7 @@ public class ScanFolderAction extends AbstractAction {
 	 * @throws ConfigurationException
 	 */
 	public ScanFolderAction(RTFMController controller) throws ConfigurationException {
-		this.controller = controller;
-		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.scan"));
-		try {
-			putValue(SMALL_ICON, new ImageUtils(Image.FILE_NEW).getIcon());
-		} catch (Exception e) {
-			System.err.println(e.toString());
-		}
+		super(controller, "string.gui.scan_folder", Image.FILE_NEW);
 	}
 
 	/*

@@ -22,26 +22,18 @@ package org.essembeh.rtfm.gui.action;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
-import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.essembeh.rtfm.gui.utils.Image;
-import org.essembeh.rtfm.gui.utils.ImageUtils;
 
-public class WriteDBAction extends AbstractAction {
+public class WriteDBAction extends GenericAction {
 
 	/**
 	 * UID
 	 */
 	private static final long serialVersionUID = -8442180040448886826L;
-
-	/**
-	 * The controller
-	 */
-	protected RTFMController controller = null;
 
 	/**
 	 * Constructor
@@ -50,13 +42,7 @@ public class WriteDBAction extends AbstractAction {
 	 * @throws ConfigurationException
 	 */
 	public WriteDBAction(RTFMController controller) throws ConfigurationException {
-		this.controller = controller;
-		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.writedb"));
-		try {
-			putValue(SMALL_ICON, new ImageUtils(Image.FILE_SAVE).getIcon(20));
-		} catch (Exception e) {
-			System.err.println(e.toString());
-		}
+		super(controller, "string.gui.write_db", Image.FILE_SAVE);
 	}
 
 	/*

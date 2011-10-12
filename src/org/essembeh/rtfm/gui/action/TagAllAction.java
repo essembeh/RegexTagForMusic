@@ -21,25 +21,16 @@ package org.essembeh.rtfm.gui.action;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
-
-import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.essembeh.rtfm.gui.utils.Image;
-import org.essembeh.rtfm.gui.utils.ImageUtils;
 
-public class TagAllAction extends AbstractAction {
+public class TagAllAction extends GenericAction {
 
 	/**
 	 * UID
 	 */
 	private static final long serialVersionUID = 1636221991112595939L;
-
-	/**
-	 * The controller
-	 */
-	protected RTFMController controller = null;
 
 	/**
 	 * Constructor
@@ -48,13 +39,7 @@ public class TagAllAction extends AbstractAction {
 	 * @throws ConfigurationException
 	 */
 	public TagAllAction(RTFMController controller) throws ConfigurationException {
-		this.controller = controller;
-		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.tagall"));
-		try {
-			putValue(SMALL_ICON, new ImageUtils(Image.RUN_ALL).getIcon());
-		} catch (Exception e) {
-			System.err.println(e.toString());
-		}
+		super(controller, "string.gui.tag_all", Image.RUN_ALL);
 	}
 
 	/*

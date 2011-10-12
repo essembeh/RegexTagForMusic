@@ -44,4 +44,14 @@ public enum Image {
 	Image(String name) {
 		this.filename = name;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Enum#toString()
+	 */
+	@Override
+	public String toString() {
+		return filename;
+	}
 }

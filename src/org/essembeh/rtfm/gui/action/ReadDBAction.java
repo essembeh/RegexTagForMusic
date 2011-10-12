@@ -20,29 +20,20 @@
 package org.essembeh.rtfm.gui.action;
 
 import java.awt.event.ActionEvent;
-
 import java.io.File;
 
-import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
-import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.gui.controller.RTFMController;
 import org.essembeh.rtfm.gui.utils.Image;
-import org.essembeh.rtfm.gui.utils.ImageUtils;
 
-public class ReadDBAction extends AbstractAction {
+public class ReadDBAction extends GenericAction {
 
 	/**
 	 * UID
 	 */
 	private static final long serialVersionUID = 1517407682888362629L;
-
-	/**
-	 * The controller
-	 */
-	protected RTFMController controller = null;
 
 	/**
 	 * Constructor
@@ -51,13 +42,7 @@ public class ReadDBAction extends AbstractAction {
 	 * @throws ConfigurationException
 	 */
 	public ReadDBAction(RTFMController controller) throws ConfigurationException {
-		this.controller = controller;
-		putValue(NAME, RTFMProperties.getMandatoryProperty("string.gui.readdb"));
-		try {
-			putValue(SMALL_ICON, new ImageUtils(Image.FILE_OPEN).getIcon());
-		} catch (Exception e) {
-			System.err.println(e.toString());
-		}
+		super(controller, "string.gui.read_db", Image.FILE_OPEN);
 	}
 
 	/*
