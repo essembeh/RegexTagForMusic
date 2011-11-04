@@ -3,7 +3,7 @@ DESCRIPTION:
 The default configuration works if you store you music as follow:
  - Three main folders
     - Albums to store albums
-    - Misc to store single
+    - Singles to store single
     - Saga to store mp3 sagas
  - In Albums folder
     - One folder per artist
@@ -14,7 +14,7 @@ The default configuration works if you store you music as follow:
     - Files in an album folder can be
        - An MP3 file (.mp3 case sensitive) with a 2 digits number starting the filename (with separator " - ")
        - A cover names cover.jpg or cover.png (case sensitive)
- - In Misc folder
+ - In Singles folder
     - Single mp3 files names "Artist - Song Title.mp3"
       Note: The artist will be set as album in mp3 tag and a fixed artist in mp3 tag (I personnaly find this very usefull)
  - In Saga folder
@@ -45,7 +45,7 @@ example-tree/
 |           |-- 01 - Track.mp3
 |           |-- 02 - Track.mp3
 |           `-- 03 - Track.mp3
-|-- Misc
+|-- Singles
 |   |-- Harry (feat. Sally) - Just a Song.mp3
 |   `-- John Doe - Single.mp3
 `-- Saga
