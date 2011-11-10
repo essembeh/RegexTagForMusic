@@ -11,8 +11,8 @@
 		</tagprovider>
 		<tagprovider id="Single">
 			<artist value="#Single" />
-			<album pattern="/Single/([^/]+) - ([^/]+)\.mp3" group="1" />
-			<trackname pattern="/Misc/([^/]+) - ([^/]+)\.mp3" group="2" />
+			<album pattern="/Singles/([^/]+) - ([^/]+)\.mp3" group="1" />
+			<trackname pattern="/Singles/([^/]+) - ([^/]+)\.mp3" group="2" />
 			<comment value="Tagged with RegexTagForMusic" />
 		</tagprovider>
 		<tagprovider id="Saga">
