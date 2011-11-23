@@ -50,12 +50,9 @@ public class YajilTagWriterTest {
 	@Test
 	public void testRemoveTags() throws Throwable {
 		TagData tag = new TagData("SuperArtist", "2000", "bb", "01", "cc", "dd", null);
-		assertTrue(this.tagger.tag(this.mp3, tag, false));
+		this.tagger.tag(this.mp3, tag);
 		assertTrue(BinaryUtils.checkFileContainsBytes(this.mp3, tag.getArtist().getBytes(), HEADER_SIZE));
-		this.tagger.removeTag(this.mp3, true);
-		assertTrue(BinaryUtils.checkFileContainsBytes(this.mp3, tag.getArtist().getBytes(), HEADER_SIZE));
-		this.tagger.removeTag(this.mp3, false);
+		this.tagger.removeTag(this.mp3);
 		assertFalse(BinaryUtils.checkFileContainsBytes(this.mp3, tag.getArtist().getBytes(), HEADER_SIZE));
 	}
-
 }

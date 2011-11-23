@@ -60,27 +60,12 @@ public class MusicManagerTest {
 	}
 
 	@Test
-	public void testTagDryrun() throws Throwable {
-		List<IMusicFile> list = this.mm.getFilteredFiles(Filter.TAGGABLE);
-		int errorCount = 0;
-		for (IMusicFile musicFile : list) {
-			try {
-				musicFile.tag(true);
-			} catch (Exception e) {
-				errorCount++;
-			}
-		}
-		assertEquals(this.taggableCount, this.mm.getFilteredFiles(Filter.NON_TAGGED).size());
-		assertEquals(0, errorCount);
-	}
-
-	@Test
 	public void testTag() throws Throwable {
 		List<IMusicFile> list = this.mm.getFilteredFiles(Filter.TAGGABLE);
 		int errorCount = 0;
 		for (IMusicFile musicFile : list) {
 			try {
-				musicFile.tag(false);
+				musicFile.tag();
 			} catch (Exception e) {
 				errorCount++;
 			}

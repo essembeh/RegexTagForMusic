@@ -56,7 +56,7 @@ public class EyeD3TaggerTest {
 	public void testTag1() throws Throwable {
 		TagData tag = new TagData("aa", "2000", "bb", "01", "cc", "dd", null);
 		Assert.assertTrue(this.mp3.isFile());
-		Assert.assertTrue(this.tagger.tag(this.mp3, tag, false));
+		this.tagger.tag(this.mp3, tag);
 		Assert.assertTrue(BinaryUtils.checkFileContainsBytes(this.mp3, tag.getArtist().getBytes(), HEADER_SIZE));
 	}
 
@@ -65,26 +65,24 @@ public class EyeD3TaggerTest {
 		TagData tag = new TagData("The Artist", "2000", "The Album", "01", "Chanson etrange",
 				"Commentaire en francais", null);
 		assertTrue(this.mp3.isFile());
-		assertTrue(this.tagger.tag(this.mp3, tag, false));
+		this.tagger.tag(this.mp3, tag);
 		assertTrue(BinaryUtils.checkFileContainsBytes(this.mp3, tag.getArtist().getBytes(), HEADER_SIZE));
 	}
 
 	@Test
 	public void testRemoveTags() throws Throwable {
 		TagData tag = new TagData("aa", "2000", "bb", "01", "cc", "dd", null);
-		assertTrue(this.tagger.tag(this.mp3, tag, false));
+		this.tagger.tag(this.mp3, tag);
 		assertTrue(BinaryUtils.checkFileContainsBytes(this.mp3, tag.getArtist().getBytes(), HEADER_SIZE));
-		this.tagger.removeTag(this.mp3, true);
-		assertTrue(BinaryUtils.checkFileContainsBytes(this.mp3, tag.getArtist().getBytes(), HEADER_SIZE));
-		this.tagger.removeTag(this.mp3, false);
+		this.tagger.removeTag(this.mp3);
 		assertFalse(BinaryUtils.checkFileContainsBytes(this.mp3, tag.getArtist().getBytes(), HEADER_SIZE));
 	}
 
 	@Test
 	public void testTagUTF8() throws Throwable {
 		TagData tag = new TagData("héhé", "2000", "aéaé", "01", "féfé", "gégé", null);
-		this.tagger.removeTag(this.mp3, false);
-		this.tagger.tag(this.mp3, tag, false);
+		this.tagger.removeTag(this.mp3);
+		this.tagger.tag(this.mp3, tag);
 		Assert.assertTrue(BinaryUtils.checkFileContainsBytes(this.mp3, tag.getArtist().getBytes("UTF-8"), HEADER_SIZE));
 	}
 }
