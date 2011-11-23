@@ -185,20 +185,17 @@ public class FileHandler {
 	/**
 	 * @param mp3
 	 * @param tag
-	 * @param dryrun
-	 * @return
 	 * @throws TagWriterException
 	 * @throws RTFMException
 	 * @throws ConfigurationException
 	 * @see org.essembeh.rtfm.interfaces.ITagWriter#tag(java.io.File,
 	 *      org.essembeh.rtfm.core.tag.TagData, boolean)
 	 */
-	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWriterException, RTFMException,
-			ConfigurationException {
+	public void tag(File mp3, TagData tag) throws TagWriterException, RTFMException, ConfigurationException {
 		if (!canTag()) {
 			throw new RTFMException("Invalid operation on non taggable file: " + toString());
 		}
-		return this.getTagWriter().tag(mp3, tag, dryrun);
+		this.getTagWriter().tag(mp3, tag);
 	}
 
 	/**
@@ -218,18 +215,17 @@ public class FileHandler {
 
 	/**
 	 * @param mp3
-	 * @param dryrun
 	 * @throws TagWriterException
 	 * @throws RTFMException
 	 * @throws ConfigurationException
 	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File,
 	 *      boolean)
 	 */
-	public void removeTag(File mp3, boolean dryrun) throws TagWriterException, RTFMException, ConfigurationException {
+	public void removeTag(File mp3) throws TagWriterException, RTFMException, ConfigurationException {
 		if (!canTag()) {
 			throw new RTFMException("Invalid operation on non taggable file: " + toString());
 		}
-		this.getTagWriter().removeTag(mp3, dryrun);
+		this.getTagWriter().removeTag(mp3);
 	}
 
 	/**

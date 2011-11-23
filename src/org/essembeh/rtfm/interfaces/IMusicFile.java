@@ -46,15 +46,13 @@ public interface IMusicFile {
 	/**
 	 * Tag the file.
 	 * 
-	 * @param dryrun
 	 * @return
 	 * @throws TagWriterException
 	 * @throws TagNotFoundException
 	 * @throws RTFMException
 	 * @throws ConfigurationException
 	 */
-	public boolean tag(boolean dryrun) throws TagWriterException, TagNotFoundException, RTFMException,
-			ConfigurationException;
+	public void tag() throws TagWriterException, TagNotFoundException, RTFMException, ConfigurationException;
 
 	/**
 	 * Return the ID of handler

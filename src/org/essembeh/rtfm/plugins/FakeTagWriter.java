@@ -50,11 +50,10 @@ public class FakeTagWriter implements ITagWriter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File,
-	 * boolean)
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File)
 	 */
 	@Override
-	public void removeTag(File mp3, boolean dryrun) {
+	public void removeTag(File mp3) {
 		this.logger.debug("Removing tags from file: " + mp3.getAbsolutePath());
 	}
 
@@ -62,8 +61,8 @@ public class FakeTagWriter implements ITagWriter {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.essembeh.rtfm.interfaces.IConfigurableService#setProperty(java.lang
-	 * .String, java.lang.String)
+	 * org.essembeh.rtfm.interfaces.ITagWriter#setProperty(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public void setProperty(String name, String value) {
@@ -77,10 +76,10 @@ public class FakeTagWriter implements ITagWriter {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.essembeh.rtfm.interfaces.ITagWriter#tag(java.io.File,
-	 * org.essembeh.rtfm.model.TagData, boolean)
+	 * org.essembeh.rtfm.core.tag.TagData)
 	 */
 	@Override
-	public boolean tag(File mp3, TagData tag, boolean dryrun) {
+	public void tag(File mp3, TagData tag) {
 		this.logger.debug("Tagging file: " + mp3.getAbsolutePath());
 		this.logger.debug(" with tags: " + tag);
 		if (!this.listOfModifiedFiles.contains(mp3)) {
@@ -91,6 +90,5 @@ public class FakeTagWriter implements ITagWriter {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		return !dryrun;
 	}
 }

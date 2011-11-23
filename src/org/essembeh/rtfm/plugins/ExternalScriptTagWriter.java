@@ -102,10 +102,10 @@ public class ExternalScriptTagWriter implements ITagWriter {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.essembeh.rtfm.interfaces.ITagWriter#tag(java.io.File,
-	 * org.essembeh.rtfm.model.TagData, boolean)
+	 * org.essembeh.rtfm.core.tag.TagData)
 	 */
 	@Override
-	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWriterException {
+	public void tag(File mp3, TagData tag) throws TagWriterException {
 		logger.debug("Tagging file: " + mp3 + ", with data: " + tag);
 		// Build the command
 		List<String> command = new ArrayList<String>();
@@ -125,7 +125,6 @@ public class ExternalScriptTagWriter implements ITagWriter {
 			processBuilderEnv.put(key, this.addToEnv.get(key));
 		}
 		runProcess(processBuilder);
-		return !dryrun;
 	}
 
 	/**
@@ -175,11 +174,10 @@ public class ExternalScriptTagWriter implements ITagWriter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File,
-	 * boolean)
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File)
 	 */
 	@Override
-	public void removeTag(File mp3, boolean dryrun) throws TagWriterException {
+	public void removeTag(File mp3) throws TagWriterException {
 		logger.debug("Removing tags from file: " + mp3);
 		// Build the command
 		List<String> command = new ArrayList<String>();

@@ -63,7 +63,7 @@ public class TagJob extends SwingWorker<Void, Void> {
 			IMusicFile file = this.listOfFilesToTag.get(i);
 			if (file.isTaggable()) {
 				try {
-					file.tag(false);
+					file.tag();
 				} catch (Exception e) {
 					errorCount++;
 					e.printStackTrace();

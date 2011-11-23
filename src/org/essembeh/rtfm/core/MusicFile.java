@@ -170,30 +170,21 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.interfaces.IMusicFile#tag(boolean)
 	 */
 	@Override
-	public boolean tag(boolean dryrun) throws TagWriterException, TagNotFoundException, RTFMException,
-			ConfigurationException {
+	public void tag() throws TagWriterException, TagNotFoundException, RTFMException, ConfigurationException {
 		if (!isTaggable()) {
 			throw new TagWriterException("This file is not taggable");
 		}
-		boolean hasBeenTagged = false;
-		TagData tag = getTagData();
 		MusicFile.logger.debug("Tag file: " + toString());
-		MusicFile.logger.debug("  and tagdata: " + tag);
 		if (this.isTagged()) {
 			MusicFile.logger.info("The file is already tagged");
 		}
-		this.handler.removeTag(this.file, dryrun);
-		hasBeenTagged = this.handler.tag(this.file, tag, dryrun);
+		// Remove the previous tag
+		this.handler.removeTag(this.file);
+		this.handler.tag(this.file, getTagData());
 		MusicFile.logger.debug("File: " + getVirtualPath() + " successfully tagged");
-		if (hasBeenTagged) {
-			setTagged();
-		}
-		return hasBeenTagged;
+		setTagged();
 	}
 
 	/*

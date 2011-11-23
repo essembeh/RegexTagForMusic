@@ -51,7 +51,7 @@ public class Tag extends Show {
 		for (int i = 0; i < list.size(); i++) {
 			String message = "[" + (i + 1) + "/" + (totalCount) + "] Tagging file " + list.get(i).getVirtualPath();
 			try {
-				list.get(i).tag(false);
+				list.get(i).tag();
 				out.printMessage(message + ": OK");
 			} catch (Exception e) {
 				errorCount++;

@@ -44,34 +44,28 @@ public class YajilTagWriter implements ITagWriter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File,
-	 * boolean)
+	 * @see org.essembeh.rtfm.interfaces.ITagWriter#removeTag(java.io.File)
 	 */
 	@Override
-	public void removeTag(File mp3, boolean dryrun) throws TagWriterException {
-		if (!dryrun) {
-			MP3File theMp3File = null;
-			try {
-				// TODO doc about fast mode
-				theMp3File = new MP3File(mp3, "rw", true);
-				theMp3File.removeID3v1Tag();
-				theMp3File.removeID3v2Tag();
+	public void removeTag(File mp3) throws TagWriterException {
+		MP3File theMp3File = null;
+		try {
+			// TODO doc about fast mode
+			theMp3File = new MP3File(mp3, "rw", true);
+			theMp3File.removeID3v1Tag();
+			theMp3File.removeID3v2Tag();
 
-			} catch (Exception e) {
-				throw new TagWriterException(e);
-			} finally {
-				// Try to close the file
-				if (theMp3File != null) {
-					try {
-						theMp3File.close();
-					} catch (IOException e) {
-						throw new TagWriterException(e);
-					}
+		} catch (Exception e) {
+			throw new TagWriterException(e);
+		} finally {
+			// Try to close the file
+			if (theMp3File != null) {
+				try {
+					theMp3File.close();
+				} catch (IOException e) {
+					throw new TagWriterException(e);
 				}
 			}
-
-		} else {
-			logger.debug("Dry run mode");
 		}
 	}
 
@@ -91,51 +85,45 @@ public class YajilTagWriter implements ITagWriter {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.essembeh.rtfm.interfaces.ITagWriter#tag(java.io.File,
-	 * org.essembeh.rtfm.core.tag.TagData, boolean)
+	 * org.essembeh.rtfm.core.tag.TagData)
 	 */
 	@Override
-	public boolean tag(File mp3, TagData tag, boolean dryrun)
-			throws TagWriterException {
-		if (dryrun) {
-			logger.debug("Dry run mode");
-		} else {
-			// Set the tag content
-			ID3v2Tag theTag = new ID3v2Tag();
-			if (tag.getArtist() != null) {
-				theTag.setArtist(tag.getArtist());
-			}
-			if (tag.getAlbum() != null) {
-				theTag.setAlbum(tag.getAlbum());
-			}
-			if (tag.getYear() != null) {
-				theTag.setYear(tag.getYear());
-			}
-			if (tag.getTrackNumber() != null) {
-				theTag.setTrack(tag.getTrackNumber());
-			}
-			if (tag.getTrackName() != null) {
-				theTag.setTitle(tag.getTrackName());
-			}
-			if (tag.getGenre() != null) {
-				theTag.setGenre(tag.getGenre());
-			}
-			MP3File theMp3File = null;
-			try {
-				theMp3File = new MP3File(mp3, "rw", true);
-				theMp3File.writeID3v2Tag(theTag);
-			} catch (Exception e) {
-				throw new TagWriterException(e);
-			} finally {
-				// Try to close the file
-				if (theMp3File != null) {
-					try {
-						theMp3File.close();
-					} catch (IOException e) {
-						throw new TagWriterException(e);
-					}
+	public void tag(File mp3, TagData tag) throws TagWriterException {
+		// Set the tag content
+		ID3v2Tag theTag = new ID3v2Tag();
+		if (tag.getArtist() != null) {
+			theTag.setArtist(tag.getArtist());
+		}
+		if (tag.getAlbum() != null) {
+			theTag.setAlbum(tag.getAlbum());
+		}
+		if (tag.getYear() != null) {
+			theTag.setYear(tag.getYear());
+		}
+		if (tag.getTrackNumber() != null) {
+			theTag.setTrack(tag.getTrackNumber());
+		}
+		if (tag.getTrackName() != null) {
+			theTag.setTitle(tag.getTrackName());
+		}
+		if (tag.getGenre() != null) {
+			theTag.setGenre(tag.getGenre());
+		}
+		MP3File theMp3File = null;
+		try {
+			theMp3File = new MP3File(mp3, "rw", true);
+			theMp3File.writeID3v2Tag(theTag);
+		} catch (Exception e) {
+			throw new TagWriterException(e);
+		} finally {
+			// Try to close the file
+			if (theMp3File != null) {
+				try {
+					theMp3File.close();
+				} catch (IOException e) {
+					throw new TagWriterException(e);
 				}
 			}
 		}
-		return true;
 	}
 }
