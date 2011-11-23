@@ -2,12 +2,14 @@
 <rtfm>
 	<tagwriters>
 		<tagwriter id="eyeD3-ID3v2.4@UTF8" classname="org.essembeh.rtfm.plugins.ExternalScriptTagWriter">
-			<property name="binary" value="scripts/eyeD3.sh" />
+			<property name="script.tag" value="scripts/eyeD3-tag.sh" />
+			<property name="script.removetag" value="scripts/eyeD3-remove.sh" />
 			<property name="env.set" value="TAG_VERSION=ID3V2_4" />
 			<property name="env.set" value="TAG_FORCEUTF8=true" />
 		</tagwriter>
 		<tagwriter id="eyeD3-ID3v2.3" classname="org.essembeh.rtfm.plugins.ExternalScriptTagWriter">
-			<property name="binary" value="scripts/eyeD3.sh" />
+			<property name="script.tag" value="scripts/eyeD3-tag.sh" />
+			<property name="script.removetag" value="scripts/eyeD3-remove.sh" />
 			<property name="env.set" value="TAG_VERSION=ID3V2_3" />
 		</tagwriter>
 		<tagwriter id="eyeD3-2.4" classname="org.essembeh.rtfm.plugins.EyeD3TagWriter">

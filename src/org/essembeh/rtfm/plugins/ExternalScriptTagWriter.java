@@ -50,7 +50,8 @@ public class ExternalScriptTagWriter implements ITagWriter {
 	/**
 	 * 
 	 */
-	protected String binary;
+	protected String removeTagScript;
+	protected String tagScript;
 
 	/**
 	 * 
@@ -66,13 +67,12 @@ public class ExternalScriptTagWriter implements ITagWriter {
 	 */
 	@Override
 	public void setProperty(String name, String value) {
-		if ("binary".equals(name)) {
-			logger.debug("Configuring ExternalScriptTagWriter");
-			// Get the full path
-			URL urlOfScript = Thread.currentThread().getContextClassLoader().getResource(value);
-			logger.debug("URL of script: " + urlOfScript);
-			this.binary = urlOfScript.getFile();
-			logger.debug("Using script: " + this.binary);
+		if ("script.tag".equals(name)) {
+			this.tagScript = retrieveScript(value);
+			logger.debug("Using tag script: " + this.tagScript);
+		} else if ("script.removetag".equals(name)) {
+			this.removeTagScript = retrieveScript(value);
+			logger.debug("Using remove tag script: " + this.removeTagScript);
 		} else if ("env.set".equals(name)) {
 			String[] array = value.split("=");
 			if (array.length == 2) {
@@ -86,6 +86,18 @@ public class ExternalScriptTagWriter implements ITagWriter {
 		}
 	}
 
+	/**
+	 * Retrieve the full path of a file in classpath
+	 * 
+	 * @param scriptName
+	 * @return
+	 */
+	protected String retrieveScript(String scriptName) {
+		URL urlOfScript = Thread.currentThread().getContextClassLoader().getResource(scriptName);
+		logger.debug("URL of script: " + urlOfScript);
+		return urlOfScript.getFile();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -94,9 +106,10 @@ public class ExternalScriptTagWriter implements ITagWriter {
 	 */
 	@Override
 	public boolean tag(File mp3, TagData tag, boolean dryrun) throws TagWriterException {
+		logger.debug("Tagging file: " + mp3 + ", with data: " + tag);
 		// Build the command
 		List<String> command = new ArrayList<String>();
-		command.add(this.binary);
+		command.add(this.tagScript);
 		command.add(mp3.getAbsolutePath());
 		// Build env.
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
@@ -111,6 +124,17 @@ public class ExternalScriptTagWriter implements ITagWriter {
 		for (String key : this.addToEnv.keySet()) {
 			processBuilderEnv.put(key, this.addToEnv.get(key));
 		}
+		runProcess(processBuilder);
+		return !dryrun;
+	}
+
+	/**
+	 * Runs a process
+	 * 
+	 * @param processBuilder
+	 * @throws TagWriterException
+	 */
+	protected void runProcess(ProcessBuilder processBuilder) throws TagWriterException {
 		// Launch the process
 		Process process = null;
 		try {
@@ -136,7 +160,6 @@ public class ExternalScriptTagWriter implements ITagWriter {
 		} finally {
 			ProcessUtils.closeStreams(process);
 		}
-		return !dryrun;
 	}
 
 	/*
@@ -146,7 +169,7 @@ public class ExternalScriptTagWriter implements ITagWriter {
 	 */
 	@Override
 	public String toString() {
-		return "EyeD3TagWriter: " + this.binary;
+		return "ExternalScriptTagWriter";
 	}
 
 	/*
@@ -157,8 +180,19 @@ public class ExternalScriptTagWriter implements ITagWriter {
 	 */
 	@Override
 	public void removeTag(File mp3, boolean dryrun) throws TagWriterException {
-		// Do nothing because everything is done in the script
-		logger.debug("ExternalScriptTagWriter do nothing for removing tags");
+		logger.debug("Removing tags from file: " + mp3);
+		// Build the command
+		List<String> command = new ArrayList<String>();
+		command.add(this.removeTagScript);
+		command.add(mp3.getAbsolutePath());
+		// Build env.
+		ProcessBuilder processBuilder = new ProcessBuilder(command);
+		Map<String, String> processBuilderEnv = processBuilder.environment();
+		// Set custom env
+		for (String key : this.addToEnv.keySet()) {
+			processBuilderEnv.put(key, this.addToEnv.get(key));
+		}
+		runProcess(processBuilder);
 	}
 
 	/**
