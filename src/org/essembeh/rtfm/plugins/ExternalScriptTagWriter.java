@@ -114,6 +114,13 @@ public class ExternalScriptTagWriter implements ITagWriter {
 		// Build env.
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		Map<String, String> processBuilderEnv = processBuilder.environment();
+		// Set custom env
+		for (String key : this.addToEnv.keySet()) {
+			String value = this.addToEnv.get(key);
+			logger.debug("Adding to env: " + key + " = " + value);
+			processBuilderEnv.put(key, value);
+		}
+		// RTFM Specific
 		addIfValueNotNull(processBuilderEnv, "RTFM_ARTIST", tag.getArtist());
 		addIfValueNotNull(processBuilderEnv, "RTFM_ALBUM", tag.getAlbum());
 		addIfValueNotNull(processBuilderEnv, "RTFM_YEAR", tag.getYear());
@@ -188,9 +195,15 @@ public class ExternalScriptTagWriter implements ITagWriter {
 		Map<String, String> processBuilderEnv = processBuilder.environment();
 		// Set custom env
 		for (String key : this.addToEnv.keySet()) {
-			processBuilderEnv.put(key, this.addToEnv.get(key));
+			String value = this.addToEnv.get(key);
+			logger.debug("Adding to env: " + key + " = " + value);
+			processBuilderEnv.put(key, value);
 		}
-		runProcess(processBuilder);
+		try {
+			runProcess(processBuilder);
+		} catch (TagWriterException e) {
+			logger.debug("Error while removing tags");
+		}
 	}
 
 	/**
