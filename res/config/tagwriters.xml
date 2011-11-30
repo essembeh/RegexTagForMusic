@@ -12,19 +12,6 @@
 			<property name="script.removetag" value="scripts/eyeD3-remove.sh" />
 			<property name="env.set" value="TAG_VERSION=ID3V2_3" />
 		</tagwriter>
-		<tagwriter id="eyeD3-2.4" classname="org.essembeh.rtfm.plugins.EyeD3TagWriter">
-			<property name="eyed3.binary" value="/usr/bin/eyeD3" />
-			<property name="eyed3.default.arguments" value="--no-color" />
-			<property name="tag.version" value="ID3V2_4" />
-			<property name="force.utf8" value="true" />
-			<property name="debug.process.ouput" value="false" />
-		</tagwriter>
-		<tagwriter id="eyeD3-2.3" classname="org.essembeh.rtfm.plugins.EyeD3TagWriter">
-			<property name="eyed3.binary" value="/usr/bin/eyeD3" />
-			<property name="eyed3.default.arguments" value="--no-color" />
-			<property name="tag.version" value="ID3V2_3" />
-			<property name="debug.process.ouput" value="false" />
-		</tagwriter>
 		<tagwriter id="yajil" classname="org.essembeh.rtfm.plugins.YajilTagWriter">
 		</tagwriter>
 		<tagwriter id="fake" classname="org.essembeh.rtfm.plugins.FakeTagWriter">

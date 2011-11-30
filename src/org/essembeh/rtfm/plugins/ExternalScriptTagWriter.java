@@ -199,11 +199,7 @@ public class ExternalScriptTagWriter implements ITagWriter {
 			logger.debug("Adding to env: " + key + " = " + value);
 			processBuilderEnv.put(key, value);
 		}
-		try {
-			runProcess(processBuilder);
-		} catch (TagWriterException e) {
-			logger.debug("Error while removing tags");
-		}
+		runProcess(processBuilder);
 	}
 
 	/**
