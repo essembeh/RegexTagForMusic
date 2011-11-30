@@ -11,15 +11,21 @@
 EYED3_BIN=/usr/bin/eyeD3
 EYED3_ARG=--no-color
 
+__doRemove () {
+	FILE="$1"
+	ARG="$2"
+	$EYED3_BIN $EYED3_ARG $ARG "$FILE" > /dev/null 2>&1
+}
+
 ## Remove tags
 __removeTags () {
 	FILE="$1"
-	$EYED3_BIN $EYED3_ARG --remove-v1 "$FILE"
-	$EYED3_BIN $EYED3_ARG --remove-v2 "$FILE"
-	$EYED3_BIN $EYED3_ARG --remove-all "$FILE"
-	$EYED3_BIN $EYED3_ARG --remove-images "$FILE"
-	$EYED3_BIN $EYED3_ARG --remove-lyrics "$FILE"
-	$EYED3_BIN $EYED3_ARG --remove-comments "$FILE"
+	__doRemove "$FILE" --remove-v1 
+	__doRemove "$FILE" --remove-v2 
+	__doRemove "$FILE" --remove-all 
+	__doRemove "$FILE" --remove-images 
+	__doRemove "$FILE" --remove-lyrics 
+	__doRemove "$FILE" --remove-comments 
 }
 
 ## Main
@@ -28,4 +34,4 @@ for FILE in "$@"; do
 	echo "Removing tags from file: $FILE"
 	__removeTags "$FILE" 
 done
-echo "End of script"
+exit 0
