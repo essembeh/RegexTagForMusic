@@ -24,6 +24,7 @@
 	<property name="build.path" value="dist/build/" />
 	<property name="junit.path" value="dist/junit/" />
 	<property name="app.folder" value="dist/RegexTagForMusic.app/" />
+	<property name="app.archive" value="dist/RegexTagForMusic-snapshot.tar.gz" />
 	<property name="rtfm.jar" value="${app.folder}/lib/${app.name}-${app.version}.jar" />
 	<property name="mf.builtby" value="Sebastien M-B: essembeh@gmail.com" />
 
@@ -63,12 +64,25 @@
 			<classpath refid="build.classpath" />
 		</javac>
 	</target>
-	<target name="dist" depends="prepare,build">
+	<target name="jar" depends="prepare,build">
 		<jar basedir="${build.path}" destfile="${rtfm.jar}">
 			<manifest>
 				<attribute name="Built-By" value="${mf.builtby}" />
 			</manifest>
 		</jar>
+	</target>
+	<target name="dist" depends="jar">
+	</target>
+	<target name="archive" depends="dist">
+		<exec executable="tar" os="Linux">
+			<arg value="--create" />
+			<arg value="--directory" />
+			<arg value="dist/" />
+			<arg value="--file" />
+			<arg value="${app.archive}" />
+			<arg value="--gzip" />
+			<arg value="RegexTagForMusic.app/" />
+		</exec>
 	</target>
 
 	<!-- JUNIT -->
