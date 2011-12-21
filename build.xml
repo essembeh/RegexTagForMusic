@@ -24,15 +24,15 @@
 	<property name="app.name" 			value="rtfm" />
 	<property name="app.version" 		value="1.1" />
 	<property name="path.src" 			value="src/" />
+	<property name="path.junit.src" 	value="junit/" />
 	<property name="path.res" 			value="res/" />
+	<property name="path.configs" 		value="${path.res}/examples/config/" />
 	<property name="path.lib" 			value="lib/" />
 	<property name="path.dist" 			value="dist/" />
 	<property name="path.build" 		value="${path.dist}/build/" />
-	<property name="path.junit.src" 	value="junit/" />
 	<property name="path.junit.build" 	value="${path.dist}/junit/" />
-	<property name="path.configs" 		value="${res.path}/examples/config/" />
-	<property name="app.folder" 		value="dist/RegexTagForMusic.app/" />
-	<property name="app.archive" 		value="dist/RegexTagForMusic-snapshot.tar.gz" />
+	<property name="app.folder" 		value="${path.dist}/RegexTagForMusic.app/" />
+	<property name="app.archive" 		value="${path.dist}/RegexTagForMusic-snapshot.tar.gz" />
 	<property name="rtfm.jar" 			value="${app.folder}/lib/${app.name}-${app.version}.jar" />
 	<property name="mf.builtby" 		value="Sebastien M-B: essembeh@gmail.com" />
 
@@ -83,8 +83,8 @@
 
 	<!-- Checks if the configuration folder exists -->
 	<target name="custom.check" if="rtfm.config">
-		<condition property="path.custom" value="${config.basedir}/${rtfm.config}">
-			<available file="${config.basedir}/${rtfm.config}" type="dir"/>
+		<condition property="path.custom" value="${path.configs}/${rtfm.config}">
+			<available file="${path.configs}/${rtfm.config}" type="dir"/>
 		</condition>
 	</target>
 
