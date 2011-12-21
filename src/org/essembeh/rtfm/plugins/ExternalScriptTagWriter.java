@@ -94,6 +94,10 @@ public class ExternalScriptTagWriter implements ITagWriter {
 	 */
 	protected String retrieveScript(String scriptName) {
 		URL urlOfScript = Thread.currentThread().getContextClassLoader().getResource(scriptName);
+		File script = new File(urlOfScript.getFile());
+		if (!script.canExecute()) {
+			logger.error("The script is not executable: " + scriptName);
+		}
 		logger.debug("URL of script: " + urlOfScript);
 		return urlOfScript.getFile();
 	}

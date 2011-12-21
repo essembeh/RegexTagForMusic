@@ -17,34 +17,56 @@
  You should have received a copy of the GNU General Public License along with
  RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
 -->
-<project basedir="." default="dist">
-	<property name="app.name" value="rtfm" />
-	<property name="app.version" value="1.0" />
-	<property name="res.path" value="res/" />
-	<property name="build.path" value="dist/build/" />
-	<property name="junit.path" value="dist/junit/" />
-	<property name="app.folder" value="dist/RegexTagForMusic.app/" />
-	<property name="app.archive" value="dist/RegexTagForMusic-snapshot.tar.gz" />
-	<property name="rtfm.jar" value="${app.folder}/lib/${app.name}-${app.version}.jar" />
-	<property name="mf.builtby" value="Sebastien M-B: essembeh@gmail.com" />
+<project name="RegexTagForMusic" basedir="." default="dist">
+	
+	<!-- ########## PROPERTIES ########## -->
 
-	<!-- Clean -->
-	<target name="clean">
-		<delete dir="dist" />
-	</target>
+	<property name="app.name" 			value="rtfm" />
+	<property name="app.version" 		value="1.1" />
+	<property name="path.src" 			value="src/" />
+	<property name="path.res" 			value="res/" />
+	<property name="path.lib" 			value="lib/" />
+	<property name="path.dist" 			value="dist/" />
+	<property name="path.build" 		value="${path.dist}/build/" />
+	<property name="path.junit.src" 	value="junit/" />
+	<property name="path.junit.build" 	value="${path.dist}/junit/" />
+	<property name="path.configs" 		value="${res.path}/examples/config/" />
+	<property name="app.folder" 		value="dist/RegexTagForMusic.app/" />
+	<property name="app.archive" 		value="dist/RegexTagForMusic-snapshot.tar.gz" />
+	<property name="rtfm.jar" 			value="${app.folder}/lib/${app.name}-${app.version}.jar" />
+	<property name="mf.builtby" 		value="Sebastien M-B: essembeh@gmail.com" />
 
-	<!-- BUILDING -->
-	<path id="build.classpath">
-		<fileset dir="lib/">
+	<!-- ########## CLASSPATHS ########## -->
+
+	<path id="classpath.build">
+		<fileset dir="${path.lib}">
 			<include name="*.jar" />
 		</fileset>
 	</path>
+	<path id="classpath.junit">
+		<fileset dir="${path.lib}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement location="${path.build}" />
+		<pathelement location="${path.junit.build}" />
+		<pathelement location="${path.res}/config/" />
+		<pathelement location="${path.res}/share/" />
+	</path>
+
+	<!-- ########## TARGETS ########## -->
+
+	<!-- Cleans -->
+	<target name="clean">
+		<delete dir="${path.dist}" />
+	</target>
+
+	<!-- BUILDING -->
 	<target name="prepare">
 		<!-- Create Application folder -->
 		<mkdir dir="${app.folder}" />
 		<!-- Copy all resources -->
 		<copy todir="${app.folder}" overwrite="true">
-			<fileset dir="${res.path}" includes="**" />
+			<fileset dir="${path.res}" includes="**" />
 		</copy>
 		<!-- Copy all libs -->
 		<copy todir="${app.folder}/lib">
@@ -58,21 +80,44 @@
 		<chmod dir="${app.folder}/bin" perm="ugo+rx" includes="*.sh" />
 		<chmod dir="${app.folder}/share/scripts" perm="ugo+rx" includes="*.sh" />
 	</target>
+
+	<!-- Checks if the configuration folder exists -->
+	<target name="custom.check" if="rtfm.config">
+		<condition property="path.custom" value="${config.basedir}/${rtfm.config}">
+			<available file="${config.basedir}/${rtfm.config}" type="dir"/>
+		</condition>
+	</target>
+
+	<!-- If the rtfm.config property is set, use these files to override configuration -->
+	<target name="custom" depends="custom.check" if="path.custom">
+		<echo message="Using custom configuration: ${path.custom}" />
+		<copy todir="${app.folder}/config/" overwrite="true">
+			<fileset dir="${path.custom}" includes="*.xml" />
+		</copy>
+	</target>
+
+	<!-- Compile Java classes -->
 	<target name="build">
-		<mkdir dir="${build.path}" />
-		<javac srcdir="src/" destdir="${build.path}" includes="**" includeantruntime="no">
-			<classpath refid="build.classpath" />
+		<mkdir dir="${path.build}" />
+		<javac srcdir="${path.src}" destdir="${path.build}" includes="**" includeantruntime="no">
+			<classpath refid="classpath.build" />
 		</javac>
 	</target>
-	<target name="jar" depends="prepare,build">
-		<jar basedir="${build.path}" destfile="${rtfm.jar}">
+
+	<!-- Makes the jar -->
+	<target name="jar" depends="build">
+		<jar basedir="${path.build}" destfile="${rtfm.jar}">
 			<manifest>
 				<attribute name="Built-By" value="${mf.builtby}" />
 			</manifest>
 		</jar>
 	</target>
-	<target name="dist" depends="jar">
+
+	<!-- Create the Application folder for distribution -->
+	<target name="dist" depends="prepare,custom,jar">
 	</target>
+
+	<!-- Creates the zip for distribution -->
 	<target name="archive" depends="dist">
 		<exec executable="tar" os="Linux">
 			<arg value="--create" />
@@ -86,38 +131,28 @@
 	</target>
 
 	<!-- JUNIT -->
-	<path id="junit.classpath">
-		<fileset dir="lib">
-			<include name="*.jar" />
-		</fileset>
-		<pathelement location="${build.path}" />
-		<pathelement location="${junit.path}" />
-		<pathelement location="res/config/" />
-		<pathelement location="res/share/" />
-	</path>
-	<target name="build.junit" depends="build">
-		<mkdir dir="${junit.path}" />
-		<javac srcdir="junit/" destdir="${junit.path}" includes="**" includeantruntime="no">
-			<classpath refid="junit.classpath" />
+	<target name="junit.build" depends="build">
+		<mkdir dir="${path.junit.build}" />
+		<javac srcdir="${path.junit.src}" destdir="${path.junit.build}" includes="**" includeantruntime="no">
+			<classpath refid="classpath.junit" />
 		</javac>
 	</target>
-	<target name="junit" depends="build.junit">
+	<target name="junit" depends="junit.build">
 		<junit fork="yes" haltonfailure="no">
-			<batchtest fork="yes" todir="${junit.path}">
-				<fileset dir="${junit.path}">
+			<batchtest fork="yes" todir="${path.junit.build}">
+				<fileset dir="${path.junit.build}">
 					<include name="**/*Test.class" />
 				</fileset>
 			</batchtest>
-			<formatter type="xml" />
-			<classpath refid="junit.classpath" />
+			<formatter type="plain" />
+			<classpath refid="classpath.junit" />
 		</junit>
 	</target>
 
-	<!-- Specific target to use my configuration files -->
-	<target name="seb" depends="dist">
-		<copy todir="${app.folder}/config/" overwrite="true">
-			<fileset dir="${res.path}/examples/config/seb/" includes="*.xml" />
-		</copy>
+	<!-- Specific target to use my configuration files i -->
+	<target name="seb">
+		<property name="rtfm.config" value="seb" />
+		<antcall target="dist" />
 	</target>
 
 </project>

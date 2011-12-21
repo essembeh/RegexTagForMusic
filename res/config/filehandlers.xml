@@ -2,7 +2,7 @@
 <rtfm>
 	<filehandlers>
 		<filehandler id="MP3" pattern="/[^/]+/[^/]+/[0-9][0-9] - .*\.mp3" database="true">
-			<tagwriter ref="yajil" />
+			<tagwriter ref="JAudioTagger-ID3v2.4" />
 			<tagprovider ref="ALBUM" />
 		</filehandler>
 		<filehandler id="COVER" pattern="/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" />

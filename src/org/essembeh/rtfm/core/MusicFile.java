@@ -182,6 +182,7 @@ public class MusicFile implements Comparable<MusicFile>, IMusicFile {
 		}
 		// Remove the previous tag
 		this.handler.removeTag(this.file);
+		// Compute the tag fields and tag file
 		this.handler.tag(this.file, getTagData());
 		MusicFile.logger.debug("File: " + getVirtualPath() + " successfully tagged");
 		setTagged();

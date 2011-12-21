@@ -23,24 +23,39 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 public class BinaryUtils {
+
+	/** Used for binary search */
+	private static final int HEADER_SIZE = 2048;
+
+	/**
+	 * Class logger
+	 */
+	private static Logger logger = Logger.getLogger(BinaryUtils.class);
+
 	/**
 	 * Check that the file contains the bytes in its n first bytes.
 	 * 
 	 * @param f
 	 * @param bytes
-	 * @param headSize
 	 * @return
 	 * @throws IOException
 	 */
-	public static boolean checkFileContainsBytes(File f, byte[] bytes, int headSize) throws IOException {
+	public static boolean checkFileContainsBytes(File f, byte[] bytes) throws IOException {
 		boolean result = false;
+		logger.debug("Binary search: " + bytes);
+		for (byte b : bytes) {
+			logger.debug(" > " + Integer.toHexString(b & 0xff));
+		}
 		FileInputStream fis = new FileInputStream(f);
-		byte[] bytesFromFile = new byte[headSize];
+		byte[] bytesFromFile = new byte[HEADER_SIZE];
 		int count = fis.read(bytesFromFile);
 		if (count > 0) {
 			result = findSequenceInArray(bytesFromFile, bytes);
 		}
+		logger.debug("Found: " + result);
 		return result;
 	}
 

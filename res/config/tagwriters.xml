@@ -12,7 +12,11 @@
 			<property name="script.removetag" value="scripts/eyeD3-remove.sh" />
 			<property name="env.set" value="TAG_VERSION=ID3V2_3" />
 		</tagwriter>
-		<tagwriter id="yajil" classname="org.essembeh.rtfm.plugins.YajilTagWriter">
+		<tagwriter id="JAudioTagger-ID3v2.4" classname="org.essembeh.rtfm.plugins.JAudioTaggerTagWriter">
+			<property name="version" value="ID3V2_4"/>
+		</tagwriter>
+		<tagwriter id="JAudioTagger-ID3v2.3" classname="org.essembeh.rtfm.plugins.JAudioTaggerTagWriter">
+			<property name="version" value="ID3V2_3"/>
 		</tagwriter>
 		<tagwriter id="fake" classname="org.essembeh.rtfm.plugins.FakeTagWriter">
 			<property name="sleep" value="100" />

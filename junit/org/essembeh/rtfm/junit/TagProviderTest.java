@@ -77,7 +77,7 @@ public class TagProviderTest {
 		TagData tag = musicFile.getTagData();
 		assertNotNull(tag);
 		assertEquals("the artist", tag.getArtist());
-		assertEquals("2000 - the album", tag.getAlbum());
+		assertEquals("the album", tag.getAlbum());
 		assertEquals("2000", tag.getYear());
 		assertEquals("the song", tag.getTrackName());
 		assertEquals("01", tag.getTrackNumber());
