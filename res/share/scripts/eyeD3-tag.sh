@@ -8,7 +8,7 @@
 # RTFM_TRACKNUMBER
 # RTFM_COMMENT
 
-EYED3_BIN=/usr/bin/eyeD3
+EYED3_BIN=`which eyeD3` || exit 1
 EYED3_ARG=--no-color
 
 ## Tag 
@@ -50,7 +50,6 @@ __forceUTF8 () {
 
 ## Main
 FILE="$1"
-test -x "$EYED3_BIN" || exit 1
 for FILE in "$@"; do
 	echo "Tagging file: $FILE"
 	__tag "$FILE" || exit 4
