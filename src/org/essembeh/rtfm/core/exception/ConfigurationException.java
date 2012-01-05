@@ -19,34 +19,23 @@
  */
 package org.essembeh.rtfm.core.exception;
 
+
 /**
  * 
  * @author seb
  * 
  */
-public class ConfigurationException extends Exception {
-
+public class ConfigurationException extends RTFMException {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4336333940987166349L;
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param message
-	 */
+	public ConfigurationException() {
+		super("Error with configuration");
+	}
+	
 	public ConfigurationException(String message) {
-		super("Error in configuration: " + message);
+		super(message);
 	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param t
-	 */
-	public ConfigurationException(Throwable t) {
-		super(t);
-	}
-
 }

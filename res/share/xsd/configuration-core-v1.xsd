@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rtfm="http://rtfm.essembeh.org/ConfigurationCore-v1" targetNamespace="http://rtfm.essembeh.org/ConfigurationCore-v1"
+	elementFormDefault="qualified">
+	<xs:complexType name="TReference">
+		<xs:attribute name="ref-id" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="TFixedAttribute">
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="value" type="xs:string" use="required" />
+		<xs:attribute name="hidden" type="xs:boolean" use="optional" default="false" />
+	</xs:complexType>
+	<xs:complexType name="TRegexAttribute">
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="pattern" type="xs:string" use="required" />
+		<xs:attribute name="group" type="xs:int" use="optional" default="1" />
+		<xs:attribute name="optional" type="xs:boolean" use="optional" default="false" />
+		<xs:attribute name="hidden" type="xs:boolean" use="optional" default="false" />
+	</xs:complexType>
+	<xs:complexType name="TAttributeArray">
+		<xs:sequence>
+			<xs:element name="attribute" type="rtfm:TFixedAttribute" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="regex-attribute" type="rtfm:TRegexAttribute" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TAttributeSet">
+		<xs:complexContent>
+			<xs:extension base="rtfm:TAttributeArray">
+				<xs:attribute name="id" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TProperty">
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="value" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="TTask">
+		<xs:sequence>
+			<xs:element name="property" minOccurs="0" maxOccurs="unbounded" type="rtfm:TProperty" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="required" />
+		<xs:attribute name="classname" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="TWorkflow">
+		<xs:sequence>
+			<xs:element name="task" type="rtfm:TReference" minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="TFileHandler">
+		<xs:sequence>
+			<xs:element name="attributes" type="rtfm:TAttributeArray" minOccurs="0" maxOccurs="1" />
+			<xs:element name="attributeset" type="rtfm:TReference" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="action" type="rtfm:TWorkflow" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="required" />
+		<xs:attribute name="matches" type="xs:string" use="required" />
+		<xs:attribute name="type" type="xs:string" use="optional" default="file" />
+	</xs:complexType>
+	<xs:complexType name="TCoreConfigurationV1">
+		<xs:sequence>
+			<xs:element name="filehandler" type="rtfm:TFileHandler" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="task" type="rtfm:TTask" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="attributeset" type="rtfm:TAttributeSet" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="configuration-core" type="rtfm:TCoreConfigurationV1" />
+</xs:schema>

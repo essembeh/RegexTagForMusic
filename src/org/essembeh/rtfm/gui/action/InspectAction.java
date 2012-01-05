@@ -21,33 +21,19 @@ package org.essembeh.rtfm.gui.action;
 
 import java.awt.event.ActionEvent;
 
-import org.essembeh.rtfm.core.exception.ConfigurationException;
-import org.essembeh.rtfm.gui.controller.RTFMController;
+import org.essembeh.rtfm.gui.controller.GuiController;
 import org.essembeh.rtfm.gui.utils.Image;
+import org.essembeh.rtfm.gui.utils.Translator;
+import org.essembeh.rtfm.gui.utils.Translator.StringId;
 
-public class InspectAction extends GenericAction {
+public class InspectAction extends GenericAbstractAction {
 
-	/**
-	 * UID
-	 */
 	private static final long serialVersionUID = 1517407682888362629L;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param controller
-	 * @throws ConfigurationException
-	 */
-	public InspectAction(RTFMController controller) throws ConfigurationException {
-		super(controller, "string.gui.inspect", Image.INSPECT);
+	public InspectAction(GuiController controller) {
+		super(controller, Translator.get(StringId.inspectSelection), Image.INSPECT);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		this.controller.inspectMusicFile();

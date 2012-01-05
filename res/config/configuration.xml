@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration-core xmlns="http://rtfm.essembeh.org/ConfigurationCore-v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!-- File types -->
+	<filehandler id="MP3" type="file" matches="/[^/]+/[^/]+/\d\d - .*\.mp3">
+		<attributes>
+			<attribute name="tagged" value="false" />
+			<attribute name="db:export" value="true" />
+			<regex-attribute name="extension" pattern=".*\.(\w+)" group="1" />
+		</attributes>
+		<attributeset ref-id="album" />
+		<action name="Tag with JAudioTagger">
+			<task ref-id="JAudioTagger-id3v2.4" />
+		</action>
+		<action name="Tag with eyed3">
+			<task ref-id="eyed3-clean" />
+			<task ref-id="setNonTagged" />
+			<task ref-id="eyed3-id3v2.4@utf8" />
+			<task ref-id="setTagged" />
+		</action>
+		<action name="Flag nontagged">
+			<task ref-id="setNonTagged" />
+		</action>
+		<!-- <action name="Flag tagged"> -->
+		<!-- <task ref-id="setTagged" /> -->
+		<!-- </action> -->
+		<action name="Test (dummy.sh)">
+			<task ref-id="echo" />
+		</action>
+	</filehandler>
+	<filehandler id="FOLDER" type="folder" matches="/[^/]+/[^/]+/">
+		<attributes>
+			<attribute name="db:export" value="false" />
+		</attributes>
+		<attributeset ref-id="albumFolder" />
+		<!-- <action name="Download cover"> -->
+		<!-- <task ref-id="downloadCover" /> -->
+		<!-- </action> -->
+	</filehandler>
+	<filehandler id="COVER" matches="/[^/]+/[^/]+/cover\.(jpg|jpeg|png)">
+		<attributes>
+			<attribute name="db:export" value="false" />
+		</attributes>
+		<!-- <action name="Delete"> -->
+		<!-- <task ref-id="echo" /> -->
+		<!-- </action> -->
+	</filehandler>
+	<filehandler id="PLAYLIST" matches="/[^/]+/[^/]+/playlist\.m3u">
+		<attributes>
+			<attribute name="db:export" value="false" />
+		</attributes>
+		<!-- <action name="Delete"> -->
+		<!-- <task ref-id="echo" /> -->
+		<!-- </action> -->
+	</filehandler>
+	<filehandler id="UNKNOWN" matches=".*">
+		<attributes>
+			<attribute name="db:export" value="false" />
+		</attributes>
+		<!-- <action name="Delete"> -->
+		<!-- <task ref-id="echo" /> -->
+		<!-- </action> -->
+	</filehandler>
+	<!-- Tasks -->
+	<task id="setNonTagged" classname="org.essembeh.rtfm.tasks.UpdateAttributes">
+		<property name="tagged" value="false" />
+	</task>
+	<task id="setTagged" classname="org.essembeh.rtfm.tasks.UpdateAttributes">
+		<property name="tagged" value="true" />
+	</task>
+	<task id="JAudioTagger-id3v2.4" classname="org.essembeh.rtfm.tasks.JAudioTagger">
+		<property name="version" value="ID3V2_4" />
+	</task>
+	<task id="JAudioTagger-id3v2.3" classname="org.essembeh.rtfm.tasks.JAudioTagger">
+		<property name="version" value="ID3V2_3" />
+	</task>
+	<task id="eyed3-id3v2.4@utf8" classname="org.essembeh.rtfm.tasks.ExternalProcess">
+		<property name="binary" value="scripts/eyeD3-tag.sh" />
+		<property name="env.set" value="TAG_VERSION=ID3V2_4" />
+		<property name="env.set" value="TAG_FORCEUTF8=true" />
+		<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
+		<property name="env.set" value="RTFM_ALBUM=${tag:album}" />
+		<property name="env.set" value="RTFM_YEAR=${tag:year}" />
+		<property name="env.set" value="RTFM_TITLE=${tag:title}" />
+		<property name="env.set" value="RTFM_TRACK=${tag:track}" />
+		<property name="env.set" value="RTFM_GENRE=${tag:genre}" />
+		<property name="env.set" value="RTFM_COMMENT=${tag:comment}" />
+	</task>
+	<task id="eyed3-id3v2.3" classname="org.essembeh.rtfm.tasks.ExternalProcess">
+		<property name="binary" value="scripts/eyeD3-tag.sh" />
+		<property name="env.set" value="TAG_VERSION=ID3V2_3" />
+		<property name="env.set" value="TAG_FORCEUTF8=true" />
+		<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
+		<property name="env.set" value="RTFM_ALBUM=${tag:album}" />
+		<property name="env.set" value="RTFM_YEAR=${tag:year}" />
+		<property name="env.set" value="RTFM_TITLE=${tag:title}" />
+		<property name="env.set" value="RTFM_TRACK=${tag:track}" />
+		<property name="env.set" value="RTFM_GENRE=${tag:genre}" />
+		<property name="env.set" value="RTFM_COMMENT=${tag:comment}" />
+	</task>
+	<task id="eyed3-clean" classname="org.essembeh.rtfm.tasks.ExternalProcess">
+		<property name="binary" value="scripts/eyeD3-remove.sh" />
+	</task>
+	<task id="echo" classname="org.essembeh.rtfm.tasks.ExternalProcess">
+		<property name="binary" value="scripts/dummy.sh" />
+		<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
+		<property name="env.set" value="RTFM_ALBUM=${tag:album}" />
+		<property name="env.set" value="RTFM_YEAR=${tag:year}" />
+		<property name="env.set" value="RTFM_TITLE=${tag:title}" />
+		<property name="env.set" value="RTFM_TRACK=${tag:track}" />
+		<property name="env.set" value="RTFM_GENRE=${tag:genre}" />
+		<property name="env.set" value="RTFM_COMMENT=${tag:comment}" />
+	</task>
+	<task id="downloadCover" classname="org.essembeh.rtfm.tasks.Echo">
+		<property name="message" value="download cover" />
+	</task>
+	<task id="delete" classname="org.essembeh.rtfm.tasks.Echo">
+		<property name="message" value="remove the file" />
+	</task>
+	<task id="rename" classname="org.essembeh.rtfm.tasks.Echo">
+		<property name="message" value="rename the file" />
+	</task>
+	<!-- Attribute lists -->
+	<attributeset id="album">
+		<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
+		<regex-attribute name="tag:artist" pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2}) - (.*)\.\w+" group="1" />
+		<regex-attribute name="tag:year" pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2}) - (.*)\.\w+" group="2" optional="true" />
+		<regex-attribute name="tag:album" pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2}) - (.*)\.\w+" group="3" />
+		<regex-attribute name="tag:track" pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2}) - (.*)\.\w+" group="4" />
+		<regex-attribute name="tag:title" pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2}) - (.*)\.\w+" group="5" />
+	</attributeset>
+	<attributeset id="albumFolder">
+		<regex-attribute name="tag:artist" pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="1" />
+		<regex-attribute name="tag:year" pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="2" optional="true" />
+		<regex-attribute name="tag:album" pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="3" />
+	</attributeset>
+</configuration-core>

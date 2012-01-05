@@ -35,14 +35,8 @@ import org.apache.log4j.Logger;
  */
 public class ProcessUtils {
 
-	/**
-	 * 
-	 */
-	static protected Logger logger = Logger.getLogger(ProcessUtils.class);
+	static private Logger logger = Logger.getLogger(ProcessUtils.class);
 
-	/**
-	 * 
-	 */
 	public enum STDOUT {
 		stdout, stderr
 	};
@@ -70,13 +64,7 @@ public class ProcessUtils {
 			} catch (IOException e) {
 				logger.error(e.getMessage());
 			} finally {
-				try {
-					if (br != null) {
-						br.close();
-					}
-				} catch (IOException e) {
-					// Do nothing
-				}
+				closeCloseable(br);
 			}
 		}
 		return out.toString();
@@ -89,29 +77,23 @@ public class ProcessUtils {
 	 */
 	public static void closeStreams(Process p) {
 		if (p != null) {
-			Closeable stdout = p.getOutputStream();
-			Closeable stdin = p.getInputStream();
-			Closeable stderr = p.getErrorStream();
-			if (stdout != null) {
-				try {
-					stdout.close();
-				} catch (IOException e) {
-					// Do nothing
-				}
-			}
-			if (stdin != null) {
-				try {
-					stdin.close();
-				} catch (IOException e) {
-					// Do nothing
-				}
-			}
-			if (stderr != null) {
-				try {
-					stderr.close();
-				} catch (IOException e) {
-					// Do nothing
-				}
+			closeCloseable(p.getOutputStream());
+			closeCloseable(p.getInputStream());
+			closeCloseable(p.getErrorStream());
+		}
+	}
+
+	/**
+	 * Close the closeable if not null. Does not throw any exception.
+	 * 
+	 * @param c
+	 */
+	public static void closeCloseable(Closeable c) {
+		if (c != null) {
+			try {
+				c.close();
+			} catch (IOException e) {
+				// Do nothing
 			}
 		}
 	}

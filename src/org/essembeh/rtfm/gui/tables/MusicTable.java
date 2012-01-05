@@ -19,11 +19,12 @@
  */
 package org.essembeh.rtfm.gui.tables;
 
-import org.essembeh.rtfm.gui.controller.RTFMController;
-import org.essembeh.rtfm.gui.listener.Inspect;
+import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.gui.controller.GuiController;
+import org.essembeh.rtfm.gui.listener.InspectFileListener;
+import org.essembeh.rtfm.gui.listener.TableSelectionListener;
 import org.essembeh.rtfm.gui.renderers.MusicFileRenderer;
 import org.essembeh.rtfm.gui.renderers.ThreeStatesBooleanRenderer;
-import org.essembeh.rtfm.interfaces.IMusicFile;
 import org.jdesktop.swingx.JXTable;
 
 public class MusicTable extends JXTable {
@@ -34,27 +35,21 @@ public class MusicTable extends JXTable {
 	private static final long serialVersionUID = 2997618588768128182L;
 
 	/**
-	 * Attributes
-	 */
-	protected RTFMController controller;
-
-	/**
 	 * Constructor
 	 * 
 	 * @param model
 	 */
-	public MusicTable(RTFMController controller) {
+	public MusicTable(GuiController controller) {
 		super(controller.getModel());
 
-		// Set the controller
-		this.controller = controller;
-
 		// Double click to inspect
-		addMouseListener(new Inspect(controller));
+		addMouseListener(new InspectFileListener(controller));
+		// Track selection change
+		getSelectionModel().addListSelectionListener(new TableSelectionListener(controller));
 
 		// Column 3 special 3 states renderer
 		setDefaultRenderer(Boolean.class, new ThreeStatesBooleanRenderer());
-		setDefaultRenderer(IMusicFile.class, new MusicFileRenderer());
+		setDefaultRenderer(MusicFile.class, new MusicFileRenderer());
 
 		// Column size
 		getColumn(0).setMaxWidth(200);

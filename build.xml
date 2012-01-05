@@ -22,7 +22,7 @@
 	<!-- ########## PROPERTIES ########## -->
 
 	<property name="app.name" 			value="rtfm" />
-	<property name="app.version" 		value="1.1" />
+	<property name="app.version" 		value="2.0b1" />
 	<property name="path.src" 			value="src/" />
 	<property name="path.junit.src" 	value="junit/" />
 	<property name="path.res" 			value="res/" />
@@ -34,18 +34,27 @@
 	<property name="app.folder" 		value="${path.dist}/RegexTagForMusic.app/" />
 	<property name="app.archive" 		value="${path.dist}/RegexTagForMusic-snapshot.tar.gz" />
 	<property name="rtfm.jar" 			value="${app.folder}/lib/${app.name}-${app.version}.jar" />
+	<property name="bootstrap.main" 	value="org.essembeh.bootstrap.RTFMBootStrap" />
+	<property name="bootstrap.jar"		value="${app.folder}/bin/${app.name}-bootstrap.jar" />
 	<property name="mf.builtby" 		value="Sebastien M-B: essembeh@gmail.com" />
+	
+	<!-- Task definition -->
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+		<classpath>
+			<fileset dir="${path.lib}" includes="*.jar" />
+		</classpath>
+	</taskdef>
 
 	<!-- ########## CLASSPATHS ########## -->
 
 	<path id="classpath.build">
 		<fileset dir="${path.lib}">
-			<include name="*.jar" />
+			<include name="**.jar" />
 		</fileset>
 	</path>
 	<path id="classpath.junit">
 		<fileset dir="${path.lib}">
-			<include name="*.jar" />
+			<include name="**.jar" />
 		</fileset>
 		<pathelement location="${path.build}" />
 		<pathelement location="${path.junit.build}" />
@@ -55,6 +64,23 @@
 
 	<!-- ########## TARGETS ########## -->
 
+	<!-- Generate classes from XSD -->
+	<target name="generateModel">
+		<delete dir="${path.src}/org/essembeh/rtfm/model/" />
+		<xjc destdir="${path.src}" package="org.essembeh.rtfm.model.configuration.core.version1">
+			<schema dir="${path.res}/share/xsd/" includes="configuration-core-v1.xsd" />
+			<arg value="-npa" />
+		</xjc>
+		<xjc destdir="${path.src}" package="org.essembeh.rtfm.model.library.version1">
+			<schema dir="${path.res}/share/xsd/" includes="library-v1.xsd" />
+			<arg value="-npa" />
+		</xjc>
+		<xjc destdir="${path.src}" package="org.essembeh.rtfm.model.library.version2">
+			<schema dir="${path.res}/share/xsd/" includes="library-v2.xsd" />
+			<arg value="-npa" />
+		</xjc>
+	</target>
+		
 	<!-- Cleans -->
 	<target name="clean">
 		<delete dir="${path.dist}" />
@@ -70,7 +96,7 @@
 		</copy>
 		<!-- Copy all libs -->
 		<copy todir="${app.folder}/lib">
-			<fileset dir="lib" includes="**" />
+			<fileset dir="${path.lib}" includes="**jar" />
 		</copy>
 		<!-- Delete previous RTFM lib -->
 		<delete>
@@ -95,7 +121,6 @@
 			<fileset dir="${path.custom}" includes="*.xml" />
 		</copy>
 	</target>
-
 	<!-- Compile Java classes -->
 	<target name="build">
 		<mkdir dir="${path.build}" />
@@ -107,14 +132,25 @@
 	<!-- Makes the jar -->
 	<target name="jar" depends="build">
 		<jar basedir="${path.build}" destfile="${rtfm.jar}">
+			<exclude name="org/essembeh/bootstrap/*"/>
 			<manifest>
 				<attribute name="Built-By" value="${mf.builtby}" />
 			</manifest>
 		</jar>
 	</target>
 
+	<target name="bootstrap" depends="build">
+		<jar basedir="${path.build}" destfile="${bootstrap.jar}">
+			<include name="org/essembeh/bootstrap/*"/>
+			<exclude name="org/essembeh/rtfm/*"/>
+			<manifest>
+				<attribute name="Main-Class" value="${bootstrap.main}"/>
+				<attribute name="Built-By" value="${mf.builtby}" />
+			</manifest>
+		</jar>
+	</target>
 	<!-- Create the Application folder for distribution -->
-	<target name="dist" depends="prepare,custom,jar">
+	<target name="dist" depends="prepare,custom,jar,bootstrap">
 	</target>
 
 	<!-- Creates the zip for distribution -->

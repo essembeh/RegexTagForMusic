@@ -1,0 +1,78 @@
+/**
+ * Copyright 2011 Sebastien M-B <essembeh@gmail.com>
+ * 
+ * This file is part of RegexTagForMusic.
+ * 
+ * RegexTagForMusic is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * RegexTagForMusic is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+package org.essembeh.rtfm.core.library.filter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.filter.conditions.Condition;
+import org.essembeh.rtfm.core.utils.list.IdList;
+import org.essembeh.rtfm.core.utils.list.Identifier;
+
+public class Filter {
+
+	List<Condition> conditions;
+
+	public Filter(Condition... conditions) {
+		this.conditions = new ArrayList<Condition>();
+		addConditions(conditions);
+	}
+
+	public void addConditions(Condition... conditions) {
+		if (conditions != null) {
+			for (int i = 0; i < conditions.length; i++) {
+				addCondition(conditions[i]);
+			}
+		}
+	}
+
+	public void addCondition(Condition condition) {
+		conditions.add(condition);
+	}
+
+	protected boolean matches(MusicFile musicFile) {
+		boolean matches = true;
+		for (Condition condition : conditions) {
+			if (!condition.isTrue(musicFile)) {
+				matches = false;
+				break;
+			}
+		}
+		return matches;
+	}
+
+	public IdList<MusicFile, Identifier<MusicFile>>
+			filter(IdList<MusicFile, Identifier<MusicFile>> inputIdentifiedList) {
+		IdList<MusicFile, Identifier<MusicFile>> outputIdentifiedList = inputIdentifiedList.newEmptyOne();
+		for (MusicFile musicFile : inputIdentifiedList) {
+			if (matches(musicFile)) {
+				outputIdentifiedList.add(musicFile);
+			}
+		}
+		return outputIdentifiedList;
+	}
+
+	@Override
+	public String toString() {
+		return "Filter [conditions={" + StringUtils.join(conditions, ", ") + "}]";
+	}
+}

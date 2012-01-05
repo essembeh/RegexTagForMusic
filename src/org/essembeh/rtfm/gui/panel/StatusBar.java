@@ -27,31 +27,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import org.essembeh.rtfm.core.conf.RTFMProperties;
 import org.essembeh.rtfm.gui.worker.StatusBarCleaner;
 
 public class StatusBar extends JPanel {
 
-	/**
-	 * UID
-	 */
 	private static final long serialVersionUID = 2713289246117490437L;
 
-	/**
-	 * The status items
-	 */
-	protected JLabel statusMessage = null;
-	protected JProgressBar progressBar = null;
+	JLabel statusMessage = null;
+	JProgressBar progressBar = null;
+	StatusBarCleaner cleaner = null;
 
-	/**
-	 * The cleaner
-	 */
-	private StatusBarCleaner cleaner = null;
-
-	/**
-	 * Constructor
-	 */
-	public StatusBar() {
+	public StatusBar(String welcomeMessage) {
 		setBackground(Color.LIGHT_GRAY);
 		setLayout(new GridLayout(1, 1));
 		this.statusMessage = new JLabel();
@@ -59,22 +45,15 @@ public class StatusBar extends JPanel {
 		this.progressBar.setValue(100);
 		this.progressBar.setStringPainted(true);
 		this.statusMessage.setFont(new Font(Font.MONOSPACED, Font.ITALIC, this.statusMessage.getFont().getSize() - 1));
-		printMessage(RTFMProperties.getProperty("app.name") + " " + RTFMProperties.getProperty("app.version"));
+		printMessage(welcomeMessage);
 	}
 
-	/**
-	 * Shows the message text in the status bar.
-	 */
 	protected void setModeMessage() {
 		removeAll();
 		add(this.statusMessage);
 		updateUI();
 	}
 
-	/**
-	 * Shows the progress bar in the status bar. Also reset the progress bar
-	 * value to 0.
-	 */
 	protected void setModeProgressBar() {
 		removeAll();
 		this.progressBar.setValue(0);
@@ -82,31 +61,20 @@ public class StatusBar extends JPanel {
 		updateUI();
 	}
 
-	/**
-	 * Hides the statusbar.
-	 */
 	protected void setModeHidden() {
 		removeAll();
 		updateUI();
 	}
 
-	/**
-	 * Sets the text of the status bar.
-	 * 
-	 * @param line
-	 */
 	public void printMessage(String line) {
-		setModeMessage();
-		this.statusMessage.setForeground(Color.BLUE);
-		this.statusMessage.setText(line);
-		autoClear(5);
+		if (line != null) {
+			setModeMessage();
+			this.statusMessage.setForeground(Color.BLUE);
+			this.statusMessage.setText(line);
+			autoClear(5);
+		}
 	}
 
-	/**
-	 * Sets the text of the status bar.
-	 * 
-	 * @param line
-	 */
 	public void printError(String line) {
 		setModeMessage();
 		this.statusMessage.setForeground(Color.RED);
@@ -114,11 +82,6 @@ public class StatusBar extends JPanel {
 		autoClear(20);
 	}
 
-	/**
-	 * Sets a timer to clean the status bar after a message.
-	 * 
-	 * @param timeout
-	 */
 	protected void autoClear(int timeout) {
 		if (this.cleaner != null) {
 			this.cleaner.cancel(true);
@@ -127,20 +90,11 @@ public class StatusBar extends JPanel {
 		this.cleaner.execute();
 	}
 
-	/**
-	 * Returns the progress bar to update it.
-	 * 
-	 * @return
-	 */
 	public JProgressBar getProgressBar() {
 		setModeProgressBar();
 		return this.progressBar;
 	}
 
-	/**
-	 * Clears the message in the statusbar. If a progress bar is running, show
-	 * it, else hide the status bar.
-	 */
 	public void clear() {
 		setModeHidden();
 		this.statusMessage.setText("");

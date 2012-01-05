@@ -24,28 +24,15 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.essembeh.rtfm.core.MusicFile;
+import org.essembeh.rtfm.core.library.file.MusicFileImpl;
 
 public class MusicFileRenderer extends DefaultTableCellRenderer {
 
-	/**
-	 * UID
-	 */
 	private static final long serialVersionUID = -1130872608459179407L;
 
-	/**
-	 * Constructor
-	 */
 	public MusicFileRenderer() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax
-	 * .swing.JTable, java.lang.Object, boolean, boolean, int, int)
-	 */
 	@Override
 	public Component getTableCellRendererComponent(	JTable table,
 													Object value,
@@ -54,8 +41,8 @@ public class MusicFileRenderer extends DefaultTableCellRenderer {
 													int row,
 													int column) {
 		String valueToPrint = new String();
-		if (value != null && value instanceof MusicFile) {
-			MusicFile mf = (MusicFile) value;
+		if (value != null && value instanceof MusicFileImpl) {
+			MusicFileImpl mf = (MusicFileImpl) value;
 			valueToPrint = mf.getVirtualPath();
 		}
 		return super.getTableCellRendererComponent(table, valueToPrint, isSelected, hasFocus, row, column);

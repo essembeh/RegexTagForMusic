@@ -24,38 +24,24 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import org.essembeh.rtfm.core.exception.ConfigurationException;
-import org.essembeh.rtfm.gui.controller.RTFMController;
+import org.essembeh.rtfm.gui.controller.GuiController;
 import org.essembeh.rtfm.gui.utils.Image;
+import org.essembeh.rtfm.gui.utils.Translator;
+import org.essembeh.rtfm.gui.utils.Translator.StringId;
 
-public class WriteDBAction extends GenericAction {
+public class WriteDBAction extends GenericAbstractAction {
 
-	/**
-	 * UID
-	 */
 	private static final long serialVersionUID = -8442180040448886826L;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param controller
-	 * @throws ConfigurationException
-	 */
-	public WriteDBAction(RTFMController controller) throws ConfigurationException {
-		super(controller, "string.gui.write_db", Image.FILE_SAVE);
+	public WriteDBAction(GuiController controller) {
+		super(controller, Translator.get(StringId.actionWriteDatabase), Image.FILE_SAVE);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setDialogTitle("Select the Database File");
+		fileChooser.setDialogTitle(Translator.get(StringId.messageSelectDatabase));
 		// Set File chooser default directory to current
 		File currentDirectory = new File(".");
 		// If a DB has been opened, set the chooser default directory to

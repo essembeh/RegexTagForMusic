@@ -26,27 +26,19 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
-import org.essembeh.rtfm.core.tag.TagData;
-import org.essembeh.rtfm.gui.panel.FileInformations;
-import org.essembeh.rtfm.interfaces.IMusicFile;
+import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.gui.panel.sub.FileInformations;
+import org.essembeh.rtfm.gui.utils.Translator;
+import org.essembeh.rtfm.gui.utils.Translator.StringId;
 
 public class FileInspectorDialog extends JDialog {
 
-	/**
-	 * UID
-	 */
 	private static final long serialVersionUID = -6412272907835657695L;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param file
-	 * @param data
-	 */
-	public FileInspectorDialog(IMusicFile file, TagData data) {
+	public FileInspectorDialog(MusicFile file) {
 		setLayout(new BorderLayout());
-		add(new FileInformations(file, data), BorderLayout.CENTER);
-		JButton closeButton = new JButton("Close");
+		add(new FileInformations(file), BorderLayout.CENTER);
+		JButton closeButton = new JButton(Translator.get(StringId.buttonClose));
 		closeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -55,7 +47,7 @@ public class FileInspectorDialog extends JDialog {
 		});
 		add(closeButton, BorderLayout.SOUTH);
 		setLocationRelativeTo(null);
-		setTitle("Inspect file");
+		setTitle(Translator.get(StringId.titleInspect));
 		pack();
 	}
 }

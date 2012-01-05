@@ -20,115 +20,73 @@
 package org.essembeh.rtfm.gui.panel;
 
 import java.awt.BorderLayout;
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
-import org.essembeh.rtfm.core.Filter;
-import org.essembeh.rtfm.core.MusicManager;
-import org.essembeh.rtfm.core.exception.ConfigurationException;
-import org.essembeh.rtfm.gui.controller.RTFMController;
-import org.essembeh.rtfm.interfaces.IMusicFile;
+import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.filter.Filter;
+import org.essembeh.rtfm.core.properties.RTFMProperties;
+import org.essembeh.rtfm.gui.controller.GuiController;
+import org.essembeh.rtfm.gui.panel.center.TabManager;
+import org.essembeh.rtfm.gui.panel.side.SidePanel;
 
 public class MainPanel extends JPanel {
 
-	/**
-	 * UID
-	 */
 	private static final long serialVersionUID = -8753385764638412756L;
 
-	/**
-	 * UI Elements
-	 */
-	protected SidePanel sidePanel;
-	protected TabManager tabManager;
-	protected StatusBar statusBar;
+	RTFMProperties properties;
+	SidePanel sidePanel;
+	TabManager tabManager;
+	StatusBar statusBar;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param controller
-	 *            the controller
-	 * @throws ConfigurationException
-	 */
-	public MainPanel(RTFMController controller) throws ConfigurationException {
+	public MainPanel(GuiController controller, RTFMProperties properties) {
 		setLayout(new BorderLayout());
+		this.properties = properties;
 		this.sidePanel = new SidePanel(controller);
-		this.tabManager = new TabManager(controller);
-		this.statusBar = new StatusBar();
 		add(this.sidePanel, BorderLayout.EAST);
+		this.tabManager = new TabManager(controller);
 		add(this.tabManager, BorderLayout.CENTER);
+		this.statusBar = new StatusBar(properties.getProperty("app.name") + properties.getProperty("app.version"));
 		add(this.statusBar, BorderLayout.SOUTH);
 	}
 
-	/**
-	 * Returns the filter of the current tab
-	 * 
-	 * @return the filter
-	 */
 	public Filter getCurrentFilter() {
 		return this.tabManager.getCurrentFilter();
 	}
 
-	/**
-	 * Returns all files of the current tab
-	 * 
-	 * @return the list of files
-	 */
-	public List<IMusicFile> getAllFiles() {
+	public List<MusicFile> getAllFiles() {
 		return this.tabManager.getAllFiles();
 	}
 
-	/**
-	 * Returns the list of selected files in the current tab
-	 * 
-	 * @return the list of files
-	 */
-	public List<IMusicFile> getCurrentSelectionOfFiles() {
+	public List<MusicFile> getCurrentSelectionOfFiles() {
 		return this.tabManager.getCurrentSelectionOfFiles();
 	}
 
-	/**
-	 * Updates the informations
-	 * 
-	 * @param app
-	 */
-	public void updateInformationPanel(MusicManager app) {
-		this.sidePanel.updateInformationPanel(app);
+	public void updateInformationPanel(File rootFolder, int fileCount, int nonTaggedCount) {
+		this.sidePanel.updateInformationPanel(rootFolder, fileCount, nonTaggedCount);
 	}
 
-	/**
-	 * Set the text of the status bar.
-	 * 
-	 * @param line
-	 */
 	public void statusPrintMessage(String line) {
 		this.statusBar.printMessage(line);
 	}
 
-	/**
-	 * Set the text of the status bar.
-	 * 
-	 * @param line
-	 */
 	public void statusPrintError(String line) {
 		this.statusBar.printError(line);
 	}
 
-	/**
-	 * Returns the status bar
-	 * 
-	 * @return
-	 */
 	public StatusBar getStatusBar() {
 		return this.statusBar;
 	}
 
-	/**
-	 * 
-	 * @param modelTypes
-	 */
 	public void setTypeList(List<String> list) {
 		this.tabManager.setTypeList(list);
 	}
+
+	public void updateActions(Map<String, Integer> map) {
+		this.sidePanel.updateActions(map);
+	}
+
 }

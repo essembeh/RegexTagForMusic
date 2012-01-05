@@ -21,6 +21,9 @@
 package org.essembeh.rtfm.core.utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,8 @@ public class FileUtils {
 	 */
 	static protected Logger logger = Logger.getLogger(FileUtils.class);
 
+	static final String SEPARATOR = "/";
+
 	/**
 	 * 
 	 * @param folder
@@ -45,9 +50,9 @@ public class FileUtils {
 	 * @return
 	 */
 	public static List<File> searchFilesInFolder(File folder, boolean listHidden) {
-		logger.debug("Search files in folder: " + folder.getAbsolutePath());
 		List<File> list = new ArrayList<File>();
 		if (folder.isDirectory() && folder.exists()) {
+			list.add(folder);
 			File[] ls = folder.listFiles();
 			for (File file : ls) {
 				if (file.isFile() && (listHidden || (!file.isHidden()))) {
@@ -67,7 +72,7 @@ public class FileUtils {
 	 * @return
 	 */
 	public static String makeNormalPath(String path) {
-		String cleanPath = path.replace("\\", "/");
+		String cleanPath = path.replace("\\", SEPARATOR);
 		return cleanPath;
 	}
 
@@ -87,7 +92,26 @@ public class FileUtils {
 			}
 			i++;
 		}
-		return child.getAbsolutePath().substring(i);
+		String relative = makeNormalPath(child.getAbsolutePath().substring(i));
+		if (child.isDirectory() && !relative.endsWith(SEPARATOR)) {
+			relative += SEPARATOR;
+		}
+		return relative;
 	}
 
+	public static File getResourceAsFile(String filename) throws FileNotFoundException {
+		URL resource = Thread.currentThread().getContextClassLoader().getResource(filename);
+		if (resource == null) {
+			throw new FileNotFoundException("Cannot find file: " + filename);
+		}
+		return new File(resource.getFile());
+	}
+
+	public static InputStream getResourceAsStream(String filename) throws FileNotFoundException {
+		InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
+		if (resource == null) {
+			throw new FileNotFoundException("Cannot find file: " + filename);
+		}
+		return resource;
+	}
 }

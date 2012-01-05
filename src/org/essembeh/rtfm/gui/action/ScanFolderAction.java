@@ -24,39 +24,25 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import org.essembeh.rtfm.core.exception.ConfigurationException;
-import org.essembeh.rtfm.gui.controller.RTFMController;
+import org.essembeh.rtfm.gui.controller.GuiController;
 import org.essembeh.rtfm.gui.utils.Image;
+import org.essembeh.rtfm.gui.utils.Translator;
+import org.essembeh.rtfm.gui.utils.Translator.StringId;
 
-public class ScanFolderAction extends GenericAction {
+public class ScanFolderAction extends GenericAbstractAction {
 
-	/**
-	 * UID
-	 */
 	private static final long serialVersionUID = 8763175742264301763L;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param controller
-	 * @throws ConfigurationException
-	 */
-	public ScanFolderAction(RTFMController controller) throws ConfigurationException {
-		super(controller, "string.gui.scan_folder", Image.FILE_NEW);
+	public ScanFolderAction(GuiController controller) {
+		super(controller, Translator.get(StringId.actionScanFolder), Image.FILE_NEW);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// Create a file chooser that only can select a folder
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.setDialogTitle("Select the folder containing your Music");
+		fileChooser.setDialogTitle(Translator.get(StringId.messageSelectFolder));
 		fileChooser.setCurrentDirectory(new File("."));
 		int rc = fileChooser.showOpenDialog(null);
 		if (rc == JFileChooser.APPROVE_OPTION) {

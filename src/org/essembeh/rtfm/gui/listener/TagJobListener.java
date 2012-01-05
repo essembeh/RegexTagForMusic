@@ -26,26 +26,12 @@ import javax.swing.JProgressBar;
 
 public class TagJobListener implements PropertyChangeListener {
 
-	/**
-	 * The progress bar to update
-	 */
-	protected JProgressBar progressBar = null;
+	JProgressBar progressBar = null;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param progressBar
-	 */
 	public TagJobListener(JProgressBar progressBar) {
 		this.progressBar = progressBar;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seejava.beans.PropertyChangeListener#propertyChange(java.beans.
-	 * PropertyChangeEvent)
-	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent arg0) {
 		if ("progress" == arg0.getPropertyName()) {

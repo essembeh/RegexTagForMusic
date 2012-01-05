@@ -24,40 +24,26 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import org.essembeh.rtfm.core.exception.ConfigurationException;
-import org.essembeh.rtfm.gui.controller.RTFMController;
+import org.essembeh.rtfm.gui.controller.GuiController;
 import org.essembeh.rtfm.gui.utils.Image;
+import org.essembeh.rtfm.gui.utils.Translator;
+import org.essembeh.rtfm.gui.utils.Translator.StringId;
 
-public class ReadDBAction extends GenericAction {
+public class ReadDBAction extends GenericAbstractAction {
 
-	/**
-	 * UID
-	 */
 	private static final long serialVersionUID = 1517407682888362629L;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param controller
-	 * @throws ConfigurationException
-	 */
-	public ReadDBAction(RTFMController controller) throws ConfigurationException {
-		super(controller, "string.gui.read_db", Image.FILE_OPEN);
+	public ReadDBAction(GuiController controller) {
+		super(controller, Translator.get(StringId.actionReadDatabase), Image.FILE_OPEN);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// Create a file chooser to select an XML File
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		// TODO: Filter only Database files (XML files)
-		fileChooser.setDialogTitle("Select the RTFM Database File");
+		fileChooser.setDialogTitle(Translator.get(StringId.messageSelectDatabase));
 		fileChooser.setCurrentDirectory(new File("."));
 		int rc = fileChooser.showOpenDialog(null);
 		if (rc == JFileChooser.APPROVE_OPTION) {

@@ -29,16 +29,10 @@ import javax.swing.table.TableCellRenderer;
 
 public class ThreeStatesBooleanRenderer implements TableCellRenderer {
 
-	/**
-	 * The 3 states
-	 */
-	protected JLabel stateNull = null;
-	protected JCheckBox stateTrue = new JCheckBox();
-	protected JCheckBox stateFalse = new JCheckBox();
+	JLabel stateNull = null;
+	JCheckBox stateTrue = new JCheckBox();
+	JCheckBox stateFalse = new JCheckBox();
 
-	/**
-	 * Constructor
-	 */
 	public ThreeStatesBooleanRenderer() {
 		this.stateNull = new JLabel();
 		this.stateTrue = new JCheckBox();
@@ -49,13 +43,6 @@ public class ThreeStatesBooleanRenderer implements TableCellRenderer {
 		this.stateFalse.setBackground(Color.WHITE);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax
-	 * .swing.JTable, java.lang.Object, boolean, boolean, int, int)
-	 */
 	@Override
 	public Component getTableCellRendererComponent(	JTable table,
 													Object value,
