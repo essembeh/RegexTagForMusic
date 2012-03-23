@@ -75,11 +75,12 @@ public class ProcessUtils {
 	 * 
 	 * @param p
 	 */
-	public static void closeStreams(Process p) {
+	public static void end(Process p) {
 		if (p != null) {
 			closeCloseable(p.getOutputStream());
 			closeCloseable(p.getInputStream());
 			closeCloseable(p.getErrorStream());
+			p.destroy();
 		}
 	}
 

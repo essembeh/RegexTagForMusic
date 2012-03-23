@@ -26,7 +26,7 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.gui.controller.GuiController;
@@ -57,11 +57,11 @@ public class MainPanel extends JPanel {
 		return this.tabManager.getCurrentFilter();
 	}
 
-	public List<MusicFile> getAllFiles() {
+	public List<IMusicFile> getAllFiles() {
 		return this.tabManager.getAllFiles();
 	}
 
-	public List<MusicFile> getCurrentSelectionOfFiles() {
+	public List<IMusicFile> getCurrentSelectionOfFiles() {
 		return this.tabManager.getCurrentSelectionOfFiles();
 	}
 

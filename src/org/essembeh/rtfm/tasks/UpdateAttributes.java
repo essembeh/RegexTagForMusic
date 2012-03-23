@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.attributes.Attribute;
-import org.essembeh.rtfm.core.library.file.MusicFile;
-import org.essembeh.rtfm.core.workflow.Task;
+import org.essembeh.rtfm.core.actions.IRTFMTask;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
-public class UpdateAttributes implements Task {
+public class UpdateAttributes implements IRTFMTask {
 
 	private static final Logger logger = Logger.getLogger(UpdateAttributes.class);
 
@@ -21,7 +21,7 @@ public class UpdateAttributes implements Task {
 	}
 
 	@Override
-	public void execute(MusicFile file) {
+	public void execute(IMusicFile file) {
 		for (String key : attributes.keySet()) {
 			String value = attributes.get(key);
 			Attribute attr = file.getAttributeList().get(key);

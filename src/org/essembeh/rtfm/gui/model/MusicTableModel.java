@@ -19,15 +19,15 @@
  */
 package org.essembeh.rtfm.gui.model;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.essembeh.rtfm.core.attributes.Attribute;
 import org.essembeh.rtfm.core.library.Library;
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.FileType;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
@@ -41,7 +41,7 @@ public class MusicTableModel extends AbstractTableModel {
 
 	Library library = null;
 
-	List<MusicFile> currentList = null;
+	List<IMusicFile> currentList = null;
 
 	public MusicTableModel(Library lib) {
 		this.library = lib;
@@ -63,7 +63,7 @@ public class MusicTableModel extends AbstractTableModel {
 			clazz = String.class;
 			break;
 		case 1:
-			clazz = MusicFile.class;
+			clazz = IMusicFile.class;
 			break;
 		case 2:
 			clazz = Boolean.class;
@@ -93,7 +93,7 @@ public class MusicTableModel extends AbstractTableModel {
 	public Object getValueAt(int arg0, int arg1) {
 		Object object = "";
 		if (arg0 < this.currentList.size()) {
-			MusicFile mf = this.currentList.get(arg0);
+			IMusicFile mf = this.currentList.get(arg0);
 			switch (arg1) {
 			case 0:
 				object = mf.getType();
@@ -121,15 +121,7 @@ public class MusicTableModel extends AbstractTableModel {
 		return false;
 	}
 
-	public List<String> getTypeList() {
-		List<String> listOfTypes = new ArrayList<String>();
-		if (this.library != null) {
-			for (MusicFile musicFile : this.library.getAllFiles()) {
-				if (!listOfTypes.contains(musicFile.getType())) {
-					listOfTypes.add(musicFile.getType());
-				}
-			}
-		}
-		return listOfTypes;
+	public List<FileType> getTypeList() {
+		return FileType.getAllFileTypes();
 	}
 }

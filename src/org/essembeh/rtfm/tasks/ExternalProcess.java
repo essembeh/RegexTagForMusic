@@ -32,20 +32,20 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.attributes.Attribute;
+import org.essembeh.rtfm.core.actions.IRTFMTask;
 import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.utils.FileUtils;
 import org.essembeh.rtfm.core.utils.ProcessUtils;
 import org.essembeh.rtfm.core.utils.ProcessUtils.STDOUT;
-import org.essembeh.rtfm.core.workflow.Task;
 
 /**
  * 
  * @author seb
  * 
  */
-public class ExternalProcess implements Task {
+public class ExternalProcess implements IRTFMTask {
 
 	static protected Logger logger = Logger.getLogger(ExternalProcess.class);
 
@@ -100,15 +100,13 @@ public class ExternalProcess implements Task {
 			if (logger.isDebugEnabled()) {
 				logger.debug("STDOUT:");
 				logger.debug(ProcessUtils.getProcessSysOut(process, STDOUT.stdout));
-				logger.debug("STERR:");
-				logger.debug(ProcessUtils.getProcessSysOut(process, STDOUT.stderr));
 			}
 		} catch (IOException e) {
 			throw new ActionException(e.getMessage());
 		} catch (InterruptedException e) {
 			throw new ActionException(e.getMessage());
 		} finally {
-			ProcessUtils.closeStreams(process);
+			ProcessUtils.end(process);
 		}
 		return rc;
 	}
@@ -132,7 +130,7 @@ public class ExternalProcess implements Task {
 	}
 
 	@Override
-	public void execute(MusicFile file) throws ActionException {
+	public void execute(IMusicFile file) throws ActionException {
 		// Build the command
 		List<String> command = new ArrayList<String>();
 		command.add(this.binaryPath);
@@ -140,12 +138,13 @@ public class ExternalProcess implements Task {
 		logger.debug("Process to execute: " + StringUtils.join(command, " "));
 		// Build env.
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
+		processBuilder.redirectErrorStream(true);
 		Map<String, String> processBuilderEnv = processBuilder.environment();
 		createEnv(processBuilderEnv, file);
 		runProcess(processBuilder);
 	}
 
-	void createEnv(Map<String, String> processEnv, MusicFile musicFile) {
+	void createEnv(Map<String, String> processEnv, IMusicFile musicFile) {
 		for (String key : this.processEnvironment.keySet()) {
 			String value = this.processEnvironment.get(key);
 			String realValue = valuate(value, musicFile);
@@ -156,7 +155,7 @@ public class ExternalProcess implements Task {
 		}
 	}
 
-	String valuate(String value, MusicFile musicFile) {
+	protected String valuate(String value, IMusicFile musicFile) {
 		String attributeValue = value;
 		Pattern pattern = Pattern.compile("\\$\\{(.*)\\}");
 		Matcher matcher = pattern.matcher(value);
@@ -168,6 +167,7 @@ public class ExternalProcess implements Task {
 				attributeValue = attribute.getValue();
 				logger.debug("Found value: " + attributeValue);
 			} else {
+				attributeValue = null;
 				logger.warn("Cannot find attribute: " + attributeName + ", on file: " + musicFile);
 			}
 		}

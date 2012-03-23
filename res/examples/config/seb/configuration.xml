@@ -1,144 +1,187 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration-core xmlns="http://rtfm.essembeh.org/ConfigurationCore-v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<!-- File types -->
-	<filehandler id="ALBUMS" type="file" matches="/Albums/[^/]+/[^/]+/\d{2,3} - .*\.mp3">
-		<attributeset ref-id="taggable" />
-		<attributeset ref-id="id3:album" />
-		<action name="Tag with eyed3">
-			<task ref-id="eyed3-clean" />
-			<task ref-id="setNonTagged" />
-			<task ref-id="eyed3-id3v2.4@utf8" />
-			<task ref-id="setTagged" />
-		</action>
-	</filehandler>
-	<filehandler id="COVER" matches="/Albums/[^/]+/[^/]+/cover\.(jpg|jpeg|png)">
-		<attributes>
-			<attribute name="db:export" value="false" />
-		</attributes>
-	</filehandler>
-	<filehandler id="PLAYLIST" matches="/Albums/[^/]+/[^/]+/playlist\.m3u">
-		<attributes>
-			<attribute name="db:export" value="false" />
-		</attributes>
-	</filehandler>
-	<filehandler id="SINGLE" type="file" matches="/Singles/([^/]+) - ([^/]+)\.mp3">
-		<attributeset ref-id="taggable" />
-		<attributeset ref-id="id3:single" />
-		<action name="Tag with eyed3">
-			<task ref-id="eyed3-clean" />
-			<task ref-id="setNonTagged" />
-			<task ref-id="eyed3-id3v2.4@utf8" />
-			<task ref-id="setTagged" />
-		</action>
-	</filehandler>
-	<filehandler id="SAGA" type="file" matches="/Saga/([^/]+)/([^/]+)\.mp3">
-		<attributeset ref-id="taggable" />
-		<attributeset ref-id="id3:saga" />
-		<action name="Tag with eyed3">
-			<task ref-id="eyed3-clean" />
-			<task ref-id="setNonTagged" />
-			<task ref-id="eyed3-id3v2.4@utf8" />
-			<task ref-id="setTagged" />
-		</action>
-	</filehandler>
-	<filehandler id="FOLDER" type="folder" matches="/Albums/[^/]+/[^/]+/">
-		<attributeset ref-id="albumFolder" />
-		<action name="Download cover">
-			<task ref-id="downloadCover" />
-		</action>
-	</filehandler>
-	<filehandler id="UNKNOWN" matches=".*">
-		<attributes>
-			<attribute name="db:export" value="false" />
-		</attributes>
-		<action name="Delete">
-			<task ref-id="echo" />
-		</action>
-	</filehandler>
+	<filehandlers>
+		<filehandler id="ALBUMS">
+			<conditions>
+				<virtualpath matches="/Albums/[^/]+/[^/]+/\d{2,3} - .*\.mp3" />
+			</conditions>
+			<attributes>
+				<attribute name="tagged" value="false" />
+				<attribute name="db:export" value="true" />
+				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
+				<regex-attribute name="tag:artist" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="1" />
+				<regex-attribute name="tag:year" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="2" optional="true" />
+				<regex-attribute name="tag:album" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="3" />
+				<regex-attribute name="tag:track" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="4" />
+				<regex-attribute name="tag:title" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="5" />
+			</attributes>
+		</filehandler>
+		<filehandler id="COVER">
+			<conditions>
+				<virtualpath matches="/Albums/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" />
+			</conditions>
+			<attributes>
+				<attribute name="db:export" value="false" />
+			</attributes>
+		</filehandler>
+		<filehandler id="PLAYLIST">
+			<conditions>
+				<virtualpath matches="/Albums/[^/]+/[^/]+/playlist\.m3u" />
+			</conditions>
+			<attributes>
+				<attribute name="db:export" value="false" />
+			</attributes>
+		</filehandler>
+		<filehandler id="SINGLE">
+			<conditions>
+				<virtualpath matches="/Singles/([^/]+) - ([^/]+)\.mp3" />
+			</conditions>
+			<attributes>
+				<attribute name="tagged" value="false" />
+				<attribute name="db:export" value="true" />
+				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
+				<attribute name="tag:album" value="#Single" />
+				<regex-attribute name="tag:artist" pattern="/Singles/([^/]+) - ([^/]+)\.\w+" group="1" />
+				<regex-attribute name="tag:title" pattern="/Singles/([^/]+) - ([^/]+)\.\w+" group="2" />
+			</attributes>
+		</filehandler>
+		<filehandler id="SAGA">
+			<conditions>
+				<virtualpath matches="/Saga/([^/]+)/([^/]+)\.mp3" />
+			</conditions>
+			<attributes>
+				<attribute name="tagged" value="false" />
+				<attribute name="db:export" value="true" />
+				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
+				<attribute name="tag:album" value="#Saga" />
+				<regex-attribute name="tag:artist" pattern="/Saga/([^/]+)/([^/]+)\.\w+" group="1" />
+				<regex-attribute name="tag:title" pattern="/Saga/([^/]+)/([^/]+)\.\w+" group="2" />
+			</attributes>
+		</filehandler>
+		<filehandler id="FOLDER">
+			<conditions>
+				<virtualpath matches="/Albums/[^/]+/[^/]+/" />
+			</conditions>
+			<attributes>
+				<attribute name="hasCover" value="false" />
+				<attribute name="db:export" value="false" />
+				<regex-attribute name="artist" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="1" />
+				<regex-attribute name="year" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="2" optional="true" />
+				<regex-attribute name="album" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="3" />
+			</attributes>
+		</filehandler>
+		<filehandler id="UNKNOWN">
+			<conditions>
+				<virtualpath matches=".*" />
+			</conditions>
+			<attributes>
+				<attribute name="db:export" value="false" />
+			</attributes>
+		</filehandler>
+	</filehandlers>
 	<!-- Tasks -->
-	<task id="setNonTagged" classname="org.essembeh.rtfm.tasks.UpdateAttributes">
-		<property name="tagged" value="false" />
-	</task>
-	<task id="setTagged" classname="org.essembeh.rtfm.tasks.UpdateAttributes">
-		<property name="tagged" value="true" />
-	</task>
-	<task id="JAudioTagger-id3v2.4" classname="org.essembeh.rtfm.tasks.JAudioTagger">
-		<property name="version" value="ID3V2_4" />
-	</task>
-	<task id="JAudioTagger-id3v2.3" classname="org.essembeh.rtfm.tasks.JAudioTagger">
-		<property name="version" value="ID3V2_3" />
-	</task>
-	<task id="eyed3-id3v2.4@utf8" classname="org.essembeh.rtfm.tasks.ExternalProcess">
-		<property name="binary" value="scripts/eyeD3-tag.sh" />
-		<property name="env.set" value="TAG_VERSION=ID3V2_4" />
-		<property name="env.set" value="TAG_FORCEUTF8=true" />
-		<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
-		<property name="env.set" value="RTFM_ALBUM=${tag:album}" />
-		<property name="env.set" value="RTFM_YEAR=${tag:year}" />
-		<property name="env.set" value="RTFM_TITLE=${tag:title}" />
-		<property name="env.set" value="RTFM_TRACK=${tag:track}" />
-		<property name="env.set" value="RTFM_GENRE=${tag:genre}" />
-		<property name="env.set" value="RTFM_COMMENT=${tag:comment}" />
-	</task>
-	<task id="eyed3-id3v2.3" classname="org.essembeh.rtfm.tasks.ExternalProcess">
-		<property name="binary" value="scripts/eyeD3-tag.sh" />
-		<property name="env.set" value="TAG_VERSION=ID3V2_3" />
-		<property name="env.set" value="TAG_FORCEUTF8=true" />
-		<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
-		<property name="env.set" value="RTFM_ALBUM=${tag:album}" />
-		<property name="env.set" value="RTFM_YEAR=${tag:year}" />
-		<property name="env.set" value="RTFM_TITLE=${tag:title}" />
-		<property name="env.set" value="RTFM_TRACK=${tag:track}" />
-		<property name="env.set" value="RTFM_GENRE=${tag:genre}" />
-		<property name="env.set" value="RTFM_COMMENT=${tag:comment}" />
-	</task>
-	<task id="eyed3-clean" classname="org.essembeh.rtfm.tasks.ExternalProcess">
-		<property name="binary" value="scripts/eyeD3-remove.sh" />
-	</task>
-	<task id="echo" classname="org.essembeh.rtfm.tasks.ExternalProcess">
-		<property name="binary" value="scripts/dummy.sh" />
-		<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
-		<property name="env.set" value="RTFM_ALBUM=${tag:album}" />
-		<property name="env.set" value="RTFM_YEAR=${tag:year}" />
-		<property name="env.set" value="RTFM_TITLE=${tag:title}" />
-		<property name="env.set" value="RTFM_TRACK=${tag:track}" />
-		<property name="env.set" value="RTFM_GENRE=${tag:genre}" />
-		<property name="env.set" value="RTFM_COMMENT=${tag:comment}" />
-	</task>
-	<task id="downloadCover" classname="org.essembeh.rtfm.tasks.Echo">
-		<property name="message" value="download cover" />
-	</task>
-	<task id="delete" classname="org.essembeh.rtfm.tasks.Echo">
-		<property name="message" value="remove the file" />
-	</task>
-	<!-- Attribute lists -->
-	<attributeset id="taggable">
-		<attribute name="tagged" value="false" />
-		<attribute name="db:export" value="true" />
-	</attributeset>
-	<attributeset id="id3:album">
-		<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
-		<regex-attribute name="tag:artist" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="1" />
-		<regex-attribute name="tag:year" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="2" optional="true" />
-		<regex-attribute name="tag:album" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="3" />
-		<regex-attribute name="tag:track" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="4" />
-		<regex-attribute name="tag:title" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="5" />
-	</attributeset>
-	<attributeset id="id3:single">
-		<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
-		<attribute name="tag:artist" value="#Single" />
-		<regex-attribute name="tag:album" pattern="/Singles/([^/]+) - ([^/]+)\.\w+" group="1" />
-		<regex-attribute name="tag:title" pattern="/Singles/([^/]+) - ([^/]+)\.\w+" group="2" />
-	</attributeset>
-	<attributeset id="id3:saga">
-		<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
-		<attribute name="tag:artist" value="#Saga" />
-		<regex-attribute name="tag:album" pattern="/Saga/([^/]+)/([^/]+)\.\w+" group="1" />
-		<regex-attribute name="tag:title" pattern="/Saga/([^/]+)/([^/]+)\.\w+" group="2" />
-	</attributeset>
-	<attributeset id="albumFolder">
-		<regex-attribute name="artist" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="1" />
-		<regex-attribute name="year" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="2" optional="true" />
-		<regex-attribute name="album" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="3" />
-	</attributeset>
+	<tasks>
+		<task id="setNonTagged" classname="org.essembeh.rtfm.tasks.UpdateAttributes">
+			<property name="tagged" value="false" />
+		</task>
+		<task id="setTagged" classname="org.essembeh.rtfm.tasks.UpdateAttributes">
+			<property name="tagged" value="true" />
+		</task>
+		<task id="JAudioTagger-id3v2.4" classname="org.essembeh.rtfm.tasks.JAudioTagger">
+			<property name="version" value="ID3V2_4" />
+		</task>
+		<task id="JAudioTagger-id3v2.3" classname="org.essembeh.rtfm.tasks.JAudioTagger">
+			<property name="version" value="ID3V2_3" />
+		</task>
+		<task id="eyed3-id3v2.4@utf8" classname="org.essembeh.rtfm.tasks.ExternalProcess">
+			<property name="binary" value="scripts/eyeD3-tag.sh" />
+			<property name="env.set" value="TAG_VERSION=ID3V2_4" />
+			<property name="env.set" value="TAG_FORCEUTF8=true" />
+			<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
+			<property name="env.set" value="RTFM_ALBUM=${tag:album}" />
+			<property name="env.set" value="RTFM_YEAR=${tag:year}" />
+			<property name="env.set" value="RTFM_TITLE=${tag:title}" />
+			<property name="env.set" value="RTFM_TRACK=${tag:track}" />
+			<property name="env.set" value="RTFM_GENRE=${tag:genre}" />
+			<property name="env.set" value="RTFM_COMMENT=${tag:comment}" />
+		</task>
+		<task id="eyed3-id3v2.3" classname="org.essembeh.rtfm.tasks.ExternalProcess">
+			<property name="binary" value="scripts/eyeD3-tag.sh" />
+			<property name="env.set" value="TAG_VERSION=ID3V2_3" />
+			<property name="env.set" value="TAG_FORCEUTF8=true" />
+			<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
+			<property name="env.set" value="RTFM_ALBUM=${tag:album}" />
+			<property name="env.set" value="RTFM_YEAR=${tag:year}" />
+			<property name="env.set" value="RTFM_TITLE=${tag:title}" />
+			<property name="env.set" value="RTFM_TRACK=${tag:track}" />
+			<property name="env.set" value="RTFM_GENRE=${tag:genre}" />
+			<property name="env.set" value="RTFM_COMMENT=${tag:comment}" />
+		</task>
+		<task id="eyed3-clean" classname="org.essembeh.rtfm.tasks.ExternalProcess">
+			<property name="binary" value="scripts/eyeD3-remove.sh" />
+		</task>
+		<task id="echo" classname="org.essembeh.rtfm.tasks.ExternalProcess">
+			<property name="binary" value="scripts/dummy.sh" />
+			<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
+			<property name="env.set" value="RTFM_ALBUM=${tag:album}" />
+			<property name="env.set" value="RTFM_YEAR=${tag:year}" />
+			<property name="env.set" value="RTFM_TITLE=${tag:title}" />
+			<property name="env.set" value="RTFM_TRACK=${tag:track}" />
+			<property name="env.set" value="RTFM_GENRE=${tag:genre}" />
+			<property name="env.set" value="RTFM_COMMENT=${tag:comment}" />
+		</task>
+		<task id="downloadCover" classname="org.essembeh.rtfm.tasks.Echo">
+			<property name="message" value="download cover" />
+		</task>
+		<task id="delete" classname="org.essembeh.rtfm.tasks.Echo">
+			<property name="message" value="remove the file" />
+		</task>
+	</tasks>
+	<actions>
+		<action id="Tag eyeD3" name="Tag with eyed3">
+			<apply-on>
+				<filehandler ref-id="ALBUMS" />
+				<filehandler ref-id="SINGLE" />
+				<filehandler ref-id="SAGA" />
+			</apply-on>
+			<workflow>
+				<task ref-id="eyed3-clean" />
+				<task ref-id="setNonTagged" />
+				<task ref-id="eyed3-id3v2.4@utf8" />
+				<task ref-id="setTagged" />
+			</workflow>
+		</action>
+		<action id="Tag JAudioTagger" name="Tag with eyed3">
+			<apply-on>
+				<filehandler ref-id="ALBUMS" />
+				<filehandler ref-id="SINGLE" />
+				<filehandler ref-id="SAGA" />
+			</apply-on>
+			<workflow>
+				<task ref-id="JAudioTagger-id3v2.4" />
+			</workflow>
+		</action>
+		<action id="Remove tags" name="Remove tags using eyed3">
+			<apply-on>
+				<filehandler ref-id="ALBUMS" />
+				<filehandler ref-id="SINGLE" />
+				<filehandler ref-id="SAGA" />
+			</apply-on>
+			<workflow>
+				<task ref-id="eyed3-clean" />
+				<task ref-id="setNonTagged" />
+			</workflow>
+		</action>
+		<action id="Dummy" name="Dummy script">
+			<apply-on>
+				<filehandler ref-id="ALBUMS" />
+				<filehandler ref-id="SINGLE" />
+				<filehandler ref-id="SAGA" />
+			</apply-on>
+			<workflow>
+				<task ref-id="echo" />
+			</workflow>
+		</action>
+	</actions>
 </configuration-core>

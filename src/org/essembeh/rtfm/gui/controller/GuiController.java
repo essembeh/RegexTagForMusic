@@ -19,7 +19,10 @@
  */
 package org.essembeh.rtfm.gui.controller;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,46 +31,56 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker.StateValue;
 
+import org.apache.log4j.Logger;
+import org.essembeh.rtfm.core.actions.Action;
+import org.essembeh.rtfm.core.configuration.ActionService;
+import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.exception.LibraryException;
 import org.essembeh.rtfm.core.library.Library;
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.FileType;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.filter.CommonFilters;
 import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
+import org.essembeh.rtfm.core.utils.TextUtils;
 import org.essembeh.rtfm.gui.dialog.FileInspectorDialog;
-import org.essembeh.rtfm.gui.listener.TagJobListener;
 import org.essembeh.rtfm.gui.model.MusicTableModel;
 import org.essembeh.rtfm.gui.panel.MainPanel;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
 import org.essembeh.rtfm.gui.worker.ActionWorker;
+import org.essembeh.rtfm.gui.worker.IActionCallback;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class GuiController {
 
-	Library model = null;
+	private static final Logger logger = Logger.getLogger(GuiController.class);
 
-	MusicTableModel tableModel = null;
+	private final Library model;
 
-	MainPanel view = null;
+	private final MusicTableModel tableModel;
 
-	ActionWorker worker = null;
+	private final MainPanel view;
 
-	File currentDatabase = null;
+	private ActionWorker worker;
 
-	RTFMProperties properties;
+	private File currentDatabase;
+
+	private final ActionService actionService;
 
 	@Inject
-	public GuiController(Library model, @Named("rtfm.properties") RTFMProperties properties) {
+	public GuiController(Library model, RTFMProperties properties, ActionService actionService) {
 		this.model = model;
-		this.properties = properties;
+		this.actionService = actionService;
 		this.tableModel = new MusicTableModel(model);
 		this.view = new MainPanel(this, properties);
+		currentDatabase = null;
+		actionService = null;
 	}
 
 	public void displayStatusMessage(String message, boolean isAnError) {
+		logger.debug("Display message: " + message);
 		if (isAnError) {
 			this.view.statusPrintError(message);
 		} else {
@@ -75,16 +88,59 @@ public class GuiController {
 		}
 	}
 
-	public void doExecuteActionForAll(String action) {
+	public void doExecuteActionForAll(String actionName) {
 		if (worker != null && worker.getState() != StateValue.DONE) {
 			// Job already running
 			JOptionPane.showMessageDialog(this.getMainPanel(), Translator.get(StringId.messageJobAlreadyRunning),
 					"Warning", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			List<MusicFile> list = view.getAllFiles();
-			this.worker = new ActionWorker(this, list, action);
-			this.worker.addPropertyChangeListener(new TagJobListener(this.view.getStatusBar().getProgressBar()));
-			this.worker.execute();
+			final List<IMusicFile> list = view.getAllFiles();
+			final Action action = actionService.getActionByIdentifier(actionName);
+			worker = new ActionWorker(action, list, new IActionCallback() {
+				private int error = 0;
+
+				@Override
+				public void unsupportedFiletype(IMusicFile musicFile) {
+					logger.warn("Action: " + action + ", does not support file: " + musicFile);
+					error++;
+				}
+
+				@Override
+				public void start() {
+				}
+
+				@Override
+				public void error(IMusicFile musicFile, ActionException exception) {
+					error++;
+				}
+
+				@Override
+				public void end() {
+					String message = "Action \"" + action.getIdentifier() + "\" executed on "
+							+ TextUtils.plural(list.size(), "file");
+					if (error == 0) {
+						displayStatusMessage(message, false);
+					} else {
+						String errorMessage = " with " + TextUtils.plural(error, "error");
+						displayStatusMessage(message + errorMessage, true);
+					}
+					updateCurrentTab();
+				}
+
+				@Override
+				public void actionSucceeded(IMusicFile musicFile) {
+				}
+			});
+			worker.addPropertyChangeListener(new PropertyChangeListener() {
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					if ("progress" == evt.getPropertyName()) {
+						int progress = (Integer) evt.getNewValue();
+						view.getStatusBar().getProgressBar().setValue(progress);
+					}
+				}
+			});
+			worker.execute();
 		}
 	}
 
@@ -144,12 +200,16 @@ public class GuiController {
 	}
 
 	public List<String> getModelTypes() {
-		return this.tableModel.getTypeList();
+		List<String> list = new ArrayList<String>();
+		for (FileType ft : tableModel.getTypeList()) {
+			list.add(ft.getIdentifier());
+		}
+		return list;
 	}
 
 	public void inspectMusicFile() {
-		List<MusicFile> file = this.view.getCurrentSelectionOfFiles();
-		for (MusicFile musicFile : file) {
+		List<IMusicFile> file = this.view.getCurrentSelectionOfFiles();
+		for (IMusicFile musicFile : file) {
 			FileInspectorDialog dialog = new FileInspectorDialog(musicFile);
 			dialog.setVisible(true);
 		}
@@ -157,8 +217,8 @@ public class GuiController {
 
 	public void updateActions() {
 		Map<String, Integer> map = new HashMap<String, Integer>();
-		for (MusicFile musicFile : view.getAllFiles()) {
-			for (String action : musicFile.getAllActions()) {
+		for (IMusicFile musicFile : view.getAllFiles()) {
+			for (String action : actionService.getActionsForType(musicFile.getType())) {
 				int newCount = 0;
 				if (map.containsKey(action)) {
 					newCount = map.get(action);
@@ -178,7 +238,7 @@ public class GuiController {
 		Filter currentFilter = this.view.getCurrentFilter();
 		this.tableModel.updateWithFilter(currentFilter);
 	}
-	
+
 	public void updateAfterTabChange() {
 		updateCurrentTab();
 		this.view.setTypeList(getModelTypes());

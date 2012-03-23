@@ -3,11 +3,11 @@ package org.essembeh.rtfm.junit;
 import java.io.File;
 import java.util.regex.Pattern;
 
-import org.essembeh.rtfm.core.attributes.Attribute;
-import org.essembeh.rtfm.core.attributes.dynamic.DynamicAttribute;
-import org.essembeh.rtfm.core.attributes.dynamic.RegexAttribute;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
+import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
+import org.essembeh.rtfm.core.filehandler.dynamic.RegexAttribute;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
+import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class AttributeTest {
 		Pattern pattern = Pattern.compile("(.*)");
 		int group = 1;
 		boolean optional = true;
-		DynamicAttribute dynamicAttribute = new RegexAttribute(name, hidden, pattern, group, optional);
+		IDynamicAttribute dynamicAttribute = new RegexAttribute(name, hidden, pattern, group, optional);
 		Attribute a = dynamicAttribute.createAttribute(file);
 		Assert.assertNotNull(a);
 		Assert.assertEquals(name, a.getName());
@@ -67,7 +67,7 @@ public class AttributeTest {
 		Pattern pattern = Pattern.compile("(.*)(...)");
 		int group = 2;
 		boolean optional = true;
-		DynamicAttribute dynamicAttribute = new RegexAttribute(name, hidden, pattern, group, optional);
+		IDynamicAttribute dynamicAttribute = new RegexAttribute(name, hidden, pattern, group, optional);
 		Attribute a = dynamicAttribute.createAttribute(file);
 		Assert.assertNotNull(a);
 		Assert.assertEquals(name, a.getName());
@@ -82,7 +82,7 @@ public class AttributeTest {
 		Pattern pattern = Pattern.compile("(foobar)");
 		int group = 1;
 		boolean optional = false;
-		DynamicAttribute dynamicAttribute = new RegexAttribute(name, hidden, pattern, group, optional);
+		IDynamicAttribute dynamicAttribute = new RegexAttribute(name, hidden, pattern, group, optional);
 		Attribute a = null;
 		try {
 			a = dynamicAttribute.createAttribute(file);
@@ -99,7 +99,7 @@ public class AttributeTest {
 		Pattern pattern = Pattern.compile("foobar(....)");
 		int group = 1;
 		boolean optional = true;
-		DynamicAttribute dynamicAttribute = new RegexAttribute(name, hidden, pattern, group, optional);
+		IDynamicAttribute dynamicAttribute = new RegexAttribute(name, hidden, pattern, group, optional);
 		Attribute a = dynamicAttribute.createAttribute(file);
 		Assert.assertNull(a);
 	}

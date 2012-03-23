@@ -15,9 +15,7 @@ public class LaunchGui {
 
 	public static void main(String[] args) throws ConfigurationException {
 		RTFMProperties rtfmProperties = new RTFMPropertiesFromFile("rtfm.properties");
-		CoreModule coreModule = new CoreModule(rtfmProperties);
-		GuiModule guiModule = new GuiModule(rtfmProperties);
-		Injector injector = Guice.createInjector(coreModule, guiModule);
+		Injector injector = Guice.createInjector(new CoreModule(rtfmProperties), new GuiModule(rtfmProperties));
 		GuiController controller = injector.getInstance(GuiController.class);
 		MainFrame window = new MainFrame(controller.getMainPanel());
 		window.setVisible(true);

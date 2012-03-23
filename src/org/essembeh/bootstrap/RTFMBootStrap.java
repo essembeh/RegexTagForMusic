@@ -62,7 +62,7 @@ public class RTFMBootStrap {
 				}
 			}
 
-			File customFolder = new File(System.getProperty("user.home") + "/.rtfm");
+			File customFolder = new File(System.getProperty("user.home"), ".rtfm");
 			try {
 				checkValidFolder(customFolder);
 				System.out.println("Custom folder: " + customFolder.getAbsolutePath());
@@ -94,7 +94,7 @@ public class RTFMBootStrap {
 			main.invoke(null, (Object) null);
 
 		} catch (Exception e) {
-			System.out.println("Error bootstrapping RegexTagForMusic, try to use startup scripts");
+			System.out.println("Error bootstrapping RegexTagForMusic, try using startup scripts");
 		}
 	}
 }

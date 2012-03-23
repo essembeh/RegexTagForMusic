@@ -30,7 +30,7 @@ import java.io.File;
 import org.essembeh.rtfm.core.configuration.MusicFileCreatorImpl;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.interfaces.MusicFile;
-import org.essembeh.rtfm.core.library.file.MusicFileImpl;
+import org.essembeh.rtfm.core.library.file.MusicFile;
 import org.essembeh.rtfm.core.properties.RTFMPropertiesFromFile;
 import org.junit.Test;
 
@@ -58,7 +58,7 @@ public class ConfigurationTest {
 		assertNotNull(MusicFileCreatorImpl.init());
 		File rootFolder = new File("/foo");
 		File testFile = new File("/foo/A/B/01 - C.mp3");
-		MusicFile mf = new MusicFileImpl(testFile, rootFolder);
+		IMusicFile mf = new MusicFile(testFile, rootFolder);
 		assertNotNull(mf);
 		assertTrue(mf.isTaggable());
 

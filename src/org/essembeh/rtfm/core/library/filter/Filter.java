@@ -23,21 +23,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.essembeh.rtfm.core.library.file.MusicFile;
-import org.essembeh.rtfm.core.library.filter.conditions.Condition;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.filter.conditions.IFilterCondition;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
 
 public class Filter {
 
-	List<Condition> conditions;
+	List<IFilterCondition> conditions;
 
-	public Filter(Condition... conditions) {
-		this.conditions = new ArrayList<Condition>();
+	public Filter(IFilterCondition... conditions) {
+		this.conditions = new ArrayList<IFilterCondition>();
 		addConditions(conditions);
 	}
 
-	public void addConditions(Condition... conditions) {
+	public void addConditions(IFilterCondition... conditions) {
 		if (conditions != null) {
 			for (int i = 0; i < conditions.length; i++) {
 				addCondition(conditions[i]);
@@ -45,13 +45,13 @@ public class Filter {
 		}
 	}
 
-	public void addCondition(Condition condition) {
+	public void addCondition(IFilterCondition condition) {
 		conditions.add(condition);
 	}
 
-	protected boolean matches(MusicFile musicFile) {
+	protected boolean matches(IMusicFile musicFile) {
 		boolean matches = true;
-		for (Condition condition : conditions) {
+		for (IFilterCondition condition : conditions) {
 			if (!condition.isTrue(musicFile)) {
 				matches = false;
 				break;
@@ -60,10 +60,10 @@ public class Filter {
 		return matches;
 	}
 
-	public IdList<MusicFile, Identifier<MusicFile>>
-			filter(IdList<MusicFile, Identifier<MusicFile>> inputIdentifiedList) {
-		IdList<MusicFile, Identifier<MusicFile>> outputIdentifiedList = inputIdentifiedList.newEmptyOne();
-		for (MusicFile musicFile : inputIdentifiedList) {
+	public IdList<IMusicFile, Identifier<IMusicFile>>
+			filter(IdList<IMusicFile, Identifier<IMusicFile>> inputIdentifiedList) {
+		IdList<IMusicFile, Identifier<IMusicFile>> outputIdentifiedList = inputIdentifiedList.newEmptyOne();
+		for (IMusicFile musicFile : inputIdentifiedList) {
 			if (matches(musicFile)) {
 				outputIdentifiedList.add(musicFile);
 			}

@@ -20,12 +20,12 @@
 package org.essembeh.rtfm.tasks;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.attributes.Attribute;
+import org.essembeh.rtfm.core.actions.IRTFMTask;
 import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
-import org.essembeh.rtfm.core.workflow.Task;
 import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
@@ -45,7 +45,7 @@ import org.jaudiotagger.tag.id3.ID3v24Tag;
  * @author seb
  * 
  */
-public class JAudioTagger implements Task {
+public class JAudioTagger implements IRTFMTask {
 
 	private static Logger logger = Logger.getLogger(JAudioTagger.class);
 
@@ -76,7 +76,7 @@ public class JAudioTagger implements Task {
 	}
 
 	@Override
-	public void execute(MusicFile mp3) throws ActionException {
+	public void execute(IMusicFile mp3) throws ActionException {
 		logger.debug("Step1: Remove tags");
 		removeTag(mp3);
 		setTagged(mp3, false);
@@ -86,7 +86,7 @@ public class JAudioTagger implements Task {
 
 	}
 
-	void setTagged(MusicFile musicFile, Boolean tagged) {
+	private void setTagged(IMusicFile musicFile, Boolean tagged) {
 		logger.debug("Set tagged=" + tagged + ", file: " + musicFile);
 		Attribute taggedAttribute = musicFile.getAttributeList().get("tagged");
 		if (taggedAttribute != null) {
@@ -96,7 +96,7 @@ public class JAudioTagger implements Task {
 		}
 	}
 
-	void tag(MusicFile mp3) throws ActionException {
+	private void tag(IMusicFile mp3) throws ActionException {
 		// Set the tag content
 		AbstractID3v2Tag id3 = null;
 		if (this.version == VERSION.ID3V2_3) {
@@ -130,7 +130,7 @@ public class JAudioTagger implements Task {
 		}
 	}
 
-	void removeTag(MusicFile mp3) throws ActionException {
+	private void removeTag(IMusicFile mp3) throws ActionException {
 		MP3File theMp3File = null;
 		try {
 			theMp3File = new MP3File(mp3.getFile());
@@ -158,7 +158,7 @@ public class JAudioTagger implements Task {
 		}
 	}
 
-	void setIfNotNull(AbstractID3v2Tag tag, Attribute field, FieldKey key) throws KeyNotFoundException,
+	private void setIfNotNull(AbstractID3v2Tag tag, Attribute field, FieldKey key) throws KeyNotFoundException,
 			FieldDataInvalidException {
 		if (field != null) {
 			String value = field.getValue();

@@ -5,15 +5,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
 public class IdList<T, I extends Identifier<T>> implements Iterable<T> {
 
-	Map<String, T> map = new HashMap<String, T>();
+	private Map<String, T> map = new HashMap<String, T>();
 
-	I identifier;
+	private I identifier;
 
 	public IdList(I identifier) {
 		this.identifier = identifier;
@@ -39,6 +40,18 @@ public class IdList<T, I extends Identifier<T>> implements Iterable<T> {
 		return o;
 	}
 
+	public IdList<T, I> changeIdentifier(I newIdentifier) {
+		IdList<T, I> o = new IdList<T, I>(newIdentifier);
+		for (T element : this) {
+			o.add(element);
+		}
+		return o;
+	}
+
+	public Identifier<T> getIdentifier() {
+		return identifier;
+	}
+
 	public void addAll(List<T> list) {
 		if (list != null) {
 			for (T t : list) {
@@ -62,7 +75,9 @@ public class IdList<T, I extends Identifier<T>> implements Iterable<T> {
 	}
 
 	public void add(T o) {
-		map.put(identifier.getId(o), o);
+		if (o != null) {
+			map.put(identifier.getId(o), o);
+		}
 	}
 
 	public void remove(String id) {
@@ -70,7 +85,9 @@ public class IdList<T, I extends Identifier<T>> implements Iterable<T> {
 	}
 
 	public void remove(T object) {
-		remove(identifier.getId(object));
+		if (object != null) {
+			remove(identifier.getId(object));
+		}
 	}
 
 	public T get(String id) {
@@ -91,6 +108,10 @@ public class IdList<T, I extends Identifier<T>> implements Iterable<T> {
 		return map.containsKey(id);
 	}
 
+	public boolean contains(T object) {
+		return map.containsValue(object);
+	}
+
 	public int size() {
 		return map.size();
 	}
@@ -103,15 +124,18 @@ public class IdList<T, I extends Identifier<T>> implements Iterable<T> {
 		return list;
 	}
 
+	public Set<String> keySet() {
+		return map.keySet();
+	}
+
 	@Override
 	public Iterator<T> iterator() {
-		// return map.values().iterator();
 		return new SortedIterator<T>(map);
 	}
 
 	@Override
 	public String toString() {
-		return StringUtils.join(map.values(), ", ");
+		return "IdList: [" + StringUtils.join(map.keySet(), ", ") + "]";
 	}
 
 }

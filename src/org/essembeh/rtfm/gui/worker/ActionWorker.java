@@ -19,65 +19,52 @@
  */
 package org.essembeh.rtfm.gui.worker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingWorker;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.library.file.MusicFile;
-import org.essembeh.rtfm.gui.controller.GuiController;
-import org.essembeh.rtfm.gui.panel.StatusBar;
+import org.essembeh.rtfm.core.actions.Action;
+import org.essembeh.rtfm.core.exception.ActionException;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 
 public class ActionWorker extends SwingWorker<Void, Void> {
 
 	private static Logger logger = Logger.getLogger(ActionWorker.class);
 
-	List<MusicFile> listOfFiles = null;
+	private final List<IMusicFile> listOfFiles;
+	private final Action action;
+	private final IActionCallback callback;
 
-	String action;
-
-	StatusBar statusBar = null;
-
-	GuiController controller;
-
-	public ActionWorker(GuiController controller, List<MusicFile> list, String action) {
-		this.controller = controller;
+	public ActionWorker(Action action, List<IMusicFile> list, IActionCallback actionCallback) {
 		this.action = action;
-		this.listOfFiles = new ArrayList<MusicFile>();
-		for (MusicFile musicFile : list) {
-			if (musicFile.getAllActions().contains(action)) {
-				listOfFiles.add(musicFile);
-			}
-		}
+		this.callback = actionCallback;
+		this.listOfFiles = list;
 	}
 
 	@Override
 	protected Void doInBackground() {
 		int totalCount = this.listOfFiles.size();
 		logger.debug("Doing action: " + action + ", in background on " + totalCount + " files");
-		int errorCount = 0;
+		callback.start();
 		setProgress(0);
 		int currentIndex = 0;
-		for (MusicFile file : listOfFiles) {
-			logger.debug("Executing action: " + action + ", on file: " + file);
-			try {
-				file.executeAction(action);
-			} catch (Exception e) {
-				errorCount++;
-				logger.error("Error on file: " + file, e);
+		for (IMusicFile musicFile : listOfFiles) {
+			logger.debug("Executing action: " + action + ", on file: " + musicFile);
+			if (action.supportType(musicFile.getType())) {
+				try {
+					action.executeOn(musicFile);
+				} catch (ActionException e) {
+					callback.error(musicFile, e);
+				}
+				callback.actionSucceeded(musicFile);
+			} else {
+				callback.unsupportedFiletype(musicFile);
 			}
 			setProgress(++currentIndex * 100 / totalCount);
 		}
 		setProgress(100);
-		String message = "Action \"" + action + "\" executed on " + totalCount + " file" + (totalCount > 1 ? "s" : "");
-		if (errorCount == 0) {
-			controller.displayStatusMessage(message, false);
-		} else {
-			String errorMessage = " with " + errorCount + " error" + (errorCount > 1 ? "s" : "");
-			controller.displayStatusMessage(message + errorMessage, true);
-		}
-		controller.updateCurrentTab();
+		callback.end();
 		return null;
 	}
 }

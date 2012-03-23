@@ -19,13 +19,13 @@ public class ConditionsUtils {
 		validation = Pattern.compile(attributeValue + "(?:," + attributeValue + ")*");
 	}
 
-	public Condition[] stringToConditions(String line) {
+	public IFilterCondition[] stringToConditions(String line) {
 		Matcher matcher = validation.matcher(line);
 		if (!matcher.matches()) {
 			logger.warn("The condition line is not valid: " + line);
 			return null;
 		}
-		List<Condition> list = new ArrayList<Condition>();
+		List<IFilterCondition> list = new ArrayList<IFilterCondition>();
 		for (int i = 1; i < matcher.groupCount(); i += 2) {
 			String key = matcher.group(i);
 			String value = matcher.group(i + 1);
@@ -36,6 +36,6 @@ public class ConditionsUtils {
 				list.add(new AttributeValueCondition(key, Pattern.compile(value)));
 			}
 		}
-		return list.toArray(new Condition[0]);
+		return list.toArray(new IFilterCondition[0]);
 	}
 }

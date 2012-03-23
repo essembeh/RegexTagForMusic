@@ -1,18 +1,21 @@
 package org.essembeh.rtfm.core.library.filter.conditions;
 
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.configuration.ActionService;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 
-public class CanExecuteActionCondition implements Condition {
+public class CanExecuteActionCondition implements IFilterCondition {
 
-	String actionName;
+	private String actionName;
+	private ActionService actionService;
 
-	public CanExecuteActionCondition(String actionName) {
+	public CanExecuteActionCondition(ActionService actionService, String actionName) {
 		this.actionName = actionName;
+		this.actionService = actionService;
 	}
 
 	@Override
-	public boolean isTrue(MusicFile musicFile) {
-		return musicFile.getAllActions().contains(actionName);
+	public boolean isTrue(IMusicFile musicFile) {
+		return actionService.getActionsForType(musicFile.getType()).contains(actionName);
 	}
 
 	@Override

@@ -23,12 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.filter.CommonFilters;
 import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.gui.controller.GuiController;
-import org.essembeh.rtfm.gui.listener.TabChangeListener;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
 
@@ -50,14 +51,19 @@ public class TabManager extends JTabbedPane {
 	 * 
 	 * @param controller
 	 */
-	public TabManager(GuiController controller) {
+	public TabManager(final GuiController controller) {
 		this.listOfTabs = new ArrayList<Tab>();
 		this.filterableTab = new FilterableTab(controller);
 		createNewTab(filterableTab, Translator.get(StringId.tabAll));
 		createNewTab(new Tab(controller, CommonFilters.filterOnAttribute("tagged", "false")),
 				Translator.get(StringId.tabNew));
 		createNewTab(new Tab(controller, CommonFilters.filterOnType("UNKNOWN")), Translator.get(StringId.tabUnknown));
-		addChangeListener(new TabChangeListener(controller));
+		addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				controller.updateAfterTabChange();
+			}
+		});
 	}
 
 	protected void createNewTab(Tab tab, String title) {
@@ -70,12 +76,12 @@ public class TabManager extends JTabbedPane {
 		return this.listOfTabs.get(sel).getFilter();
 	}
 
-	public List<MusicFile> getCurrentSelectionOfFiles() {
+	public List<IMusicFile> getCurrentSelectionOfFiles() {
 		int sel = this.getSelectedIndex();
 		return this.listOfTabs.get(sel).getSelectionOfFiles();
 	}
 
-	public List<MusicFile> getAllFiles() {
+	public List<IMusicFile> getAllFiles() {
 		int sel = this.getSelectedIndex();
 		return this.listOfTabs.get(sel).getAllFiles();
 	}

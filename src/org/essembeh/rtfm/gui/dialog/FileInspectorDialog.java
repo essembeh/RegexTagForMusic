@@ -26,7 +26,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.gui.panel.sub.FileInformations;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
@@ -35,7 +35,7 @@ public class FileInspectorDialog extends JDialog {
 
 	private static final long serialVersionUID = -6412272907835657695L;
 
-	public FileInspectorDialog(MusicFile file) {
+	public FileInspectorDialog(IMusicFile file) {
 		setLayout(new BorderLayout());
 		add(new FileInformations(file), BorderLayout.CENTER);
 		JButton closeButton = new JButton(Translator.get(StringId.buttonClose));

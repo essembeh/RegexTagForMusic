@@ -24,25 +24,25 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.configuration.MusicFileFactory;
-import org.essembeh.rtfm.core.event.EventHandler;
+import org.essembeh.rtfm.core.configuration.MusicFileService;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.exception.LibraryException;
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.FileType;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.MusicFileIdentifier;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.library.filter.Filter;
-import org.essembeh.rtfm.core.library.io.LibraryLoader;
-import org.essembeh.rtfm.core.library.io.LibraryWriter;
+import org.essembeh.rtfm.core.library.io.GenericLibraryIO;
+import org.essembeh.rtfm.core.library.io.LibraryLoaderCallback;
+import org.essembeh.rtfm.core.library.io.LibraryWriterCallback;
+import org.essembeh.rtfm.core.library.listener.LibraryListenerContainer;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.core.utils.FileUtils;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class Library {
 
@@ -51,40 +51,37 @@ public class Library {
 	 */
 	protected static Logger logger = Logger.getLogger(Library.class);
 
-	LibraryLoader libraryLoader;
-	LibraryWriter libraryWriter;
-	MusicFileFactory musicFileFactory;
 	RTFMProperties properties;
-	EventHandler eventHandler;
+	MusicFileService musicFileService;
+	GenericLibraryIO genericLibraryIO;
+	LibraryListenerContainer listeners;
 
 	File rootFolder;
-	IdList<MusicFile, Identifier<MusicFile>> listOfFiles;
+	IdList<IMusicFile, Identifier<IMusicFile>> listOfFiles;
 
 	@Inject
-	public Library(	MusicFileFactory musicFileFactory,
-					@Named("rtfm.properties") RTFMProperties properties,
-					LibraryLoader libraryLoader,
-					LibraryWriter libraryWriter,
-					EventHandler eventHandler) {
-		this.musicFileFactory = musicFileFactory;
+	public Library(	RTFMProperties properties,
+					MusicFileService musicFileService,
+					GenericLibraryIO genericLibraryIO,
+					LibraryListenerContainer libraryListenerContainer) {
+		this.musicFileService = musicFileService;
 		this.properties = properties;
-		this.libraryLoader = libraryLoader;
-		this.libraryWriter = libraryWriter;
-		this.eventHandler = eventHandler;
+		this.genericLibraryIO = genericLibraryIO;
+		this.listeners = libraryListenerContainer;
 		clear();
 	}
 
 	protected void clear() {
 		this.rootFolder = null;
-		this.listOfFiles = new IdList<MusicFile, Identifier<MusicFile>>(new MusicFileIdentifier());
+		this.listOfFiles = new IdList<IMusicFile, Identifier<IMusicFile>>(new MusicFileIdentifier());
 	}
 
-	public IdList<MusicFile, Identifier<MusicFile>> getAllFiles() {
+	public IdList<IMusicFile, Identifier<IMusicFile>> getAllFiles() {
 		return getFilteredFiles(null);
 	}
 
-	public IdList<MusicFile, Identifier<MusicFile>> getFilteredFiles(Filter filter) {
-		IdList<MusicFile, Identifier<MusicFile>> list = listOfFiles.newEmptyOne();
+	public IdList<IMusicFile, Identifier<IMusicFile>> getFilteredFiles(Filter filter) {
+		IdList<IMusicFile, Identifier<IMusicFile>> list = listOfFiles.newEmptyOne();
 		if (filter == null) {
 			list.addAll(listOfFiles);
 		} else {
@@ -111,49 +108,82 @@ public class Library {
 
 		// Search all files
 		boolean scanHiddenFiles = properties.getBoolean("scan.hidden.files");
+		String ignoreAttribute = properties.getProperty("library.musicfile.attribute.ignore");
 		List<File> allFiles = FileUtils.searchFilesInFolder(this.rootFolder, scanHiddenFiles);
 
 		for (File file : allFiles) {
 			logger.debug("Found: " + file.getAbsolutePath());
 			VirtualFile virtualFile = new VirtualFile(file, folder);
-			MusicFile musicFile;
+			IMusicFile musicFile;
 			try {
-				musicFile = musicFileFactory.createMusicFile(virtualFile);
+				musicFile = musicFileService.createMusicFile(virtualFile);
 				if (musicFile != null) {
-					listOfFiles.add(musicFile);
+					if (ignoreAttribute != null && musicFile.getAttributeList().contains(ignoreAttribute)) {
+						logger.info("Ignored file: " + musicFile);
+					} else {
+						listOfFiles.add(musicFile);
+					}
 				} else {
-					eventHandler.noFileHandlerForFile(virtualFile);
+					listeners.noFileHandlerForFile(virtualFile);
 				}
-			} catch (InstantiationException e) {
-				eventHandler.errorInstantiateFile(virtualFile, e.getMessage());
 			} catch (DynamicAttributeException e) {
-				eventHandler.errorMatchingDynamicAttribute(virtualFile, e.getMessage());
+				listeners.errorMatchingDynamicAttribute(virtualFile, e.getMessage());
 			}
 		}
-		// Sort the list
 		logger.info("Found " + this.listOfFiles.size() + " files in folder: " + this.rootFolder.getAbsolutePath());
 	}
 
 	public void loadFrom(File source) throws LibraryException, IOException {
-		if (libraryLoader.load(source)) {
-			scanFolder(libraryLoader.getRootFolder());
-			libraryLoader.update(listOfFiles);
-		} else {
-			logger.error("Error using library loader for file: " + source.getAbsolutePath());
-			clear();
-			throw new LibraryException("Cannot load library: " + source.getAbsolutePath());
+		clear();
+		final IdList<IMusicFile, Identifier<IMusicFile>> oldFiles = listOfFiles.newEmptyOne();
+		genericLibraryIO.loadLibrary(source, new LibraryLoaderCallback() {
+			@Override
+			public void setRootFolder(File rootFolder) throws IOException {
+				scanFolder(rootFolder);
+			}
+
+			@Override
+			public IMusicFile getExistingMusicFile(String virtualPath, FileType type) {
+				IMusicFile musicFile = null;
+				if (listOfFiles.contains(virtualPath)) {
+					musicFile = listOfFiles.get(virtualPath);
+					logger.debug("Update file: " + musicFile);
+				} else {
+					logger.debug("Removed file during importation: " + virtualPath);
+					listeners.loadLibraryFileRemoved(virtualPath, type);
+				}
+				oldFiles.add(musicFile);
+
+				return listOfFiles.get(virtualPath);
+			}
+		});
+		// Detect new files
+		for (IMusicFile iMusicFile : listOfFiles) {
+			if (!oldFiles.contains(iMusicFile)) {
+				logger.debug("New file during importation: " + iMusicFile);
+				listeners.loadLibraryNewFile(iMusicFile);
+			}
 		}
+		logger.info("File count: " + listOfFiles.size());
+		logger.info("New file: " + (listOfFiles.size() - oldFiles.size()));
 	}
 
 	public void writeTo(File destination) throws LibraryException {
-		this.libraryWriter.write(destination, listOfFiles, rootFolder);
+		genericLibraryIO.writeLibrary(destination, new LibraryWriterCallback() {
+			@Override
+			public File getRootFolder() {
+				return rootFolder;
+			}
+
+			@Override
+			public List<IMusicFile> getMusicFiles() {
+				return listOfFiles.toList();
+			}
+		});
 	}
 
 	@Override
 	public String toString() {
-		return "Library [rootFolder=" + rootFolder + ", listOfFiles={" + StringUtils.join(listOfFiles, ", ")
-				+ "}, libraryLoader=" + libraryLoader + ", libraryWriter=" + libraryWriter + ", configuration="
-				+ musicFileFactory + ", properties=" + properties + "]";
+		return "Library [rootFolder=" + rootFolder + ", files: " + listOfFiles.size() + "]";
 	}
-
 }

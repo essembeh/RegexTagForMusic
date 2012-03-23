@@ -27,7 +27,7 @@ import java.io.File;
 
 import org.essembeh.rtfm.core.configuration.MusicFileCreatorImpl;
 import org.essembeh.rtfm.core.interfaces.MusicFile;
-import org.essembeh.rtfm.core.library.file.MusicFileImpl;
+import org.essembeh.rtfm.core.library.file.MusicFile;
 import org.essembeh.rtfm.core.tag.TagData;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class TagProviderTest {
 	public void testWithInvalidYear() throws Exception {
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/3000 - the album/01 - the song.mp3");
-		MusicFile musicFile = new MusicFileImpl(mp3, root);
+		IMusicFile musicFile = new MusicFile(mp3, root);
 		TagData tag = musicFile.updateTagData();
 		assertNotNull(tag);
 		assertEquals("the artist", tag.getArtist());
@@ -58,7 +58,7 @@ public class TagProviderTest {
 	public void testWithoutYear() throws Exception {
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/the album/01 - the song.mp3");
-		MusicFile musicFile = new MusicFileImpl(mp3, root);
+		IMusicFile musicFile = new MusicFile(mp3, root);
 		TagData tag = musicFile.updateTagData();
 		assertNotNull(tag);
 		assertEquals("the artist", tag.getArtist());
@@ -73,7 +73,7 @@ public class TagProviderTest {
 	public void testWithYear() throws Exception {
 		File root = new File("/m/");
 		File mp3 = new File("/m/the artist/2000 - the album/01 - the song.mp3");
-		MusicFile musicFile = new MusicFileImpl(mp3, root);
+		IMusicFile musicFile = new MusicFile(mp3, root);
 		TagData tag = musicFile.updateTagData();
 		assertNotNull(tag);
 		assertEquals("the artist", tag.getArtist());

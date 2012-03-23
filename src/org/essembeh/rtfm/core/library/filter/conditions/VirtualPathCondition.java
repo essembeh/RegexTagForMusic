@@ -2,9 +2,9 @@ package org.essembeh.rtfm.core.library.filter.conditions;
 
 import java.util.regex.Pattern;
 
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 
-public class VirtualPathCondition implements Condition {
+public class VirtualPathCondition implements IFilterCondition {
 
 	Pattern regexOnPath;
 
@@ -13,7 +13,7 @@ public class VirtualPathCondition implements Condition {
 	}
 
 	@Override
-	public boolean isTrue(MusicFile musicFile) {
+	public boolean isTrue(IMusicFile musicFile) {
 		return regexOnPath.matcher(musicFile.getVirtualPath()).matches();
 	}
 

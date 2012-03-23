@@ -26,8 +26,8 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 
-import org.essembeh.rtfm.core.attributes.Attribute;
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.gui.utils.SpringUtilities;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
@@ -37,7 +37,7 @@ public class FileInformations extends JPanel {
 
 	private static final long serialVersionUID = 9011058431499845479L;
 
-	public FileInformations(final MusicFile file) {
+	public FileInformations(final IMusicFile file) {
 
 		// Top Panel
 		JPanel top = new JPanel();
@@ -47,7 +47,7 @@ public class FileInformations extends JPanel {
 		top.add(createTextField(file.getVirtualPath()));
 		// Type
 		top.add(createLabel(Translator.get(StringId.columnType)));
-		top.add(createTextField(file.getType()));
+		top.add(createTextField(file.getType().getIdentifier()));
 		SpringUtilities.makeCompactGrid(top, 2, 2, 3, 3, 3, 3);
 
 		// Bottom

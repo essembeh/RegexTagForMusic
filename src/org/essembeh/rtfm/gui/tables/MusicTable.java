@@ -19,10 +19,15 @@
  */
 package org.essembeh.rtfm.gui.tables;
 
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
+
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.gui.controller.GuiController;
-import org.essembeh.rtfm.gui.listener.InspectFileListener;
-import org.essembeh.rtfm.gui.listener.TableSelectionListener;
+import org.essembeh.rtfm.gui.menu.ContextualMenu;
 import org.essembeh.rtfm.gui.renderers.MusicFileRenderer;
 import org.essembeh.rtfm.gui.renderers.ThreeStatesBooleanRenderer;
 import org.jdesktop.swingx.JXTable;
@@ -39,17 +44,24 @@ public class MusicTable extends JXTable {
 	 * 
 	 * @param model
 	 */
-	public MusicTable(GuiController controller) {
+	public MusicTable(final GuiController controller) {
 		super(controller.getModel());
 
 		// Double click to inspect
-		addMouseListener(new InspectFileListener(controller));
-		// Track selection change
-		getSelectionModel().addListSelectionListener(new TableSelectionListener(controller));
-
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+					controller.inspectMusicFile();
+				} else if (SwingUtilities.isRightMouseButton(e)) {
+					JPopupMenu menu = new ContextualMenu(controller);
+					menu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+		});
 		// Column 3 special 3 states renderer
 		setDefaultRenderer(Boolean.class, new ThreeStatesBooleanRenderer());
-		setDefaultRenderer(MusicFile.class, new MusicFileRenderer());
+		setDefaultRenderer(IMusicFile.class, new MusicFileRenderer());
 
 		// Column size
 		getColumn(0).setMaxWidth(200);

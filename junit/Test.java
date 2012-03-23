@@ -6,7 +6,7 @@ import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.exception.old.AbstractException;
 import org.essembeh.rtfm.core.exception.old.DatabaseException;
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.gui.controller.MusicManager;
 
 import com.google.inject.Guice;
@@ -27,7 +27,7 @@ public class Test {
 
 		manager.scanFolder(folder);
 		manager.saveDatabase(db1);
-		for (MusicFile musicFile : manager.getAllFiles()) {
+		for (IMusicFile musicFile : manager.getAllFiles()) {
 			musicFile.executeAction("setTagged");
 			musicFile.updateTagData();
 			musicFile.executeAction("test");

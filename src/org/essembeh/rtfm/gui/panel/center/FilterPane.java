@@ -20,6 +20,10 @@
 package org.essembeh.rtfm.gui.panel.center;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -36,7 +40,6 @@ import org.essembeh.rtfm.core.library.filter.conditions.ConditionsUtils;
 import org.essembeh.rtfm.core.library.filter.conditions.TypeCondition;
 import org.essembeh.rtfm.core.library.filter.conditions.VirtualPathCondition;
 import org.essembeh.rtfm.gui.controller.GuiController;
-import org.essembeh.rtfm.gui.listener.FilterUpdatedListener;
 import org.jdesktop.swingx.HorizontalLayout;
 
 public class FilterPane extends JPanel {
@@ -112,4 +115,41 @@ public class FilterPane extends JPanel {
 		}
 		this.typeComboBox.setSelectedIndex(0);
 	}
+
+	public class FilterUpdatedListener implements ActionListener, KeyListener {
+
+		GuiController controller = null;
+
+		public FilterUpdatedListener(GuiController controller) {
+			this.controller = controller;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			this.controller.updateCurrentTab();
+		}
+
+		@Override
+		public void keyPressed(KeyEvent arg0) {
+			if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+				this.controller.updateCurrentTab();
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+				this.controller.updateCurrentTab();
+			}
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+				this.controller.updateCurrentTab();
+			}
+		}
+
+	}
+
 }

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.library.file.MusicFile;
-import org.essembeh.rtfm.core.workflow.Task;
+import org.essembeh.rtfm.core.actions.IRTFMTask;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 
-public class Echo implements Task {
+public class Echo implements IRTFMTask {
 
 	private static final Logger logger = Logger.getLogger(Echo.class);
 
@@ -23,7 +23,7 @@ public class Echo implements Task {
 	}
 
 	@Override
-	public void execute(MusicFile file) {
+	public void execute(IMusicFile file) {
 		for (String message : messages) {
 			logger.info(message);
 		}

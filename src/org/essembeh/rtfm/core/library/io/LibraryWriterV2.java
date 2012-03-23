@@ -1,18 +1,17 @@
 package org.essembeh.rtfm.core.library.io;
 
 import java.io.File;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.essembeh.rtfm.core.attributes.Attribute;
 import org.essembeh.rtfm.core.exception.LibraryException;
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
-import org.essembeh.rtfm.core.utils.list.IdList;
-import org.essembeh.rtfm.core.utils.list.Identifier;
 import org.essembeh.rtfm.model.library.version2.ObjectFactory;
 import org.essembeh.rtfm.model.library.version2.TAttribute;
 import org.essembeh.rtfm.model.library.version2.TFile;
@@ -20,25 +19,22 @@ import org.essembeh.rtfm.model.library.version2.TLibraryV2;
 import org.essembeh.rtfm.model.library.version2.TRootFolder;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
-public class LibraryWriterV2 implements LibraryWriter {
+public class LibraryWriterV2 implements ILibraryWriter {
 
 	ObjectFactory objectFactory;
 
 	String exportableAttribute = null;
 
 	@Inject
-	public LibraryWriterV2(ObjectFactory objectFactory, @Named("rtfm.properties") RTFMProperties properties) {
-		this.objectFactory = objectFactory;
+	public LibraryWriterV2(RTFMProperties properties) {
 		exportableAttribute = properties.getProperty("library.musicfile.attribute.export");
+		this.objectFactory = new ObjectFactory();
 	}
 
 	@Override
-	public void write(File destination, IdList<MusicFile, Identifier<MusicFile>> musicFiles, File rootFolder)
-			throws LibraryException {
-		TLibraryV2 library = toModel(musicFiles, rootFolder);
-
+	public void writeLibrary(File destination, LibraryWriterCallback callback) throws LibraryException {
+		TLibraryV2 library = toModel(callback.getMusicFiles(), callback.getRootFolder());
 		try {
 			JAXBContext context = JAXBContext.newInstance("org.essembeh.rtfm.model.library.version2");
 			Marshaller marshaller = context.createMarshaller();
@@ -51,7 +47,7 @@ public class LibraryWriterV2 implements LibraryWriter {
 		}
 	}
 
-	protected boolean isExportable(MusicFile musicFile) {
+	protected boolean isExportable(IMusicFile musicFile) {
 		boolean isExportable = true;
 		if (exportableAttribute != null) {
 			Attribute exportAttribute = musicFile.getAttributeList().get(exportableAttribute);
@@ -62,10 +58,10 @@ public class LibraryWriterV2 implements LibraryWriter {
 		return isExportable;
 	}
 
-	protected TLibraryV2 toModel(IdList<MusicFile, Identifier<MusicFile>> musicFiles, File rootFolder) {
+	protected TLibraryV2 toModel(List<IMusicFile> musicFiles, File rootFolder) {
 		TLibraryV2 model = objectFactory.createTLibraryV2();
 		model.setRootFolder(toModel(rootFolder));
-		for (MusicFile musicFile : musicFiles) {
+		for (IMusicFile musicFile : musicFiles) {
 			if (isExportable(musicFile)) {
 				model.getFile().add(toModel(musicFile));
 			}
@@ -79,9 +75,9 @@ public class LibraryWriterV2 implements LibraryWriter {
 		return model;
 	}
 
-	protected TFile toModel(MusicFile musicFile) {
+	protected TFile toModel(IMusicFile musicFile) {
 		TFile model = objectFactory.createTFile();
-		model.setType(musicFile.getType());
+		model.setType(musicFile.getType().toString());
 		model.setVirtualpath(musicFile.getVirtualPath());
 		for (Attribute a : musicFile.getAttributeList()) {
 			if (!a.isHidden()) {

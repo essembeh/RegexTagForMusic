@@ -24,7 +24,7 @@ import java.util.List;
 
 import javax.swing.JScrollPane;
 
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.gui.controller.GuiController;
 import org.essembeh.rtfm.gui.tables.MusicTable;
 
@@ -39,20 +39,20 @@ public class MusicTablePane extends JScrollPane {
 		setViewportView(this.table);
 	}
 
-	public List<MusicFile> getSelectedMusicFiles() {
-		List<MusicFile> list = new ArrayList<MusicFile>();
+	public List<IMusicFile> getSelectedMusicFiles() {
+		List<IMusicFile> list = new ArrayList<IMusicFile>();
 		int[] selectedRows = this.table.getSelectedRows();
 		for (int i : selectedRows) {
-			list.add((MusicFile) this.table.getValueAt(i, 1));
+			list.add((IMusicFile) this.table.getValueAt(i, 1));
 		}
 		return list;
 	}
 
-	public List<MusicFile> getAllFiles() {
-		List<MusicFile> list = new ArrayList<MusicFile>();
+	public List<IMusicFile> getAllFiles() {
+		List<IMusicFile> list = new ArrayList<IMusicFile>();
 		int nbRows = this.table.getRowCount();
 		for (int i = 0; i < nbRows; i++) {
-			list.add((MusicFile) this.table.getValueAt(i, 1));
+			list.add((IMusicFile) this.table.getValueAt(i, 1));
 		}
 		return list;
 	}

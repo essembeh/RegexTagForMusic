@@ -61,9 +61,9 @@ public class MusicManagerTest {
 
 	@Test
 	public void testTag() throws Throwable {
-		List<MusicFile> list = this.mm.getFilteredFiles(Filter.TAGGABLE);
+		List<IMusicFile> list = this.mm.getFilteredFiles(Filter.TAGGABLE);
 		int errorCount = 0;
-		for (MusicFile musicFile : list) {
+		for (IMusicFile musicFile : list) {
 			try {
 				musicFile.tag();
 			} catch (Exception e) {

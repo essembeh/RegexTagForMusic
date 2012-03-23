@@ -52,7 +52,7 @@ public class HandlersTest {
 			String result = map.get(path);
 			FileHandler handler = Services.getFilehandlerService().getFileHandlerForFile(path);
 			assertNotNull(handler);
-			assertEquals(handler.getId(), result);
+			assertEquals(handler.getIdentifier(), result);
 		}
 	}
 
@@ -67,7 +67,7 @@ public class HandlersTest {
 			String result = map.get(path);
 			FileHandler handler = Services.getFilehandlerService().getFileHandlerForFile(path);
 			assertNotNull(handler);
-			assertEquals(handler.getId(), result);
+			assertEquals(handler.getIdentifier(), result);
 		}
 		System.out.println("");
 	}

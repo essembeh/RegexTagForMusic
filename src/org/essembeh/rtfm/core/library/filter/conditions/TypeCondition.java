@@ -1,20 +1,21 @@
 package org.essembeh.rtfm.core.library.filter.conditions;
 
 import org.apache.commons.lang3.StringUtils;
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.FileType;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 
-public class TypeCondition implements Condition {
+public class TypeCondition implements IFilterCondition {
 
-	String[] validTypes;
+	private String[] validTypes;
 
-	public TypeCondition(String[] validTypes) {
+	public TypeCondition(String... validTypes) {
 		this.validTypes = validTypes;
 	}
 
 	@Override
-	public boolean isTrue(MusicFile musicFile) {
+	public boolean isTrue(IMusicFile musicFile) {
 		for (int i = 0; i < validTypes.length; i++) {
-			if (validTypes[i].equals(musicFile.getType())) {
+			if (musicFile.getType().equals(FileType.getFiletype(validTypes[i]))) {
 				return true;
 			}
 		}
@@ -23,7 +24,7 @@ public class TypeCondition implements Condition {
 
 	@Override
 	public String toString() {
-		return "TypeCondition [regexOnType=" + StringUtils.join(validTypes, ", ") + "]";
+		return "TypeCondition [validTypes=" + StringUtils.join(validTypes, ", ") + "]";
 	}
 
 }

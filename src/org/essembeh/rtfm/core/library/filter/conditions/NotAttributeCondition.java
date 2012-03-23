@@ -1,8 +1,8 @@
 package org.essembeh.rtfm.core.library.filter.conditions;
 
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 
-public class NotAttributeCondition implements Condition {
+public class NotAttributeCondition implements IFilterCondition {
 
 	String attributeName;
 
@@ -11,7 +11,7 @@ public class NotAttributeCondition implements Condition {
 	}
 
 	@Override
-	public boolean isTrue(MusicFile musicFile) {
+	public boolean isTrue(IMusicFile musicFile) {
 		return !musicFile.getAttributeList().contains(attributeName);
 	}
 
