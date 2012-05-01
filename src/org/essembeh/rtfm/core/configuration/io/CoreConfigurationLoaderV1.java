@@ -14,10 +14,8 @@ import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.actions.Action;
-import org.essembeh.rtfm.core.actions.ActionIdentifier;
-import org.essembeh.rtfm.core.actions.TaskExecutor;
-import org.essembeh.rtfm.core.actions.TaskExecutorIdentifier;
+import org.essembeh.rtfm.core.actions.Task;
+import org.essembeh.rtfm.core.actions.Workflow;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.TaskException;
 import org.essembeh.rtfm.core.filehandler.FileHandler;
@@ -25,6 +23,8 @@ import org.essembeh.rtfm.core.filehandler.RegexOnPathCondition;
 import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
 import org.essembeh.rtfm.core.filehandler.dynamic.RegexAttribute;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
+import org.essembeh.rtfm.core.utils.identifiers.TaskIdentifier;
+import org.essembeh.rtfm.core.utils.identifiers.WorkflowIdentifier;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
 import org.essembeh.rtfm.model.configuration.core.version1.TAction;
@@ -109,25 +109,25 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 	}
 
 	@Override
-	public IdList<Action, Identifier<Action>> getActions() throws ConfigurationException {
+	public IdList<Workflow, Identifier<Workflow>> getWorkflows() throws ConfigurationException {
 		if (model == null) {
 			throw new ConfigurationException();
 		}
-		IdList<Action, Identifier<Action>> list = new IdList<Action, Identifier<Action>>(new ActionIdentifier());
-		IdList<TaskExecutor, Identifier<TaskExecutor>> taskList = new IdList<TaskExecutor, Identifier<TaskExecutor>>(
-				new TaskExecutorIdentifier());
+		IdList<Workflow, Identifier<Workflow>> list = new IdList<Workflow, Identifier<Workflow>>(
+				new WorkflowIdentifier());
+		IdList<Task, TaskIdentifier> taskList = new IdList<Task, TaskIdentifier>(new TaskIdentifier());
 		for (TTask taskModel : model.getTasks().getTask()) {
-			TaskExecutor taskExecutor = read(taskModel);
-			logger.debug("Found task: " + taskExecutor);
-			taskList.add(taskExecutor);
+			Task task = read(taskModel);
+			logger.debug("Found task: " + task);
+			taskList.add(task);
 		}
 
 		for (TAction actionModel : model.getActions().getAction()) {
-			Action action = read(actionModel);
+			Workflow action = read(actionModel);
 			list.add(action);
 			// Tasks
 			for (TReference taskRef : actionModel.getWorkflow().getTask()) {
-				TaskExecutor taskExecutor = taskList.get(taskRef.getRefId());
+				Task taskExecutor = taskList.get(taskRef.getRefId());
 				if (taskExecutor == null) {
 					throw new ConfigurationException("Cannot find task: " + taskRef.getRefId());
 				}
@@ -138,20 +138,20 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 		return list;
 	}
 
-	private Action read(TAction model) {
-		Action out = new Action(model.getName(), model.getId());
+	private Workflow read(TAction model) {
+		Workflow out = new Workflow(model.getId(), model.getDescription());
 		for (TReference ref : model.getApplyOn().getFilehandler()) {
 			out.addSupportedType(ref.getRefId());
 		}
 		return out;
 	}
 
-	private TaskExecutor read(TTask model) throws ConfigurationException {
-		TaskExecutor out;
+	private Task read(TTask model) throws ConfigurationException {
+		Task out;
 		try {
 			String id = model.getId();
 			String classname = model.getClassname();
-			out = new TaskExecutor(id, classname);
+			out = new Task(id, classname);
 			// Setting properties
 			for (TProperty property : model.getProperty()) {
 				out.setProperty(property.getName(), property.getValue());
@@ -161,4 +161,5 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 		}
 		return out;
 	}
+
 }

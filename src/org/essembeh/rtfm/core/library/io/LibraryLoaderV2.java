@@ -68,7 +68,7 @@ public class LibraryLoaderV2 implements ILibraryLoader {
 		for (TAttribute attribute : model.getAttribute()) {
 			String name = attribute.getName();
 			String value = attribute.getValue();
-			if (musicFile.getAttributeList().contains(name)) {
+			if (musicFile.getAttributeList().containsKey(name)) {
 				// Update
 				musicFile.getAttributeList().get(name).setValue(value);
 			} else {

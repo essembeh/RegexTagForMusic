@@ -23,7 +23,7 @@ package org.essembeh.rtfm.core.library.file;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.core.library.file.attributes.AttributeIdentifier;
+import org.essembeh.rtfm.core.utils.identifiers.AttributeIdentifier;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
 

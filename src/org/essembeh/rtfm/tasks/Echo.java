@@ -1,31 +1,25 @@
 package org.essembeh.rtfm.tasks;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.actions.IRTFMTask;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 
-public class Echo implements IRTFMTask {
+public class Echo implements ITask {
 
 	private static final Logger logger = Logger.getLogger(Echo.class);
-
-	List<String> messages;
-
-	public Echo() {
-		messages = new ArrayList<String>();
-	}
-
-	@Override
-	public void setProperty(String name, String value) {
-		messages.add(name + "=" + value);
-	}
+	private Map<String, String> properties = new HashMap<String, String>();
 
 	@Override
 	public void execute(IMusicFile file) {
-		for (String message : messages) {
-			logger.info(message);
+		for (String key : properties.keySet()) {
+			logger.info(key + " = " + properties.get(key));
 		}
+	}
+
+	@Override
+	public void setProperty(String key, String value) {
+		properties.put(key, value);
 	}
 }

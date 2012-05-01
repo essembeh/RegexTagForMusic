@@ -17,6 +17,11 @@ public class FileType implements Comparable<FileType> {
 		return Collections.unmodifiableList(knownFiletypes);
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public static FileType getFiletype(String id) {
 		for (FileType fileType : knownFiletypes) {
 			if (fileType.getIdentifier().equals(id)) {
@@ -26,6 +31,11 @@ public class FileType implements Comparable<FileType> {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public static FileType createFiletype(String id) {
 		FileType newFileType = getFiletype(id);
 		if (newFileType == null) {
@@ -35,26 +45,52 @@ public class FileType implements Comparable<FileType> {
 		return newFileType;
 	}
 
+	/**
+	 * 
+	 */
 	private final String identifier;
 
+	/**
+	 * 
+	 * @param id
+	 */
 	private FileType(String id) {
 		identifier = id;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getIdentifier() {
 		return identifier;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return identifier;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		return obj != null && obj instanceof FileType && identifier.equals(((FileType) obj).getIdentifier());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(FileType o) {
 		return identifier.compareTo(o.getIdentifier());

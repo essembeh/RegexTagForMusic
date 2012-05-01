@@ -19,20 +19,18 @@
  */
 package org.essembeh.rtfm.gui.controller;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingWorker.StateValue;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.actions.Action;
+import org.essembeh.rtfm.core.actions.IJob;
+import org.essembeh.rtfm.core.actions.Workflow;
+import org.essembeh.rtfm.core.actions.listener.IJobListener;
 import org.essembeh.rtfm.core.configuration.ActionService;
 import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.exception.LibraryException;
@@ -48,8 +46,6 @@ import org.essembeh.rtfm.gui.model.MusicTableModel;
 import org.essembeh.rtfm.gui.panel.MainPanel;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
-import org.essembeh.rtfm.gui.worker.ActionWorker;
-import org.essembeh.rtfm.gui.worker.IActionCallback;
 
 import com.google.inject.Inject;
 
@@ -62,8 +58,6 @@ public class GuiController {
 	private final MusicTableModel tableModel;
 
 	private final MainPanel view;
-
-	private ActionWorker worker;
 
 	private File currentDatabase;
 
@@ -89,34 +83,37 @@ public class GuiController {
 	}
 
 	public void doExecuteActionForAll(String actionName) {
-		if (worker != null && worker.getState() != StateValue.DONE) {
-			// Job already running
-			JOptionPane.showMessageDialog(this.getMainPanel(), Translator.get(StringId.messageJobAlreadyRunning),
-					"Warning", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			final List<IMusicFile> list = view.getAllFiles();
-			final Action action = actionService.getActionByIdentifier(actionName);
-			worker = new ActionWorker(action, list, new IActionCallback() {
+		// Job already running
+		// JOptionPane.showMessageDialog(this.getMainPanel(),
+		// Translator.get(StringId.messageJobAlreadyRunning),
+		// "Warning", JOptionPane.INFORMATION_MESSAGE);
+		final List<IMusicFile> list = view.getAllFiles();
+
+		try {
+			IJob job = actionService.createJob(actionName, list);
+			job.addListener(new IJobListener() {
 				private int error = 0;
 
 				@Override
-				public void unsupportedFiletype(IMusicFile musicFile) {
-					logger.warn("Action: " + action + ", does not support file: " + musicFile);
+				public void succeeded(Workflow workflow, IMusicFile musicFile) {
+				}
+
+				@Override
+				public void start(Workflow workflow) {
+				}
+
+				@Override
+				public void process(Workflow workflow, IMusicFile musicFile) {
+				}
+
+				@Override
+				public void error(Workflow workflow, IMusicFile musicFile, ActionException e) {
 					error++;
 				}
 
 				@Override
-				public void start() {
-				}
-
-				@Override
-				public void error(IMusicFile musicFile, ActionException exception) {
-					error++;
-				}
-
-				@Override
-				public void end() {
-					String message = "Action \"" + action.getIdentifier() + "\" executed on "
+				public void end(Workflow workflow) {
+					String message = "Action \"" + workflow.getIdentifier() + "\" executed on "
 							+ TextUtils.plural(list.size(), "file");
 					if (error == 0) {
 						displayStatusMessage(message, false);
@@ -125,22 +122,13 @@ public class GuiController {
 						displayStatusMessage(message + errorMessage, true);
 					}
 					updateCurrentTab();
-				}
 
-				@Override
-				public void actionSucceeded(IMusicFile musicFile) {
 				}
 			});
-			worker.addPropertyChangeListener(new PropertyChangeListener() {
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					if ("progress" == evt.getPropertyName()) {
-						int progress = (Integer) evt.getNewValue();
-						view.getStatusBar().getProgressBar().setValue(progress);
-					}
-				}
-			});
-			worker.execute();
+			job.submit();
+		} catch (ActionException e1) {
+			logger.error("Error", e1);
+			e1.printStackTrace();
 		}
 	}
 
@@ -218,7 +206,7 @@ public class GuiController {
 	public void updateActions() {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		for (IMusicFile musicFile : view.getAllFiles()) {
-			for (String action : actionService.getActionsForType(musicFile.getType())) {
+			for (String action : actionService.getWorkflowIdentifiersForType(musicFile.getType())) {
 				int newCount = 0;
 				if (map.containsKey(action)) {
 					newCount = map.get(action);

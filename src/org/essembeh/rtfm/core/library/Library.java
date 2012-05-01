@@ -30,21 +30,23 @@ import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.exception.LibraryException;
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.core.library.file.MusicFileIdentifier;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.core.library.io.GenericLibraryIO;
 import org.essembeh.rtfm.core.library.io.LibraryLoaderCallback;
 import org.essembeh.rtfm.core.library.io.LibraryWriterCallback;
+import org.essembeh.rtfm.core.library.listener.ILibraryListener;
 import org.essembeh.rtfm.core.library.listener.LibraryListenerContainer;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.core.utils.FileUtils;
+import org.essembeh.rtfm.core.utils.identifiers.MusicFileIdentifier;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
+import org.essembeh.rtfm.core.utils.listener.IListenable;
 
 import com.google.inject.Inject;
 
-public class Library {
+public class Library implements IListenable<ILibraryListener> {
 
 	/**
 	 * The logger.
@@ -60,14 +62,11 @@ public class Library {
 	IdList<IMusicFile, Identifier<IMusicFile>> listOfFiles;
 
 	@Inject
-	public Library(	RTFMProperties properties,
-					MusicFileService musicFileService,
-					GenericLibraryIO genericLibraryIO,
-					LibraryListenerContainer libraryListenerContainer) {
+	public Library(RTFMProperties properties, MusicFileService musicFileService, GenericLibraryIO genericLibraryIO) {
 		this.musicFileService = musicFileService;
 		this.properties = properties;
 		this.genericLibraryIO = genericLibraryIO;
-		this.listeners = libraryListenerContainer;
+		this.listeners = new LibraryListenerContainer();
 		clear();
 	}
 
@@ -118,7 +117,7 @@ public class Library {
 			try {
 				musicFile = musicFileService.createMusicFile(virtualFile);
 				if (musicFile != null) {
-					if (ignoreAttribute != null && musicFile.getAttributeList().contains(ignoreAttribute)) {
+					if (ignoreAttribute != null && musicFile.getAttributeList().containsKey(ignoreAttribute)) {
 						logger.info("Ignored file: " + musicFile);
 					} else {
 						listOfFiles.add(musicFile);
@@ -145,7 +144,7 @@ public class Library {
 			@Override
 			public IMusicFile getExistingMusicFile(String virtualPath, FileType type) {
 				IMusicFile musicFile = null;
-				if (listOfFiles.contains(virtualPath)) {
+				if (listOfFiles.containsKey(virtualPath)) {
 					musicFile = listOfFiles.get(virtualPath);
 					logger.debug("Update file: " + musicFile);
 				} else {
@@ -185,5 +184,20 @@ public class Library {
 	@Override
 	public String toString() {
 		return "Library [rootFolder=" + rootFolder + ", files: " + listOfFiles.size() + "]";
+	}
+
+	@Override
+	public void addListener(ILibraryListener listener) {
+		listeners.addListener(listener);
+	}
+
+	@Override
+	public void removeListener(ILibraryListener listener) {
+		listeners.removeListener(listener);
+	}
+
+	@Override
+	public void removeAllListener() {
+		listeners.removeAllListener();
 	}
 }

@@ -102,7 +102,7 @@ public class MusicTableModel extends AbstractTableModel {
 				object = mf;
 				break;
 			case 2:
-				Attribute att = mf.getAttributeList().get("tagged");
+				Attribute att = mf.getAttributeList().get("rtfm:tagged");
 				if (att == null) {
 					object = null;
 				} else {

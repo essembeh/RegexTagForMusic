@@ -22,6 +22,8 @@ package org.essembeh.rtfm.core.utils;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -99,4 +101,21 @@ public class ProcessUtils {
 		}
 	}
 
+	/**
+	 * 
+	 * @param scriptName
+	 * @return
+	 * @throws FileNotFoundException
+	 */
+	public static String retrieveBinaryFullPath(String scriptName) throws FileNotFoundException {
+		File script = FileUtils.getResourceAsFile(scriptName);
+		String binaryPath = null;
+		if (!script.canExecute()) {
+			logger.error("The binary is not executable: " + scriptName);
+		} else {
+			binaryPath = script.getAbsolutePath();
+			logger.debug("Found script: " + binaryPath);
+		}
+		return binaryPath;
+	}
 }

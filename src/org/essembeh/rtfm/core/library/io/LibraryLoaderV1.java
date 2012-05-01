@@ -24,6 +24,8 @@ import com.google.inject.Inject;
 
 public class LibraryLoaderV1 implements ILibraryLoader {
 
+	private static final String RTFM_TAGGED = "rtfm:tagged";
+
 	private static Logger logger = Logger.getLogger(LibraryLoaderV1.class);
 
 	TLibraryV1 model = null;
@@ -67,7 +69,7 @@ public class LibraryLoaderV1 implements ILibraryLoader {
 		Boolean isTagged = model.isTagged();
 		if (isTagged != null) {
 			logger.debug("Set file: " + model.getPath() + ", tagged: " + isTagged);
-			Attribute attribute = new Attribute("tagged", isTagged.toString(), false);
+			Attribute attribute = new Attribute(RTFM_TAGGED, isTagged.toString(), false);
 			musicFile.getAttributeList().add(attribute);
 		}
 	}

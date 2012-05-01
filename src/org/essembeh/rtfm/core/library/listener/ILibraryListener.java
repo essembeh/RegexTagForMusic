@@ -4,7 +4,7 @@ import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 
-public interface LibraryListener {
+public interface ILibraryListener {
 
 	void errorMatchingDynamicAttribute(VirtualFile file, String comment);
 

@@ -34,8 +34,8 @@ import org.junit.Test;
 
 public class EyeD3TaggerTagWriterTest {
 
-	Action tagger23 = null;
-	Action tagger24 = null;
+	Workflow tagger23 = null;
+	Workflow tagger24 = null;
 	File mp3 = new File("res/test/notag.mp3");
 	TagData tag = null;
 

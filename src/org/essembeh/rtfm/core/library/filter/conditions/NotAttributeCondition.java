@@ -12,7 +12,7 @@ public class NotAttributeCondition implements IFilterCondition {
 
 	@Override
 	public boolean isTrue(IMusicFile musicFile) {
-		return !musicFile.getAttributeList().contains(attributeName);
+		return !musicFile.getAttributeList().containsKey(attributeName);
 	}
 
 	@Override

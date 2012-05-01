@@ -20,7 +20,6 @@
 package org.essembeh.rtfm.tasks;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.actions.IRTFMTask;
 import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
@@ -45,7 +44,7 @@ import org.jaudiotagger.tag.id3.ID3v24Tag;
  * @author seb
  * 
  */
-public class JAudioTagger implements IRTFMTask {
+public class JAudioTagger implements ITask {
 
 	private static Logger logger = Logger.getLogger(JAudioTagger.class);
 
@@ -53,15 +52,18 @@ public class JAudioTagger implements IRTFMTask {
 		ID3V2_3, ID3V2_4
 	}
 
-	String attributeArtist = "tag:artist";
-	String attributeAlbum = "tag:album";
-	String attributeYear = "tag:year";
-	String attributeTitle = "tag:title";
-	String attributeTrack = "tag:track";
-	String attributeComment = "tag:comment";
+	private final String attributeArtist = "tag:artist";
+	private final String attributeAlbum = "tag:album";
+	private final String attributeYear = "tag:year";
+	private final String attributeTitle = "tag:title";
+	private final String attributeTrack = "tag:track";
+	private final String attributeComment = "tag:comment";
 
-	VERSION version = VERSION.ID3V2_4;
+	private VERSION version = VERSION.ID3V2_4;
 
+	/**
+	 * Constructor
+	 */
 	public JAudioTagger() {
 	}
 
@@ -88,7 +90,7 @@ public class JAudioTagger implements IRTFMTask {
 
 	private void setTagged(IMusicFile musicFile, Boolean tagged) {
 		logger.debug("Set tagged=" + tagged + ", file: " + musicFile);
-		Attribute taggedAttribute = musicFile.getAttributeList().get("tagged");
+		Attribute taggedAttribute = musicFile.getAttributeList().get("rtfm:tagged");
 		if (taggedAttribute != null) {
 			taggedAttribute.setValue(tagged.toString());
 		} else {

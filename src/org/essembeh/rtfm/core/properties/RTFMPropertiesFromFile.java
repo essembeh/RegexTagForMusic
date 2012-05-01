@@ -80,8 +80,22 @@ public class RTFMPropertiesFromFile implements RTFMProperties {
 	}
 
 	@Override
-	public boolean getBoolean(String name) {
+	public Boolean getBoolean(String name) {
+		Boolean out = null;
 		String value = getProperty(name);
-		return Boolean.parseBoolean(value);
+		if (value != null) {
+			out = Boolean.parseBoolean(value);
+		}
+		return out;
+	}
+
+	@Override
+	public Integer getInteger(String name) {
+		Integer out = null;
+		String value = getProperty(name);
+		if (value != null) {
+			out = Integer.parseInt(value);
+		}
+		return out;
 	}
 }

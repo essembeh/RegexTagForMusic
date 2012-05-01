@@ -1,3 +1,22 @@
+/**
+ * Copyright 2012 Sebastien M-B <seb@essembeh.org>
+ * 
+ * This file is part of RegexTagForMusic.
+ * 
+ * RegexTagForMusic is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * RegexTagForMusic is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
 package org.essembeh.bootstrap;
 
 import java.io.File;
@@ -8,10 +27,26 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class used to build the application classpath on the fly. <br/>
+ * It avoids using scripts to launch the application and is cross platform.
+ * 
+ * @author seb
+ * 
+ */
 public class RTFMBootStrap {
 
+	/**
+	 * The mainclass to invoke
+	 */
 	private static final String MAINCLASS = "org.essembeh.rtfm.launcher.LaunchGui";
 
+	/**
+	 * Returns all jars found in the folder. This methode is recursive.
+	 * 
+	 * @param folder
+	 * @return
+	 */
 	static List<File> folderToJar(File folder) {
 		List<File> list = new ArrayList<File>();
 		File[] ls = folder.listFiles();
@@ -26,6 +61,12 @@ public class RTFMBootStrap {
 		return list;
 	}
 
+	/**
+	 * Checks if the folder is valid
+	 * 
+	 * @param folder
+	 * @throws IOException
+	 */
 	static void checkValidFolder(File folder) throws IOException {
 		if (folder == null) {
 			throw new IOException("Null folder");
@@ -38,6 +79,11 @@ public class RTFMBootStrap {
 		}
 	}
 
+	/**
+	 * Entry point
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		try {

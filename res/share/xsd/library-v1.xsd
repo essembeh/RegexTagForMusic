@@ -12,5 +12,5 @@
 		</xs:sequence>
 		<xs:attribute name="path" type="xs:string" use="required" />
 	</xs:complexType>
-	<xs:element name="library" type="rtfm:TLibraryV1" />
+	<xs:element name="music" type="rtfm:TLibraryV1" />
 </xs:schema>

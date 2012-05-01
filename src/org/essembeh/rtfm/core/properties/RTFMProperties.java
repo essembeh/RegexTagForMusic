@@ -8,7 +8,9 @@ public interface RTFMProperties {
 
 	public String getProperty(String string);
 
-	public boolean getBoolean(String name);
+	public Boolean getBoolean(String name);
+
+	public Integer getInteger(String name);
 
 	public void updateProperty(String name, String value);
 

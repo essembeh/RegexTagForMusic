@@ -20,44 +20,38 @@
 
 package org.essembeh.rtfm.tasks;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.actions.IRTFMTask;
 import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.core.utils.FileUtils;
 import org.essembeh.rtfm.core.utils.ProcessUtils;
 import org.essembeh.rtfm.core.utils.ProcessUtils.STDOUT;
+import org.essembeh.rtfm.core.utils.TaskUtils;
 
 /**
  * 
  * @author seb
  * 
  */
-public class ExternalProcess implements IRTFMTask {
+public class ExternalProcess implements ITask {
 
 	static protected Logger logger = Logger.getLogger(ExternalProcess.class);
 
-	String binaryPath;
-
-	Map<String, String> processEnvironment = new HashMap<String, String>();
+	private String binaryPath;
+	private Map<String, String> properties = new HashMap<String, String>();
 
 	@Override
 	public void setProperty(String name, String value) {
 		if ("binary".equals(name)) {
 			try {
-				this.binaryPath = retrieveBinaryFullPath(value);
+				binaryPath = ProcessUtils.retrieveBinaryFullPath(value);
 				logger.debug("Using binary: " + this.binaryPath);
 			} catch (FileNotFoundException e) {
 				logger.error("Cannot find binary: " + this.binaryPath);
@@ -66,7 +60,7 @@ public class ExternalProcess implements IRTFMTask {
 			String[] array = value.split("=");
 			if (array.length == 2) {
 				logger.debug("Environment property: " + array[0] + "=" + array[1]);
-				this.processEnvironment.put(array[0], array[1]);
+				properties.put(array[0], array[1]);
 			} else {
 				logger.warn("Invalid environment property: " + value);
 			}
@@ -75,18 +69,12 @@ public class ExternalProcess implements IRTFMTask {
 		}
 	}
 
-	protected String retrieveBinaryFullPath(String scriptName) throws FileNotFoundException {
-		File script = FileUtils.getResourceAsFile(scriptName);
-		String binaryPath = null;
-		if (!script.canExecute()) {
-			logger.error("The binary is not executable: " + scriptName);
-		} else {
-			binaryPath = script.getAbsolutePath();
-			logger.debug("Found script: " + binaryPath);
-		}
-		return binaryPath;
-	}
-
+	/**
+	 * 
+	 * @param processBuilder
+	 * @return
+	 * @throws ActionException
+	 */
 	protected int runProcess(ProcessBuilder processBuilder) throws ActionException {
 		int rc = 0;
 		// Launch the process
@@ -111,6 +99,11 @@ public class ExternalProcess implements IRTFMTask {
 		return rc;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "ExternalProcess: " + binaryPath;
@@ -129,6 +122,13 @@ public class ExternalProcess implements IRTFMTask {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.essembeh.rtfm.core.actions.IRTFMTask#execute(org.essembeh.rtfm.core
+	 * .library.file.IMusicFile)
+	 */
 	@Override
 	public void execute(IMusicFile file) throws ActionException {
 		// Build the command
@@ -140,37 +140,23 @@ public class ExternalProcess implements IRTFMTask {
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		processBuilder.redirectErrorStream(true);
 		Map<String, String> processBuilderEnv = processBuilder.environment();
-		createEnv(processBuilderEnv, file);
+		updateEnvironment(processBuilderEnv, file);
 		runProcess(processBuilder);
 	}
 
-	void createEnv(Map<String, String> processEnv, IMusicFile musicFile) {
-		for (String key : this.processEnvironment.keySet()) {
-			String value = this.processEnvironment.get(key);
-			String realValue = valuate(value, musicFile);
-			if (realValue != null) {
-				logger.debug("Adding to env: " + key + "=" + realValue);
+	/**
+	 * 
+	 * @param processEnv
+	 * @param musicFile
+	 */
+	void updateEnvironment(Map<String, String> processEnv, IMusicFile musicFile) {
+		// Parse env
+		for (String key : properties.keySet()) {
+			String value = properties.get(key);
+			String realValue = TaskUtils.valuateDynamicEnvironmentVariable(value, musicFile);
+			if (realValue.length() > 0) {
 				processEnv.put(key, realValue);
 			}
 		}
-	}
-
-	protected String valuate(String value, IMusicFile musicFile) {
-		String attributeValue = value;
-		Pattern pattern = Pattern.compile("\\$\\{(.*)\\}");
-		Matcher matcher = pattern.matcher(value);
-		if (matcher.matches()) {
-			String attributeName = matcher.group(1);
-			logger.debug("Dynamic value: " + value + ", attribute name: " + attributeName);
-			Attribute attribute = musicFile.getAttributeList().get(attributeName);
-			if (attribute != null) {
-				attributeValue = attribute.getValue();
-				logger.debug("Found value: " + attributeValue);
-			} else {
-				attributeValue = null;
-				logger.warn("Cannot find attribute: " + attributeName + ", on file: " + musicFile);
-			}
-		}
-		return attributeValue;
 	}
 }

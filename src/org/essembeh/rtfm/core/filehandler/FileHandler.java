@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
-import org.essembeh.rtfm.core.filehandler.dynamic.DynamicAttributeIdentifier;
 import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.core.library.file.attributes.AttributeIdentifier;
+import org.essembeh.rtfm.core.utils.identifiers.AttributeIdentifier;
+import org.essembeh.rtfm.core.utils.identifiers.DynamicAttributeIdentifier;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
 

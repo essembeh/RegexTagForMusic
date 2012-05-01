@@ -1,23 +1,31 @@
 package org.essembeh.rtfm.core.utils.list;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
 public class IdList<T, I extends Identifier<T>> implements Iterable<T> {
 
-	private Map<String, T> map = new HashMap<String, T>();
+	private final Map<String, T> map = new ConcurrentHashMap<String, T>();
 
-	private I identifier;
+	private final Identifier<T> identifier;
 
-	public IdList(I identifier) {
-		this.identifier = identifier;
+	public IdList(Identifier<T> identifier) {
+		if (identifier == null) {
+			this.identifier = new Identifier<T>() {
+				public String getId(T o) {
+					return o.toString();
+				};
+			};
+		} else {
+			this.identifier = identifier;
+		}
 	}
 
 	public IdList(IdList<T, I> other) {
@@ -104,7 +112,7 @@ public class IdList<T, I extends Identifier<T>> implements Iterable<T> {
 		return sub;
 	}
 
-	public boolean contains(String id) {
+	public boolean containsKey(String id) {
 		return map.containsKey(id);
 	}
 
@@ -130,7 +138,7 @@ public class IdList<T, I extends Identifier<T>> implements Iterable<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		return new SortedIterator<T>(map);
+		return map.values().iterator();
 	}
 
 	@Override

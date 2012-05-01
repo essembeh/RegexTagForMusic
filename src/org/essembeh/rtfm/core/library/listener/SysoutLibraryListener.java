@@ -4,7 +4,7 @@ import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 
-public class SysoutLibraryListener implements LibraryListener {
+public class SysoutLibraryListener implements ILibraryListener {
 
 	@Override
 	public void errorMatchingDynamicAttribute(VirtualFile file, String comment) {

@@ -7,14 +7,14 @@
 				<virtualpath matches="/Albums/[^/]+/[^/]+/\d{2,3} - .*\.mp3" />
 			</conditions>
 			<attributes>
-				<attribute name="tagged" value="false" />
+				<attribute name="rtfm:tagged" value="false" />
 				<attribute name="db:export" value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
-				<regex-attribute name="tag:artist" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="1" />
-				<regex-attribute name="tag:year" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="2" optional="true" />
-				<regex-attribute name="tag:album" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="3" />
-				<regex-attribute name="tag:track" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="4" />
-				<regex-attribute name="tag:title" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="5" />
+				<regex-attribute name="tag:artist" pattern="/Albums/(.*)/((?:([12]\d\d\d) - )?.*)/(\d{2,3}) - (.*)\.\w+" group="1" />
+				<regex-attribute name="tag:year"   pattern="/Albums/(.*)/((?:([12]\d\d\d) - )?.*)/(\d{2,3}) - (.*)\.\w+" group="3" optional="true" />
+				<regex-attribute name="tag:album"  pattern="/Albums/(.*)/((?:([12]\d\d\d) - )?.*)/(\d{2,3}) - (.*)\.\w+" group="2" />
+				<regex-attribute name="tag:track"  pattern="/Albums/(.*)/((?:([12]\d\d\d) - )?.*)/(\d{2,3}) - (.*)\.\w+" group="4" />
+				<regex-attribute name="tag:title"  pattern="/Albums/(.*)/((?:([12]\d\d\d) - )?.*)/(\d{2,3}) - (.*)\.\w+" group="5" />
 			</attributes>
 		</filehandler>
 		<filehandler id="COVER">
@@ -38,7 +38,7 @@
 				<virtualpath matches="/Singles/([^/]+) - ([^/]+)\.mp3" />
 			</conditions>
 			<attributes>
-				<attribute name="tagged" value="false" />
+				<attribute name="rtfm:tagged" value="false" />
 				<attribute name="db:export" value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
 				<attribute name="tag:album" value="#Single" />
@@ -51,7 +51,7 @@
 				<virtualpath matches="/Saga/([^/]+)/([^/]+)\.mp3" />
 			</conditions>
 			<attributes>
-				<attribute name="tagged" value="false" />
+				<attribute name="rtfm:tagged" value="false" />
 				<attribute name="db:export" value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
 				<attribute name="tag:album" value="#Saga" />
@@ -83,10 +83,10 @@
 	<!-- Tasks -->
 	<tasks>
 		<task id="setNonTagged" classname="org.essembeh.rtfm.tasks.UpdateAttributes">
-			<property name="tagged" value="false" />
+			<property name="rtfm:tagged" value="false" />
 		</task>
 		<task id="setTagged" classname="org.essembeh.rtfm.tasks.UpdateAttributes">
-			<property name="tagged" value="true" />
+			<property name="rtfm:tagged" value="true" />
 		</task>
 		<task id="JAudioTagger-id3v2.4" classname="org.essembeh.rtfm.tasks.JAudioTagger">
 			<property name="version" value="ID3V2_4" />
@@ -139,7 +139,7 @@
 		</task>
 	</tasks>
 	<actions>
-		<action id="Tag eyeD3" name="Tag with eyed3">
+		<action id="Tag eyeD3" description="Tag with eyed3">
 			<apply-on>
 				<filehandler ref-id="ALBUMS" />
 				<filehandler ref-id="SINGLE" />
@@ -152,7 +152,7 @@
 				<task ref-id="setTagged" />
 			</workflow>
 		</action>
-		<action id="Tag JAudioTagger" name="Tag with eyed3">
+		<action id="Tag JAudioTagger" description="Tag with eyed3">
 			<apply-on>
 				<filehandler ref-id="ALBUMS" />
 				<filehandler ref-id="SINGLE" />
@@ -162,7 +162,7 @@
 				<task ref-id="JAudioTagger-id3v2.4" />
 			</workflow>
 		</action>
-		<action id="Remove tags" name="Remove tags using eyed3">
+		<action id="Remove tags" description="Remove tags using eyed3">
 			<apply-on>
 				<filehandler ref-id="ALBUMS" />
 				<filehandler ref-id="SINGLE" />
@@ -173,7 +173,7 @@
 				<task ref-id="setNonTagged" />
 			</workflow>
 		</action>
-		<action id="Dummy" name="Dummy script">
+		<action id="Dummy" description="Dummy script">
 			<apply-on>
 				<filehandler ref-id="ALBUMS" />
 				<filehandler ref-id="SINGLE" />

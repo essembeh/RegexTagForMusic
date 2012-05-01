@@ -7,7 +7,7 @@
 				<virtualpath matches="/[^/]+/[^/]+/\d\d - .*\.mp3" />
 			</conditions>
 			<attributes>
-				<attribute name="tagged" value="false" />
+				<attribute name="rtfm:tagged" value="false" />
 				<attribute name="db:export" value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
 				<regex-attribute name="tag:artist" pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="1" />
@@ -53,10 +53,10 @@
 	<!-- Tasks -->
 	<tasks>
 		<task id="setNonTagged" classname="org.essembeh.rtfm.tasks.UpdateAttributes">
-			<property name="tagged" value="false" />
+			<property name="rtfm:tagged" value="false" />
 		</task>
 		<task id="setTagged" classname="org.essembeh.rtfm.tasks.UpdateAttributes">
-			<property name="tagged" value="true" />
+			<property name="rtfm:tagged" value="true" />
 		</task>
 		<task id="JAudioTagger-id3v2.4" classname="org.essembeh.rtfm.tasks.JAudioTagger">
 			<property name="version" value="ID3V2_4" />
@@ -66,7 +66,7 @@
 		</task>
 	</tasks>
 	<actions>
-		<action id="Tag ID3v2.4" name="Tag with JAudioTagger and ID3v2.4">
+		<action id="Tag ID3v2.4" description="Tag with JAudioTagger and ID3v2.4">
 			<apply-on>
 				<filehandler ref-id="MP3" />
 			</apply-on>
@@ -74,7 +74,7 @@
 				<task ref-id="JAudioTagger-id3v2.4" />
 			</workflow>
 		</action>
-		<action id="Tag ID3v2.3" name="Tag with JAudioTagger and ID3v2.3">
+		<action id="Tag ID3v2.3" description="Tag with JAudioTagger and ID3v2.3">
 			<apply-on>
 				<filehandler ref-id="MP3" />
 			</apply-on>

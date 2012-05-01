@@ -4,8 +4,8 @@
 # RTFM_ARTIST
 # RTFM_ALBUM
 # RTFM_YEAR
-# RTFM_TRACKNAME
-# RTFM_TRACKNUMBER
+# RTFM_TITLE
+# RTFM_TRACK
 # RTFM_COMMENT
 
 EYED3_BIN=`which eyeD3` || exit 1
@@ -19,8 +19,8 @@ __tag () {
 		--artist  "$RTFM_ARTIST" \
 		--album   "$RTFM_ALBUM" \
 		--year    "$RTFM_YEAR" \
-		--track   "$RTFM_TRACKNUMBER" \
-		--title   "$RTFM_TRACKNAME" \
+		--track   "$RTFM_TRACK" \
+		--title   "$RTFM_TITLE" \
 		--comment "::$RTFM_COMMENT" \
 		"$FILE"
 }

@@ -33,7 +33,7 @@ import org.junit.Test;
 
 public class JAudioTaggerTagWriterTest {
 
-	Action tagger;
+	Workflow tagger;
 
 	File mp3 = new File("res/test/notag.mp3");
 

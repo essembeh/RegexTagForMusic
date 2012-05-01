@@ -4,14 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.actions.IRTFMTask;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
-public class UpdateAttributes implements IRTFMTask {
-
+public class UpdateAttributes implements ITask {
 	private static final Logger logger = Logger.getLogger(UpdateAttributes.class);
-
 	Map<String, String> attributes = new HashMap<String, String>();
 
 	@Override
