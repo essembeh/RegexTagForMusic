@@ -1,6 +1,6 @@
 package org.essembeh.rtfm.core.library.file.attributes;
 
-public class Attribute implements Cloneable {
+public class Attribute implements Cloneable, Comparable<Attribute> {
 
 	String name;
 	String value;
@@ -37,5 +37,10 @@ public class Attribute implements Cloneable {
 	@Override
 	public String toString() {
 		return (hidden ? "-" : "+") + name + "=" + value;
+	}
+
+	@Override
+	public int compareTo(Attribute o) {
+		return name.compareTo(o.name);
 	}
 }

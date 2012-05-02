@@ -1,6 +1,7 @@
 package org.essembeh.rtfm.core.library.io;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -79,7 +80,9 @@ public class LibraryWriterV2 implements ILibraryWriter {
 		TFile model = objectFactory.createTFile();
 		model.setType(musicFile.getType().toString());
 		model.setVirtualpath(musicFile.getVirtualPath());
-		for (Attribute a : musicFile.getAttributeList()) {
+		List<Attribute> attributeList = musicFile.getAttributeList().toList();
+		Collections.sort(attributeList);
+		for (Attribute a : attributeList) {
 			if (!a.isHidden()) {
 				model.getAttribute().add(toModel(a));
 			}
