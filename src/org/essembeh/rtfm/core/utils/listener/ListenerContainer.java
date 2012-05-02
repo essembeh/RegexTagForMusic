@@ -15,7 +15,7 @@ public class ListenerContainer<T> implements IListenable<T> {
 	/**
 	 * List of listeners
 	 */
-	protected final Set<T> listeners;
+	private final Set<T> listeners;
 
 	/**
 	 * Constructor
