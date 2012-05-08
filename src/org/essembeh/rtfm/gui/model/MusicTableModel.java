@@ -24,11 +24,11 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
 
@@ -50,7 +50,7 @@ public class MusicTableModel extends AbstractTableModel {
 	}
 
 	public void updateWithFilter(Filter currentFilter) {
-		currentList = this.library.getFilteredFiles(currentFilter).toList();
+		currentList = currentFilter.filter(library.getAllFiles());
 		Collections.sort(currentList);
 		fireTableDataChanged();
 	}
@@ -123,5 +123,9 @@ public class MusicTableModel extends AbstractTableModel {
 
 	public List<FileType> getTypeList() {
 		return FileType.getAllFileTypes();
+	}
+
+	public Library getLibrary() {
+		return library;
 	}
 }

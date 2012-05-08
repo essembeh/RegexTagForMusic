@@ -112,6 +112,7 @@ public class FileUtils {
 		if (resource == null) {
 			throw new FileNotFoundException("Cannot find file: " + filename);
 		}
+		logger.debug("Found resource: " + filename);
 		return resource;
 	}
 }

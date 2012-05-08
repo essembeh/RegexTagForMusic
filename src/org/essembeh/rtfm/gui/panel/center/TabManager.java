@@ -26,9 +26,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.essembeh.rtfm.core.filter.CommonFilters;
+import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.core.library.filter.CommonFilters;
-import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.gui.controller.GuiController;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;

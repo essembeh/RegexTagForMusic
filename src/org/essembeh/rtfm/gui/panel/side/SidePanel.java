@@ -19,7 +19,6 @@
  */
 package org.essembeh.rtfm.gui.panel.side;
 
-import java.io.File;
 import java.util.Map;
 
 import javax.swing.JPanel;
@@ -40,15 +39,15 @@ public class SidePanel extends JPanel {
 
 	public SidePanel(GuiController controller) {
 		setLayout(new VerticalLayout(10));
-		this.informations = new MusicManagerInformations();
+		this.informations = new MusicManagerInformations(controller.getModel().getLibrary());
 		this.actionsForAll = new ActionCommands(controller);
 		add(new FileCommands(controller));
 		add(this.informations);
 		add(this.actionsForAll);
 	}
 
-	public void updateInformationPanel(File rootFolder, int fileCount, int nonTaggedCount) {
-		this.informations.updateInformations(rootFolder, fileCount, nonTaggedCount);
+	public void updateInformationPanel() {
+		this.informations.updateInformations();
 	}
 
 	public void updateActions(Map<String, Integer> map) {

@@ -20,14 +20,13 @@
 package org.essembeh.rtfm.gui.panel;
 
 import java.awt.BorderLayout;
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.JPanel;
 
+import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.gui.controller.GuiController;
 import org.essembeh.rtfm.gui.panel.center.TabManager;
@@ -65,8 +64,8 @@ public class MainPanel extends JPanel {
 		return this.tabManager.getCurrentSelectionOfFiles();
 	}
 
-	public void updateInformationPanel(File rootFolder, int fileCount, int nonTaggedCount) {
-		this.sidePanel.updateInformationPanel(rootFolder, fileCount, nonTaggedCount);
+	public void updateInformationPanel() {
+		this.sidePanel.updateInformationPanel();
 	}
 
 	public void statusPrintMessage(String line) {

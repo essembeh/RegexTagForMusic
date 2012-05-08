@@ -19,7 +19,6 @@
  */
 package org.essembeh.rtfm.core.configuration.io;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,15 +56,16 @@ import org.essembeh.rtfm.model.configuration.core.version1.TRegexAttribute;
 import org.essembeh.rtfm.model.configuration.core.version1.TTask;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 
 	private static final Logger logger = Logger.getLogger(CoreConfigurationLoaderV1.class);
 
-	TCoreConfigurationV1 model = null;
+	private final TCoreConfigurationV1 model;
 
 	@Inject
-	public CoreConfigurationLoaderV1(InputStream source) throws ConfigurationException, FileNotFoundException {
+	public CoreConfigurationLoaderV1(@Named("configuration.core") InputStream source) throws ConfigurationException {
 		try {
 			JAXBContext context = JAXBContext.newInstance("org.essembeh.rtfm.model.configuration.core.version1");
 			Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -80,10 +80,7 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 	}
 
 	@Override
-	public List<FileHandler> getFileHandlers() throws ConfigurationException {
-		if (model == null) {
-			throw new ConfigurationException();
-		}
+	public List<FileHandler> getFileHandlers() {
 		List<FileHandler> out = new ArrayList<FileHandler>();
 		for (TFileHandler fileHandlerModel : model.getFilehandlers().getFilehandler()) {
 			FileHandler theFileHandler = read(fileHandlerModel);
@@ -129,9 +126,6 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 
 	@Override
 	public IdList<Workflow, Identifier<Workflow>> getWorkflows() throws ConfigurationException {
-		if (model == null) {
-			throw new ConfigurationException();
-		}
 		IdList<Workflow, Identifier<Workflow>> list = new IdList<Workflow, Identifier<Workflow>>(
 				new WorkflowIdentifier());
 		IdList<Task, TaskIdentifier> taskList = new IdList<Task, TaskIdentifier>(new TaskIdentifier());

@@ -17,41 +17,29 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.gui.panel.center;
+package org.essembeh.rtfm.core.filter.conditions;
 
-import java.awt.BorderLayout;
-import java.util.List;
-
-import javax.swing.JPanel;
-
-import org.essembeh.rtfm.core.filter.Filter;
+import org.essembeh.rtfm.core.configuration.ActionService;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.gui.controller.GuiController;
 
-public class Tab extends JPanel {
+public class CanExecuteActionCondition implements IFilterCondition {
 
-	private static final long serialVersionUID = -5606715267589764167L;
+	private String actionName;
+	private ActionService actionService;
 
-	Filter filter;
-
-	MusicTablePane table;
-
-	public Tab(GuiController controller, Filter filter) {
-		this.filter = filter;
-		this.table = new MusicTablePane(controller);
-		setLayout(new BorderLayout());
-		add(this.table, BorderLayout.CENTER);
+	public CanExecuteActionCondition(ActionService actionService, String actionName) {
+		this.actionName = actionName;
+		this.actionService = actionService;
 	}
 
-	public Filter getFilter() {
-		return this.filter;
+	@Override
+	public boolean isTrue(IMusicFile musicFile) {
+		return actionService.getWorkflowIdentifiersForType(musicFile.getType()).contains(actionName);
 	}
 
-	public List<IMusicFile> getSelectionOfFiles() {
-		return this.table.getSelectedMusicFiles();
+	@Override
+	public String toString() {
+		return "CanExecuteActionCondition [actionName=" + actionName + "]";
 	}
 
-	public List<IMusicFile> getAllFiles() {
-		return this.table.getAllFiles();
-	}
 }

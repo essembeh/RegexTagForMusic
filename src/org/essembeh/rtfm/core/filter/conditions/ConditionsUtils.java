@@ -17,7 +17,7 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.filter.conditions;
+package org.essembeh.rtfm.core.filter.conditions;
 
 import java.util.ArrayList;
 import java.util.List;

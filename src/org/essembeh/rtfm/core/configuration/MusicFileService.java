@@ -37,7 +37,7 @@ public class MusicFileService {
 
 	private static Logger logger = Logger.getLogger(MusicFileService.class);
 
-	List<FileHandler> fileHandlers;
+	private final List<FileHandler> fileHandlers;
 
 	@Inject
 	public MusicFileService(ICoreConfigurationLoader coreConfigurationLoader) throws ConfigurationException {

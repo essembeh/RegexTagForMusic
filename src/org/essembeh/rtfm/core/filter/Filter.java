@@ -17,20 +17,18 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.filter;
+package org.essembeh.rtfm.core.filter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.essembeh.rtfm.core.filter.conditions.IFilterCondition;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.core.library.filter.conditions.IFilterCondition;
-import org.essembeh.rtfm.core.utils.list.IdList;
-import org.essembeh.rtfm.core.utils.list.Identifier;
 
 public class Filter {
 
-	List<IFilterCondition> conditions;
+	private final List<IFilterCondition> conditions;
 
 	public Filter(IFilterCondition... conditions) {
 		this.conditions = new ArrayList<IFilterCondition>();
@@ -60,15 +58,14 @@ public class Filter {
 		return matches;
 	}
 
-	public IdList<IMusicFile, Identifier<IMusicFile>>
-			filter(IdList<IMusicFile, Identifier<IMusicFile>> inputIdentifiedList) {
-		IdList<IMusicFile, Identifier<IMusicFile>> outputIdentifiedList = inputIdentifiedList.newEmptyOne();
-		for (IMusicFile musicFile : inputIdentifiedList) {
+	public List<IMusicFile> filter(List<IMusicFile> inList) {
+		List<IMusicFile> outList = new ArrayList<IMusicFile>();
+		for (IMusicFile musicFile : inList) {
 			if (matches(musicFile)) {
-				outputIdentifiedList.add(musicFile);
+				outList.add(musicFile);
 			}
 		}
-		return outputIdentifiedList;
+		return outList;
 	}
 
 	@Override

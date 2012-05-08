@@ -19,6 +19,8 @@
  */
 package org.essembeh.rtfm.core;
 
+import java.io.InputStream;
+
 import org.essembeh.rtfm.core.configuration.io.CoreConfigurationLoaderV1;
 import org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader;
 import org.essembeh.rtfm.core.library.io.ILibraryLoader;
@@ -30,6 +32,7 @@ import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.core.utils.FileUtils;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 public class CoreModule extends AbstractModule {
@@ -47,11 +50,11 @@ public class CoreModule extends AbstractModule {
 			bind(RTFMProperties.class).toInstance(mainProperties);
 
 			// Load configuration
-			bind(ICoreConfigurationLoader.class).toInstance(
-					new CoreConfigurationLoaderV1(FileUtils.getResourceAsStream(mainProperties
-							.getMandatoryProperty("configuration.core"))));
+			bind(InputStream.class).annotatedWith(Names.named("configuration.core")).toInstance(
+					FileUtils.getResourceAsStream(mainProperties.getMandatoryProperty("configuration.core")));
 
 			// Interfaces
+			bind(ICoreConfigurationLoader.class).to(CoreConfigurationLoaderV1.class).in(Singleton.class);
 			bind(ILibraryLoader.class).annotatedWith(Names.named("LibraryLoaderV1")).to(LibraryLoaderV1.class);
 			bind(ILibraryLoader.class).annotatedWith(Names.named("LibraryLoaderV2")).to(LibraryLoaderV2.class);
 			bind(ILibraryWriter.class).to(LibraryWriterV2.class);

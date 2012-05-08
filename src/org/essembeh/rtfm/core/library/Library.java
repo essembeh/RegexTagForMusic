@@ -31,7 +31,6 @@ import org.essembeh.rtfm.core.exception.LibraryException;
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
-import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.core.library.io.GenericLibraryIO;
 import org.essembeh.rtfm.core.library.io.LibraryLoaderCallback;
 import org.essembeh.rtfm.core.library.io.LibraryWriterCallback;
@@ -53,13 +52,13 @@ public class Library implements IListenable<ILibraryListener> {
 	 */
 	protected static Logger logger = Logger.getLogger(Library.class);
 
-	RTFMProperties properties;
-	MusicFileService musicFileService;
-	GenericLibraryIO genericLibraryIO;
-	LibraryListenerContainer listeners;
+	private final RTFMProperties properties;
+	private final MusicFileService musicFileService;
+	private final GenericLibraryIO genericLibraryIO;
+	private final LibraryListenerContainer listeners;
 
-	File rootFolder;
-	IdList<IMusicFile, Identifier<IMusicFile>> listOfFiles;
+	private volatile File rootFolder;
+	private volatile IdList<IMusicFile, Identifier<IMusicFile>> listOfFiles;
 
 	@Inject
 	public Library(RTFMProperties properties, MusicFileService musicFileService, GenericLibraryIO genericLibraryIO) {
@@ -75,18 +74,8 @@ public class Library implements IListenable<ILibraryListener> {
 		this.listOfFiles = new IdList<IMusicFile, Identifier<IMusicFile>>(new MusicFileIdentifier());
 	}
 
-	public IdList<IMusicFile, Identifier<IMusicFile>> getAllFiles() {
-		return getFilteredFiles(null);
-	}
-
-	public IdList<IMusicFile, Identifier<IMusicFile>> getFilteredFiles(Filter filter) {
-		IdList<IMusicFile, Identifier<IMusicFile>> list = listOfFiles.newEmptyOne();
-		if (filter == null) {
-			list.addAll(listOfFiles);
-		} else {
-			list.addAll(filter.filter(listOfFiles));
-		}
-		return list;
+	public List<IMusicFile> getAllFiles() {
+		return listOfFiles.toList();
 	}
 
 	public File getRootFolder() {
