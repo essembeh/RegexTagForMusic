@@ -17,29 +17,28 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.filter.conditions;
+package org.essembeh.rtfm.core.filter;
 
-import org.essembeh.rtfm.core.configuration.ActionService;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import java.util.regex.Pattern;
 
-public class CanExecuteActionCondition implements IFilterCondition {
+import org.essembeh.rtfm.core.filter.conditions.AttributeValueCondition;
+import org.essembeh.rtfm.core.filter.conditions.TypeCondition;
 
-	private String actionName;
-	private ActionService actionService;
+public class CommonFilters {
 
-	public CanExecuteActionCondition(ActionService actionService, String actionName) {
-		this.actionName = actionName;
-		this.actionService = actionService;
+	public static Filter noFilter() {
+		return new Filter();
 	}
 
-	@Override
-	public boolean isTrue(IMusicFile musicFile) {
-		return actionService.getWorkflowIdentifiersForType(musicFile.getType()).contains(actionName);
+	public static Filter filterOnAttribute(String attributeName, String expectedValue) {
+		Filter filter = new Filter();
+		filter.addCondition(new AttributeValueCondition(attributeName, Pattern.compile(expectedValue)));
+		return filter;
 	}
 
-	@Override
-	public String toString() {
-		return "CanExecuteActionCondition [actionName=" + actionName + "]";
+	public static Filter filterOnType(String expectedValue) {
+		Filter filter = new Filter();
+		filter.addCondition(new TypeCondition(new String[] { expectedValue }));
+		return filter;
 	}
-
 }

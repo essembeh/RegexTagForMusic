@@ -17,28 +17,28 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.filter;
+package org.essembeh.rtfm.core.filter.conditions;
 
 import java.util.regex.Pattern;
 
-import org.essembeh.rtfm.core.library.filter.conditions.AttributeValueCondition;
-import org.essembeh.rtfm.core.library.filter.conditions.TypeCondition;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 
-public class CommonFilters {
+public class VirtualPathCondition implements IFilterCondition {
 
-	public static Filter noFilter() {
-		return new Filter();
+	Pattern regexOnPath;
+
+	public VirtualPathCondition(Pattern regexOnPath) {
+		this.regexOnPath = regexOnPath;
 	}
 
-	public static Filter filterOnAttribute(String attributeName, String expectedValue) {
-		Filter filter = new Filter();
-		filter.addCondition(new AttributeValueCondition(attributeName, Pattern.compile(expectedValue)));
-		return filter;
+	@Override
+	public boolean isTrue(IMusicFile musicFile) {
+		return regexOnPath.matcher(musicFile.getVirtualPath()).matches();
 	}
 
-	public static Filter filterOnType(String expectedValue) {
-		Filter filter = new Filter();
-		filter.addCondition(new TypeCondition(new String[] { expectedValue }));
-		return filter;
+	@Override
+	public String toString() {
+		return "VirtualPathCondition [regexOnPath=" + regexOnPath + "]";
 	}
+
 }

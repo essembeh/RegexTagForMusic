@@ -29,19 +29,16 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.actions.IJob;
-import org.essembeh.rtfm.core.actions.Workflow;
-import org.essembeh.rtfm.core.actions.listener.IJobListener;
 import org.essembeh.rtfm.core.configuration.ActionService;
 import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.exception.LibraryException;
+import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.core.library.filter.CommonFilters;
-import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
-import org.essembeh.rtfm.core.utils.TextUtils;
 import org.essembeh.rtfm.gui.dialog.FileInspectorDialog;
+import org.essembeh.rtfm.gui.dialog.JobDialog;
 import org.essembeh.rtfm.gui.model.MusicTableModel;
 import org.essembeh.rtfm.gui.panel.MainPanel;
 import org.essembeh.rtfm.gui.utils.Translator;
@@ -91,41 +88,46 @@ public class GuiController {
 
 		try {
 			IJob job = actionService.createJob(actionName, list);
-			job.addListener(new IJobListener() {
-				private int error = 0;
-
-				@Override
-				public void succeeded(Workflow workflow, IMusicFile musicFile) {
-				}
-
-				@Override
-				public void start(Workflow workflow) {
-				}
-
-				@Override
-				public void process(Workflow workflow, IMusicFile musicFile) {
-				}
-
-				@Override
-				public void error(Workflow workflow, IMusicFile musicFile, ActionException e) {
-					error++;
-				}
-
-				@Override
-				public void end(Workflow workflow) {
-					String message = "Action \"" + workflow.getIdentifier() + "\" executed on "
-							+ TextUtils.plural(list.size(), "file");
-					if (error == 0) {
-						displayStatusMessage(message, false);
-					} else {
-						String errorMessage = " with " + TextUtils.plural(error, "error");
-						displayStatusMessage(message + errorMessage, true);
-					}
-					updateCurrentTab();
-
-				}
-			});
-			job.submit();
+			JobDialog jobDialog = new JobDialog(job);
+			jobDialog.setVisible(true);
+			// job.addListener(new IJobListener() {
+			// private int error = 0;
+			//
+			// @Override
+			// public void succeeded(Workflow workflow, IMusicFile musicFile) {
+			// }
+			//
+			// @Override
+			// public void start(Workflow workflow) {
+			// }
+			//
+			// @Override
+			// public void process(Workflow workflow, IMusicFile musicFile) {
+			// }
+			//
+			// @Override
+			// public void error(Workflow workflow, IMusicFile musicFile,
+			// ActionException e) {
+			// error++;
+			// }
+			//
+			// @Override
+			// public void end(Workflow workflow) {
+			// String message = "Action \"" + workflow.getIdentifier() +
+			// "\" executed on "
+			// + TextUtils.plural(list.size(), "file");
+			// if (error == 0) {
+			// displayStatusMessage(message, false);
+			// } else {
+			// String errorMessage = " with " + TextUtils.plural(error,
+			// "error");
+			// displayStatusMessage(message + errorMessage, true);
+			// }
+			// updateCurrentTab();
+			//
+			// }
+			// });
+			// job.submit();
 		} catch (ActionException e1) {
 			logger.error("Error", e1);
 			e1.printStackTrace();
@@ -218,8 +220,7 @@ public class GuiController {
 	}
 
 	public void updateLibraryInfo() {
-		this.view.updateInformationPanel(this.model.getRootFolder(), model.getAllFiles().size(), model
-				.getFilteredFiles(CommonFilters.filterOnAttribute("tagged", "false")).size());
+		this.view.updateInformationPanel();
 	}
 
 	public void updateCurrentTab() {

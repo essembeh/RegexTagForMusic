@@ -22,7 +22,7 @@ package org.essembeh.rtfm.gui.panel.center;
 import java.awt.BorderLayout;
 import java.util.List;
 
-import org.essembeh.rtfm.core.library.filter.Filter;
+import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.gui.controller.GuiController;
 
 public class FilterableTab extends Tab {

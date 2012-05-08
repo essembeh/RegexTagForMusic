@@ -34,11 +34,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.library.filter.CommonFilters;
-import org.essembeh.rtfm.core.library.filter.Filter;
-import org.essembeh.rtfm.core.library.filter.conditions.ConditionsUtils;
-import org.essembeh.rtfm.core.library.filter.conditions.TypeCondition;
-import org.essembeh.rtfm.core.library.filter.conditions.VirtualPathCondition;
+import org.essembeh.rtfm.core.filter.CommonFilters;
+import org.essembeh.rtfm.core.filter.Filter;
+import org.essembeh.rtfm.core.filter.conditions.ConditionsUtils;
+import org.essembeh.rtfm.core.filter.conditions.TypeCondition;
+import org.essembeh.rtfm.core.filter.conditions.VirtualPathCondition;
 import org.essembeh.rtfm.gui.controller.GuiController;
 import org.jdesktop.swingx.HorizontalLayout;
 

@@ -19,11 +19,16 @@
  */
 package org.essembeh.rtfm.core.actions;
 
+import java.util.List;
+
 import org.essembeh.rtfm.core.actions.listener.IJobListener;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.utils.listener.IListenable;
 
 public interface IJob extends IListenable<IJobListener> {
 
 	void submit();
+
+	List<IMusicFile> getMusicFiles();
 
 }

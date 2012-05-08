@@ -19,37 +19,40 @@
  */
 package org.essembeh.rtfm.gui.panel.side.commands;
 
-import java.io.File;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 
+import org.essembeh.rtfm.core.filter.CommonFilters;
+import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.gui.utils.SpringUtilities;
 import org.jdesktop.swingx.JXTaskPane;
 
 public class MusicManagerInformations extends JXTaskPane {
 
 	private static final long serialVersionUID = 5764326428888520100L;
+	private final Library library;
 
-	public MusicManagerInformations() {
+	public MusicManagerInformations(Library library) {
 		super("Informations");
+		this.library = library;
 	}
 
-	public void updateInformations(File rootFolder, int fileCount, int nonTaggedCount) {
+	public void updateInformations() {
 		removeAll();
 		JPanel panel = new JPanel();
 		panel.setLayout(new SpringLayout());
 		add(panel);
 
 		String path = "";
-		if (rootFolder != null) {
-			path = rootFolder.getName();
+		if (library.getRootFolder() != null) {
+			path = library.getRootFolder().getName();
 		}
 		addRow(panel, "Music folder", path);
-		addRow(panel, "File count", "" + fileCount);
-		addRow(panel, "Non tagged", "" + nonTaggedCount);
+		addRow(panel, "File count", "" + library.getAllFiles().size());
+		addRow(panel, "Non tagged",
+				"" + CommonFilters.filterOnAttribute("rtfm:tagged", "false").filter(library.getAllFiles()).size());
 		// Lay out the panel.
 		SpringUtilities.makeCompactGrid(panel, // parent
 				3, 2, // rows, cols

@@ -17,33 +17,39 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.filter.conditions;
+package org.essembeh.rtfm.core.filter.conditions;
 
-import org.apache.commons.lang3.StringUtils;
-import org.essembeh.rtfm.core.library.file.FileType;
+import java.util.regex.Pattern;
+
 import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
-public class TypeCondition implements IFilterCondition {
+public class AttributeValueCondition implements IFilterCondition {
 
-	private String[] validTypes;
+	String attributeName;
 
-	public TypeCondition(String... validTypes) {
-		this.validTypes = validTypes;
+	Pattern regexOnValue;
+
+	public AttributeValueCondition(String attributeName, Pattern regexOnValue) {
+		this.attributeName = attributeName;
+		this.regexOnValue = regexOnValue;
 	}
 
 	@Override
 	public boolean isTrue(IMusicFile musicFile) {
-		for (int i = 0; i < validTypes.length; i++) {
-			if (musicFile.getType().equals(FileType.getFiletype(validTypes[i]))) {
-				return true;
-			}
+		boolean condition = false;
+		Attribute attribute = musicFile.getAttributeList().get(attributeName);
+		if (attribute != null) {
+			String value = attribute.getValue();
+			condition = regexOnValue.matcher(value).matches();
 		}
-		return false;
+		return condition;
 	}
 
 	@Override
 	public String toString() {
-		return "TypeCondition [validTypes=" + StringUtils.join(validTypes, ", ") + "]";
+		return "AttributeValueCondition [attributeName=" + attributeName + ", regexOnValue=" + regexOnValue.pattern()
+				+ "]";
 	}
 
 }

@@ -19,6 +19,7 @@
  */
 package org.essembeh.rtfm.core.actions;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -105,5 +106,10 @@ public class Job extends JobListenerContainer implements IJob {
 				end(workflow);
 			}
 		});
+	}
+
+	@Override
+	public List<IMusicFile> getMusicFiles() {
+		return Collections.unmodifiableList(files);
 	}
 }
