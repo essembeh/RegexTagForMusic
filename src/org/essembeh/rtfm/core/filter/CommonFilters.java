@@ -19,8 +19,6 @@
  */
 package org.essembeh.rtfm.core.filter;
 
-import java.util.regex.Pattern;
-
 import org.essembeh.rtfm.core.filter.conditions.AttributeValueCondition;
 import org.essembeh.rtfm.core.filter.conditions.TypeCondition;
 
@@ -32,7 +30,7 @@ public class CommonFilters {
 
 	public static Filter filterOnAttribute(String attributeName, String expectedValue) {
 		Filter filter = new Filter();
-		filter.addCondition(new AttributeValueCondition(attributeName, Pattern.compile(expectedValue)));
+		filter.addCondition(new AttributeValueCondition(attributeName, expectedValue));
 		return filter;
 	}
 

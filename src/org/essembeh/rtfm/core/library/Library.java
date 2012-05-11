@@ -85,6 +85,7 @@ public class Library implements IListenable<ILibraryListener> {
 	public void scanFolder(File folder) throws IOException {
 
 		if (!folder.exists() || !folder.isDirectory()) {
+			listeners.scanFolderFailed(folder);
 			throw new IOException("The root folder is invalid: " + folder.getAbsolutePath());
 		}
 
@@ -119,32 +120,41 @@ public class Library implements IListenable<ILibraryListener> {
 			}
 		}
 		logger.info("Found " + this.listOfFiles.size() + " files in folder: " + this.rootFolder.getAbsolutePath());
+		listeners.scanFolderSucceeeded();
 	}
 
 	public void loadFrom(File source) throws LibraryException, IOException {
 		clear();
 		final IdList<IMusicFile, Identifier<IMusicFile>> oldFiles = listOfFiles.newEmptyOne();
-		genericLibraryIO.loadLibrary(source, new LibraryLoaderCallback() {
-			@Override
-			public void setRootFolder(File rootFolder) throws IOException {
-				scanFolder(rootFolder);
-			}
-
-			@Override
-			public IMusicFile getExistingMusicFile(String virtualPath, FileType type) {
-				IMusicFile musicFile = null;
-				if (listOfFiles.containsKey(virtualPath)) {
-					musicFile = listOfFiles.get(virtualPath);
-					logger.debug("Update file: " + musicFile);
-				} else {
-					logger.debug("Removed file during importation: " + virtualPath);
-					listeners.loadLibraryFileRemoved(virtualPath, type);
+		try {
+			genericLibraryIO.loadLibrary(source, new LibraryLoaderCallback() {
+				@Override
+				public void setRootFolder(File rootFolder) throws IOException {
+					scanFolder(rootFolder);
 				}
-				oldFiles.add(musicFile);
 
-				return listOfFiles.get(virtualPath);
-			}
-		});
+				@Override
+				public IMusicFile getExistingMusicFile(String virtualPath, FileType type) {
+					IMusicFile musicFile = null;
+					if (listOfFiles.containsKey(virtualPath)) {
+						musicFile = listOfFiles.get(virtualPath);
+						logger.debug("Update file: " + musicFile);
+					} else {
+						logger.debug("Removed file during importation: " + virtualPath);
+						listeners.loadLibraryFileRemoved(virtualPath, type);
+					}
+					oldFiles.add(musicFile);
+
+					return listOfFiles.get(virtualPath);
+				}
+			});
+		} catch (IOException e) {
+			listeners.loadLibraryFailed(source);
+			throw e;
+		} catch (LibraryException e) {
+			listeners.loadLibraryFailed(source);
+			throw e;
+		}
 		// Detect new files
 		for (IMusicFile iMusicFile : listOfFiles) {
 			if (!oldFiles.contains(iMusicFile)) {
@@ -154,6 +164,7 @@ public class Library implements IListenable<ILibraryListener> {
 		}
 		logger.info("File count: " + listOfFiles.size());
 		logger.info("New file: " + (listOfFiles.size() - oldFiles.size()));
+		listeners.loadLibrarySucceeeded();
 	}
 
 	public void writeTo(File destination) throws LibraryException {

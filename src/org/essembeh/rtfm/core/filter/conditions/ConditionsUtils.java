@@ -52,7 +52,7 @@ public class ConditionsUtils {
 				if (value == null || value.length() == 0) {
 					value = ".*";
 				}
-				list.add(new AttributeValueCondition(key, Pattern.compile(value)));
+				list.add(new AttributeValueCondition(key, value));
 			}
 		}
 		return list.toArray(new IFilterCondition[0]);
