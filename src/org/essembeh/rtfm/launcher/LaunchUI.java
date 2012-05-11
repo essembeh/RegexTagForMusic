@@ -23,7 +23,7 @@ import org.essembeh.rtfm.core.CoreModule;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.core.properties.RTFMPropertiesFromFile;
-import org.essembeh.rtfm.ui.RtfmUI;
+import org.essembeh.rtfm.ui.RtfmUICustom;
 import org.essembeh.rtfm.ui.UIModule;
 import org.essembeh.rtfm.ui.controller.MainController;
 
@@ -36,7 +36,7 @@ public class LaunchUI {
 		RTFMProperties rtfmProperties = new RTFMPropertiesFromFile("rtfm.properties");
 		Injector injector = Guice.createInjector(new CoreModule(rtfmProperties), new UIModule(rtfmProperties));
 		MainController controller = injector.getInstance(MainController.class);
-		RtfmUI ui = new RtfmUI(controller);
+		RtfmUICustom ui = new RtfmUICustom(controller);
 		ui.setVisible(true);
 	}
 }
