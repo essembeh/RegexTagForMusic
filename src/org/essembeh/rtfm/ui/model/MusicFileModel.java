@@ -1,16 +1,16 @@
 package org.essembeh.rtfm.ui.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.listener.DefaultLibraryListener;
 
 public class MusicFileModel extends AbstractTableModel {
 
@@ -19,7 +19,7 @@ public class MusicFileModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 8190214732252626027L;
 	private final Library library;
-	private volatile Filter filter;
+	private final List<Filter> filters;
 	private final List<IMusicFile> currentList;
 	private final MusicFileColumnManager columnManager;
 
@@ -32,9 +32,26 @@ public class MusicFileModel extends AbstractTableModel {
 		this.library = library;
 		this.currentList = new ArrayList<IMusicFile>();
 		this.columnManager = new MusicFileColumnManager();
-		addTableModelListener(new TableModelListener() {
+		this.filters = new ArrayList<Filter>();
+
+		library.addListener(new DefaultLibraryListener() {
 			@Override
-			public void tableChanged(TableModelEvent arg0) {
+			public void loadLibraryFailed(File source) {
+				refresh();
+			}
+
+			@Override
+			public void loadLibrarySucceeeded() {
+				refresh();
+			}
+
+			@Override
+			public void scanFolderFailed(File folder) {
+				refresh();
+			}
+
+			@Override
+			public void scanFolderSucceeeded() {
 				refresh();
 			}
 		});
@@ -43,24 +60,13 @@ public class MusicFileModel extends AbstractTableModel {
 
 	public void refresh() {
 		currentList.clear();
-		currentList.addAll(library.getAllFiles());
+		List<IMusicFile> tmpList = library.getAllFiles();
+		for (Filter filter : filters) {
+			tmpList = filter.filter(tmpList);
+		}
+		currentList.addAll(tmpList);
 		Collections.sort(currentList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Filter getFilter() {
-		return filter;
-	}
-
-	/**
-	 * 
-	 * @param filter
-	 */
-	public void setFilter(Filter filter) {
-		this.filter = filter;
+		fireTableDataChanged();
 	}
 
 	@Override
@@ -100,6 +106,12 @@ public class MusicFileModel extends AbstractTableModel {
 
 	public IMusicFile getMusicFileAtRow(int i) {
 		return currentList.get(i);
+	}
+
+	public void setFilters(List<Filter> filters) {
+		this.filters.clear();
+		this.filters.addAll(filters);
+		refresh();
 	}
 
 }

@@ -19,6 +19,8 @@
  */
 package org.essembeh.rtfm.core.library.listener;
 
+import java.io.File;
+
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
@@ -62,6 +64,46 @@ public class LibraryListenerContainer extends ListenerContainer<ILibraryListener
 			@Override
 			public void execute(ILibraryListener listener) {
 				listener.loadLibraryFileRemoved(virtualPath, type);
+			}
+		});
+	}
+
+	@Override
+	public void loadLibrarySucceeeded() {
+		forEachListener(new ListenerAction<ILibraryListener>() {
+			@Override
+			public void execute(ILibraryListener listener) {
+				listener.loadLibrarySucceeeded();
+			}
+		});
+	}
+
+	@Override
+	public void loadLibraryFailed(final File source) {
+		forEachListener(new ListenerAction<ILibraryListener>() {
+			@Override
+			public void execute(ILibraryListener listener) {
+				listener.loadLibraryFailed(source);
+			}
+		});
+	}
+
+	@Override
+	public void scanFolderSucceeeded() {
+		forEachListener(new ListenerAction<ILibraryListener>() {
+			@Override
+			public void execute(ILibraryListener listener) {
+				listener.scanFolderSucceeeded();
+			}
+		});
+	}
+
+	@Override
+	public void scanFolderFailed(final File folder) {
+		forEachListener(new ListenerAction<ILibraryListener>() {
+			@Override
+			public void execute(ILibraryListener listener) {
+				listener.scanFolderFailed(folder);
 			}
 		});
 	}

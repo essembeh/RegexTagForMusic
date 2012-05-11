@@ -19,17 +19,19 @@
  */
 package org.essembeh.rtfm.core.filter.conditions;
 
+import java.util.regex.Pattern;
+
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
-public class AttributeValueCondition implements IFilterCondition {
+public class AttributeRegexCondition implements IFilterCondition {
 
 	private final String attributeName;
-	private final String expectedValue;
+	private final Pattern regexOnValue;
 
-	public AttributeValueCondition(String attributeName, String expectedValue) {
+	public AttributeRegexCondition(String attributeName, Pattern regexOnValue) {
 		this.attributeName = attributeName;
-		this.expectedValue = expectedValue;
+		this.regexOnValue = regexOnValue;
 	}
 
 	@Override
@@ -37,14 +39,16 @@ public class AttributeValueCondition implements IFilterCondition {
 		boolean condition = false;
 		Attribute attribute = musicFile.getAttributeList().get(attributeName);
 		if (attribute != null) {
-			condition = attribute.getValue().equals(expectedValue);
+			String value = attribute.getValue();
+			condition = regexOnValue.matcher(value).matches();
 		}
 		return condition;
 	}
 
 	@Override
 	public String toString() {
-		return "AttributeValueCondition [attributeName=" + attributeName + ", expectedValue=" + expectedValue + "]";
+		return "AttributeRegexCondition [attributeName=" + attributeName + ", regexOnValue=" + regexOnValue.pattern()
+				+ "]";
 	}
 
 }

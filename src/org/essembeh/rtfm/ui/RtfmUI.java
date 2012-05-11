@@ -3,6 +3,8 @@ package org.essembeh.rtfm.ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -15,14 +17,21 @@ import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
+import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.ui.controller.MainController;
+import org.essembeh.rtfm.ui.model.ExplorerNodeUtils.NamedFilter;
 
 public class RtfmUI extends JFrame {
 
 	private JPanel contentPane;
 	private JTable attributeTable;
 	private JTable fileTable;
+	private JTree fileTree;
 
 	private final MainController mainController;
 
@@ -87,8 +96,28 @@ public class RtfmUI extends JFrame {
 		JSplitPane splitPaneLeft = new JSplitPane();
 		contentPane.add(splitPaneLeft, BorderLayout.CENTER);
 
-		JTree fileTree = new JTree();
+		fileTree = new JTree(mainController.getExplorerModel());
 		splitPaneLeft.setLeftComponent(fileTree);
+		fileTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+			@Override
+			public void valueChanged(TreeSelectionEvent e) {
+				List<Filter> filters = new ArrayList<Filter>();
+				TreePath[] selectedPaths = fileTree.getSelectionPaths();
+				for (TreePath treePath : selectedPaths) {
+					Object lastPathElement = treePath.getLastPathComponent();
+					if (lastPathElement instanceof DefaultMutableTreeNode) {
+						Object userObject = ((DefaultMutableTreeNode) lastPathElement).getUserObject();
+						if (userObject instanceof NamedFilter) {
+							Filter filter = ((NamedFilter) userObject).getFilter();
+							if (filter != null) {
+								filters.add(filter);
+							}
+						}
+					}
+				}
+				mainController.updateSelectedFilter(filters);
+			}
+		});
 
 		fileTable = new JTable(mainController.getFileModel());
 		splitPaneLeft.setRightComponent(fileTable);

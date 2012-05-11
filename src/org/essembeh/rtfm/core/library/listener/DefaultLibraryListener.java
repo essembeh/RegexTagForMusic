@@ -19,31 +19,61 @@
  */
 package org.essembeh.rtfm.core.library.listener;
 
+import java.io.File;
+
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 
-public class SysoutLibraryListener implements ILibraryListener {
+public class DefaultLibraryListener implements ILibraryListener {
 
 	@Override
 	public void errorMatchingDynamicAttribute(VirtualFile file, String comment) {
-		System.out.println("Event> Error with dynamic attribute, file:" + file + ", message:" + comment);
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void noFileHandlerForFile(VirtualFile file) {
-		System.out.println("Event> No file handler found for file:" + file);
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void loadLibraryNewFile(IMusicFile musicFile) {
-		System.out.println("Event> New file in Library: " + musicFile);
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public void loadLibraryFileRemoved(String virtualpath, FileType fileType) {
-		System.out.println("Event> Old file no more present in Library, type:" + fileType + ", path:" + virtualpath);
+	public void loadLibraryFileRemoved(String virtualPath, FileType fileType) {
+		// TODO Auto-generated method stub
+
 	}
+
+	@Override
+	public void loadLibrarySucceeeded() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void loadLibraryFailed(File source) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void scanFolderSucceeeded() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void scanFolderFailed(File folder) {
+		// TODO Auto-generated method stub
+
+	}
+
 
 }

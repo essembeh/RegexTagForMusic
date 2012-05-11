@@ -10,11 +10,14 @@ import javax.swing.table.TableModel;
 
 import org.essembeh.rtfm.core.configuration.ActionService;
 import org.essembeh.rtfm.core.exception.LibraryException;
+import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
 import org.essembeh.rtfm.ui.model.AttributesModel;
+import org.essembeh.rtfm.ui.model.ExplorerModel;
+import org.essembeh.rtfm.ui.model.ExplorerNodeUtils;
 import org.essembeh.rtfm.ui.model.MusicFileModel;
 
 import com.google.inject.Inject;
@@ -27,6 +30,7 @@ public class MainController {
 
 	private final MusicFileModel musicFileModel;
 	private final AttributesModel attributesModel;
+	private final ExplorerModel explorerModel;
 
 	private File currentDatabase;
 
@@ -36,6 +40,7 @@ public class MainController {
 		this.actionService = actionService;
 		this.musicFileModel = new MusicFileModel(library);
 		this.attributesModel = new AttributesModel();
+		this.explorerModel = new ExplorerModel(new ExplorerNodeUtils(library), true);
 	}
 
 	public TableModel getFileModel() {
@@ -58,7 +63,6 @@ public class MainController {
 			currentDatabase = fileChooser.getSelectedFile();
 			try {
 				library.loadFrom(currentDatabase);
-				musicFileModel.fireTableDataChanged();
 			} catch (LibraryException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -79,7 +83,6 @@ public class MainController {
 		if (rc == JFileChooser.APPROVE_OPTION) {
 			try {
 				library.scanFolder(fileChooser.getSelectedFile());
-				musicFileModel.fireTableDataChanged();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -118,6 +121,16 @@ public class MainController {
 			selection.add(musicFileModel.getMusicFileAtRow(selectedRows[i]));
 		}
 		attributesModel.updateSelection(selection);
+	}
+
+	public ExplorerModel getExplorerModel() {
+		return explorerModel;
+	}
+
+	public void updateSelectedFilter(List<Filter> filters) {
+		if (filters.size() > 0) {
+			musicFileModel.setFilters(filters);
+		}
 	}
 
 }
