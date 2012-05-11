@@ -1,6 +1,7 @@
 package org.essembeh.rtfm.ui.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.event.TableModelEvent;
@@ -31,16 +32,19 @@ public class MusicFileModel extends AbstractTableModel {
 		this.library = library;
 		this.currentList = new ArrayList<IMusicFile>();
 		this.columnManager = new MusicFileColumnManager();
-		this.currentList.addAll(this.library.getAllFiles());
 		addTableModelListener(new TableModelListener() {
-
 			@Override
 			public void tableChanged(TableModelEvent arg0) {
-				currentList.clear();
-				currentList.addAll(library.getAllFiles());
-
+				refresh();
 			}
 		});
+		refresh();
+	}
+
+	public void refresh() {
+		currentList.clear();
+		currentList.addAll(library.getAllFiles());
+		Collections.sort(currentList);
 	}
 
 	/**
