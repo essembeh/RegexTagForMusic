@@ -1,39 +1,31 @@
 package org.essembeh.rtfm.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 
-import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.ui.controller.MainController;
-import org.essembeh.rtfm.ui.model.ExplorerNodeUtils.NamedFilter;
 
 public class RtfmUI extends JFrame {
 
 	private JPanel contentPane;
-	private JTable attributeTable;
-	private JTable fileTable;
-	private JTree fileTree;
 
-	private final MainController mainController;
+	protected final MainController mainController;
+	protected JTable attributesTable;
+	protected JTree explorerTree;
+	protected JTable fileTable;
 
 	/**
 	 * Create the frame.
@@ -41,6 +33,7 @@ public class RtfmUI extends JFrame {
 	 * @param controller
 	 */
 	public RtfmUI(MainController controller) {
+		setSize(new Dimension(600, 400));
 		this.mainController = controller;
 		setTitle("RegexTagForMusic");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,51 +76,42 @@ public class RtfmUI extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
-		JSplitPane splitPaneCenter = new JSplitPane();
-		splitPaneCenter.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		contentPane.add(splitPaneCenter, BorderLayout.EAST);
+		JSplitPane splitPaneLeftCenter = new JSplitPane();
+		contentPane.add(splitPaneLeftCenter, BorderLayout.CENTER);
 
-		attributeTable = new JTable(mainController.getAttributesModel());
-		splitPaneCenter.setLeftComponent(attributeTable);
+		JSplitPane splitPaneCenterRight = new JSplitPane();
+		splitPaneLeftCenter.setRightComponent(splitPaneCenterRight);
 
-		JPanel actionPanel = new JPanel();
-		splitPaneCenter.setRightComponent(actionPanel);
+		JScrollPane scrollPane = new JScrollPane();
+		splitPaneCenterRight.setRightComponent(scrollPane);
 
-		JSplitPane splitPaneLeft = new JSplitPane();
-		contentPane.add(splitPaneLeft, BorderLayout.CENTER);
+		JPanel panel = new JPanel();
+		scrollPane.setViewportView(panel);
+		panel.setLayout(new BorderLayout(0, 0));
 
-		fileTree = new JTree(mainController.getExplorerModel());
-		splitPaneLeft.setLeftComponent(fileTree);
-		fileTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-			@Override
-			public void valueChanged(TreeSelectionEvent e) {
-				List<Filter> filters = new ArrayList<Filter>();
-				TreePath[] selectedPaths = fileTree.getSelectionPaths();
-				for (TreePath treePath : selectedPaths) {
-					Object lastPathElement = treePath.getLastPathComponent();
-					if (lastPathElement instanceof DefaultMutableTreeNode) {
-						Object userObject = ((DefaultMutableTreeNode) lastPathElement).getUserObject();
-						if (userObject instanceof NamedFilter) {
-							Filter filter = ((NamedFilter) userObject).getFilter();
-							if (filter != null) {
-								filters.add(filter);
-							}
-						}
-					}
-				}
-				mainController.updateSelectedFilter(filters);
-			}
-		});
+		attributesTable = new JTable(mainController.getAttributesModel());
+		panel.add(attributesTable);
+
+		JScrollPane scrollPane_2 = new JScrollPane();
+		splitPaneCenterRight.setLeftComponent(scrollPane_2);
+
+		JPanel panel_2 = new JPanel();
+		scrollPane_2.setViewportView(panel_2);
+		panel_2.setLayout(new BorderLayout(0, 0));
 
 		fileTable = new JTable(mainController.getFileModel());
-		splitPaneLeft.setRightComponent(fileTable);
-		fileTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				int[] selectedRows = fileTable.getSelectedRows();
-				mainController.updateSelection(selectedRows);
-			}
-		});
+		panel_2.add(fileTable);
+
+		JScrollPane scrollPane_1 = new JScrollPane();
+		splitPaneLeftCenter.setLeftComponent(scrollPane_1);
+
+		JPanel panel_1 = new JPanel();
+		scrollPane_1.setViewportView(panel_1);
+		panel_1.setLayout(new BorderLayout(0, 0));
+
+		explorerTree = new JTree(mainController.getExplorerModel());
+		panel_1.add(explorerTree);
+
 	}
 
 }
