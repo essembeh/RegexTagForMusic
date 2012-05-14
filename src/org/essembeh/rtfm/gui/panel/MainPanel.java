@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
+import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
@@ -84,7 +85,7 @@ public class MainPanel extends JPanel {
 		this.tabManager.setTypeList(list);
 	}
 
-	public void updateActions(Map<String, Integer> map) {
+	public void updateActions(Map<IWorkflowIdentifier, Integer> map) {
 		this.sidePanel.updateActions(map);
 	}
 

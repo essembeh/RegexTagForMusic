@@ -21,6 +21,7 @@ package org.essembeh.rtfm.gui.panel.side.commands;
 
 import java.util.Map;
 
+import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.gui.action.DynamicAction;
 import org.essembeh.rtfm.gui.controller.GuiController;
 import org.essembeh.rtfm.gui.utils.Translator;
@@ -38,11 +39,11 @@ public class ActionCommands extends JXTaskPane {
 		this.controller = controller;
 	}
 
-	public void updateDynamicActions(Map<String, Integer> actions) {
+	public void updateDynamicActions(Map<IWorkflowIdentifier, Integer> actions) {
 		getContentPane().removeAll();
-		for (String action : actions.keySet()) {
+		for (IWorkflowIdentifier action : actions.keySet()) {
 			int count = actions.get(action);
-			add(new DynamicAction(controller, action, action + " (" + count + ")"));
+			add(new DynamicAction(controller, action, action.getDescription() + " (" + count + ")"));
 		}
 		this.updateUI();
 	}
