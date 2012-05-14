@@ -71,7 +71,7 @@ public class MusicFileModel extends AbstractTableModel {
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		return String.class;
+		return columnIndex == 2 ? Boolean.class : String.class;
 	}
 
 	@Override

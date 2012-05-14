@@ -26,7 +26,7 @@ public class MusicFileColumnManager {
 			break;
 		case 2:
 			Attribute attribute = musicFile.getAttributeList().get("rtfm:tagged");
-			out = attribute != null ? attribute.getValue() : "";
+			out = attribute == null ? null : Boolean.parseBoolean(attribute.getValue());
 			break;
 		default:
 			break;
