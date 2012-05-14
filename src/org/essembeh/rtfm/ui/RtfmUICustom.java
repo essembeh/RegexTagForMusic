@@ -13,6 +13,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.essembeh.rtfm.core.filter.Filter;
+import org.essembeh.rtfm.gui.renderers.ThreeStatesBooleanRenderer;
 import org.essembeh.rtfm.ui.action.AbstractRtfmAction;
 import org.essembeh.rtfm.ui.controller.MainController;
 import org.essembeh.rtfm.ui.model.ExplorerNodeUtils.NamedFilter;
@@ -29,9 +30,13 @@ public class RtfmUICustom extends RtfmUI {
 		explorerTree.setModel(mainController.getExplorerModel());
 
 		// Size
-		fileTable.getColumnModel().getColumn(0).setPreferredWidth(100);
-		fileTable.getColumnModel().getColumn(1).setPreferredWidth(300);
-		fileTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+		fileTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+		fileTable.getColumnModel().getColumn(2).setPreferredWidth(70);
+		attributeTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+		attributeTable.getColumnModel().getColumn(1).setPreferredWidth(200);
+
+		// Renderes
+		fileTable.setDefaultRenderer(Boolean.class, new ThreeStatesBooleanRenderer());
 
 		// Listeners
 		fileTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
