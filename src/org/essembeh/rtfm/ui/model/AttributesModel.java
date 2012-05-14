@@ -3,8 +3,11 @@ package org.essembeh.rtfm.ui.model;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.essembeh.rtfm.core.library.file.IMusicFile;
@@ -12,21 +15,51 @@ import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
 public class AttributesModel extends AbstractTableModel {
 
-	private final List<IMusicFile> selection;
-	private final String[] columns = new String[] { "Name", "Value" };
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2842406342280768095L;
+	private static final String[] TITLES = new String[] { "Name", "Value" };
+	private static final String MULTIPLE_VALUES = "...";
+	private final MusicFilesModel musicFilesModel;
+	private final MusicFilesSelection musicFilesSelection;
 	private final Map<String, String> data;
-	private final static String MULTIPLE_VALUES = "...";
 
-	public AttributesModel() {
-		selection = new CopyOnWriteArrayList<IMusicFile>();
+	/**
+	 * 
+	 * @param musicFilesModel
+	 * @param musicFilesSelection
+	 */
+	public AttributesModel(MusicFilesModel musicFilesModel, MusicFilesSelection musicFilesSelection) {
+		this.musicFilesModel = musicFilesModel;
+		this.musicFilesSelection = musicFilesSelection;
 		data = new TreeMap<String, String>();
+		setupListeners();
+		refresh();
 	}
 
-	public void updateSelection(List<IMusicFile> selection) {
-		this.selection.clear();
-		this.selection.addAll(selection);
+	/**
+	 * 
+	 */
+	private void setupListeners() {
+		musicFilesModel.addTableModelListener(new TableModelListener() {
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				refresh();
+			}
+		});
+		musicFilesSelection.addListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				refresh();
+			}
+		});
+	}
+
+	public void refresh() {
+		List<IMusicFile> files = musicFilesSelection.getSelectedFiles();
 		data.clear();
-		for (IMusicFile musicFile : selection) {
+		for (IMusicFile musicFile : files) {
 			for (Attribute attribute : musicFile.getAttributeList()) {
 				if (data.containsKey(attribute.getName())) {
 					if (!data.get(attribute.getName()).equals(attribute.getValue())) {
@@ -47,12 +80,12 @@ public class AttributesModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return columns.length;
+		return TITLES.length;
 	}
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		return columns[columnIndex];
+		return TITLES[columnIndex];
 	}
 
 	@Override

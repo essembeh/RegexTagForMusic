@@ -21,7 +21,6 @@ package org.essembeh.rtfm.core.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -63,8 +62,7 @@ public class ActionService {
 	 * @throws ConfigurationException
 	 */
 	@Inject
-	public ActionService(ICoreConfigurationLoader coreConfigurationLoader, RTFMProperties properties)
-			throws ConfigurationException {
+	public ActionService(ICoreConfigurationLoader coreConfigurationLoader, RTFMProperties properties) throws ConfigurationException {
 		logger.debug("Init ActionService");
 		workflows = coreConfigurationLoader.getWorkflows();
 		Integer nbThread = properties.getInteger("job.threads");
@@ -95,8 +93,12 @@ public class ActionService {
 	 * 
 	 * @return
 	 */
-	public Set<String> getAllActions() {
-		return workflows.keySet();
+	public List<IWorkflowIdentifier> getAllActions() {
+		List<IWorkflowIdentifier> out = new ArrayList<IWorkflowIdentifier>();
+		for (Workflow workflow : workflows) {
+			out.add(workflow);
+		}
+		return out;
 	}
 
 	/**

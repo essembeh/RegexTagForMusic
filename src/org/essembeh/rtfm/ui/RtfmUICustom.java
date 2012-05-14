@@ -1,94 +1,115 @@
 package org.essembeh.rtfm.ui;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
+import javax.swing.JComboBox;
 
-import org.essembeh.rtfm.core.filter.Filter;
-import org.essembeh.rtfm.gui.renderers.ThreeStatesBooleanRenderer;
-import org.essembeh.rtfm.ui.action.AbstractRtfmAction;
+import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
+import org.essembeh.rtfm.ui.action.DefaultRtfmAction.ICallback;
 import org.essembeh.rtfm.ui.controller.MainController;
-import org.essembeh.rtfm.ui.model.ExplorerNodeUtils.NamedFilter;
+import org.essembeh.rtfm.ui.renderers.MusicFileRenderer;
+import org.essembeh.rtfm.ui.renderers.ThreeStatesBooleanRenderer;
+import org.essembeh.rtfm.ui.renderers.WorkflowRenderer;
 import org.essembeh.rtfm.ui.utils.Image;
 
 public class RtfmUICustom extends RtfmUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6158596439845992908L;
+	private final JButton showHideAttributesButton;
+	private final MainController mainController;
+
 	public RtfmUICustom(MainController controller) {
-		super(controller);
+		super();
+
+		this.mainController = controller;
 
 		// Model
+		explorerTree.setModel(mainController.getFiltersModel());
+		fileTable.setModel(mainController.getMusicFilesModel());
 		attributeTable.setModel(mainController.getAttributesModel());
-		fileTable.setModel(mainController.getFileModel());
-		explorerTree.setModel(mainController.getExplorerModel());
 
 		// Size
-		fileTable.getColumnModel().getColumn(0).setPreferredWidth(80);
-		fileTable.getColumnModel().getColumn(2).setPreferredWidth(70);
+		fileTable.getColumnModel().getColumn(0).setMinWidth(100);
+		fileTable.getColumnModel().getColumn(0).setMaxWidth(100);
+		fileTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+		// fileTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+		// fileTable.getColumnModel().getColumn(2).setPreferredWidth(70);
 		attributeTable.getColumnModel().getColumn(0).setPreferredWidth(80);
 		attributeTable.getColumnModel().getColumn(1).setPreferredWidth(200);
 
 		// Renderes
 		fileTable.setDefaultRenderer(Boolean.class, new ThreeStatesBooleanRenderer());
+		fileTable.setDefaultRenderer(IMusicFile.class, new MusicFileRenderer());
 
 		// Listeners
-		fileTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				int[] selectedRows = fileTable.getSelectedRows();
-				mainController.updateSelection(selectedRows);
-			}
-		});
-		explorerTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-			@Override
-			public void valueChanged(TreeSelectionEvent e) {
-				List<Filter> filters = new ArrayList<Filter>();
-				TreePath[] selectedPaths = explorerTree.getSelectionPaths();
-				if (selectedPaths != null) {
-					for (TreePath treePath : selectedPaths) {
-						Object lastPathElement = treePath.getLastPathComponent();
-						if (lastPathElement instanceof DefaultMutableTreeNode) {
-							Object userObject = ((DefaultMutableTreeNode) lastPathElement).getUserObject();
-							if (userObject instanceof NamedFilter) {
-								Filter filter = ((NamedFilter) userObject).getFilter();
-								if (filter != null) {
-									filters.add(filter);
-								}
-							}
-						}
-					}
-				}
-				mainController.updateSelectedFilter(filters);
-			}
-		});
+		mainController.getFiltersSelection().listen(explorerTree);
+		mainController.getMusicFilesSelection().listen(fileTable);
 
 		// Add actions
-		actionPanel.add(new JButton(new AbstractRtfmAction("Scan", Image.FILE_NEW) {
+		actionPanel.add(new JButton(new DefaultRtfmAction("Scan", Image.FILE_NEW, new ICallback() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void execute() {
 				mainController.scanFolder();
 			}
-		}));
-		actionPanel.add(new JButton(new AbstractRtfmAction("Open", Image.FILE_OPEN) {
+		})));
+		actionPanel.add(new JButton(new DefaultRtfmAction("Open", Image.FILE_OPEN, new ICallback() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void execute() {
 				mainController.loadDatabase();
 			}
-		}));
-		actionPanel.add(new JButton(new AbstractRtfmAction("Save", Image.FILE_SAVE) {
+		})));
+		actionPanel.add(new JButton(new DefaultRtfmAction("Save", Image.FILE_SAVE, new ICallback() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void execute() {
 				mainController.saveDatabase();
 			}
-		}));
+		})));
 
-		mainController.createWorkflowActionModel(workflowPanel);
+		actionPanel.add(showHideAttributesButton = new JButton(new DefaultRtfmAction("Attributes", Image.INSPECT, new ICallback() {
+			@Override
+			public void execute() {
+				setAttributesPanelVisible(!splitPaneCenterRight.getRightComponent().isVisible());
+			}
+		})));
+
+		final JComboBox comboBox = new JComboBox(mainController.getWorkflowModel());
+		actionPanel.add(comboBox);
+		comboBox.setRenderer(new WorkflowRenderer());
+		comboBox.setSelectedIndex(0);
+		comboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Object selectedWorkflow = comboBox.getSelectedItem();
+				if (selectedWorkflow != null && selectedWorkflow instanceof IWorkflowIdentifier) {
+					mainController.executeWorkFlow((IWorkflowIdentifier) selectedWorkflow);
+				}
+				comboBox.setSelectedIndex(0);
+
+			}
+		});
+
+		// Panels
+		setAttributesPanelVisible(false);
+
+	}
+
+	protected void setAttributesPanelVisible(boolean visible) {
+		splitPaneCenterRight.getRightComponent().setVisible(visible);
+		if (visible) {
+			splitPaneCenterRight.setDividerLocation(0.6);
+			splitPaneCenterRight.setResizeWeight(0.8);
+			showHideAttributesButton.setText("Hide attributes");
+		} else {
+			splitPaneCenterRight.setDividerLocation(1.0);
+			splitPaneCenterRight.setResizeWeight(1.0);
+			showHideAttributesButton.setText("Show attributes");
+		}
 	}
 }

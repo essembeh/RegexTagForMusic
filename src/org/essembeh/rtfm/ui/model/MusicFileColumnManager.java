@@ -8,7 +8,8 @@ public class MusicFileColumnManager {
 	private final String[] columns = new String[] { "Type", "Path", "Tagged" };
 
 	public int getColumnCount() {
-		return columns.length;
+		// return columns.length;
+		return 2;
 	}
 
 	public String getColumnTitle(int i) {
@@ -22,7 +23,7 @@ public class MusicFileColumnManager {
 			out = musicFile.getType().getIdentifier();
 			break;
 		case 1:
-			out = musicFile.getVirtualPath();
+			out = musicFile;
 			break;
 		case 2:
 			Attribute attribute = musicFile.getAttributeList().get("rtfm:tagged");
