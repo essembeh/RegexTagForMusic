@@ -2,25 +2,21 @@ package org.essembeh.rtfm.ui.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.table.TableModel;
 
-import org.essembeh.rtfm.core.configuration.ActionService;
+import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.core.exception.LibraryException;
-import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.core.library.Library;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
 import org.essembeh.rtfm.ui.model.AttributesModel;
-import org.essembeh.rtfm.ui.model.ExplorerModel;
 import org.essembeh.rtfm.ui.model.ExplorerNodeUtils;
-import org.essembeh.rtfm.ui.model.MusicFileModel;
-import org.essembeh.rtfm.ui.model.WorkflowActionsModel;
+import org.essembeh.rtfm.ui.model.FiltersModel;
+import org.essembeh.rtfm.ui.model.FiltersSelection;
+import org.essembeh.rtfm.ui.model.MusicFilesModel;
+import org.essembeh.rtfm.ui.model.MusicFilesSelection;
+import org.essembeh.rtfm.ui.model.WorkflowModel;
 
 import com.google.inject.Inject;
 
@@ -28,31 +24,50 @@ public class MainController {
 
 	private final Library library;
 
-	private final ActionService actionService;
-
-	private final MusicFileModel musicFileModel;
+	private final FiltersModel filtersModel;
+	private final FiltersSelection filtersSelection;
+	private final MusicFilesModel musicFilesModel;
+	private final MusicFilesSelection musicFilesSelection;
 	private final AttributesModel attributesModel;
-	private final ExplorerModel explorerModel;
-	private WorkflowActionsModel workflowActionsModel;
+	private final WorkflowModel workflowModel;
 
 	private File currentDatabase;
 
 	@Inject
-	public MainController(Library library, ActionService actionService) {
+	public MainController(Library library) {
 		this.library = library;
-		this.actionService = actionService;
-		this.musicFileModel = new MusicFileModel(library);
-		this.attributesModel = new AttributesModel();
-		this.explorerModel = new ExplorerModel(new ExplorerNodeUtils(library), true);
-		this.workflowActionsModel = null;
+		this.filtersModel = new FiltersModel(library, new ExplorerNodeUtils(library), true);
+		this.filtersSelection = new FiltersSelection();
+		
+		this.musicFilesModel = new MusicFilesModel(library, filtersSelection);
+		this.musicFilesSelection = new MusicFilesSelection(musicFilesModel);
+
+		this.attributesModel = new AttributesModel(musicFilesModel, musicFilesSelection);
+		this.workflowModel = new WorkflowModel(library, musicFilesModel, musicFilesSelection);
 	}
 
-	public TableModel getFileModel() {
-		return musicFileModel;
+	public FiltersModel getFiltersModel() {
+		return filtersModel;
 	}
 
-	public TableModel getAttributesModel() {
+	public FiltersSelection getFiltersSelection() {
+		return filtersSelection;
+	}
+
+	public MusicFilesModel getMusicFilesModel() {
+		return musicFilesModel;
+	}
+
+	public MusicFilesSelection getMusicFilesSelection() {
+		return musicFilesSelection;
+	}
+
+	public AttributesModel getAttributesModel() {
 		return attributesModel;
+	}
+
+	public WorkflowModel getWorkflowModel() {
+		return workflowModel;
 	}
 
 	public void loadDatabase() {
@@ -119,29 +134,12 @@ public class MainController {
 		}
 	}
 
-	public void updateSelection(int[] selectedRows) {
-		List<IMusicFile> selection = new ArrayList<IMusicFile>();
-		for (int i = 0; i < selectedRows.length; i++) {
-			selection.add(musicFileModel.getMusicFileAtRow(selectedRows[i]));
-		}
-		attributesModel.updateSelection(selection);
-		if (workflowActionsModel != null) {
-			workflowActionsModel.updateSelection(selection);
-		}
-	}
-
-	public ExplorerModel getExplorerModel() {
-		return explorerModel;
-	}
-
-	public void updateSelectedFilter(List<Filter> filters) {
-		if (filters.size() > 0) {
-			musicFileModel.setFilters(filters);
-		}
-	}
-
-	public void createWorkflowActionModel(JPanel panel) {
-		workflowActionsModel = new WorkflowActionsModel(library, panel);
+	/**
+	 * 
+	 * @param workflowIdentifier
+	 */
+	public void executeWorkFlow(IWorkflowIdentifier workflowIdentifier) {
+		System.err.println(workflowIdentifier.getIdentifier());
 	}
 
 }

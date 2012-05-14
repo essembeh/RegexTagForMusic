@@ -19,16 +19,27 @@ import org.essembeh.rtfm.core.utils.FileUtils;
 
 public class ExplorerNodeUtils {
 
+	/**
+	 * Attributes
+	 */
 	private final Library library;
 	private final DefaultMutableTreeNode root;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param library
+	 */
 	public ExplorerNodeUtils(Library library) {
 		this.library = library;
 		root = newNode("Filters");
-		refreshTreeNode();
 	}
 
-	public void refreshTreeNode() {
+	/**
+	 * 
+	 * @return
+	 */
+	public TreeNode buildRoot() {
 		root.removeAllChildren();
 		root.add(newNode("All files", CommonFilters.noFilter()));
 		root.add(newNode("Non tagged", CommonFilters.filterOnAttribute("rtfm:tagged", "false")));
@@ -37,8 +48,13 @@ public class ExplorerNodeUtils {
 		root.add(byAttribute("Artist", "tag:artist"));
 		root.add(byAttribute("Album", "tag:album"));
 		root.add(byAttribute("Year", "tag:year"));
+		return root;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private MutableTreeNode fileSystem() {
 		File rootFolder = library.getRootFolder();
 		DefaultMutableTreeNode root = newNode("Filesystem");
@@ -48,9 +64,15 @@ public class ExplorerNodeUtils {
 		return root;
 	}
 
+	/**
+	 * 
+	 * @param folder
+	 * @param root
+	 * @return
+	 */
 	private DefaultMutableTreeNode folderToNode(File folder, File root) {
-		DefaultMutableTreeNode node = newNode(folder.getName(),
-				CommonFilters.virtualPathStartsWith(FileUtils.extractRelativePath(folder, root)), true);
+		DefaultMutableTreeNode node = newNode(folder.getName(), CommonFilters.virtualPathStartsWith(FileUtils.extractRelativePath(folder, root)),
+				true);
 
 		for (File sub : folder.listFiles()) {
 			if (sub.isDirectory()) {
@@ -60,6 +82,10 @@ public class ExplorerNodeUtils {
 		return node;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private MutableTreeNode byType() {
 		DefaultMutableTreeNode root = newNode("Type");
 		for (FileType type : FileType.getAllFileTypes()) {
@@ -68,10 +94,12 @@ public class ExplorerNodeUtils {
 		return root;
 	}
 
-	public TreeNode getRoot() {
-		return root;
-	}
-
+	/**
+	 * 
+	 * @param nodeName
+	 * @param attributeName
+	 * @return
+	 */
 	private MutableTreeNode byAttribute(String nodeName, String attributeName) {
 		DefaultMutableTreeNode root = newNode(nodeName);
 		List<String> values = new ArrayList<String>();
@@ -88,18 +116,41 @@ public class ExplorerNodeUtils {
 		return root;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
 	private DefaultMutableTreeNode newNode(String name) {
 		return newNode(name, null);
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param filter
+	 * @return
+	 */
 	private DefaultMutableTreeNode newNode(String name, Filter filter) {
 		return newNode(name, filter, filter == null);
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param filter
+	 * @param hasChildren
+	 * @return
+	 */
 	private DefaultMutableTreeNode newNode(String name, Filter filter, boolean hasChildren) {
 		return new DefaultMutableTreeNode(new NamedFilter(name, filter), hasChildren);
 	}
 
+	/**
+	 * 
+	 * @author smassot
+	 * 
+	 */
 	public class NamedFilter {
 		private final String name;
 		private final Filter filter;
@@ -122,9 +173,5 @@ public class ExplorerNodeUtils {
 		public String toString() {
 			return name;
 		}
-	}
-
-	public Library getLibrary() {
-		return library;
 	}
 }

@@ -2,14 +2,10 @@ package org.essembeh.rtfm.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -17,63 +13,31 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
 
-import org.essembeh.rtfm.ui.controller.MainController;
-
 public class RtfmUI extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3838131239724672622L;
 	private JPanel contentPane;
-
-	protected final MainController mainController;
 	protected JPanel actionPanel;
 	protected JTree explorerTree;
 	protected JTable fileTable;
 	protected JTable attributeTable;
 	protected JPanel workflowPanel;
+	protected JSplitPane splitPaneCenterRight;
 
 	/**
 	 * Create the frame.
 	 * 
 	 * @param controller
 	 */
-	public RtfmUI(MainController controller) {
+	public RtfmUI() {
 		setSize(new Dimension(600, 400));
-		this.mainController = controller;
 		setTitle("RegexTagForMusic");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-
-		JMenu mnLibrary = new JMenu("Library");
-		menuBar.add(mnLibrary);
-
-		JMenuItem mntmScanANew = new JMenuItem("Scan a new folder");
-		mntmScanANew.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				mainController.scanFolder();
-			}
-		});
-		mnLibrary.add(mntmScanANew);
-
-		JMenuItem mntmOpenADatabase = new JMenuItem("Open database");
-		mntmOpenADatabase.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mainController.loadDatabase();
-			}
-		});
-		mnLibrary.add(mntmOpenADatabase);
-
-		JMenuItem mntmSaveDatabase = new JMenuItem("Save database");
-		mntmSaveDatabase.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mainController.saveDatabase();
-			}
-		});
-		mnLibrary.add(mntmSaveDatabase);
-
-		JMenu mnAction = new JMenu("Actions");
-		menuBar.add(mnAction);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -86,16 +50,13 @@ public class RtfmUI extends JFrame {
 		splitPaneLeftCenter.setLeftComponent(panel);
 		panel.setLayout(new BorderLayout(0, 0));
 
-		actionPanel = new JPanel();
-		panel.add(actionPanel, BorderLayout.NORTH);
-
 		JScrollPane scrollPane = new JScrollPane();
 		panel.add(scrollPane, BorderLayout.CENTER);
 
 		explorerTree = new JTree();
 		scrollPane.setViewportView(explorerTree);
 
-		JSplitPane splitPaneCenterRight = new JSplitPane();
+		splitPaneCenterRight = new JSplitPane();
 		splitPaneLeftCenter.setRightComponent(splitPaneCenterRight);
 
 		JPanel panel_1 = new JPanel();
@@ -121,6 +82,11 @@ public class RtfmUI extends JFrame {
 		workflowPanel = new JPanel();
 		panel_2.add(workflowPanel, BorderLayout.SOUTH);
 		workflowPanel.setLayout(new GridLayout(0, 1, 0, 0));
+
+		actionPanel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) actionPanel.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		contentPane.add(actionPanel, BorderLayout.NORTH);
 
 	}
 }

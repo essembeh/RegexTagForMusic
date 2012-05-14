@@ -19,29 +19,55 @@
  */
 package org.essembeh.rtfm.ui.action;
 
+import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.ui.utils.Image;
 import org.essembeh.rtfm.ui.utils.ImageUtils;
 
-public abstract class AbstractRtfmAction extends AbstractAction {
+public class DefaultRtfmAction extends AbstractAction {
 
 	private static final long serialVersionUID = -4801896580741417417L;
+	private static final Logger logger = Logger.getLogger(DefaultRtfmAction.class);
+	private final ICallback callback;
 
-	private static Logger logger = Logger.getLogger(AbstractRtfmAction.class);
-
-	public AbstractRtfmAction(String text, Image image) {
-		setText(text);
-		setIcon(image);
+	/**
+	 * 
+	 * @param text
+	 * @param image
+	 */
+	public DefaultRtfmAction(String text, Image image) {
+		this(text, image, null);
 	}
 
+	/**
+	 * 
+	 * @param text
+	 * @param image
+	 * @param callback
+	 */
+	public DefaultRtfmAction(String text, Image image, ICallback callback) {
+		setText(text);
+		setIcon(image);
+		this.callback = callback;
+	}
+
+	/**
+	 * 
+	 * @param text
+	 */
 	protected void setText(String text) {
 		if (text != null) {
 			putValue(NAME, text);
 		}
 	}
 
+	/**
+	 * 
+	 * @param image
+	 */
 	protected void setIcon(Image image) {
 		if (image != null) {
 			try {
@@ -51,5 +77,29 @@ public abstract class AbstractRtfmAction extends AbstractAction {
 				logger.error(e.toString());
 			}
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
+	final public void actionPerformed(ActionEvent e) {
+		if (callback != null) {
+			callback.execute();
+		}
+	}
+
+	/**
+	 * 
+	 * @author smassot
+	 * 
+	 */
+	public interface ICallback {
+		/**
+		 * 
+		 */
+		void execute();
 	}
 }
