@@ -19,8 +19,11 @@
  */
 package org.essembeh.rtfm.core.filter;
 
+import java.util.regex.Pattern;
+
 import org.essembeh.rtfm.core.filter.conditions.AttributeValueCondition;
 import org.essembeh.rtfm.core.filter.conditions.TypeCondition;
+import org.essembeh.rtfm.core.filter.conditions.VirtualPathCondition;
 
 public class CommonFilters {
 
@@ -37,6 +40,12 @@ public class CommonFilters {
 	public static Filter filterOnType(String expectedValue) {
 		Filter filter = new Filter();
 		filter.addCondition(new TypeCondition(new String[] { expectedValue }));
+		return filter;
+	}
+
+	public static Filter virtualPathStartsWith(String expectedValue) {
+		Filter filter = new Filter();
+		filter.addCondition(new VirtualPathCondition(Pattern.compile(Pattern.quote(expectedValue) + ".*")));
 		return filter;
 	}
 }

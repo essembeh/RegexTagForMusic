@@ -15,7 +15,7 @@ public class AttributesModel extends AbstractTableModel {
 	private final List<IMusicFile> selection;
 	private final String[] columns = new String[] { "Name", "Value" };
 	private final Map<String, String> data;
-	private final static String MULTIPLE_VALUES = "(Multiple values)";
+	private final static String MULTIPLE_VALUES = "...";
 
 	public AttributesModel() {
 		selection = new CopyOnWriteArrayList<IMusicFile>();
@@ -73,12 +73,11 @@ public class AttributesModel extends AbstractTableModel {
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return rowIndex == 1;
+		return columnIndex == 1;
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
 
 	}
 

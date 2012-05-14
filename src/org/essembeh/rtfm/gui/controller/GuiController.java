@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.actions.IJob;
+import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.core.configuration.ActionService;
 import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.exception.LibraryException;
@@ -208,12 +209,12 @@ public class GuiController {
 	public void updateActions() {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		for (IMusicFile musicFile : view.getAllFiles()) {
-			for (String action : actionService.getWorkflowIdentifiersForType(musicFile.getType())) {
+			for (IWorkflowIdentifier action : actionService.getWorkflowIdentifiersForType(musicFile.getType())) {
 				int newCount = 0;
 				if (map.containsKey(action)) {
 					newCount = map.get(action);
 				}
-				map.put(action, ++newCount);
+				map.put(action.getIdentifier(), ++newCount);
 			}
 		}
 		this.view.updateActions(map);

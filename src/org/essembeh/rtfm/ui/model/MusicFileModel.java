@@ -113,5 +113,4 @@ public class MusicFileModel extends AbstractTableModel {
 		this.filters.addAll(filters);
 		refresh();
 	}
-
 }

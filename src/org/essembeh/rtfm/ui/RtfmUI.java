@@ -2,6 +2,7 @@ package org.essembeh.rtfm.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,9 +24,11 @@ public class RtfmUI extends JFrame {
 	private JPanel contentPane;
 
 	protected final MainController mainController;
-	protected JTable attributesTable;
+	protected JPanel actionPanel;
 	protected JTree explorerTree;
 	protected JTable fileTable;
+	protected JTable attributeTable;
+	protected JPanel workflowPanel;
 
 	/**
 	 * Create the frame.
@@ -79,39 +82,45 @@ public class RtfmUI extends JFrame {
 		JSplitPane splitPaneLeftCenter = new JSplitPane();
 		contentPane.add(splitPaneLeftCenter, BorderLayout.CENTER);
 
+		JPanel panel = new JPanel();
+		splitPaneLeftCenter.setLeftComponent(panel);
+		panel.setLayout(new BorderLayout(0, 0));
+
+		actionPanel = new JPanel();
+		panel.add(actionPanel, BorderLayout.NORTH);
+
+		JScrollPane scrollPane = new JScrollPane();
+		panel.add(scrollPane, BorderLayout.CENTER);
+
+		explorerTree = new JTree();
+		scrollPane.setViewportView(explorerTree);
+
 		JSplitPane splitPaneCenterRight = new JSplitPane();
 		splitPaneLeftCenter.setRightComponent(splitPaneCenterRight);
 
-		JScrollPane scrollPane = new JScrollPane();
-		splitPaneCenterRight.setRightComponent(scrollPane);
-
-		JPanel panel = new JPanel();
-		scrollPane.setViewportView(panel);
-		panel.setLayout(new BorderLayout(0, 0));
-
-		attributesTable = new JTable(mainController.getAttributesModel());
-		panel.add(attributesTable);
-
-		JScrollPane scrollPane_2 = new JScrollPane();
-		splitPaneCenterRight.setLeftComponent(scrollPane_2);
-
-		JPanel panel_2 = new JPanel();
-		scrollPane_2.setViewportView(panel_2);
-		panel_2.setLayout(new BorderLayout(0, 0));
-
-		fileTable = new JTable(mainController.getFileModel());
-		panel_2.add(fileTable);
-
-		JScrollPane scrollPane_1 = new JScrollPane();
-		splitPaneLeftCenter.setLeftComponent(scrollPane_1);
-
 		JPanel panel_1 = new JPanel();
-		scrollPane_1.setViewportView(panel_1);
+		splitPaneCenterRight.setLeftComponent(panel_1);
 		panel_1.setLayout(new BorderLayout(0, 0));
 
-		explorerTree = new JTree(mainController.getExplorerModel());
-		panel_1.add(explorerTree);
+		JScrollPane scrollPane_1 = new JScrollPane();
+		panel_1.add(scrollPane_1, BorderLayout.CENTER);
+
+		fileTable = new JTable();
+		scrollPane_1.setViewportView(fileTable);
+
+		JPanel panel_2 = new JPanel();
+		splitPaneCenterRight.setRightComponent(panel_2);
+		panel_2.setLayout(new BorderLayout(0, 0));
+
+		JScrollPane scrollPane_2 = new JScrollPane();
+		panel_2.add(scrollPane_2, BorderLayout.CENTER);
+
+		attributeTable = new JTable();
+		scrollPane_2.setViewportView(attributeTable);
+
+		workflowPanel = new JPanel();
+		panel_2.add(workflowPanel, BorderLayout.SOUTH);
+		workflowPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
 	}
-
 }

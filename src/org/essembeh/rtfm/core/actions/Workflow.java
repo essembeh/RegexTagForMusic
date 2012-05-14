@@ -31,7 +31,7 @@ import org.essembeh.rtfm.core.library.file.FileType;
  * @author seb
  * 
  */
-public class Workflow {
+public class Workflow implements IWorkflowIdentifier {
 	/**
 	 * Attributes
 	 */
@@ -71,20 +71,34 @@ public class Workflow {
 		tasks.add(task);
 	}
 
-	/**
-	 * Add a supported file type.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param type
-	 * @return
+	 * @see
+	 * org.essembeh.rtfm.core.actions.IWorkflowIdentifier#supportType(org.essembeh
+	 * .rtfm.core.library.file.FileType)
 	 */
+	@Override
 	public boolean supportType(final FileType type) {
 		return applyOnTypes.contains(type.getIdentifier());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.actions.IWorkflowIdentifier#getDescription()
+	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.actions.IWorkflowIdentifier#getIdentifier()
+	 */
+	@Override
 	public String getIdentifier() {
 		return identifier;
 	}

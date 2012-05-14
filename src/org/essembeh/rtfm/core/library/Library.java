@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.essembeh.rtfm.core.configuration.ActionService;
 import org.essembeh.rtfm.core.configuration.MusicFileService;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.exception.LibraryException;
@@ -56,15 +57,19 @@ public class Library implements IListenable<ILibraryListener> {
 	private final MusicFileService musicFileService;
 	private final GenericLibraryIO genericLibraryIO;
 	private final LibraryListenerContainer listeners;
-
+	private final ActionService actionService;
 	private volatile File rootFolder;
 	private volatile IdList<IMusicFile, Identifier<IMusicFile>> listOfFiles;
 
 	@Inject
-	public Library(RTFMProperties properties, MusicFileService musicFileService, GenericLibraryIO genericLibraryIO) {
+	public Library(	RTFMProperties properties,
+					MusicFileService musicFileService,
+					GenericLibraryIO genericLibraryIO,
+					ActionService actionService) {
 		this.musicFileService = musicFileService;
 		this.properties = properties;
 		this.genericLibraryIO = genericLibraryIO;
+		this.actionService = actionService;
 		this.listeners = new LibraryListenerContainer();
 		clear();
 	}
@@ -199,5 +204,9 @@ public class Library implements IListenable<ILibraryListener> {
 	@Override
 	public void removeAllListener() {
 		listeners.removeAllListener();
+	}
+
+	public ActionService getActionService() {
+		return actionService;
 	}
 }
