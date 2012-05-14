@@ -1,5 +1,6 @@
 package org.essembeh.rtfm.ui.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
+import org.essembeh.rtfm.core.utils.FileUtils;
 
 public class ExplorerNodeUtils {
 
@@ -29,21 +31,37 @@ public class ExplorerNodeUtils {
 	public void refreshTreeNode() {
 		root.removeAllChildren();
 		root.add(newNode("All files", CommonFilters.noFilter()));
+		root.add(newNode("Non tagged", CommonFilters.filterOnAttribute("rtfm:tagged", "false")));
+		root.add(fileSystem());
 		root.add(byType());
-		root.add(byAttribute("By artist", "tag:artist"));
-		root.add(byAttribute("By album", "tag:album"));
-		root.add(byAttribute("By year", "tag:year"));
-		root.add(byCommonAttributes());
+		root.add(byAttribute("Artist", "tag:artist"));
+		root.add(byAttribute("Album", "tag:album"));
+		root.add(byAttribute("Year", "tag:year"));
 	}
 
-	private MutableTreeNode byCommonAttributes() {
-		DefaultMutableTreeNode root = newNode("By attribute");
-		root.add(byAttribute("rtfm:tagged", "rtfm:tagged"));
+	private MutableTreeNode fileSystem() {
+		File rootFolder = library.getRootFolder();
+		DefaultMutableTreeNode root = newNode("Filesystem");
+		if (rootFolder != null) {
+			root.add(folderToNode(rootFolder, rootFolder));
+		}
 		return root;
 	}
 
+	private DefaultMutableTreeNode folderToNode(File folder, File root) {
+		DefaultMutableTreeNode node = newNode(folder.getName(),
+				CommonFilters.virtualPathStartsWith(FileUtils.extractRelativePath(folder, root)), true);
+
+		for (File sub : folder.listFiles()) {
+			if (sub.isDirectory()) {
+				node.add(folderToNode(sub, root));
+			}
+		}
+		return node;
+	}
+
 	private MutableTreeNode byType() {
-		DefaultMutableTreeNode root = newNode("By type");
+		DefaultMutableTreeNode root = newNode("Type");
 		for (FileType type : FileType.getAllFileTypes()) {
 			root.add(newNode(type.getIdentifier(), CommonFilters.filterOnType(type.getIdentifier())));
 		}
@@ -71,11 +89,15 @@ public class ExplorerNodeUtils {
 	}
 
 	private DefaultMutableTreeNode newNode(String name) {
-		return new DefaultMutableTreeNode(newNode(name, null));
+		return newNode(name, null);
 	}
 
 	private DefaultMutableTreeNode newNode(String name, Filter filter) {
-		return new DefaultMutableTreeNode(new NamedFilter(name, filter), filter == null);
+		return newNode(name, filter, filter == null);
+	}
+
+	private DefaultMutableTreeNode newNode(String name, Filter filter, boolean hasChildren) {
+		return new DefaultMutableTreeNode(new NamedFilter(name, filter), hasChildren);
 	}
 
 	public class NamedFilter {

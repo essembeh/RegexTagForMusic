@@ -27,6 +27,7 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.actions.IJob;
+import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.core.actions.Job;
 import org.essembeh.rtfm.core.actions.Workflow;
 import org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader;
@@ -82,11 +83,11 @@ public class ActionService {
 	 * @return
 	 * @throws ActionException
 	 */
-	public IJob createJob(String workflowIdentifier, List<IMusicFile> musicFiles) throws ActionException {
-		if (!workflows.containsKey(workflowIdentifier)) {
+	public IJob createJob(IWorkflowIdentifier workflowIdentifier, List<IMusicFile> musicFiles) throws ActionException {
+		if (!workflows.containsKey(workflowIdentifier.getIdentifier())) {
 			throw new ActionException("Unknown workflow: " + workflowIdentifier);
 		}
-		return new Job(workflows.get(workflowIdentifier), musicFiles, executor);
+		return new Job(workflows.get(workflowIdentifier.getIdentifier()), musicFiles, executor);
 	}
 
 	/**
@@ -104,11 +105,11 @@ public class ActionService {
 	 * @param fileType
 	 * @return
 	 */
-	public List<String> getWorkflowIdentifiersForType(FileType fileType) {
-		List<String> out = new ArrayList<String>();
+	public List<IWorkflowIdentifier> getWorkflowIdentifiersForType(FileType fileType) {
+		List<IWorkflowIdentifier> out = new ArrayList<IWorkflowIdentifier>();
 		for (Workflow workflow : workflows) {
 			if (workflow.supportType(fileType)) {
-				out.add(workflows.getIdentifier().getId(workflow));
+				out.add(workflow);
 			}
 		}
 		return out;

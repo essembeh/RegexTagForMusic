@@ -37,6 +37,7 @@ public class LaunchUI {
 		Injector injector = Guice.createInjector(new CoreModule(rtfmProperties), new UIModule(rtfmProperties));
 		MainController controller = injector.getInstance(MainController.class);
 		RtfmUICustom ui = new RtfmUICustom(controller);
+		ui.pack();
 		ui.setVisible(true);
 	}
 }

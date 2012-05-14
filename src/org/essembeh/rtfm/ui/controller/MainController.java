@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import javax.swing.table.TableModel;
 
 import org.essembeh.rtfm.core.configuration.ActionService;
@@ -19,6 +20,7 @@ import org.essembeh.rtfm.ui.model.AttributesModel;
 import org.essembeh.rtfm.ui.model.ExplorerModel;
 import org.essembeh.rtfm.ui.model.ExplorerNodeUtils;
 import org.essembeh.rtfm.ui.model.MusicFileModel;
+import org.essembeh.rtfm.ui.model.WorkflowActionsModel;
 
 import com.google.inject.Inject;
 
@@ -31,6 +33,7 @@ public class MainController {
 	private final MusicFileModel musicFileModel;
 	private final AttributesModel attributesModel;
 	private final ExplorerModel explorerModel;
+	private WorkflowActionsModel workflowActionsModel;
 
 	private File currentDatabase;
 
@@ -41,6 +44,7 @@ public class MainController {
 		this.musicFileModel = new MusicFileModel(library);
 		this.attributesModel = new AttributesModel();
 		this.explorerModel = new ExplorerModel(new ExplorerNodeUtils(library), true);
+		this.workflowActionsModel = null;
 	}
 
 	public TableModel getFileModel() {
@@ -121,6 +125,9 @@ public class MainController {
 			selection.add(musicFileModel.getMusicFileAtRow(selectedRows[i]));
 		}
 		attributesModel.updateSelection(selection);
+		if (workflowActionsModel != null) {
+			workflowActionsModel.updateSelection(selection);
+		}
 	}
 
 	public ExplorerModel getExplorerModel() {
@@ -131,6 +138,10 @@ public class MainController {
 		if (filters.size() > 0) {
 			musicFileModel.setFilters(filters);
 		}
+	}
+
+	public void createWorkflowActionModel(JPanel panel) {
+		workflowActionsModel = new WorkflowActionsModel(library, panel);
 	}
 
 }
