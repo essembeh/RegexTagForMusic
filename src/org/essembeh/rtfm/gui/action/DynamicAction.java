@@ -21,6 +21,7 @@ package org.essembeh.rtfm.gui.action;
 
 import java.awt.event.ActionEvent;
 
+import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.gui.controller.GuiController;
 import org.essembeh.rtfm.gui.utils.Image;
 
@@ -28,9 +29,9 @@ public class DynamicAction extends GenericAbstractAction {
 
 	private static final long serialVersionUID = 1636221991112595939L;
 
-	String action;
+	IWorkflowIdentifier action;
 
-	public DynamicAction(GuiController controller, String action, String title) {
+	public DynamicAction(GuiController controller, IWorkflowIdentifier action, String title) {
 		super(controller, title, Image.RUN_ALL);
 		this.action = action;
 	}

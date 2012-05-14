@@ -80,7 +80,7 @@ public class GuiController {
 		}
 	}
 
-	public void doExecuteActionForAll(String actionName) {
+	public void doExecuteActionForAll(IWorkflowIdentifier actionName) {
 		// Job already running
 		// JOptionPane.showMessageDialog(this.getMainPanel(),
 		// Translator.get(StringId.messageJobAlreadyRunning),
@@ -207,14 +207,14 @@ public class GuiController {
 	}
 
 	public void updateActions() {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<IWorkflowIdentifier, Integer> map = new HashMap<IWorkflowIdentifier, Integer>();
 		for (IMusicFile musicFile : view.getAllFiles()) {
 			for (IWorkflowIdentifier action : actionService.getWorkflowIdentifiersForType(musicFile.getType())) {
 				int newCount = 0;
 				if (map.containsKey(action)) {
 					newCount = map.get(action);
 				}
-				map.put(action.getIdentifier(), ++newCount);
+				map.put(action, ++newCount);
 			}
 		}
 		this.view.updateActions(map);

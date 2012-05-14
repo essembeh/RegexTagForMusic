@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
+import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.gui.controller.GuiController;
 import org.essembeh.rtfm.gui.panel.side.commands.ActionCommands;
 import org.essembeh.rtfm.gui.panel.side.commands.FileCommands;
@@ -50,7 +51,7 @@ public class SidePanel extends JPanel {
 		this.informations.updateInformations();
 	}
 
-	public void updateActions(Map<String, Integer> map) {
+	public void updateActions(Map<IWorkflowIdentifier, Integer> map) {
 		this.actionsForAll.updateDynamicActions(map);
 	}
 }
