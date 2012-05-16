@@ -139,7 +139,17 @@
 		</task>
 	</tasks>
 	<actions>
-		<action id="Tag eyeD3" description="Tag with eyed3">
+		<action id="00-marskAsNonTagged" description="Mark as non tagged">
+			<apply-on>
+				<filehandler ref-id="ALBUMS" />
+				<filehandler ref-id="SINGLE" />
+				<filehandler ref-id="SAGA" />
+			</apply-on>
+			<workflow>
+				<task ref-id="setNonTagged" />
+			</workflow>
+		</action>
+		<action id="10-tagEyeD3" description="Tag with eyed3">
 			<apply-on>
 				<filehandler ref-id="ALBUMS" />
 				<filehandler ref-id="SINGLE" />
@@ -152,7 +162,7 @@
 				<task ref-id="setTagged" />
 			</workflow>
 		</action>
-		<action id="Tag JAudioTagger" description="Tag with eyed3">
+		<action id="11-tagJAudioTagger" description="Tag with JAudioTagger">
 			<apply-on>
 				<filehandler ref-id="ALBUMS" />
 				<filehandler ref-id="SINGLE" />
@@ -162,7 +172,7 @@
 				<task ref-id="JAudioTagger-id3v2.4" />
 			</workflow>
 		</action>
-		<action id="Remove tags" description="Remove tags using eyed3">
+		<action id="20-removeTags" description="Remove tags using eyed3">
 			<apply-on>
 				<filehandler ref-id="ALBUMS" />
 				<filehandler ref-id="SINGLE" />
@@ -173,7 +183,7 @@
 				<task ref-id="setNonTagged" />
 			</workflow>
 		</action>
-		<action id="Dummy" description="Dummy script">
+		<action id="99-dummy" description="Dummy script">
 			<apply-on>
 				<filehandler ref-id="ALBUMS" />
 				<filehandler ref-id="SINGLE" />

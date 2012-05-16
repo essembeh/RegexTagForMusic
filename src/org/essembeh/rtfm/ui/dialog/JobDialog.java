@@ -2,7 +2,6 @@ package org.essembeh.rtfm.ui.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -12,18 +11,25 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import javax.swing.border.EmptyBorder;
+
+import org.essembeh.rtfm.ui.utils.SpringUtilities;
 
 public class JobDialog extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3237723209016194172L;
 	private final JPanel contentPanel = new JPanel();
-	protected JTextField nameValue;
 	protected JTextField descriptionValue;
 	protected JButton submitButton;
 	protected JButton cancelButton;
 	protected JProgressBar progressBar;
 	protected JTable table;
 	protected JTextField statusValue;
+	protected JPanel descriptionPanel;
 
 	/**
 	 * Launch the application.
@@ -50,36 +56,31 @@ public class JobDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
-			JPanel panel = new JPanel();
-			contentPanel.add(panel, BorderLayout.NORTH);
-			panel.setLayout(new GridLayout(3, 2, 0, 0));
+			descriptionPanel = new JPanel();
+			contentPanel.add(descriptionPanel, BorderLayout.NORTH);
+			// panel.setLayout(new GridLayout(0, 2, 0, 0));
+			descriptionPanel.setLayout(new SpringLayout());
 			{
-				JLabel nameLabel = new JLabel("Workflow");
-				panel.add(nameLabel);
-			}
-			{
-				nameValue = new JTextField();
-				panel.add(nameValue);
-				nameValue.setColumns(10);
-			}
-			{
-				JLabel descriptionLabel = new JLabel("Description");
-				panel.add(descriptionLabel);
+				JLabel nameLabel = new JLabel("Workflow", JLabel.TRAILING);
+				descriptionPanel.add(nameLabel);
 			}
 			{
 				descriptionValue = new JTextField();
-				panel.add(descriptionValue);
+				descriptionPanel.add(descriptionValue);
 				descriptionValue.setColumns(10);
 			}
 			{
-				JLabel statusLabel = new JLabel("Status");
-				panel.add(statusLabel);
+				JLabel statusLabel = new JLabel("Status", JLabel.TRAILING);
+				descriptionPanel.add(statusLabel);
 			}
 			{
 				statusValue = new JTextField();
-				panel.add(statusValue);
+				descriptionPanel.add(statusValue);
 				statusValue.setColumns(10);
 			}
+			SpringUtilities.makeCompactGrid(descriptionPanel, 2, 2, // rows, cols
+					6, 6, // initX, initY
+					6, 6); // xPad, yPad
 		}
 		{
 			progressBar = new JProgressBar();

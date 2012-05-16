@@ -16,9 +16,11 @@ public class JobModel extends AbstractTableModel {
 	private static final long serialVersionUID = 6137772141319616195L;
 	private static final String[] TITLES = { "File", "Status" };
 	private final List<FileWithStatus> data;
+	private final boolean onlyKeepErrorFiles;
 
-	public JobModel(List<IMusicFile> files) {
+	public JobModel(List<IMusicFile> files, boolean onlyKeepErrorFiles) {
 		data = new CopyOnWriteArrayList<JobModel.FileWithStatus>();
+		this.onlyKeepErrorFiles = onlyKeepErrorFiles;
 		for (IMusicFile iMusicFile : files) {
 			data.add(new FileWithStatus(iMusicFile));
 		}
@@ -57,18 +59,20 @@ public class JobModel extends AbstractTableModel {
 	}
 
 	public void jobFinished(IMusicFile file, ActionException e) {
-		int i = 0;
+		int index = 0;
+		FileWithStatus theFile = null;
 		for (FileWithStatus fileWithStatus : data) {
 			if (fileWithStatus.getFile().equals(file)) {
-				if (e != null) {
-					fileWithStatus.finishWithError(e);
-				} else {
-					fileWithStatus.finish();
-				}
-				fireTableRowsUpdated(i, i);
+				theFile = fileWithStatus;
 				break;
 			}
-			i++;
+			index++;
+		}
+		theFile.finishWithError(e);
+		if (e == null && onlyKeepErrorFiles) {
+			data.remove(index);
+		} else {
+			fireTableRowsUpdated(index, index);
 		}
 	}
 

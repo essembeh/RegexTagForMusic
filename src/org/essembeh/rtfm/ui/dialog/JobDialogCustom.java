@@ -17,19 +17,22 @@ public class JobDialogCustom extends JobDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = -2837294156772380930L;
-	private final IJob job;
 
 	public JobDialogCustom(final IJob job) {
-		this.job = job;
+		setSize(600, 400);
+		setTitle("Executing job: " + job.getWorkflowIdentifier().getIdentifier());
 
-		nameValue.setText(job.getWorkflowIdentifier().getIdentifier());
+
+
 		descriptionValue.setText(job.getWorkflowIdentifier().getDescription());
+		descriptionValue.setEditable(false);
+		statusValue.setEditable(false);
 
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(job.getMusicFiles().size() + 1);
 		progressBar.setStringPainted(true);
 
-		final JobModel jobModel = new JobModel(job.getMusicFiles());
+		final JobModel jobModel = new JobModel(job.getMusicFiles(), true);
 		table.setModel(jobModel);
 
 		job.addListener(new IJobListener() {
@@ -65,7 +68,6 @@ public class JobDialogCustom extends JobDialog {
 				synchronized (progressBar) {
 					progressBar.setValue(progressBar.getValue() + 1);
 				}
-				submitButton.setEnabled(true);
 				cancelButton.setEnabled(true);
 				statusValue.setText("Job executed on " + TextUtils.plural(job.getMusicFiles().size(), "file") + " with "
 						+ TextUtils.plural(jobModel.getErrorCount(), "error"));
