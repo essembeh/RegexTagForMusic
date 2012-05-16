@@ -20,6 +20,7 @@
 package org.essembeh.rtfm.core.configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -93,11 +94,12 @@ public class ActionService {
 	 * 
 	 * @return
 	 */
-	public List<IWorkflowIdentifier> getAllActions() {
+	public List<IWorkflowIdentifier> getAllWorkflows() {
 		List<IWorkflowIdentifier> out = new ArrayList<IWorkflowIdentifier>();
 		for (Workflow workflow : workflows) {
 			out.add(workflow);
 		}
+		Collections.sort(out);
 		return out;
 	}
 
@@ -107,13 +109,14 @@ public class ActionService {
 	 * @param fileType
 	 * @return
 	 */
-	public List<IWorkflowIdentifier> getWorkflowIdentifiersForType(FileType fileType) {
+	public List<IWorkflowIdentifier> getWorkflowsForType(FileType fileType) {
 		List<IWorkflowIdentifier> out = new ArrayList<IWorkflowIdentifier>();
 		for (Workflow workflow : workflows) {
 			if (workflow.supportType(fileType)) {
 				out.add(workflow);
 			}
 		}
+		Collections.sort(out);
 		return out;
 	}
 }

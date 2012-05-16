@@ -26,7 +26,7 @@ import org.essembeh.rtfm.core.library.file.FileType;
  * @author seb
  * 
  */
-public interface IWorkflowIdentifier {
+public interface IWorkflowIdentifier extends Comparable<IWorkflowIdentifier> {
 	/**
 	 * 
 	 * @param type

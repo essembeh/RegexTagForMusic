@@ -112,4 +112,9 @@ public class Workflow implements IWorkflowIdentifier {
 		return "Workflow [identifier=" + identifier + ", description=" + description + ", applyOnTypes="
 				+ StringUtils.join(applyOnTypes, ",") + ", tasks=" + StringUtils.join(tasks, ",") + "]";
 	}
+
+	@Override
+	public int compareTo(IWorkflowIdentifier o) {
+		return identifier.compareTo(o.getIdentifier());
+	}
 }

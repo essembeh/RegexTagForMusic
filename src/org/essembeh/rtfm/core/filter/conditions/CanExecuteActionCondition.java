@@ -34,7 +34,7 @@ public class CanExecuteActionCondition implements IFilterCondition {
 
 	@Override
 	public boolean isTrue(IMusicFile musicFile) {
-		return actionService.getWorkflowIdentifiersForType(musicFile.getType()).contains(actionName);
+		return actionService.getWorkflowsForType(musicFile.getType()).contains(actionName);
 	}
 
 	@Override
