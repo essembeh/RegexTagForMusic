@@ -112,4 +112,9 @@ public class Job extends JobListenerContainer implements IJob {
 	public List<IMusicFile> getMusicFiles() {
 		return Collections.unmodifiableList(files);
 	}
+
+	@Override
+	public IWorkflowIdentifier getWorkflowIdentifier() {
+		return workflow;
+	}
 }

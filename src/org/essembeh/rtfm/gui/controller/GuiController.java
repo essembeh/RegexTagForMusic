@@ -209,7 +209,7 @@ public class GuiController {
 	public void updateActions() {
 		Map<IWorkflowIdentifier, Integer> map = new HashMap<IWorkflowIdentifier, Integer>();
 		for (IMusicFile musicFile : view.getAllFiles()) {
-			for (IWorkflowIdentifier action : actionService.getWorkflowIdentifiersForType(musicFile.getType())) {
+			for (IWorkflowIdentifier action : actionService.getWorkflowsForType(musicFile.getType())) {
 				int newCount = 0;
 				if (map.containsKey(action)) {
 					newCount = map.get(action);

@@ -54,7 +54,7 @@ public class WorkflowModel extends DefaultComboBoxModel {
 		}
 		workflows.clear();
 		for (IMusicFile musicFile : files) {
-			for (IWorkflowIdentifier workflowIdentifier : library.getActionService().getWorkflowIdentifiersForType(musicFile.getType())) {
+			for (IWorkflowIdentifier workflowIdentifier : library.getActionService().getWorkflowsForType(musicFile.getType())) {
 				if (!workflows.contains(workflowIdentifier)) {
 					workflows.add(workflowIdentifier);
 				}

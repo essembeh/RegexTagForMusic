@@ -2,14 +2,19 @@ package org.essembeh.rtfm.ui.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 
+import org.essembeh.rtfm.core.actions.IJob;
 import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
+import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.exception.LibraryException;
 import org.essembeh.rtfm.core.library.Library;
+import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
+import org.essembeh.rtfm.ui.dialog.JobDialogCustom;
 import org.essembeh.rtfm.ui.model.AttributesModel;
 import org.essembeh.rtfm.ui.model.ExplorerNodeUtils;
 import org.essembeh.rtfm.ui.model.FiltersModel;
@@ -139,7 +144,18 @@ public class MainController {
 	 * @param workflowIdentifier
 	 */
 	public void executeWorkFlow(IWorkflowIdentifier workflowIdentifier) {
-		System.err.println(workflowIdentifier.getIdentifier());
+		List<IMusicFile> files = musicFilesSelection.getSelectedFiles();
+		if (files.size() == 0) {
+			files = musicFilesModel.getFilteredFiles();
+		}
+		try {
+			IJob job = library.getActionService().createJob(workflowIdentifier, files);
+			JobDialogCustom jobDialogCustom = new JobDialogCustom(job);
+			jobDialogCustom.setVisible(true);
+		} catch (ActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

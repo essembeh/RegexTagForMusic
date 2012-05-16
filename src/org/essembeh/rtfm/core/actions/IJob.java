@@ -31,4 +31,5 @@ public interface IJob extends IListenable<IJobListener> {
 
 	List<IMusicFile> getMusicFiles();
 
+	IWorkflowIdentifier getWorkflowIdentifier();
 }
