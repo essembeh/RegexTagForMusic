@@ -156,20 +156,25 @@ public class AttributesModel extends AbstractTableModel {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object,
+	 * int, int)
 	 */
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		String attributeName = getAttributeName(rowIndex);
-		logger.info("Update attribute: " + attributeName + ", with value: " + aValue);
-		List<IMusicFile> list = musicFilesSelection.getSelectedFiles();
-		for (IMusicFile musicFile : list) {
-			Attribute attribute = musicFile.getAttributeList().get(attributeName);
-			if (attribute != null) {
-				logger.debug("Update file: " + musicFile);
-				attribute.setValue(aValue.toString());
+		if (MULTIPLE_VALUES.equals(aValue)) {
+			logger.debug("Do not update with value: " + MULTIPLE_VALUES);
+		} else {
+			String attributeName = getAttributeName(rowIndex);
+			logger.info("Update attribute: " + attributeName + ", with value: " + aValue);
+			List<IMusicFile> list = musicFilesSelection.getSelectedFiles();
+			for (IMusicFile musicFile : list) {
+				Attribute attribute = musicFile.getAttributeList().get(attributeName);
+				if (attribute != null) {
+					logger.debug("Update file: " + musicFile);
+					attribute.setValue(aValue.toString());
+				}
 			}
+			refresh();
 		}
-		refresh();
 	}
 }
