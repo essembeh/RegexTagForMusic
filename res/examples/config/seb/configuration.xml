@@ -73,7 +73,7 @@
 		</filehandler>
 		<filehandler id="UNKNOWN">
 			<conditions>
-				<virtualpath matches=".*" />
+				<virtualpath matches=".*[^/]" />
 			</conditions>
 			<attributes>
 				<attribute name="db:export" value="false" />

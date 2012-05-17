@@ -2,6 +2,7 @@ package org.essembeh.rtfm.ui.dialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import org.essembeh.rtfm.core.actions.IJob;
 import org.essembeh.rtfm.core.actions.Workflow;
@@ -22,8 +23,6 @@ public class JobDialogCustom extends JobDialog {
 		setSize(600, 400);
 		setTitle("Executing job: " + job.getWorkflowIdentifier().getIdentifier());
 
-
-
 		descriptionValue.setText(job.getWorkflowIdentifier().getDescription());
 		descriptionValue.setEditable(false);
 		statusValue.setEditable(false);
@@ -36,6 +35,8 @@ public class JobDialogCustom extends JobDialog {
 		table.setModel(jobModel);
 
 		job.addListener(new IJobListener() {
+			private Date startTime;
+
 			@Override
 			public void succeeded(Workflow workflow, IMusicFile musicFile) {
 				synchronized (progressBar) {
@@ -46,6 +47,7 @@ public class JobDialogCustom extends JobDialog {
 
 			@Override
 			public void start(Workflow workflow) {
+				startTime = new Date();
 				synchronized (progressBar) {
 					progressBar.setValue(0);
 				}
@@ -69,8 +71,10 @@ public class JobDialogCustom extends JobDialog {
 					progressBar.setValue(progressBar.getValue() + 1);
 				}
 				cancelButton.setEnabled(true);
-				statusValue.setText("Job executed on " + TextUtils.plural(job.getMusicFiles().size(), "file") + " with "
-						+ TextUtils.plural(jobModel.getErrorCount(), "error"));
+				int totalTime = (int) ((new Date().getTime() - startTime.getTime()) / 1000);
+				statusValue.setText("Job executed on " + TextUtils.plural(job.getMusicFiles().size(), "file")
+						+ " with " + TextUtils.plural(jobModel.getErrorCount(), "error") + " in "
+						+ TextUtils.plural(totalTime, "second"));
 			}
 		});
 		submitButton.addActionListener(new ActionListener() {

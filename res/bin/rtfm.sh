@@ -47,5 +47,5 @@ export CLASSPATH=$CLASSPATH:$RTFM_HOME/config:$RTFM_HOME/share
 ## Launching the Application
 ##
 JAVA=$(which java)
-RTFM_MAINCLASS="org.essembeh.rtfm.launcher.LaunchGui"
+RTFM_MAINCLASS="org.essembeh.rtfm.launcher.LaunchUI"
 $JAVA -cp $CLASSPATH $RTFM_MAINCLASS $@
