@@ -1,5 +1,6 @@
 package org.essembeh.rtfm.ui.controller;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.exception.LibraryException;
 import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.utils.TextUtils;
 import org.essembeh.rtfm.gui.utils.Translator;
 import org.essembeh.rtfm.gui.utils.Translator.StringId;
 import org.essembeh.rtfm.ui.dialog.JobDialogCustom;
@@ -22,6 +24,7 @@ import org.essembeh.rtfm.ui.model.FiltersSelection;
 import org.essembeh.rtfm.ui.model.MusicFilesModel;
 import org.essembeh.rtfm.ui.model.MusicFilesSelection;
 import org.essembeh.rtfm.ui.model.WorkflowModel;
+import org.essembeh.rtfm.ui.panel.StatusBar;
 
 import com.google.inject.Inject;
 
@@ -35,6 +38,7 @@ public class MainController {
 	private final MusicFilesSelection musicFilesSelection;
 	private final AttributesModel attributesModel;
 	private final WorkflowModel workflowModel;
+	private final StatusBar statusBar;
 
 	private File currentDatabase;
 
@@ -43,12 +47,14 @@ public class MainController {
 		this.library = library;
 		this.filtersModel = new FiltersModel(library, new ExplorerNodeUtils(library), true);
 		this.filtersSelection = new FiltersSelection();
-		
+
 		this.musicFilesModel = new MusicFilesModel(library, filtersSelection);
 		this.musicFilesSelection = new MusicFilesSelection(musicFilesModel);
 
 		this.attributesModel = new AttributesModel(musicFilesModel, musicFilesSelection);
 		this.workflowModel = new WorkflowModel(library, musicFilesModel, musicFilesSelection);
+
+		this.statusBar = new StatusBar("RegexTagForMusic");
 	}
 
 	public FiltersModel getFiltersModel() {
@@ -87,12 +93,13 @@ public class MainController {
 			currentDatabase = fileChooser.getSelectedFile();
 			try {
 				library.loadFrom(currentDatabase);
+				String message = "Library loaded: " + currentDatabase.getName() + ", found "
+						+ TextUtils.plural(library.getAllFiles().size(), "file");
+				statusBar.printMessage(message);
 			} catch (LibraryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				statusBar.printError(e);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				statusBar.printError(e);
 			}
 		}
 	}
@@ -102,14 +109,15 @@ public class MainController {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY | JFileChooser.OPEN_DIALOG);
 		fileChooser.setDialogTitle(Translator.get(StringId.messageSelectFolder));
-		fileChooser.setCurrentDirectory(new File("."));
 		int rc = fileChooser.showOpenDialog(null);
 		if (rc == JFileChooser.APPROVE_OPTION) {
 			try {
 				library.scanFolder(fileChooser.getSelectedFile());
+				String message = "Folder scanned: " + library.getRootFolder().getAbsolutePath() + ", found "
+						+ TextUtils.plural(library.getAllFiles().size(), "file");
+				statusBar.printMessage(message);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				statusBar.printError(e);
 			}
 		}
 
@@ -132,9 +140,10 @@ public class MainController {
 			currentDatabase = fileChooser.getSelectedFile();
 			try {
 				library.writeTo(currentDatabase);
+				String message = "Library saved: " + currentDatabase.getName();
+				statusBar.printMessage(message);
 			} catch (LibraryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				statusBar.printError(e);
 			}
 		}
 	}
@@ -153,9 +162,16 @@ public class MainController {
 			JobDialogCustom jobDialogCustom = new JobDialogCustom(job);
 			jobDialogCustom.setVisible(true);
 		} catch (ActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			statusBar.printError(e);
 		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Component getStatusPanel() {
+		return statusBar;
 	}
 
 }

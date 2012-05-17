@@ -19,13 +19,14 @@ public class RtfmUI extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 3838131239724672622L;
-	private JPanel contentPane;
+	protected JPanel contentPane;
 	protected JPanel actionPanel;
 	protected JTree explorerTree;
 	protected JTable fileTable;
 	protected JTable attributeTable;
 	protected JPanel workflowPanel;
 	protected JSplitPane splitPaneCenterRight;
+	protected JPanel statusPanel;
 
 	/**
 	 * Create the frame.

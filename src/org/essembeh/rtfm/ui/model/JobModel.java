@@ -43,8 +43,11 @@ public class JobModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		FileWithStatus fileWithStatus = data.get(rowIndex);
-		String out = columnIndex == 0 ? fileWithStatus.getFile().getVirtualPath() : fileWithStatus.getStatus();
+		String out = "";
+		if (columnIndex < data.size()) {
+			FileWithStatus fileWithStatus = data.get(rowIndex);
+			out = columnIndex == 0 ? fileWithStatus.getFile().getVirtualPath() : fileWithStatus.getStatus();
+		}
 		return out;
 	}
 

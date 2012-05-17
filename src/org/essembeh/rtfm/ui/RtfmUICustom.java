@@ -1,5 +1,6 @@
 package org.essembeh.rtfm.ui;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -53,31 +54,32 @@ public class RtfmUICustom extends RtfmUI {
 		mainController.getMusicFilesSelection().listen(fileTable);
 
 		// Add actions
-		actionPanel.add(new JButton(new DefaultRtfmAction("Scan", Image.FILE_NEW, new ICallback() {
+		actionPanel.add(new JButton(new DefaultRtfmAction("Scan", Image.SCAN_FOLDER, new ICallback() {
 			@Override
 			public void execute() {
 				mainController.scanFolder();
 			}
 		})));
-		actionPanel.add(new JButton(new DefaultRtfmAction("Open", Image.FILE_OPEN, new ICallback() {
+		actionPanel.add(new JButton(new DefaultRtfmAction("Open", Image.OPEN_LIBRARY, new ICallback() {
 			@Override
 			public void execute() {
 				mainController.loadDatabase();
 			}
 		})));
-		actionPanel.add(new JButton(new DefaultRtfmAction("Save", Image.FILE_SAVE, new ICallback() {
+		actionPanel.add(new JButton(new DefaultRtfmAction("Save", Image.SAVE_LIBRARY, new ICallback() {
 			@Override
 			public void execute() {
 				mainController.saveDatabase();
 			}
 		})));
 
-		actionPanel.add(showHideAttributesButton = new JButton(new DefaultRtfmAction("Attributes", Image.INSPECT, new ICallback() {
-			@Override
-			public void execute() {
-				setAttributesPanelVisible(!splitPaneCenterRight.getRightComponent().isVisible());
-			}
-		})));
+		actionPanel.add(showHideAttributesButton = new JButton(new DefaultRtfmAction("Attributes", Image.ATTRIBUTES,
+				new ICallback() {
+					@Override
+					public void execute() {
+						setAttributesPanelVisible(!splitPaneCenterRight.getRightComponent().isVisible());
+					}
+				})));
 
 		final JComboBox comboBox = new JComboBox(mainController.getWorkflowModel());
 		actionPanel.add(comboBox);
@@ -97,6 +99,7 @@ public class RtfmUICustom extends RtfmUI {
 
 		// Panels
 		setAttributesPanelVisible(false);
+		contentPane.add(mainController.getStatusPanel(), BorderLayout.SOUTH);
 
 	}
 

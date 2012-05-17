@@ -25,7 +25,6 @@ import javax.swing.AbstractAction;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.ui.utils.Image;
-import org.essembeh.rtfm.ui.utils.ImageUtils;
 
 public class DefaultRtfmAction extends AbstractAction {
 
@@ -71,7 +70,7 @@ public class DefaultRtfmAction extends AbstractAction {
 	protected void setIcon(Image image) {
 		if (image != null) {
 			try {
-				putValue(SMALL_ICON, new ImageUtils(image).getIcon());
+				putValue(SMALL_ICON, image.getCommonIcon());
 			} catch (Exception e) {
 				logger.error("Error loading image: " + image);
 				logger.error(e.toString());
@@ -82,7 +81,8 @@ public class DefaultRtfmAction extends AbstractAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 * @see
+	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
 	final public void actionPerformed(ActionEvent e) {

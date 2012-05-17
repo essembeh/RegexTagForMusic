@@ -20,16 +20,22 @@ public class WorkflowRenderer extends DefaultListRenderer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.jdesktop.swingx.renderer.DefaultListRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+	 * @see
+	 * org.jdesktop.swingx.renderer.DefaultListRenderer#getListCellRendererComponent
+	 * (javax.swing.JList, java.lang.Object, int, boolean, boolean)
 	 */
 	@Override
-	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(	JList list,
+													Object value,
+													int index,
+													boolean isSelected,
+													boolean cellHasFocus) {
 		Component out;
 		if (value != null && value instanceof IWorkflowIdentifier) {
 			final IWorkflowIdentifier workflowIdentifier = (IWorkflowIdentifier) value;
-			out = new JMenuItem(new DefaultRtfmAction(workflowIdentifier.getDescription(), Image.RUN_ALL));
+			out = new JMenuItem(new DefaultRtfmAction(workflowIdentifier.getDescription(), Image.WORKFLOW));
 		} else {
-			out = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			out = new JMenuItem(new DefaultRtfmAction(value.toString(), Image.DIALOG_QUESTION));
 		}
 		return out;
 	}
