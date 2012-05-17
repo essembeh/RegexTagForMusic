@@ -2,7 +2,9 @@ package org.essembeh.rtfm.ui.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -71,10 +73,16 @@ public class ExplorerNodeUtils {
 	 * @return
 	 */
 	private DefaultMutableTreeNode folderToNode(File folder, File root) {
-		DefaultMutableTreeNode node = newNode(folder.getName(), CommonFilters.virtualPathStartsWith(FileUtils.extractRelativePath(folder, root)),
-				true);
-
-		for (File sub : folder.listFiles()) {
+		DefaultMutableTreeNode node = newNode(folder.getName(),
+				CommonFilters.virtualPathStartsWith(FileUtils.extractRelativePath(folder, root)), true);
+		List<File> ls = Arrays.asList(folder.listFiles());
+		Collections.sort(ls, new Comparator<File>() {
+			@Override
+			public int compare(File a, File b) {
+				return a.getAbsolutePath().compareTo(b.getAbsolutePath());
+			}
+		});
+		for (File sub : ls) {
 			if (sub.isDirectory()) {
 				node.add(folderToNode(sub, root));
 			}
