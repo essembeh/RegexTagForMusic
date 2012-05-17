@@ -30,31 +30,37 @@ import javax.swing.JPanel;
 public class StatusBar extends JPanel {
 
 	private static final long serialVersionUID = 2713289246117490437L;
-	private volatile JLabel statusMessage;
+	private final JLabel shortMessage;
 
-	public StatusBar(String welcomeMessage) {
+	public StatusBar() {
 		// setBackground(Color.LIGHT_GRAY);
-		setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		setBorder(BorderFactory.createLoweredBevelBorder());
 		setLayout(new BorderLayout());
-		this.statusMessage = new JLabel();
-		this.statusMessage.setFont(new Font(Font.MONOSPACED, Font.ITALIC, this.statusMessage.getFont().getSize() - 1));
-		add(statusMessage, BorderLayout.NORTH);
-		printMessage(welcomeMessage);
+
+		// Short message
+		this.shortMessage = new JLabel();
+		this.shortMessage.setFont(new Font(Font.MONOSPACED, Font.BOLD, this.shortMessage.getFont().getSize() - 1));
+		add(shortMessage, BorderLayout.NORTH);
 	}
 
 	public void printMessage(String line) {
-		if (line != null) {
-			this.statusMessage.setForeground(Color.BLUE);
-			this.statusMessage.setText(line);
-		}
+		shortMessage.setForeground(Color.BLACK);
+		shortMessage.setText(line);
+		shortMessage.setVisible(true);
 	}
 
 	public void printError(String line) {
-		this.statusMessage.setForeground(Color.RED);
-		this.statusMessage.setText(line);
+		shortMessage.setForeground(Color.RED);
+		shortMessage.setText(line);
+		shortMessage.setVisible(true);
 	}
 
 	public void printError(Exception e) {
-		printMessage(e.getMessage());
+		printError(e.getMessage());
+	}
+
+	public void hide() {
+		shortMessage.setText("");
+		shortMessage.setVisible(false);
 	}
 }

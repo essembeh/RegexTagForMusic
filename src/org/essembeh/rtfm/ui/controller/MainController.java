@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JFileChooser;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.essembeh.rtfm.core.actions.IJob;
 import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
@@ -54,7 +56,21 @@ public class MainController {
 		this.attributesModel = new AttributesModel(musicFilesModel, musicFilesSelection);
 		this.workflowModel = new WorkflowModel(library, musicFilesModel, musicFilesSelection);
 
-		this.statusBar = new StatusBar("RegexTagForMusic");
+		this.statusBar = new StatusBar();
+
+		// Listener to display selection count in statusbar
+		musicFilesSelection.addListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				int count = musicFilesSelection.getSelectedFiles().size();
+				if (count > 0) {
+					statusBar.printMessage(TextUtils.plural(count, "file") + " selected");
+				} else {
+					statusBar.hide();
+				}
+			}
+		});
 	}
 
 	public FiltersModel getFiltersModel() {
