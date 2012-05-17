@@ -10,7 +10,9 @@ import org.essembeh.rtfm.core.actions.listener.IJobListener;
 import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.utils.TextUtils;
+import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
 import org.essembeh.rtfm.ui.model.JobModel;
+import org.essembeh.rtfm.ui.utils.Image;
 
 public class JobDialogCustom extends JobDialog {
 
@@ -77,6 +79,7 @@ public class JobDialogCustom extends JobDialog {
 						+ TextUtils.plural(totalTime, "second"));
 			}
 		});
+		submitButton.setAction(new DefaultRtfmAction("Submit", Image.DIALOG_YES));
 		submitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -85,6 +88,7 @@ public class JobDialogCustom extends JobDialog {
 				cancelButton.setEnabled(false);
 			}
 		});
+		cancelButton.setAction(new DefaultRtfmAction("Cancel", Image.DIALOG_NO));
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
