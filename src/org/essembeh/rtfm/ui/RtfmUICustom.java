@@ -36,12 +36,10 @@ public class RtfmUICustom extends RtfmUI {
 		fileTable.setModel(mainController.getMusicFilesModel());
 		attributeTable.setModel(mainController.getAttributesModel());
 
-		// Size
+		// Size & style
 		fileTable.getColumnModel().getColumn(0).setMinWidth(100);
 		fileTable.getColumnModel().getColumn(0).setMaxWidth(100);
 		fileTable.getColumnModel().getColumn(0).setPreferredWidth(100);
-		// fileTable.getColumnModel().getColumn(0).setPreferredWidth(80);
-		// fileTable.getColumnModel().getColumn(2).setPreferredWidth(70);
 		attributeTable.getColumnModel().getColumn(0).setPreferredWidth(80);
 		attributeTable.getColumnModel().getColumn(1).setPreferredWidth(200);
 
