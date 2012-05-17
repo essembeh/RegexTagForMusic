@@ -39,7 +39,7 @@ public class RTFMBootStrap {
 	/**
 	 * The mainclass to invoke
 	 */
-	private static final String MAINCLASS = "org.essembeh.rtfm.launcher.LaunchGui";
+	private static final String MAINCLASS = "org.essembeh.rtfm.launcher.LaunchUI";
 
 	/**
 	 * Returns all jars found in the folder. This methode is recursive.

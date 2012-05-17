@@ -71,6 +71,7 @@ public class JobModel extends AbstractTableModel {
 		theFile.finishWithError(e);
 		if (e == null && onlyKeepErrorFiles) {
 			data.remove(index);
+			fireTableDataChanged();
 		} else {
 			fireTableRowsUpdated(index, index);
 		}

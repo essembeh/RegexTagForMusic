@@ -10,7 +10,7 @@ The default configuration works if you store you music as follow:
 	- A cover names cover.jpg or cover.png (case sensitive)
 	- A playlist named playlist.m3u (case sensitive)
 
-This is the default configuration and the default behaviour. No need to copy any configuration file.
+This is the default configuration and the default behavior. No need to copy any configuration file.
 
 TREE STRUCTURE:
 ---------------

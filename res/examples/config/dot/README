@@ -1,7 +1,7 @@
 DESCRIPTION:
 ------------
 This configuration works if you store you music as follow:
- - Like the "default" configuration but with only lowacase 
+ - Like the "default" configuration but with a single dot as separator (with an optional space)
     - For the album folder between year and name
 	- For songs files between number and title
 
@@ -16,10 +16,10 @@ example-tree/
 |   |   |-- 03.Track Three.mp3
 |   |   |-- cover.jpg
 |   |   `-- playlist.m3u
-|   `-- 2001.Second Album
-|       |-- 01.Track One.mp3
-|       |-- 02.Track Two.mp3
-|       |-- 03.Track Three.mp3
+|   `-- 2001. Second Album
+|       |-- 01. Track One.mp3
+|       |-- 02. Track Two.mp3
+|       |-- 03. Track Three.mp3
 |       |-- cover.jpg
 |       `-- playlist.m3u
 `-- Bob

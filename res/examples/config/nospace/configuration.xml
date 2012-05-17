@@ -4,22 +4,22 @@
 	<filehandlers>
 		<filehandler id="MP3">
 			<conditions>
-				<virtualpath matches="/[^/]+/[^/]+/\d{2,3} - .*\.mp3" />
+				<virtualpath matches="/[^/ ]+/[^/ ]+/\d{2,3}\.[^/ ]+\.mp3" />
 			</conditions>
 			<attributes>
 				<attribute name="rtfm:tagged" value="false" />
 				<attribute name="db:export" value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
-				<regex-attribute name="tag:artist" pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="1" />
-				<regex-attribute name="tag:year"   pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="2" optional="true" />
-				<regex-attribute name="tag:album"  pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="3" />
-				<regex-attribute name="tag:track"  pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="4" />
-				<regex-attribute name="tag:title"  pattern="/(.*)/(?:([12]\d\d\d) - )?(.*)/(\d{2,3}) - (.*)\.\w+" group="5" />
+				<regex-attribute name="tag:artist" pattern="/(.*)/(?:([12]\d\d\d)\.)?(.*)/(\d{2,3})\.(.*)\.\w+" group="1" />
+				<regex-attribute name="tag:year"   pattern="/(.*)/(?:([12]\d\d\d)\.)?(.*)/(\d{2,3})\.(.*)\.\w+" group="2" optional="true" />
+				<regex-attribute name="tag:album"  pattern="/(.*)/(?:([12]\d\d\d)\.)?(.*)/(\d{2,3})\.(.*)\.\w+" group="3" />
+				<regex-attribute name="tag:track"  pattern="/(.*)/(?:([12]\d\d\d)\.)?(.*)/(\d{2,3})\.(.*)\.\w+" group="4" />
+				<regex-attribute name="tag:title"  pattern="/(.*)/(?:([12]\d\d\d)\.)?(.*)/(\d{2,3})\.(.*)\.\w+" group="5" />
 			</attributes>
 		</filehandler>
 		<filehandler id="COVER">
 			<conditions>
-				<virtualpath matches="/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" />
+				<virtualpath matches="/[^/ ]+/[^/ ]+/cover\.(jpg|jpeg|png)" />
 			</conditions>
 			<attributes>
 				<attribute name="db:export" value="false" />
@@ -27,7 +27,7 @@
 		</filehandler>
 		<filehandler id="PLAYLIST">
 			<conditions>
-				<virtualpath matches="/[^/]+/[^/]+/playlist\.m3u" />
+				<virtualpath matches="/[^/ ]+/[^/ ]+/playlist\.m3u" />
 			</conditions>
 			<attributes>
 				<attribute name="db:export" value="false" />
