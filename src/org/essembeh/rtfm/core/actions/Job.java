@@ -73,7 +73,7 @@ public class Job extends JobListenerContainer implements IJob {
 				error(workflow, musicFile, e);
 			}
 		} else {
-			error(workflow, musicFile, new ActionException("Unsopported filetype: " + musicFile));
+			error(workflow, musicFile, new ActionException("Unsupported filetype: " + musicFile));
 		}
 	}
 

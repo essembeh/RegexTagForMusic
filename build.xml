@@ -22,7 +22,7 @@
 	<!-- ########## PROPERTIES ########## -->
 
 	<property name="app.name" 			value="rtfm" />
-	<property name="app.version" 		value="2.0b1" />
+	<property name="app.version" 		value="2.1b1" />
 	<property name="path.src" 			value="src/" />
 	<property name="path.junit.src" 	value="junit/" />
 	<property name="path.res" 			value="res/" />

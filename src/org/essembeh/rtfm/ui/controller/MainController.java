@@ -100,7 +100,7 @@ public class MainController {
 	public void loadDatabase() {
 		// Create a file chooser to select an XML File
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY | JFileChooser.OPEN_DIALOG);
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		// TODO: Filter only Database files (XML files)
 		fileChooser.setDialogTitle(Translator.get(StringId.messageSelectDatabase));
 		fileChooser.setCurrentDirectory(new File("."));
@@ -123,7 +123,7 @@ public class MainController {
 	public void scanFolder() {
 		// Create a file chooser that only can select a folder
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY | JFileChooser.OPEN_DIALOG);
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setDialogTitle(Translator.get(StringId.messageSelectFolder));
 		int rc = fileChooser.showOpenDialog(null);
 		if (rc == JFileChooser.APPROVE_OPTION) {
@@ -141,7 +141,7 @@ public class MainController {
 
 	public void saveDatabase() {
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY | JFileChooser.SAVE_DIALOG);
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setDialogTitle(Translator.get(StringId.messageSelectDatabase));
 		// Set File chooser default directory to current
 		File currentDirectory = new File(".");

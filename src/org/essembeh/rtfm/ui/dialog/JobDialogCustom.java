@@ -88,7 +88,7 @@ public class JobDialogCustom extends JobDialog {
 				cancelButton.setEnabled(false);
 			}
 		});
-		cancelButton.setAction(new DefaultRtfmAction("Cancel", Image.DIALOG_NO));
+		cancelButton.setAction(new DefaultRtfmAction("Close", Image.DIALOG_NO));
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
