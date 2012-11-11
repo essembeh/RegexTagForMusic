@@ -39,9 +39,8 @@ public class FileUtils {
 	/**
 	 * 
 	 */
-	static protected Logger logger = Logger.getLogger(FileUtils.class);
-
-	static final String SEPARATOR = "/";
+	private final static Logger logger = Logger.getLogger(FileUtils.class);
+	private final static String SEPARATOR = "/";
 
 	/**
 	 * 
@@ -99,6 +98,12 @@ public class FileUtils {
 		return relative;
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public static File getResourceAsFile(String filename) throws FileNotFoundException {
 		URL resource = Thread.currentThread().getContextClassLoader().getResource(filename);
 		if (resource == null) {
@@ -107,6 +112,12 @@ public class FileUtils {
 		return new File(resource.getFile());
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public static InputStream getResourceAsStream(String filename) throws FileNotFoundException {
 		InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
 		if (resource == null) {

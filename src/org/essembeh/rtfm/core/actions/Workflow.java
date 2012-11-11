@@ -74,9 +74,7 @@ public class Workflow implements IWorkflowIdentifier {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.essembeh.rtfm.core.actions.IWorkflowIdentifier#supportType(org.essembeh
-	 * .rtfm.core.library.file.FileType)
+	 * @see org.essembeh.rtfm.core.actions.IWorkflowIdentifier#supportType(org.essembeh .rtfm.core.library.file.FileType)
 	 */
 	@Override
 	public boolean supportType(final FileType type) {
@@ -109,8 +107,8 @@ public class Workflow implements IWorkflowIdentifier {
 
 	@Override
 	public String toString() {
-		return "Workflow [identifier=" + identifier + ", description=" + description + ", applyOnTypes="
-				+ StringUtils.join(applyOnTypes, ",") + ", tasks=" + StringUtils.join(tasks, ",") + "]";
+		return "Workflow [identifier=" + identifier + ", description=" + description + ", applyOnTypes=" + StringUtils.join(applyOnTypes, ",") + ", tasks="
+				+ StringUtils.join(tasks, ",") + "]";
 	}
 
 	@Override

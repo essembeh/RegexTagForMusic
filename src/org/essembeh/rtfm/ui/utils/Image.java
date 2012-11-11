@@ -63,8 +63,7 @@ public class Image {
 	protected String filename;
 
 	/**
-	 * Constructor which set the image file name which the one given in
-	 * parameters
+	 * Constructor which set the image file name which the one given in parameters
 	 * 
 	 * @param filename
 	 */
@@ -73,8 +72,7 @@ public class Image {
 	}
 
 	/**
-	 * Constructor which set the image file name which the one given in
-	 * parameters
+	 * Constructor which set the image file name which the one given in parameters
 	 * 
 	 * @param filename
 	 */
@@ -98,8 +96,7 @@ public class Image {
 	}
 
 	/**
-	 * Create the Thumbnail defined by the width and height dimension of the
-	 * previous given imagefilename
+	 * Create the Thumbnail defined by the width and height dimension of the previous given imagefilename
 	 * 
 	 * @param width
 	 * @param height

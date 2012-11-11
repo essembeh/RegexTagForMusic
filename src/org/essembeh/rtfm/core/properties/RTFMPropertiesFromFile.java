@@ -51,8 +51,7 @@ public class RTFMPropertiesFromFile implements RTFMProperties {
 		try {
 			URL resource = Thread.currentThread().getContextClassLoader().getResource(this.propertyFilename);
 			properties.load(resource.openStream());
-			logger.debug("Read properties: " + this.propertyFilename + ", found: " + properties.entrySet().size()
-					+ " items");
+			logger.debug("Read properties: " + this.propertyFilename + ", found: " + properties.entrySet().size() + " items");
 		} catch (IOException e) {
 			logger.error("Cannot load properties: " + this.propertyFilename);
 			logger.error(e);
@@ -97,5 +96,19 @@ public class RTFMPropertiesFromFile implements RTFMProperties {
 			out = Integer.parseInt(value);
 		}
 		return out;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getWithDefault(String key, T defaultValue) {
+		T out = null;
+		if (defaultValue instanceof String) {
+			out = (T) getProperty(key);
+		} else if (defaultValue instanceof Integer) {
+			out = (T) getInteger(key);
+		} else if (defaultValue instanceof Boolean) {
+			out = (T) getBoolean(key);
+		}
+		return out == null ? defaultValue : out;
 	}
 }

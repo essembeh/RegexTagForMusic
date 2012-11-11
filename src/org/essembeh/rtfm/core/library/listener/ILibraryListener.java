@@ -37,7 +37,7 @@ public interface ILibraryListener {
 
 	void loadLibrarySucceeeded();
 
-	void loadLibraryFailed(File source);
+	void loadLibraryFailed();
 
 	void scanFolderSucceeeded();
 

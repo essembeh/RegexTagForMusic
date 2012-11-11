@@ -26,7 +26,7 @@ public class FiltersModel extends DefaultTreeModel {
 		this.nodeUtils = nodeUtils;
 		library.addListener(new DefaultLibraryListener() {
 			@Override
-			public void loadLibraryFailed(File source) {
+			public void loadLibraryFailed() {
 				refresh();
 			}
 

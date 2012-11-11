@@ -25,14 +25,38 @@ import org.essembeh.rtfm.core.library.file.IMusicFile;
 
 public interface IJobListener {
 
+	/**
+	 * 
+	 * @param workflow
+	 */
 	void start(Workflow workflow);
 
+	/**
+	 * 
+	 * @param workflow
+	 * @param musicFile
+	 */
 	void process(Workflow workflow, IMusicFile musicFile);
 
+	/**
+	 * 
+	 * @param workflow
+	 * @param musicFile
+	 */
 	void succeeded(Workflow workflow, IMusicFile musicFile);
 
+	/**
+	 * 
+	 * @param workflow
+	 * @param musicFile
+	 * @param e
+	 */
 	void error(Workflow workflow, IMusicFile musicFile, ActionException e);
 
+	/**
+	 * 
+	 * @param workflow
+	 */
 	void end(Workflow workflow);
 
 }

@@ -58,7 +58,7 @@ public class DefaultLibraryListener implements ILibraryListener {
 	}
 
 	@Override
-	public void loadLibraryFailed(File source) {
+	public void loadLibraryFailed() {
 		// TODO Auto-generated method stub
 
 	}

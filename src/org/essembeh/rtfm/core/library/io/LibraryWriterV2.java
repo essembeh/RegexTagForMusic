@@ -20,6 +20,7 @@
 package org.essembeh.rtfm.core.library.io;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.essembeh.rtfm.core.exception.LibraryException;
+import org.essembeh.rtfm.core.library.ILibrary;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
@@ -41,33 +43,48 @@ import org.essembeh.rtfm.model.library.version2.TRootFolder;
 import com.google.inject.Inject;
 
 public class LibraryWriterV2 implements ILibraryWriter {
+	/**
+	 * Attributes
+	 */
+	private final ObjectFactory objectFactory;
+	private final String exportableAttribute;
 
-	ObjectFactory objectFactory;
-
-	String exportableAttribute = null;
-
+	/**
+	 * 
+	 * @param properties
+	 */
 	@Inject
 	public LibraryWriterV2(RTFMProperties properties) {
-		exportableAttribute = properties.getProperty("library.musicfile.attribute.export");
+		this.exportableAttribute = properties.getProperty("library.musicfile.attribute.export");
 		this.objectFactory = new ObjectFactory();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.io.ILibraryWriter#writeLibrary(java.io.OutputStream, org.essembeh.rtfm.core.library.Library)
+	 */
 	@Override
-	public void writeLibrary(File destination, LibraryWriterCallback callback) throws LibraryException {
-		TLibraryV2 library = toModel(callback.getMusicFiles(), callback.getRootFolder());
+	public void writeLibrary(OutputStream destination, ILibrary library) throws LibraryException {
+		TLibraryV2 model = toModel(library);
 		try {
 			JAXBContext context = JAXBContext.newInstance("org.essembeh.rtfm.model.library.version2");
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			JAXBElement<TLibraryV2> root = objectFactory.createLibrary(library);
+			JAXBElement<TLibraryV2> root = objectFactory.createLibrary(model);
 			marshaller.marshal(root, destination);
 		} catch (JAXBException e) {
 			throw new LibraryException(e.getMessage());
 		}
 	}
 
-	protected boolean isExportable(IMusicFile musicFile) {
+	/**
+	 * 
+	 * @param musicFile
+	 * @return
+	 */
+	private boolean isExportable(IMusicFile musicFile) {
 		boolean isExportable = true;
 		if (exportableAttribute != null) {
 			Attribute exportAttribute = musicFile.getAttributeList().get(exportableAttribute);
@@ -78,10 +95,15 @@ public class LibraryWriterV2 implements ILibraryWriter {
 		return isExportable;
 	}
 
-	protected TLibraryV2 toModel(List<IMusicFile> musicFiles, File rootFolder) {
+	/**
+	 * 
+	 * @param library
+	 * @return
+	 */
+	private TLibraryV2 toModel(ILibrary library) {
 		TLibraryV2 model = objectFactory.createTLibraryV2();
-		model.setRootFolder(toModel(rootFolder));
-		for (IMusicFile musicFile : musicFiles) {
+		model.setRootFolder(toModel(library.getRootFolder()));
+		for (IMusicFile musicFile : library.getAllFiles()) {
 			if (isExportable(musicFile)) {
 				model.getFile().add(toModel(musicFile));
 			}
@@ -89,12 +111,22 @@ public class LibraryWriterV2 implements ILibraryWriter {
 		return model;
 	}
 
+	/**
+	 * 
+	 * @param rootFolder
+	 * @return
+	 */
 	protected TRootFolder toModel(File rootFolder) {
 		TRootFolder model = objectFactory.createTRootFolder();
 		model.setPath(rootFolder.getAbsolutePath());
 		return model;
 	}
 
+	/**
+	 * 
+	 * @param musicFile
+	 * @return
+	 */
 	protected TFile toModel(IMusicFile musicFile) {
 		TFile model = objectFactory.createTFile();
 		model.setType(musicFile.getType().toString());
@@ -109,6 +141,11 @@ public class LibraryWriterV2 implements ILibraryWriter {
 		return model;
 	}
 
+	/**
+	 * 
+	 * @param attribute
+	 * @return
+	 */
 	protected TAttribute toModel(Attribute attribute) {
 		TAttribute model = objectFactory.createTAttribute();
 		model.setName(attribute.getName());

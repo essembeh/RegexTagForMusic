@@ -23,5 +23,10 @@ import org.essembeh.rtfm.core.library.file.VirtualFile;
 
 public interface ICondition {
 
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
 	boolean isValid(VirtualFile file);
 }

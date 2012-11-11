@@ -9,9 +9,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
-import org.essembeh.rtfm.core.filter.Filter;
 import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.core.library.listener.DefaultLibraryListener;
 
 public class MusicFilesModel extends AbstractTableModel {
@@ -47,7 +47,7 @@ public class MusicFilesModel extends AbstractTableModel {
 	private void setupListeners() {
 		library.addListener(new DefaultLibraryListener() {
 			@Override
-			public void loadLibraryFailed(File source) {
+			public void loadLibraryFailed() {
 				refresh();
 			}
 

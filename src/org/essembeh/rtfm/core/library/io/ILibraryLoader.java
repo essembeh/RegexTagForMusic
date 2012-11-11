@@ -19,12 +19,22 @@
  */
 package org.essembeh.rtfm.core.library.io;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.essembeh.rtfm.core.exception.LibraryException;
+import org.essembeh.rtfm.core.library.ILibrary;
 
+/**
+ * 
+ */
 public interface ILibraryLoader {
-
-	void loadLibrary(File source, LibraryLoaderCallback callback) throws LibraryException, IOException;
+	/**
+	 * 
+	 * @param source
+	 * @param library
+	 * @throws LibraryException
+	 * @throws IOException
+	 */
+	void loadLibrary(InputStream source, ILibrary library) throws LibraryException, IOException;
 }

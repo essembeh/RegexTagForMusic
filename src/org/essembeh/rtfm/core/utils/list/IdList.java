@@ -79,6 +79,10 @@ public class IdList<T, I extends Identifier<T>> implements Iterable<T> {
 		return identifier;
 	}
 
+	public void clear() {
+		map.clear();
+	}
+
 	public void addAll(List<T> list) {
 		if (list != null) {
 			for (T t : list) {

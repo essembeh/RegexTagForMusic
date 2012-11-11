@@ -20,127 +20,113 @@
 <project name="RegexTagForMusic" basedir="." default="dist">
 	
 	<!-- ########## PROPERTIES ########## -->
-
 	<property name="app.name" 			value="rtfm" />
-	<property name="app.version" 		value="2.1b1" />
-	<property name="path.src" 			value="src/" />
-	<property name="path.junit.src" 	value="junit/" />
-	<property name="path.res" 			value="res/" />
-	<property name="path.configs" 		value="${path.res}/examples/config/" />
-	<property name="path.lib" 			value="lib/" />
-	<property name="path.dist" 			value="dist/" />
-	<property name="path.build" 		value="${path.dist}/build/" />
-	<property name="path.junit.build" 	value="${path.dist}/junit/" />
-	<property name="app.folder" 		value="${path.dist}/RegexTagForMusic.app/" />
-	<property name="app.archive" 		value="${path.dist}/RegexTagForMusic-snapshot.tar.gz" />
-	<property name="rtfm.jar" 			value="${app.folder}/lib/${app.name}-${app.version}.jar" />
+	<property name="app.version" 		value="2.2" />
+	<property name="src"	 			value="src/" />
+	<property name="res" 				value="resources/" />
+	<property name="lib" 				value="libraries/" />
+	<property name="xsd" 				value="${res}/share/xsd" />
+	<property name="dist" 				value="dist/" />
+	<property name="build" 				value="${dist}/build/" />
+	<property name="target" 			value="${dist}/RegexTagForMusic/" />
+	<property name="target.archive" 	value="${dist}/RegexTagForMusic-snapshot.tar.gz" />
+	<property name="rtfm.jar" 			value="${target}/lib/${app.name}-${app.version}.jar" />
 	<property name="bootstrap.main" 	value="org.essembeh.bootstrap.RTFMBootStrap" />
-	<property name="bootstrap.jar"		value="${app.folder}/bin/${app.name}-bootstrap.jar" />
+	<property name="bootstrap.jar"		value="${target}/bin/start-${app.name}.jar" />
 	<property name="mf.builtby" 		value="Sebastien M-B: essembeh@gmail.com" />
+	
+
+	<!-- CLASSPATHS  -->
+	<fileset id="fileset.lib.base" dir="${lib}">
+		<include name="jaudiotagger-*.jar" />
+		<include name="swingx-core-*.jar" />
+		<include name="apache-log4j*/*.jar" />
+		<include name="commons-lang3*/*.jar" />
+		<include name="guice*/*.jar" />
+	</fileset>
+	<fileset id="fileset.lib.jaxb" dir="${lib}">
+		<include name="jaxb*/*.jar" />
+	</fileset>
+	
+	<path id="classpath.rtfm">
+		<fileset refid="fileset.lib.base" />
+		<fileset refid="fileset.lib.jaxb" />
+	</path>
+	<path id="classpath.jaxb">
+		<fileset refid="fileset.lib.jaxb" />
+	</path>
 	
 	<!-- Task definition -->
 	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-		<classpath>
-			<fileset dir="${path.lib}" includes="*.jar" />
-		</classpath>
+		<classpath refid="classpath.jaxb" />
 	</taskdef>
-
-	<!-- ########## CLASSPATHS ########## -->
-
-	<path id="classpath.build">
-		<fileset dir="${path.lib}">
-			<include name="**.jar" />
-		</fileset>
-	</path>
-	<path id="classpath.junit">
-		<fileset dir="${path.lib}">
-			<include name="**.jar" />
-		</fileset>
-		<pathelement location="${path.build}" />
-		<pathelement location="${path.junit.build}" />
-		<pathelement location="${path.res}/config/" />
-		<pathelement location="${path.res}/share/" />
-	</path>
-
+	
 	<!-- ########## TARGETS ########## -->
 
 	<!-- Generate classes from XSD -->
 	<target name="generateModel">
-		<delete dir="${path.src}/org/essembeh/rtfm/model/" />
-		<xjc destdir="${path.src}" package="org.essembeh.rtfm.model.configuration.core.version1">
-			<schema dir="${path.res}/share/xsd/" includes="configuration-core-v1.xsd" />
+		<delete dir="${src}/org/essembeh/rtfm/model/" />
+		<xjc destdir="${src}" package="org.essembeh.rtfm.model.configuration.core.version1">
+			<schema dir="${xsd}" includes="configuration-core-v1.xsd" />
 			<arg value="-npa" />
 		</xjc>
-		<xjc destdir="${path.src}" package="org.essembeh.rtfm.model.library.version1">
-			<schema dir="${path.res}/share/xsd/" includes="library-v1.xsd" />
+		<xjc destdir="${src}" package="org.essembeh.rtfm.model.library.version1">
+			<schema dir="${xsd}" includes="library-v1.xsd" />
 			<arg value="-npa" />
 		</xjc>
-		<xjc destdir="${path.src}" package="org.essembeh.rtfm.model.library.version2">
-			<schema dir="${path.res}/share/xsd/" includes="library-v2.xsd" />
+		<xjc destdir="${src}" package="org.essembeh.rtfm.model.library.version2">
+			<schema dir="${xsd}" includes="library-v2.xsd" />
 			<arg value="-npa" />
 		</xjc>
 	</target>
 		
 	<!-- Cleans -->
 	<target name="clean">
-		<delete dir="${path.dist}" />
+		<delete dir="${dist}" />
 	</target>
 
 	<!-- BUILDING -->
 	<target name="prepare">
 		<!-- Create Application folder -->
-		<mkdir dir="${app.folder}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${target}" />
 		<!-- Copy all resources -->
-		<copy todir="${app.folder}" overwrite="true">
-			<fileset dir="${path.res}" includes="**" />
+		<copy todir="${target}" overwrite="true">
+			<fileset dir="${res}" includes="**" />
 		</copy>
 		<!-- Copy all libs -->
-		<copy todir="${app.folder}/lib">
-			<fileset dir="${path.lib}" includes="**jar" />
+		<mkdir dir="${target}/lib" />
+		<copy todir="${target}/lib" flatten="true">
+			<fileset refid="fileset.lib.base" />
+			<fileset refid="fileset.lib.jaxb" />
 		</copy>
 		<!-- Delete previous RTFM lib -->
 		<delete>
-			<fileset dir="${app.folder}/lib/" includes="${app.name}*.jar" />
+			<fileset dir="${target}/lib/" includes="${app.name}*.jar" />
 		</delete>
 		<!-- Set scripts executable -->
-		<chmod dir="${app.folder}/bin" perm="ugo+rx" includes="*.sh" />
-		<chmod dir="${app.folder}/share/scripts" perm="ugo+rx" includes="*.sh" />
+		<chmod dir="${target}/bin" perm="ugo+rx" includes="*.sh" />
+		<chmod dir="${target}/share/scripts" perm="ugo+rx" includes="*.sh" />
 	</target>
 
-	<!-- Checks if the configuration folder exists -->
-	<target name="custom.check" if="rtfm.config">
-		<condition property="path.custom" value="${path.configs}/${rtfm.config}">
-			<available file="${path.configs}/${rtfm.config}" type="dir"/>
-		</condition>
-	</target>
-
-	<!-- If the rtfm.config property is set, use these files to override configuration -->
-	<target name="custom" depends="custom.check" if="path.custom">
-		<echo message="Using custom configuration: ${path.custom}" />
-		<copy todir="${app.folder}/config/" overwrite="true">
-			<fileset dir="${path.custom}" includes="*.xml" />
-		</copy>
-	</target>
 	<!-- Compile Java classes -->
 	<target name="build">
-		<mkdir dir="${path.build}" />
-		<javac srcdir="${path.src}" destdir="${path.build}" includes="**" includeantruntime="no">
-			<classpath refid="classpath.build" />
+		<mkdir dir="${build}" />
+		<javac srcdir="${src}" destdir="${build}" includes="**" includeantruntime="no">
+			<classpath refid="classpath.rtfm" />
+			<classpath refid="classpath.jaxb" />
 		</javac>
 	</target>
 
 	<!-- Makes the jar -->
 	<target name="jar" depends="build">
-		<jar basedir="${path.build}" destfile="${rtfm.jar}">
+		<jar basedir="${build}" destfile="${rtfm.jar}">
 			<exclude name="org/essembeh/bootstrap/*"/>
 			<manifest>
 				<attribute name="Built-By" value="${mf.builtby}" />
 			</manifest>
 		</jar>
-	</target>
-
-	<target name="bootstrap" depends="build">
-		<jar basedir="${path.build}" destfile="${bootstrap.jar}">
+		<jar basedir="${build}" destfile="${bootstrap.jar}">
 			<include name="org/essembeh/bootstrap/*"/>
 			<exclude name="org/essembeh/rtfm/*"/>
 			<manifest>
@@ -149,8 +135,9 @@
 			</manifest>
 		</jar>
 	</target>
+	
 	<!-- Create the Application folder for distribution -->
-	<target name="dist" depends="prepare,custom,jar,bootstrap">
+	<target name="dist" depends="prepare,jar">
 	</target>
 
 	<!-- Creates the zip for distribution -->
@@ -158,37 +145,12 @@
 		<exec executable="tar" os="Linux">
 			<arg value="--create" />
 			<arg value="--directory" />
-			<arg value="dist/" />
+			<arg value="${dist}/" />
 			<arg value="--file" />
-			<arg value="${app.archive}" />
+			<arg value="${target.archive}" />
 			<arg value="--gzip" />
-			<arg value="RegexTagForMusic.app/" />
+			<arg value="RegexTagForMusic" />
 		</exec>
-	</target>
-
-	<!-- JUNIT -->
-	<target name="junit.build" depends="build">
-		<mkdir dir="${path.junit.build}" />
-		<javac srcdir="${path.junit.src}" destdir="${path.junit.build}" includes="**" includeantruntime="no">
-			<classpath refid="classpath.junit" />
-		</javac>
-	</target>
-	<target name="junit" depends="junit.build">
-		<junit fork="yes" haltonfailure="no">
-			<batchtest fork="yes" todir="${path.junit.build}">
-				<fileset dir="${path.junit.build}">
-					<include name="**/*Test.class" />
-				</fileset>
-			</batchtest>
-			<formatter type="plain" />
-			<classpath refid="classpath.junit" />
-		</junit>
-	</target>
-
-	<!-- Specific target to use my configuration files i -->
-	<target name="seb">
-		<property name="rtfm.config" value="seb" />
-		<antcall target="dist" />
 	</target>
 
 </project>

@@ -27,9 +27,20 @@ import org.essembeh.rtfm.core.utils.listener.IListenable;
 
 public interface IJob extends IListenable<IJobListener> {
 
+	/**
+	 * 
+	 */
 	void submit();
 
+	/**
+	 * 
+	 * @return
+	 */
 	List<IMusicFile> getMusicFiles();
 
+	/**
+	 * 
+	 * @return
+	 */
 	IWorkflowIdentifier getWorkflowIdentifier();
 }

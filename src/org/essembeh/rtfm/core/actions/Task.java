@@ -25,11 +25,23 @@ import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.utils.TaskUtils;
 import org.essembeh.rtfm.tasks.ITask;
 
+/**
+ * 
+ */
 public class Task {
 
+	/**
+	 * Attributes
+	 */
 	private final String identifier;
 	private final ITask task;
 
+	/**
+	 * 
+	 * @param identifier
+	 * @param classname
+	 * @throws TaskException
+	 */
 	public Task(String identifier, String classname) throws TaskException {
 		this.identifier = identifier;
 		this.task = TaskUtils.instantiateTask(classname);
@@ -44,14 +56,28 @@ public class Task {
 		task.setProperty(name, value);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getIdentifier() {
 		return identifier;
 	}
 
+	/**
+	 * 
+	 * @param musicFile
+	 * @throws ActionException
+	 */
 	public void execute(IMusicFile musicFile) throws ActionException {
 		task.execute(musicFile);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return identifier;

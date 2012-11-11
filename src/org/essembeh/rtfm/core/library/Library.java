@@ -22,19 +22,19 @@ package org.essembeh.rtfm.core.library;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.configuration.ActionService;
-import org.essembeh.rtfm.core.configuration.MusicFileService;
+import org.essembeh.rtfm.core.configuration.CoreConfiguration;
+import org.essembeh.rtfm.core.configuration.IExecutionEnvironment;
+import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.exception.LibraryException;
-import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.library.io.GenericLibraryIO;
-import org.essembeh.rtfm.core.library.io.LibraryLoaderCallback;
-import org.essembeh.rtfm.core.library.io.LibraryWriterCallback;
 import org.essembeh.rtfm.core.library.listener.ILibraryListener;
 import org.essembeh.rtfm.core.library.listener.LibraryListenerContainer;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
@@ -46,47 +46,137 @@ import org.essembeh.rtfm.core.utils.listener.IListenable;
 
 import com.google.inject.Inject;
 
-public class Library implements IListenable<ILibraryListener> {
+public class Library implements IListenable<ILibraryListener>, ILibrary {
+	/**
+	 * Attributes
+	 */
+	private final static Logger logger = Logger.getLogger(Library.class);
+	private final RTFMProperties properties;
+	private final CoreConfiguration coreConfiguration;
+	private final GenericLibraryIO libraryIO;
+	private final IdList<IMusicFile, Identifier<IMusicFile>> listOfFiles;
+	private final LibraryListenerContainer listeners;
+	private volatile File rootFolder;
 
 	/**
-	 * The logger.
+	 * 
+	 * @param libraryIO
+	 * @param properties
+	 * @param coreConfiguration
 	 */
-	protected static Logger logger = Logger.getLogger(Library.class);
-
-	private final RTFMProperties properties;
-	private final MusicFileService musicFileService;
-	private final GenericLibraryIO genericLibraryIO;
-	private final LibraryListenerContainer listeners;
-	private final ActionService actionService;
-	private volatile File rootFolder;
-	private volatile IdList<IMusicFile, Identifier<IMusicFile>> listOfFiles;
-
 	@Inject
-	public Library(	RTFMProperties properties,
-					MusicFileService musicFileService,
-					GenericLibraryIO genericLibraryIO,
-					ActionService actionService) {
-		this.musicFileService = musicFileService;
+	public Library(GenericLibraryIO libraryIO, RTFMProperties properties, CoreConfiguration coreConfiguration) {
+		this.coreConfiguration = coreConfiguration;
 		this.properties = properties;
-		this.genericLibraryIO = genericLibraryIO;
-		this.actionService = actionService;
+		this.libraryIO = libraryIO;
 		this.listeners = new LibraryListenerContainer();
+		this.listOfFiles = new IdList<IMusicFile, Identifier<IMusicFile>>(new MusicFileIdentifier());
 		clear();
 	}
 
-	protected void clear() {
-		this.rootFolder = null;
-		this.listOfFiles = new IdList<IMusicFile, Identifier<IMusicFile>>(new MusicFileIdentifier());
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.utils.listener.IListenable#addListener(java.lang.Object)
+	 */
+	@Override
+	public void addListener(ILibraryListener listener) {
+		listeners.addListener(listener);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.ILibrary#getAllFiles()
+	 */
+	@Override
 	public List<IMusicFile> getAllFiles() {
 		return listOfFiles.toList();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.ILibrary#getExecutionEnvironment()
+	 */
+	@Override
+	public IExecutionEnvironment getExecutionEnvironment() {
+		return coreConfiguration;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.ILibrary#getRootFolder()
+	 */
+	@Override
 	public File getRootFolder() {
 		return this.rootFolder;
 	}
 
+	/**
+	 * 
+	 * @param configuration
+	 * @throws ConfigurationException
+	 */
+	public void loadConfiguration(InputStream configuration) throws ConfigurationException {
+		clear();
+		coreConfiguration.load(configuration);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.ILibrary#loadFrom(java.io.InputStream)
+	 */
+	@Override
+	public void loadFrom(InputStream source) throws LibraryException, IOException {
+		clear();
+		final IdList<IMusicFile, Identifier<IMusicFile>> oldFiles = listOfFiles.newEmptyOne();
+		try {
+			libraryIO.loadLibrary(source, this);
+		} catch (LibraryException e) {
+			listeners.loadLibraryFailed();
+			throw e;
+		}
+		// Detect new files
+		for (IMusicFile iMusicFile : listOfFiles) {
+			if (!oldFiles.contains(iMusicFile)) {
+				logger.debug("New file during importation: " + iMusicFile);
+				listeners.loadLibraryNewFile(iMusicFile);
+			}
+		}
+		logger.info("File count: " + listOfFiles.size());
+		logger.info("New file: " + (listOfFiles.size() - oldFiles.size()));
+		listeners.loadLibrarySucceeeded();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.utils.listener.IListenable#removeAllListener()
+	 */
+	@Override
+	public void removeAllListener() {
+		listeners.removeAllListener();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.utils.listener.IListenable#removeListener(java.lang.Object)
+	 */
+	@Override
+	public void removeListener(ILibraryListener listener) {
+		listeners.removeListener(listener);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.ILibrary#scanFolder(java.io.File)
+	 */
+	@Override
 	public void scanFolder(File folder) throws IOException {
 
 		if (!folder.exists() || !folder.isDirectory()) {
@@ -96,8 +186,6 @@ public class Library implements IListenable<ILibraryListener> {
 
 		// Clean the previous musicfiles
 		clear();
-
-		// Set root folder
 		this.rootFolder = folder;
 
 		// Search all files
@@ -110,7 +198,7 @@ public class Library implements IListenable<ILibraryListener> {
 			VirtualFile virtualFile = new VirtualFile(file, folder);
 			IMusicFile musicFile;
 			try {
-				musicFile = musicFileService.createMusicFile(virtualFile);
+				musicFile = coreConfiguration.createMusicFile(virtualFile);
 				if (musicFile != null) {
 					if (ignoreAttribute != null && musicFile.getAttributeList().containsKey(ignoreAttribute)) {
 						logger.info("Ignored file: " + musicFile);
@@ -128,85 +216,31 @@ public class Library implements IListenable<ILibraryListener> {
 		listeners.scanFolderSucceeeded();
 	}
 
-	public void loadFrom(File source) throws LibraryException, IOException {
-		clear();
-		final IdList<IMusicFile, Identifier<IMusicFile>> oldFiles = listOfFiles.newEmptyOne();
-		try {
-			genericLibraryIO.loadLibrary(source, new LibraryLoaderCallback() {
-				@Override
-				public void setRootFolder(File rootFolder) throws IOException {
-					scanFolder(rootFolder);
-				}
-
-				@Override
-				public IMusicFile getExistingMusicFile(String virtualPath, FileType type) {
-					IMusicFile musicFile = null;
-					if (listOfFiles.containsKey(virtualPath)) {
-						musicFile = listOfFiles.get(virtualPath);
-						logger.debug("Update file: " + musicFile);
-					} else {
-						logger.debug("Removed file during importation: " + virtualPath);
-						listeners.loadLibraryFileRemoved(virtualPath, type);
-					}
-					oldFiles.add(musicFile);
-
-					return listOfFiles.get(virtualPath);
-				}
-			});
-		} catch (IOException e) {
-			listeners.loadLibraryFailed(source);
-			throw e;
-		} catch (LibraryException e) {
-			listeners.loadLibraryFailed(source);
-			throw e;
-		}
-		// Detect new files
-		for (IMusicFile iMusicFile : listOfFiles) {
-			if (!oldFiles.contains(iMusicFile)) {
-				logger.debug("New file during importation: " + iMusicFile);
-				listeners.loadLibraryNewFile(iMusicFile);
-			}
-		}
-		logger.info("File count: " + listOfFiles.size());
-		logger.info("New file: " + (listOfFiles.size() - oldFiles.size()));
-		listeners.loadLibrarySucceeeded();
-	}
-
-	public void writeTo(File destination) throws LibraryException {
-		genericLibraryIO.writeLibrary(destination, new LibraryWriterCallback() {
-			@Override
-			public File getRootFolder() {
-				return rootFolder;
-			}
-
-			@Override
-			public List<IMusicFile> getMusicFiles() {
-				return listOfFiles.toList();
-			}
-		});
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Library [rootFolder=" + rootFolder + ", files: " + listOfFiles.size() + "]";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.ILibrary#writeTo(java.io.OutputStream)
+	 */
 	@Override
-	public void addListener(ILibraryListener listener) {
-		listeners.addListener(listener);
+	public void writeTo(OutputStream destination) throws LibraryException {
+		libraryIO.writeLibrary(destination, this);
 	}
 
-	@Override
-	public void removeListener(ILibraryListener listener) {
-		listeners.removeListener(listener);
-	}
-
-	@Override
-	public void removeAllListener() {
-		listeners.removeAllListener();
-	}
-
-	public ActionService getActionService() {
-		return actionService;
+	/**
+	 * Resets root folder and file list.
+	 */
+	private void clear() {
+		this.rootFolder = null;
+		listOfFiles.clear();
 	}
 }

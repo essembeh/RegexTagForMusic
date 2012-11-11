@@ -19,12 +19,12 @@
  */
 package org.essembeh.rtfm.launcher;
 
-import org.essembeh.rtfm.core.CoreModule;
+import org.essembeh.rtfm.core.ModuleCore;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.core.properties.RTFMPropertiesFromFile;
+import org.essembeh.rtfm.ui.ModuleUI;
 import org.essembeh.rtfm.ui.RtfmUICustom;
-import org.essembeh.rtfm.ui.UIModule;
 import org.essembeh.rtfm.ui.controller.MainController;
 
 import com.google.inject.Guice;
@@ -34,7 +34,7 @@ public class LaunchUI {
 
 	public static void main(String[] args) throws ConfigurationException {
 		RTFMProperties rtfmProperties = new RTFMPropertiesFromFile("rtfm.properties");
-		Injector injector = Guice.createInjector(new CoreModule(rtfmProperties), new UIModule(rtfmProperties));
+		Injector injector = Guice.createInjector(new ModuleCore(rtfmProperties), new ModuleUI(rtfmProperties));
 		MainController controller = injector.getInstance(MainController.class);
 		RtfmUICustom ui = new RtfmUICustom(controller);
 		ui.pack();

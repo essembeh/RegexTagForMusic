@@ -19,10 +19,17 @@
  */
 package org.essembeh.rtfm.core.library.io;
 
-import java.io.File;
+import java.io.OutputStream;
 
 import org.essembeh.rtfm.core.exception.LibraryException;
+import org.essembeh.rtfm.core.library.ILibrary;
 
 public interface ILibraryWriter {
-	void writeLibrary(File destination, LibraryWriterCallback callback) throws LibraryException;
+	/**
+	 * 
+	 * @param destination
+	 * @param library
+	 * @throws LibraryException
+	 */
+	void writeLibrary(OutputStream destination, ILibrary library) throws LibraryException;
 }

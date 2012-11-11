@@ -32,5 +32,7 @@ public interface RTFMProperties {
 	public Integer getInteger(String name);
 
 	public void updateProperty(String name, String value);
+	
+	public <T> T getWithDefault(String key, T defaultValue);
 
 }

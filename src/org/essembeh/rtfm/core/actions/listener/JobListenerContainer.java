@@ -29,9 +29,7 @@ public class JobListenerContainer extends ListenerContainer<IJobListener> implem
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.essembeh.rtfm.core.actions.listener.IJobListener#start(org.essembeh
-	 * .rtfm.core.actions.Workflow)
+	 * @see org.essembeh.rtfm.core.actions.listener.IJobListener#start(org.essembeh .rtfm.core.actions.Workflow)
 	 */
 	@Override
 	public void start(final Workflow workflow) {
@@ -46,9 +44,7 @@ public class JobListenerContainer extends ListenerContainer<IJobListener> implem
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.essembeh.rtfm.core.actions.listener.IJobListener#process(org.essembeh
-	 * .rtfm.core.actions.Workflow,
+	 * @see org.essembeh.rtfm.core.actions.listener.IJobListener#process(org.essembeh .rtfm.core.actions.Workflow,
 	 * org.essembeh.rtfm.core.library.file.IMusicFile)
 	 */
 	@Override
@@ -64,9 +60,7 @@ public class JobListenerContainer extends ListenerContainer<IJobListener> implem
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.essembeh.rtfm.core.actions.listener.IJobListener#succeeded(org.essembeh
-	 * .rtfm.core.actions.Workflow,
+	 * @see org.essembeh.rtfm.core.actions.listener.IJobListener#succeeded(org.essembeh .rtfm.core.actions.Workflow,
 	 * org.essembeh.rtfm.core.library.file.IMusicFile)
 	 */
 	@Override
@@ -82,10 +76,7 @@ public class JobListenerContainer extends ListenerContainer<IJobListener> implem
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.essembeh.rtfm.core.actions.listener.IJobListener#error(org.essembeh
-	 * .rtfm.core.actions.Workflow,
-	 * org.essembeh.rtfm.core.library.file.IMusicFile,
+	 * @see org.essembeh.rtfm.core.actions.listener.IJobListener#error(org.essembeh .rtfm.core.actions.Workflow, org.essembeh.rtfm.core.library.file.IMusicFile,
 	 * org.essembeh.rtfm.core.exception.ActionException)
 	 */
 	@Override
@@ -101,9 +92,7 @@ public class JobListenerContainer extends ListenerContainer<IJobListener> implem
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.essembeh.rtfm.core.actions.listener.IJobListener#end(org.essembeh
-	 * .rtfm.core.actions.Workflow)
+	 * @see org.essembeh.rtfm.core.actions.listener.IJobListener#end(org.essembeh .rtfm.core.actions.Workflow)
 	 */
 	@Override
 	public void end(final Workflow workflow) {

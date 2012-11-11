@@ -56,22 +56,35 @@ import org.essembeh.rtfm.model.configuration.core.version1.TRegexAttribute;
 import org.essembeh.rtfm.model.configuration.core.version1.TTask;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
-
+	/**
+	 * Attributes
+	 */
 	private static final Logger logger = Logger.getLogger(CoreConfigurationLoaderV1.class);
+	private TCoreConfigurationV1 model;
 
-	private final TCoreConfigurationV1 model;
-
+	/**
+	 * Constructor
+	 */
 	@Inject
-	public CoreConfigurationLoaderV1(@Named("configuration.core") InputStream source) throws ConfigurationException {
+	public CoreConfigurationLoaderV1() {
+		this.model = null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader#loadConfiguration(java.io.InputStream)
+	 */
+	@Override
+	public void loadConfiguration(InputStream input) throws ConfigurationException {
+		model = null;
 		try {
 			JAXBContext context = JAXBContext.newInstance("org.essembeh.rtfm.model.configuration.core.version1");
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-			JAXBElement<TCoreConfigurationV1> root = unmarshaller.unmarshal(new StreamSource(source),
-					TCoreConfigurationV1.class);
+			JAXBElement<TCoreConfigurationV1> root = unmarshaller.unmarshal(new StreamSource(input), TCoreConfigurationV1.class);
 			model = root.getValue();
 		} catch (JAXBException e) {
 			logger.info("Cannot load core configuration version 1: " + e.getMessage());
@@ -79,8 +92,16 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader#getFileHandlers()
+	 */
 	@Override
-	public List<FileHandler> getFileHandlers() {
+	public List<FileHandler> getFileHandlers() throws ConfigurationException {
+		if (model == null) {
+			throw new ConfigurationException("Model is null");
+		}
 		List<FileHandler> out = new ArrayList<FileHandler>();
 		for (TFileHandler fileHandlerModel : model.getFilehandlers().getFilehandler()) {
 			FileHandler theFileHandler = read(fileHandlerModel);
@@ -89,6 +110,11 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 		return out;
 	}
 
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 */
 	private FileHandler read(TFileHandler model) {
 		String id = model.getId();
 		FileHandler fileHandler = new FileHandler(id);
@@ -111,23 +137,39 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 		return fileHandler;
 	}
 
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 */
 	private IDynamicAttribute read(TRegexAttribute model) {
-		IDynamicAttribute o = new RegexAttribute(model.getName(), model.isHidden(),
-				Pattern.compile(model.getPattern()), model.getGroup(), model.isOptional());
+		IDynamicAttribute o = new RegexAttribute(model.getName(), model.isHidden(), Pattern.compile(model.getPattern()), model.getGroup(), model.isOptional());
 		logger.debug("Create DynamicAttribute: " + o);
 		return o;
 	}
 
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 */
 	private Attribute read(TFixedAttribute model) {
 		Attribute o = new Attribute(model.getName(), model.getValue(), model.isHidden());
 		logger.debug("Create Attribute: " + o);
 		return o;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader#getWorkflows()
+	 */
 	@Override
 	public IdList<Workflow, Identifier<Workflow>> getWorkflows() throws ConfigurationException {
-		IdList<Workflow, Identifier<Workflow>> list = new IdList<Workflow, Identifier<Workflow>>(
-				new WorkflowIdentifier());
+		if (model == null) {
+			throw new ConfigurationException("Model is null");
+		}
+		IdList<Workflow, Identifier<Workflow>> list = new IdList<Workflow, Identifier<Workflow>>(new WorkflowIdentifier());
 		IdList<Task, TaskIdentifier> taskList = new IdList<Task, TaskIdentifier>(new TaskIdentifier());
 		for (TTask taskModel : model.getTasks().getTask()) {
 			Task task = read(taskModel);
@@ -151,6 +193,11 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 		return list;
 	}
 
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 */
 	private Workflow read(TAction model) {
 		Workflow out = new Workflow(model.getId(), model.getDescription());
 		for (TReference ref : model.getApplyOn().getFilehandler()) {
@@ -159,6 +206,12 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 		return out;
 	}
 
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 * @throws ConfigurationException
+	 */
 	private Task read(TTask model) throws ConfigurationException {
 		Task out;
 		try {

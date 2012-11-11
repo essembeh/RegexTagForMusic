@@ -37,7 +37,10 @@ import org.apache.log4j.Logger;
  */
 public class ProcessUtils {
 
-	static private Logger logger = Logger.getLogger(ProcessUtils.class);
+	/**
+	 * 
+	 */
+	private final static Logger logger = Logger.getLogger(ProcessUtils.class);
 
 	public enum STDOUT {
 		stdout, stderr

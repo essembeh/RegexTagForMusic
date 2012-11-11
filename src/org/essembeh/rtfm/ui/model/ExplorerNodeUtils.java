@@ -11,12 +11,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-import org.essembeh.rtfm.core.filter.CommonFilters;
-import org.essembeh.rtfm.core.filter.Filter;
-import org.essembeh.rtfm.core.library.Library;
+import org.essembeh.rtfm.core.library.ILibrary;
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IMusicFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
+import org.essembeh.rtfm.core.library.filter.CommonFilters;
+import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.core.utils.FileUtils;
 
 public class ExplorerNodeUtils {
@@ -24,7 +24,7 @@ public class ExplorerNodeUtils {
 	/**
 	 * Attributes
 	 */
-	private final Library library;
+	private final ILibrary library;
 	private final DefaultMutableTreeNode root;
 
 	/**
@@ -32,7 +32,7 @@ public class ExplorerNodeUtils {
 	 * 
 	 * @param library
 	 */
-	public ExplorerNodeUtils(Library library) {
+	public ExplorerNodeUtils(ILibrary library) {
 		this.library = library;
 		root = newNode("Filters");
 	}

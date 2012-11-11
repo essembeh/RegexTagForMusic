@@ -11,7 +11,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import org.essembeh.rtfm.core.filter.Filter;
+import org.essembeh.rtfm.core.library.filter.Filter;
 import org.essembeh.rtfm.core.utils.listener.IListenable;
 import org.essembeh.rtfm.ui.model.ExplorerNodeUtils.NamedFilter;
 import org.essembeh.rtfm.ui.utils.ChangeListenerContainer;

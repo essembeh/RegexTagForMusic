@@ -19,6 +19,7 @@
  */
 package org.essembeh.rtfm.core.configuration.io;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.essembeh.rtfm.core.actions.Workflow;
@@ -29,7 +30,24 @@ import org.essembeh.rtfm.core.utils.list.Identifier;
 
 public interface ICoreConfigurationLoader {
 
+	/**
+	 * 
+	 * @param input
+	 * @throws ConfigurationException
+	 */
+	void loadConfiguration(InputStream input) throws ConfigurationException;
+
+	/**
+	 * 
+	 * @return
+	 * @throws ConfigurationException
+	 */
 	List<FileHandler> getFileHandlers() throws ConfigurationException;
 
+	/**
+	 * 
+	 * @return
+	 * @throws ConfigurationException
+	 */
 	IdList<Workflow, Identifier<Workflow>> getWorkflows() throws ConfigurationException;
 }

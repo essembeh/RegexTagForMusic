@@ -19,6 +19,7 @@
  */
 package org.essembeh.rtfm.core.actions;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -53,7 +54,7 @@ public class Job extends JobListenerContainer implements IJob {
 	 */
 	public Job(Workflow workflow, List<IMusicFile> files, Executor executor) {
 		this.workflow = workflow;
-		this.files = files;
+		this.files = new ArrayList<IMusicFile>(files);
 		this.executor = executor;
 	}
 
@@ -108,11 +109,21 @@ public class Job extends JobListenerContainer implements IJob {
 		});
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.actions.IJob#getMusicFiles()
+	 */
 	@Override
 	public List<IMusicFile> getMusicFiles() {
 		return Collections.unmodifiableList(files);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.actions.IJob#getWorkflowIdentifier()
+	 */
 	@Override
 	public IWorkflowIdentifier getWorkflowIdentifier() {
 		return workflow;

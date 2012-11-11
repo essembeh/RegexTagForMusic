@@ -79,11 +79,11 @@ public class LibraryListenerContainer extends ListenerContainer<ILibraryListener
 	}
 
 	@Override
-	public void loadLibraryFailed(final File source) {
+	public void loadLibraryFailed() {
 		forEachListener(new ListenerAction<ILibraryListener>() {
 			@Override
 			public void execute(ILibraryListener listener) {
-				listener.loadLibraryFailed(source);
+				listener.loadLibraryFailed();
 			}
 		});
 	}

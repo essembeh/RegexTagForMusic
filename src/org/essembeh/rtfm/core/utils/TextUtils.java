@@ -21,6 +21,12 @@ package org.essembeh.rtfm.core.utils;
 
 public class TextUtils {
 
+	/**
+	 * 
+	 * @param size
+	 * @param name
+	 * @return
+	 */
 	static public String plural(int size, String name) {
 		return "" + size + " " + name + (size > 1 ? "s" : "");
 	}

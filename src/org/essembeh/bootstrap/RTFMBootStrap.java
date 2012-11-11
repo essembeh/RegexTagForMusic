@@ -89,8 +89,7 @@ public class RTFMBootStrap {
 		try {
 			List<URL> urls = new ArrayList<URL>();
 			System.out.println("Bootstrapping");
-			File bootstrapJar = new File(RTFMBootStrap.class.getProtectionDomain().getCodeSource().getLocation()
-					.getPath());
+			File bootstrapJar = new File(RTFMBootStrap.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 			File binFolder = bootstrapJar.getParentFile();
 			checkValidFolder(binFolder);
 			System.out.println("Bin folder: " + binFolder.getAbsolutePath());
@@ -101,7 +100,7 @@ public class RTFMBootStrap {
 
 			File libFolder = new File(homeFolder, "lib");
 			checkValidFolder(libFolder);
-			System.out.println("Lib folder: " + homeFolder.getAbsolutePath());
+			System.out.println("Lib folder: " + libFolder.getAbsolutePath());
 			for (File jar : folderToJar(libFolder)) {
 				if (jar.getName().endsWith(".jar")) {
 					urls.add(jar.toURI().toURL());
@@ -119,12 +118,12 @@ public class RTFMBootStrap {
 
 			File configFolder = new File(homeFolder, "config");
 			checkValidFolder(configFolder);
-			System.out.println("Config folder: " + homeFolder.getAbsolutePath());
+			System.out.println("Config folder: " + configFolder.getAbsolutePath());
 			urls.add(configFolder.toURI().toURL());
 
 			File shareFolder = new File(homeFolder, "share");
 			checkValidFolder(shareFolder);
-			System.out.println("Share folder: " + homeFolder.getAbsolutePath());
+			System.out.println("Share folder: " + shareFolder.getAbsolutePath());
 			urls.add(shareFolder.toURI().toURL());
 
 			for (URL url : urls) {
