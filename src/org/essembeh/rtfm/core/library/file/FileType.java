@@ -25,7 +25,7 @@ import java.util.List;
 
 public class FileType implements Comparable<FileType> {
 
-	private static List<FileType> knownFiletypes = new ArrayList<FileType>();
+	private final static List<FileType> knownFiletypes = new ArrayList<FileType>();
 
 	/**
 	 * Returns all known Filetypes

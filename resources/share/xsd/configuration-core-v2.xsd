@@ -7,7 +7,6 @@
 	<xs:complexType name="TFixedAttribute">
 		<xs:attribute name="name" type="xs:string" use="required" />
 		<xs:attribute name="value" type="xs:string" use="required" />
-		<xs:attribute name="hidden" type="xs:boolean" use="optional" default="false" />
 	</xs:complexType>
 	<xs:complexType name="TRegexAttribute">
 		<xs:attribute name="name" type="xs:string" use="required" />
@@ -25,8 +24,14 @@
 	<xs:complexType name="TConditionOnVirtualPath">
 		<xs:attribute name="pattern" type="xs:string" use="required" />
 	</xs:complexType>
+	<xs:simpleType name="TFileType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FILE" />
+			<xs:enumeration value="FOLDER" />
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:complexType name="TConditionOnType">
-		<xs:attribute name="value" type="xs:string" use="required" />
+		<xs:attribute name="value" type="rtfm:TFileType" use="required" />
 	</xs:complexType>
 	<xs:simpleType name="TConditionLogic">
 		<xs:restriction base="xs:string">
@@ -36,8 +41,8 @@
 	</xs:simpleType>
 	<xs:complexType name="TConditionList">
 		<xs:sequence>
-			<xs:element name="virtualpath" type="rtfm:TConditionOnVirtualPath" minOccurs="1" maxOccurs="unbounded" />
-			<xs:element name="type" type="rtfm:TConditionOnType" minOccurs="1" maxOccurs="unbounded" />
+			<xs:element name="virtualpath" type="rtfm:TConditionOnVirtualPath" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="type" type="rtfm:TConditionOnType" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 		<xs:attribute name="logic" type="rtfm:TConditionLogic" default="AND"/>
 	</xs:complexType>
@@ -108,6 +113,7 @@
 			<xs:element name="tasks" type="rtfm:TTaskList" minOccurs="0" maxOccurs="1" />
 			<xs:element name="actions" type="rtfm:TActionList" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required" />
 	</xs:complexType>
 	<xs:element name="configuration-core" type="rtfm:TCoreConfigurationV2" />
 </xs:schema>

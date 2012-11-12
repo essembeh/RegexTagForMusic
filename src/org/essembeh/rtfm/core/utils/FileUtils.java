@@ -51,13 +51,13 @@ public class FileUtils {
 	public static List<File> searchFilesInFolder(File folder, boolean listHidden) {
 		List<File> list = new ArrayList<File>();
 		if (folder.isDirectory() && folder.exists()) {
-			list.add(folder);
 			File[] ls = folder.listFiles();
 			for (File file : ls) {
-				if (file.isFile() && (listHidden || (!file.isHidden()))) {
+				if (listHidden || !file.isHidden()) {
 					list.add(file);
-				} else if (file.isDirectory() && (listHidden || (!file.isHidden()))) {
-					list.addAll(searchFilesInFolder(file, listHidden));
+					if (file.isDirectory()) {
+						list.addAll(searchFilesInFolder(file, listHidden));
+					}
 				}
 			}
 		}

@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
 public class UpdateAttributes implements ITask {
@@ -37,13 +37,13 @@ public class UpdateAttributes implements ITask {
 	}
 
 	@Override
-	public void execute(IMusicFile file) {
+	public void execute(IXFile file) {
 		for (String key : attributes.keySet()) {
 			String value = attributes.get(key);
 			Attribute attr = file.getAttributeList().get(key);
 			if (attr == null) {
 				logger.debug("Create attribute: " + key + " = " + value);
-				Attribute newAttr = new Attribute(key, value, false);
+				Attribute newAttr = new Attribute(key, value);
 				file.getAttributeList().add(newAttr);
 			} else {
 				logger.debug("Set attribute: " + key + " = " + value);

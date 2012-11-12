@@ -1,8 +1,8 @@
 //
-// Ce fichier a Ã©tÃ© gÃ©nÃ©rÃ© par l'implÃ©mentation de rÃ©fÃ©rence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
+// Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Toute modification apportÃ©e Ã  ce fichier sera perdue lors de la recompilation du schÃ©ma source. 
-// GÃ©nÃ©rÃ© le : 2012.11.12 Ã  12:52:12 AM CET 
+// Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
+// Généré le : 2012.12.03 à 04:47:27 PM CET 
 //
 
 
@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour TCoreConfigurationV1 complex type.
  * 
- * <p>Le fragment de schÃ©ma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TCoreConfigurationV1">
@@ -51,7 +51,7 @@ public class TCoreConfigurationV1 {
     protected TActionList actions;
 
     /**
-     * Obtient la valeur de la propriÃ©tÃ© filehandlers.
+     * Obtient la valeur de la propriété filehandlers.
      * 
      * @return
      *     possible object is
@@ -63,7 +63,7 @@ public class TCoreConfigurationV1 {
     }
 
     /**
-     * DÃ©finit la valeur de la propriÃ©tÃ© filehandlers.
+     * Définit la valeur de la propriété filehandlers.
      * 
      * @param value
      *     allowed object is
@@ -75,7 +75,7 @@ public class TCoreConfigurationV1 {
     }
 
     /**
-     * Obtient la valeur de la propriÃ©tÃ© tasks.
+     * Obtient la valeur de la propriété tasks.
      * 
      * @return
      *     possible object is
@@ -87,7 +87,7 @@ public class TCoreConfigurationV1 {
     }
 
     /**
-     * DÃ©finit la valeur de la propriÃ©tÃ© tasks.
+     * Définit la valeur de la propriété tasks.
      * 
      * @param value
      *     allowed object is
@@ -99,7 +99,7 @@ public class TCoreConfigurationV1 {
     }
 
     /**
-     * Obtient la valeur de la propriÃ©tÃ© actions.
+     * Obtient la valeur de la propriété actions.
      * 
      * @return
      *     possible object is
@@ -111,7 +111,7 @@ public class TCoreConfigurationV1 {
     }
 
     /**
-     * DÃ©finit la valeur de la propriÃ©tÃ© actions.
+     * Définit la valeur de la propriété actions.
      * 
      * @param value
      *     allowed object is

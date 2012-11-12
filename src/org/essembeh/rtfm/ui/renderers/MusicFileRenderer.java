@@ -24,7 +24,7 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.XFile;
 
 public class MusicFileRenderer extends DefaultTableCellRenderer {
 
@@ -41,8 +41,8 @@ public class MusicFileRenderer extends DefaultTableCellRenderer {
 													int row,
 													int column) {
 		String valueToPrint = new String();
-		if (value != null && value instanceof MusicFile) {
-			MusicFile mf = (MusicFile) value;
+		if (value != null && value instanceof XFile) {
+			XFile mf = (XFile) value;
 			valueToPrint = mf.getVirtualPath();
 		}
 		return super.getTableCellRendererComponent(table, valueToPrint, isSelected, hasFocus, row, column);

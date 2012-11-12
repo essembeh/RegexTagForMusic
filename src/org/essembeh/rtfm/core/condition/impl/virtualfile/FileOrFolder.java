@@ -17,26 +17,45 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.filter.conditions;
+package org.essembeh.rtfm.core.condition.impl.virtualfile;
 
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.condition.ICondition;
+import org.essembeh.rtfm.core.library.file.VirtualFile;
 
-public class NotAttributeCondition implements IFilterCondition {
+public class FileOrFolder implements ICondition<VirtualFile> {
 
-	String attributeName;
+	/**
+	 * 
+	 */
+	public enum InodeType {
+		FILE, FOLDER
+	};
 
-	public NotAttributeCondition(String attributeName) {
-		this.attributeName = attributeName;
+	/**
+	 * Attributes
+	 */
+	private final InodeType type;
+
+	/**
+	 * 
+	 * @param type
+	 */
+	public FileOrFolder(InodeType type) {
+		this.type = type;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
+	 */
 	@Override
-	public boolean isTrue(IMusicFile musicFile) {
-		return !musicFile.getAttributeList().containsKey(attributeName);
-	}
-
-	@Override
-	public String toString() {
-		return "NotAttributeCondition [attributeName=" + attributeName + "]";
+	public boolean isTrue(VirtualFile file) {
+		boolean out = false;
+		if (file != null && file.exists()) {
+			out = (file.isDirectory() && type == InodeType.FOLDER) || (file.isFile() && type == InodeType.FILE);
+		}
+		return out;
 	}
 
 }

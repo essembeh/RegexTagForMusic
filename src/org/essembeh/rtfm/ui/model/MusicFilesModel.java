@@ -10,8 +10,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.essembeh.rtfm.core.library.Library;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.core.library.filter.Filter;
+import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.core.library.filter.XFileFilter;
 import org.essembeh.rtfm.core.library.listener.DefaultLibraryListener;
 
 public class MusicFilesModel extends AbstractTableModel {
@@ -22,7 +22,7 @@ public class MusicFilesModel extends AbstractTableModel {
 	private static final long serialVersionUID = 8190214732252626027L;
 	private final Library library;
 	private final FiltersSelection filtersSelection;
-	private final List<IMusicFile> currentList;
+	private final List<IXFile> currentList;
 	private final MusicFileColumnManager columnManager;
 
 	/**
@@ -34,7 +34,7 @@ public class MusicFilesModel extends AbstractTableModel {
 		super();
 		this.library = library;
 		this.filtersSelection = filtersSelection;
-		this.currentList = new ArrayList<IMusicFile>();
+		this.currentList = new ArrayList<IXFile>();
 		this.columnManager = new MusicFileColumnManager();
 
 		setupListeners();
@@ -79,8 +79,8 @@ public class MusicFilesModel extends AbstractTableModel {
 	 */
 	public void refresh() {
 		currentList.clear();
-		List<IMusicFile> tmpList = library.getAllFiles();
-		for (Filter filter : filtersSelection.getCurrentFilters()) {
+		List<IXFile> tmpList = library.getAllFiles();
+		for (XFileFilter filter : filtersSelection.getCurrentFilters()) {
 			tmpList = filter.filter(tmpList);
 		}
 		currentList.addAll(tmpList);
@@ -95,7 +95,7 @@ public class MusicFilesModel extends AbstractTableModel {
 	 */
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		return columnIndex == 0 ? String.class : IMusicFile.class;
+		return columnIndex == 0 ? String.class : IXFile.class;
 	}
 
 	/*
@@ -168,7 +168,7 @@ public class MusicFilesModel extends AbstractTableModel {
 		int width = 100;
 		if (col == 0) {
 			int maxLen = 0;
-			for (IMusicFile musicFile : currentList) {
+			for (IXFile musicFile : currentList) {
 				maxLen = Math.max(maxLen, columnManager.getValue(musicFile, 0).toString().length());
 			}
 			width = maxLen * 12;
@@ -180,7 +180,7 @@ public class MusicFilesModel extends AbstractTableModel {
 	 * 
 	 * @return
 	 */
-	public List<IMusicFile> getFilteredFiles() {
+	public List<IXFile> getFilteredFiles() {
 		return currentList;
 	}
 }

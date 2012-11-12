@@ -21,43 +21,73 @@ package org.essembeh.rtfm.core.library.file.attributes;
 
 public class Attribute implements Cloneable, Comparable<Attribute> {
 
-	String name;
-	String value;
-	boolean hidden;
+	/**
+	 * Attributes
+	 */
+	private final String name;
+	private volatile String value;
 
-	public Attribute(String name, String value, boolean hidden) {
+	/**
+	 * 
+	 * @param name
+	 * @param value
+	 */
+	public Attribute(String name, String value) {
 		this.name = name;
 		this.value = value;
-		this.hidden = hidden;
 	}
 
-	public boolean isHidden() {
-		return hidden;
-	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getValue() {
 		return value;
 	}
 
+	/**
+	 * 
+	 * @param newValue
+	 * @return
+	 */
 	public boolean setValue(String newValue) {
 		this.value = newValue;
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#clone()
+	 */
 	@Override
 	public Attribute clone() {
-		return new Attribute(name, value, hidden);
+		return new Attribute(name, value);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return (hidden ? "-" : "+") + name + "=" + value;
+		return name + "=" + value;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(Attribute o) {
 		return name.compareTo(o.name);

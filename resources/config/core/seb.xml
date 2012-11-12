@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration-core xmlns="http://rtfm.essembeh.org/ConfigurationCore-v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration-core xmlns="http://rtfm.essembeh.org/ConfigurationCore-v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="seb music">
 	<!-- Substitutions are applied only on "pattern" attributes -->
 	<substitutions>
 		<substitution key="@SEPARATOR"   value=" - "/>
@@ -10,13 +10,13 @@
 	</substitutions>
 	<!-- File types -->
 	<filehandlers>
-		<filehandler id="Album track">
+		<filehandler id="Album mp3">
 			<conditions>
 				<virtualpath pattern="/Albums/@ANYTHING/@ANYTHING/@TRACKNUMBER@SEPARATOR@ANYTHING@MP3" />
 			</conditions>
 			<attributes>
+				<attribute name="core:export"   value="true" />
 				<attribute name="rtfm:tagged" value="false" />
-				<attribute name="db:export"   value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
 				<regex-attribute name="tag:artist" pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="1" />
 				<regex-attribute name="tag:year"   pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="3" optional="true" />
@@ -30,7 +30,7 @@
 				<virtualpath pattern="/Albums/@ANYTHING/@ANYTHING/cover\.(jpg|jpeg|png)" />
 			</conditions>
 			<attributes>
-				<attribute name="db:export" value="false" />
+				<attribute name="core:export" value="false" />
 			</attributes>
 		</filehandler>
 		<filehandler id="Playlist">
@@ -38,29 +38,29 @@
 				<virtualpath pattern="/Albums/@ANYTHING/@ANYTHING/playlist\.m3u" />
 			</conditions>
 			<attributes>
-				<attribute name="db:export" value="false" />
+				<attribute name="core:export" value="false" />
 			</attributes>
 		</filehandler>
-		<filehandler id="Single">
+		<filehandler id="Single mp3">
 			<conditions>
 				<virtualpath pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)\.mp3" />
 			</conditions>
 			<attributes>
+				<attribute name="core:export"   value="true" />
 				<attribute name="rtfm:tagged" value="false" />
-				<attribute name="db:export"   value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
 				<attribute name="tag:album"   value="#Single" />
 				<regex-attribute name="tag:artist" pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@MP3" group="1" />
 				<regex-attribute name="tag:title"  pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@MP3" group="2" />
 			</attributes>
 		</filehandler>
-		<filehandler id="Saga">
+		<filehandler id="Saga mp3">
 			<conditions>
 				<virtualpath pattern="/Saga/(@ANYTHING)/(@ANYTHING)\.mp3" />
 			</conditions>
 			<attributes>
+				<attribute name="core:export"   value="true" />
 				<attribute name="rtfm:tagged" value="false" />
-				<attribute name="db:export"   value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
 				<attribute name="tag:album"   value="#Saga" />
 				<regex-attribute name="tag:artist" pattern="/Saga/(@ANYTHING)/(@ANYTHING)@MP3" group="1" />
@@ -72,7 +72,7 @@
 				<virtualpath pattern="/Albums/@ANYTHING/" />
 			</conditions>
 			<attributes>
-				<attribute name="db:export" value="false" />
+				<attribute name="core:export" value="false" />
 				<regex-attribute name="artist" pattern="/Albums/(@ANYTHING)/" group="1" />
 			</attributes>
 		</filehandler>
@@ -81,27 +81,36 @@
 				<virtualpath pattern="/Albums/@ANYTHING/@ANYTHING/" />
 			</conditions>
 			<attributes>
+				<attribute name="core:export" value="false" />
 				<attribute name="hasCover"  value="false" />
-				<attribute name="db:export" value="false" />
 				<regex-attribute name="artist" pattern="/Albums/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="1" />
 				<regex-attribute name="year"   pattern="/Albums/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="2" optional="true" />
 				<regex-attribute name="album"  pattern="/Albums/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="3" />
 			</attributes>
 		</filehandler>
-		<filehandler id="Other">
+		<filehandler id="Untracked">
 			<conditions logic="OR">
 				<virtualpath pattern="/Saga/@ANYTHING/"/>
 				<virtualpath pattern="/@ANYTHING/"/>
 			</conditions>
 			<attributes>
-				<attribute name="db:export" value="false" />
+				<attribute name="core:ignore" value="true" />
 			</attributes>
 		</filehandler>
-		<filehandler id="UNKNOWN">
+		<filehandler id="Unknown file">
 			<conditions>
+				<type value="FILE"/>
 			</conditions>
 			<attributes>
-				<attribute name="db:export" value="false" />
+				<attribute name="core:export" value="false" />
+			</attributes>
+		</filehandler>
+		<filehandler id="Unknown folder">
+			<conditions>
+				<type value="FOLDER"/>
+			</conditions>
+			<attributes>
+				<attribute name="core:export" value="false" />
 			</attributes>
 		</filehandler>
 	</filehandlers>
@@ -166,8 +175,8 @@
 	<actions>
 		<action id="00-marskAsNonTagged" description="Mark as non tagged">
 			<apply-on>
-				<filehandler ref-id="ALBUMS" />
-				<filehandler ref-id="SINGLE" />
+				<filehandler ref-id="Album track" />
+				<filehandler ref-id="Single track" />
 				<filehandler ref-id="SAGA" />
 			</apply-on>
 			<workflow>

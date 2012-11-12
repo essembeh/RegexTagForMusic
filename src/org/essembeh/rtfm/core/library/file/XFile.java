@@ -34,17 +34,15 @@ import org.essembeh.rtfm.core.utils.list.Identifier;
  * @author seb
  * 
  */
-public class MusicFile implements IMusicFile {
+public class XFile implements IXFile {
 
-	protected static Logger logger = Logger.getLogger(MusicFile.class);
+	protected static Logger logger = Logger.getLogger(XFile.class);
 
-	FileType type;
+	private final FileType type;
+	private final VirtualFile file;
+	private final IdList<Attribute, Identifier<Attribute>> attributeList;
 
-	VirtualFile file;
-
-	IdList<Attribute, Identifier<Attribute>> attributeList;
-
-	public MusicFile(FileType type, VirtualFile virtualFile) {
+	public XFile(FileType type, VirtualFile virtualFile) {
 		this.type = type;
 		this.file = virtualFile;
 		this.attributeList = new IdList<Attribute, Identifier<Attribute>>(new AttributeIdentifier());
@@ -61,7 +59,7 @@ public class MusicFile implements IMusicFile {
 	}
 
 	@Override
-	public int compareTo(IMusicFile other) {
+	public int compareTo(IXFile other) {
 		return getVirtualPath().compareTo(other.getVirtualPath());
 	}
 

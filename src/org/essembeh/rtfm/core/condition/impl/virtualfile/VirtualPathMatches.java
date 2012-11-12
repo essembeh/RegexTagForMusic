@@ -17,28 +17,43 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.filter.conditions;
+package org.essembeh.rtfm.core.condition.impl.virtualfile;
 
 import java.util.regex.Pattern;
 
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.condition.ICondition;
+import org.essembeh.rtfm.core.library.file.VirtualFile;
 
-public class VirtualPathCondition implements IFilterCondition {
+public class VirtualPathMatches implements ICondition<VirtualFile> {
 
-	Pattern regexOnPath;
+	private final Pattern regexOnPath;
 
-	public VirtualPathCondition(Pattern regexOnPath) {
-		this.regexOnPath = regexOnPath;
+	/**
+	 * 
+	 * @param regexOnPath
+	 */
+	public VirtualPathMatches(String regexOnPath) {
+		this.regexOnPath = Pattern.compile(regexOnPath);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
+	 */
 	@Override
-	public boolean isTrue(IMusicFile musicFile) {
-		return regexOnPath.matcher(musicFile.getVirtualPath()).matches();
+	public boolean isTrue(VirtualFile input) {
+		return regexOnPath.matcher(input.getVirtualPath()).matches();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "VirtualPathCondition [regexOnPath=" + regexOnPath + "]";
+		return this.getClass().getName() + " [regexOnPath=" + regexOnPath + "]";
 	}
 
 }

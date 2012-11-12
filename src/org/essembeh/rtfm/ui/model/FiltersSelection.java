@@ -11,7 +11,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import org.essembeh.rtfm.core.library.filter.Filter;
+import org.essembeh.rtfm.core.library.filter.XFileFilter;
 import org.essembeh.rtfm.core.utils.listener.IListenable;
 import org.essembeh.rtfm.ui.model.ExplorerNodeUtils.NamedFilter;
 import org.essembeh.rtfm.ui.utils.ChangeListenerContainer;
@@ -22,14 +22,14 @@ public class FiltersSelection implements TreeSelectionListener, IListenable<Chan
 	 * Attributes
 	 */
 	private final ChangeListenerContainer listeners;
-	private final List<Filter> currentFilters;
+	private final List<XFileFilter> currentFilters;
 	private volatile JTree jtree;
 
 	/**
 	 * Constructor
 	 */
 	public FiltersSelection() {
-		this.currentFilters = new ArrayList<Filter>();
+		this.currentFilters = new ArrayList<XFileFilter>();
 		this.listeners = new ChangeListenerContainer();
 		this.jtree = null;
 	}
@@ -65,7 +65,7 @@ public class FiltersSelection implements TreeSelectionListener, IListenable<Chan
 				if (lastPathElement instanceof DefaultMutableTreeNode) {
 					Object userObject = ((DefaultMutableTreeNode) lastPathElement).getUserObject();
 					if (userObject instanceof NamedFilter) {
-						Filter filter = ((NamedFilter) userObject).getFilter();
+						XFileFilter filter = ((NamedFilter) userObject).getFilter();
 						if (filter != null) {
 							currentFilters.add(filter);
 						}
@@ -81,7 +81,7 @@ public class FiltersSelection implements TreeSelectionListener, IListenable<Chan
 	 * 
 	 * @return
 	 */
-	public List<Filter> getCurrentFilters() {
+	public List<XFileFilter> getCurrentFilters() {
 		return currentFilters;
 	}
 

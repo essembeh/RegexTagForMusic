@@ -21,7 +21,7 @@ package org.essembeh.rtfm.core.actions.listener;
 
 import org.essembeh.rtfm.core.actions.Workflow;
 import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
 public interface IJobListener {
 
@@ -36,14 +36,14 @@ public interface IJobListener {
 	 * @param workflow
 	 * @param musicFile
 	 */
-	void process(Workflow workflow, IMusicFile musicFile);
+	void process(Workflow workflow, IXFile musicFile);
 
 	/**
 	 * 
 	 * @param workflow
 	 * @param musicFile
 	 */
-	void succeeded(Workflow workflow, IMusicFile musicFile);
+	void succeeded(Workflow workflow, IXFile musicFile);
 
 	/**
 	 * 
@@ -51,7 +51,7 @@ public interface IJobListener {
 	 * @param musicFile
 	 * @param e
 	 */
-	void error(Workflow workflow, IMusicFile musicFile, ActionException e);
+	void error(Workflow workflow, IXFile musicFile, ActionException e);
 
 	/**
 	 * 

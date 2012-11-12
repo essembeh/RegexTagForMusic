@@ -17,16 +17,20 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.filehandler;
+package org.essembeh.rtfm.core.library.file;
 
-import org.essembeh.rtfm.core.library.file.VirtualFile;
+import org.essembeh.rtfm.core.library.file.attributes.Attribute;
+import org.essembeh.rtfm.core.utils.list.IdList;
+import org.essembeh.rtfm.core.utils.list.Identifier;
 
-public interface ICondition {
+public interface IXFile extends Comparable<IXFile> {
 
-	/**
-	 * 
-	 * @param file
-	 * @return
-	 */
-	boolean isValid(VirtualFile file);
+	FileType getType();
+
+	String getVirtualPath();
+
+	VirtualFile getFile();
+
+	IdList<Attribute, Identifier<Attribute>> getAttributeList();
+
 }

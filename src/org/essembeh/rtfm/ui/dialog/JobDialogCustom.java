@@ -8,7 +8,7 @@ import org.essembeh.rtfm.core.actions.IJob;
 import org.essembeh.rtfm.core.actions.Workflow;
 import org.essembeh.rtfm.core.actions.listener.IJobListener;
 import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.utils.TextUtils;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
 import org.essembeh.rtfm.ui.model.JobModel;
@@ -40,7 +40,7 @@ public class JobDialogCustom extends JobDialog {
 			private Date startTime;
 
 			@Override
-			public void succeeded(Workflow workflow, IMusicFile musicFile) {
+			public void succeeded(Workflow workflow, IXFile musicFile) {
 				synchronized (progressBar) {
 					jobModel.jobFinished(musicFile, null);
 					progressBar.setValue(progressBar.getValue() + 1);
@@ -56,11 +56,11 @@ public class JobDialogCustom extends JobDialog {
 			}
 
 			@Override
-			public void process(Workflow workflow, IMusicFile musicFile) {
+			public void process(Workflow workflow, IXFile musicFile) {
 			}
 
 			@Override
-			public void error(Workflow workflow, IMusicFile musicFile, ActionException e) {
+			public void error(Workflow workflow, IXFile musicFile, ActionException e) {
 				synchronized (progressBar) {
 					jobModel.jobFinished(musicFile, e);
 					progressBar.setValue(progressBar.getValue() + 1);

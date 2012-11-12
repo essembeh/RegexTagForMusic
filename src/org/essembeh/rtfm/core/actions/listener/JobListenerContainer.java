@@ -21,7 +21,7 @@ package org.essembeh.rtfm.core.actions.listener;
 
 import org.essembeh.rtfm.core.actions.Workflow;
 import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.utils.listener.ListenerContainer;
 
 public class JobListenerContainer extends ListenerContainer<IJobListener> implements IJobListener {
@@ -48,7 +48,7 @@ public class JobListenerContainer extends ListenerContainer<IJobListener> implem
 	 * org.essembeh.rtfm.core.library.file.IMusicFile)
 	 */
 	@Override
-	public void process(final Workflow workflow, final IMusicFile musicFile) {
+	public void process(final Workflow workflow, final IXFile musicFile) {
 		forEachListener(new ListenerAction<IJobListener>() {
 			@Override
 			public void execute(IJobListener listener) {
@@ -64,7 +64,7 @@ public class JobListenerContainer extends ListenerContainer<IJobListener> implem
 	 * org.essembeh.rtfm.core.library.file.IMusicFile)
 	 */
 	@Override
-	public void succeeded(final Workflow workflow, final IMusicFile musicFile) {
+	public void succeeded(final Workflow workflow, final IXFile musicFile) {
 		forEachListener(new ListenerAction<IJobListener>() {
 			@Override
 			public void execute(IJobListener listener) {
@@ -80,7 +80,7 @@ public class JobListenerContainer extends ListenerContainer<IJobListener> implem
 	 * org.essembeh.rtfm.core.exception.ActionException)
 	 */
 	@Override
-	public void error(final Workflow workflow, final IMusicFile musicFile, final ActionException e) {
+	public void error(final Workflow workflow, final IXFile musicFile, final ActionException e) {
 		forEachListener(new ListenerAction<IJobListener>() {
 			@Override
 			public void execute(IJobListener listener) {

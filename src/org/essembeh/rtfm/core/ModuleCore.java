@@ -19,17 +19,21 @@
  */
 package org.essembeh.rtfm.core;
 
-import org.essembeh.rtfm.core.configuration.io.CoreConfigurationLoaderV2;
-import org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader;
-import org.essembeh.rtfm.core.library.io.ILibraryLoader;
-import org.essembeh.rtfm.core.library.io.ILibraryWriter;
-import org.essembeh.rtfm.core.library.io.LibraryLoaderV1;
-import org.essembeh.rtfm.core.library.io.LibraryLoaderV2;
+import org.essembeh.rtfm.core.configuration.CoreConfiguration;
+import org.essembeh.rtfm.core.configuration.CoreConfigurationServices;
+import org.essembeh.rtfm.core.configuration.IWorkflowService;
+import org.essembeh.rtfm.core.configuration.IXFileService;
+import org.essembeh.rtfm.core.configuration.io.MultiCoreConfigurationReader;
+import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.io.LibraryWriterV2;
+import org.essembeh.rtfm.core.library.io.MultiLibraryReader;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
+import org.essembeh.rtfm.core.utils.version.IObjectReader;
+import org.essembeh.rtfm.core.utils.version.IObjectWriter;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
 public class ModuleCore extends AbstractModule {
@@ -50,16 +54,30 @@ public class ModuleCore extends AbstractModule {
 	@Override
 	protected void configure() {
 		try {
-			// Singleton
+			// Singleton for properties
 			bind(RTFMProperties.class).toInstance(mainProperties);
 
-			// Interfaces
-			bind(ICoreConfigurationLoader.class).to(CoreConfigurationLoaderV2.class).in(Singleton.class);
-			bind(ILibraryLoader.class).annotatedWith(Names.named("LibraryLoaderV1")).to(LibraryLoaderV1.class);
-			bind(ILibraryLoader.class).annotatedWith(Names.named("LibraryLoaderV2")).to(LibraryLoaderV2.class);
-			bind(ILibraryWriter.class).to(LibraryWriterV2.class);
+			// Singleton for the configuration and services
+			bind(CoreConfigurationServices.class).in(Singleton.class);
+			bind(IWorkflowService.class).to(CoreConfigurationServices.class).in(Singleton.class);
+			bind(IXFileService.class).to(CoreConfigurationServices.class).in(Singleton.class);
+			
+			// IO
+			bind(new TypeLiteral<IObjectReader<Library>>() {
+			}).annotatedWith(Names.named("LibraryReader")).to(MultiLibraryReader.class);
+
+			bind(new TypeLiteral<IObjectWriter<Library>>() {
+			}).annotatedWith(Names.named("LibraryWriter")).to(LibraryWriterV2.class);
+
+			bind(new TypeLiteral<IObjectReader<CoreConfiguration>>() {
+			}).annotatedWith(Names.named("CoreConfigurationReader")).to(MultiCoreConfigurationReader.class);
+
 		} catch (Exception e) {
 			addError(e);
 		}
+	}
+
+	public static void main(String[] args) {
+		System.out.println(((String) null).getClass());
 	}
 }

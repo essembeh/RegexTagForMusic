@@ -6,7 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.table.AbstractTableModel;
 
 import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
 public class JobModel extends AbstractTableModel {
 
@@ -18,10 +18,10 @@ public class JobModel extends AbstractTableModel {
 	private final List<FileWithStatus> data;
 	private final boolean onlyKeepErrorFiles;
 
-	public JobModel(List<IMusicFile> files, boolean onlyKeepErrorFiles) {
+	public JobModel(List<IXFile> files, boolean onlyKeepErrorFiles) {
 		data = new CopyOnWriteArrayList<JobModel.FileWithStatus>();
 		this.onlyKeepErrorFiles = onlyKeepErrorFiles;
-		for (IMusicFile iMusicFile : files) {
+		for (IXFile iMusicFile : files) {
 			data.add(new FileWithStatus(iMusicFile));
 		}
 	}
@@ -61,7 +61,7 @@ public class JobModel extends AbstractTableModel {
 		return count;
 	}
 
-	public void jobFinished(IMusicFile file, ActionException e) {
+	public void jobFinished(IXFile file, ActionException e) {
 		int index = 0;
 		FileWithStatus theFile = null;
 		for (FileWithStatus fileWithStatus : data) {
@@ -81,11 +81,11 @@ public class JobModel extends AbstractTableModel {
 	}
 
 	private class FileWithStatus {
-		private final IMusicFile musicFile;
+		private final IXFile musicFile;
 		private boolean finished;
 		private ActionException exception;
 
-		public FileWithStatus(IMusicFile file) {
+		public FileWithStatus(IXFile file) {
 			musicFile = file;
 			exception = null;
 			finished = false;
@@ -100,7 +100,7 @@ public class JobModel extends AbstractTableModel {
 			exception = e;
 		}
 
-		public IMusicFile getFile() {
+		public IXFile getFile() {
 			return musicFile;
 		}
 

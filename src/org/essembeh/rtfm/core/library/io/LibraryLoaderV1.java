@@ -21,28 +21,21 @@ package org.essembeh.rtfm.core.library.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.helpers.DefaultValidationEventHandler;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.exception.LibraryException;
-import org.essembeh.rtfm.core.library.ILibrary;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.Library;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
+import org.essembeh.rtfm.core.utils.version.JaxbObjectReader;
+import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
 import org.essembeh.rtfm.model.library.version1.TFile;
 import org.essembeh.rtfm.model.library.version1.TLibraryV1;
 
 import com.google.inject.Inject;
 
-public class LibraryLoaderV1 implements ILibraryLoader {
+public class LibraryLoaderV1 extends JaxbObjectReader<Library, TLibraryV1> {
 	/**
 	 * Attributes
 	 */
@@ -54,29 +47,23 @@ public class LibraryLoaderV1 implements ILibraryLoader {
 	 */
 	@Inject
 	public LibraryLoaderV1() {
+		super(TLibraryV1.class);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.core.library.io.ILibraryLoader#loadLibrary(java.io.InputStream, org.essembeh.rtfm.core.library.Library)
+	 * @see org.essembeh.rtfm.core.utils.version.JaxbObjectReader#readObjectFromModel(java.lang.Object, org.essembeh.rtfm.core.utils.version.ILoadable)
 	 */
 	@Override
-	public void loadLibrary(InputStream source, ILibrary library) throws LibraryException, IOException {
-		TLibraryV1 model = null;
-		try {
-			JAXBContext context = JAXBContext.newInstance("org.essembeh.rtfm.model.library.version1");
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-			JAXBElement<TLibraryV1> root = unmarshaller.unmarshal(new StreamSource(source), TLibraryV1.class);
-			model = root.getValue();
-		} catch (JAXBException e) {
-			logger.info("Cannot load Library version 1 from source");
-			throw new LibraryException(e);
-		}
+	protected void readObjectFromModel(TLibraryV1 model, Library library) throws ReaderException {
 
 		// Scan root folder
-		library.scanFolder(new File(model.getPath()));
+		try {
+			library.scanFolder(new File(model.getPath()));
+		} catch (IOException e) {
+			throw new ReaderException(e.getMessage());
+		}
 
 		// Update files
 		IdList<TFile, Identifier<TFile>> modelFiles = new IdList<TFile, Identifier<TFile>>(new Identifier<TFile>() {
@@ -86,7 +73,7 @@ public class LibraryLoaderV1 implements ILibraryLoader {
 			}
 		}, model.getFile());
 
-		for (IMusicFile musicFile : library.getAllFiles()) {
+		for (IXFile musicFile : library.getAllFiles()) {
 			TFile modelFile = modelFiles.get(musicFile.getVirtualPath());
 			if (modelFile == null) {
 				// New file
@@ -98,12 +85,13 @@ public class LibraryLoaderV1 implements ILibraryLoader {
 		}
 	}
 
-	protected void updateMusicFile(IMusicFile musicFile, TFile model) {
+	protected void updateMusicFile(IXFile musicFile, TFile model) {
 		Boolean isTagged = model.isTagged();
 		if (isTagged != null) {
 			logger.debug("Set file: " + model.getPath() + ", tagged: " + isTagged);
-			Attribute attribute = new Attribute(RTFM_TAGGED, isTagged.toString(), false);
+			Attribute attribute = new Attribute(RTFM_TAGGED, isTagged.toString());
 			musicFile.getAttributeList().add(attribute);
 		}
 	}
+
 }

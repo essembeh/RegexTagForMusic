@@ -13,10 +13,10 @@ import javax.swing.tree.TreeNode;
 
 import org.essembeh.rtfm.core.library.ILibrary;
 import org.essembeh.rtfm.core.library.file.FileType;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.library.filter.CommonFilters;
-import org.essembeh.rtfm.core.library.filter.Filter;
+import org.essembeh.rtfm.core.library.filter.XFileFilter;
 import org.essembeh.rtfm.core.utils.FileUtils;
 
 public class ExplorerNodeUtils {
@@ -111,7 +111,7 @@ public class ExplorerNodeUtils {
 	private MutableTreeNode byAttribute(String nodeName, String attributeName) {
 		DefaultMutableTreeNode root = newNode(nodeName);
 		List<String> values = new ArrayList<String>();
-		for (IMusicFile musicFile : library.getAllFiles()) {
+		for (IXFile musicFile : library.getAllFiles()) {
 			Attribute att = musicFile.getAttributeList().get(attributeName);
 			if (att != null && !values.contains(att.getValue())) {
 				values.add(att.getValue());
@@ -139,7 +139,7 @@ public class ExplorerNodeUtils {
 	 * @param filter
 	 * @return
 	 */
-	private DefaultMutableTreeNode newNode(String name, Filter filter) {
+	private DefaultMutableTreeNode newNode(String name, XFileFilter filter) {
 		return newNode(name, filter, filter == null);
 	}
 
@@ -150,7 +150,7 @@ public class ExplorerNodeUtils {
 	 * @param hasChildren
 	 * @return
 	 */
-	private DefaultMutableTreeNode newNode(String name, Filter filter, boolean hasChildren) {
+	private DefaultMutableTreeNode newNode(String name, XFileFilter filter, boolean hasChildren) {
 		return new DefaultMutableTreeNode(new NamedFilter(name, filter), hasChildren);
 	}
 
@@ -161,9 +161,9 @@ public class ExplorerNodeUtils {
 	 */
 	public class NamedFilter {
 		private final String name;
-		private final Filter filter;
+		private final XFileFilter filter;
 
-		public NamedFilter(String name, Filter filter) {
+		public NamedFilter(String name, XFileFilter filter) {
 			super();
 			this.name = name;
 			this.filter = filter;
@@ -173,7 +173,7 @@ public class ExplorerNodeUtils {
 			return name;
 		}
 
-		public Filter getFilter() {
+		public XFileFilter getFilter() {
 			return filter;
 		}
 

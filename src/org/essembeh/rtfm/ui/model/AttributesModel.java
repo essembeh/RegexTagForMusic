@@ -11,7 +11,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
 public class AttributesModel extends AbstractTableModel {
@@ -62,9 +62,9 @@ public class AttributesModel extends AbstractTableModel {
 	 * 
 	 */
 	public void refresh() {
-		List<IMusicFile> files = musicFilesSelection.getSelectedFiles();
+		List<IXFile> files = musicFilesSelection.getSelectedFiles();
 		data.clear();
-		for (IMusicFile musicFile : files) {
+		for (IXFile musicFile : files) {
 			for (Attribute attribute : musicFile.getAttributeList()) {
 				if (data.containsKey(attribute.getName())) {
 					if (!data.get(attribute.getName()).equals(attribute.getValue())) {
@@ -166,8 +166,8 @@ public class AttributesModel extends AbstractTableModel {
 		} else {
 			String attributeName = getAttributeName(rowIndex);
 			logger.info("Update attribute: " + attributeName + ", with value: " + aValue);
-			List<IMusicFile> list = musicFilesSelection.getSelectedFiles();
-			for (IMusicFile musicFile : list) {
+			List<IXFile> list = musicFilesSelection.getSelectedFiles();
+			for (IXFile musicFile : list) {
 				Attribute attribute = musicFile.getAttributeList().get(attributeName);
 				if (attribute != null) {
 					logger.debug("Update file: " + musicFile);

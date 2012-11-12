@@ -27,7 +27,7 @@ import java.util.concurrent.Executor;
 
 import org.essembeh.rtfm.core.actions.listener.JobListenerContainer;
 import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
 /**
  * 
@@ -39,7 +39,7 @@ public class Job extends JobListenerContainer implements IJob {
 	 * Attributes
 	 */
 	private final Workflow workflow;
-	private final List<IMusicFile> files;
+	private final List<IXFile> files;
 	private final Executor executor;
 
 	/**
@@ -52,9 +52,9 @@ public class Job extends JobListenerContainer implements IJob {
 	 * @param executor
 	 *            the executor used to submit tasks
 	 */
-	public Job(Workflow workflow, List<IMusicFile> files, Executor executor) {
+	public Job(Workflow workflow, List<IXFile> files, Executor executor) {
 		this.workflow = workflow;
-		this.files = new ArrayList<IMusicFile>(files);
+		this.files = new ArrayList<IXFile>(files);
 		this.executor = executor;
 	}
 
@@ -62,7 +62,7 @@ public class Job extends JobListenerContainer implements IJob {
 	 * 
 	 * @param musicFile
 	 */
-	private void executeOneFile(IMusicFile musicFile) {
+	private void executeOneFile(IXFile musicFile) {
 		process(workflow, musicFile);
 		if (workflow.supportType(musicFile.getType())) {
 			try {
@@ -87,7 +87,7 @@ public class Job extends JobListenerContainer implements IJob {
 	public void submit() {
 		start(workflow);
 		final CountDownLatch latch = new CountDownLatch(files.size());
-		for (final IMusicFile musicFile : files) {
+		for (final IXFile musicFile : files) {
 			executor.execute(new Runnable() {
 				@Override
 				public void run() {
@@ -115,7 +115,7 @@ public class Job extends JobListenerContainer implements IJob {
 	 * @see org.essembeh.rtfm.core.actions.IJob#getMusicFiles()
 	 */
 	@Override
-	public List<IMusicFile> getMusicFiles() {
+	public List<IXFile> getMusicFiles() {
 		return Collections.unmodifiableList(files);
 	}
 

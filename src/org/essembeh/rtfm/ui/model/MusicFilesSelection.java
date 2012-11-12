@@ -9,7 +9,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.utils.listener.IListenable;
 import org.essembeh.rtfm.ui.utils.ChangeListenerContainer;
 
@@ -19,7 +19,7 @@ public class MusicFilesSelection implements ListSelectionListener, IListenable<C
 	 * Attributes
 	 */
 	private final ChangeListenerContainer changeListenerContainer;
-	private final List<IMusicFile> currentSelection;
+	private final List<IXFile> currentSelection;
 	private final MusicFilesModel musicFilesModel;
 	private volatile JTable jtable;
 
@@ -28,7 +28,7 @@ public class MusicFilesSelection implements ListSelectionListener, IListenable<C
 	 */
 	public MusicFilesSelection(MusicFilesModel model) {
 		this.musicFilesModel = model;
-		this.currentSelection = new ArrayList<IMusicFile>();
+		this.currentSelection = new ArrayList<IXFile>();
 		this.changeListenerContainer = new ChangeListenerContainer();
 		this.jtable = null;
 	}
@@ -59,7 +59,7 @@ public class MusicFilesSelection implements ListSelectionListener, IListenable<C
 		currentSelection.clear();
 		int[] selectedRows = jtable.getSelectedRows();
 		if (selectedRows != null) {
-			List<IMusicFile> filteredFiles = musicFilesModel.getFilteredFiles();
+			List<IXFile> filteredFiles = musicFilesModel.getFilteredFiles();
 			for (int i : selectedRows) {
 				currentSelection.add(filteredFiles.get(i));
 			}
@@ -72,7 +72,7 @@ public class MusicFilesSelection implements ListSelectionListener, IListenable<C
 	 * 
 	 * @return
 	 */
-	public List<IMusicFile> getSelectedFiles() {
+	public List<IXFile> getSelectedFiles() {
 		return currentSelection;
 	}
 

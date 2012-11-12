@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration-core xmlns="http://rtfm.essembeh.org/ConfigurationCore-v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration-core xmlns="http://rtfm.essembeh.org/ConfigurationCore-v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="seb photos">
 	<substitutions>
 		<substitution key="@YEAR" value="[12]\d{3}"/>
 		<substitution key="@DATE" value="[12]\d{3}-[0-9x]{2}-[0-9x]{2}"/>

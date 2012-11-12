@@ -22,6 +22,7 @@ package org.essembeh.rtfm.core.filehandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.essembeh.rtfm.core.condition.AndCondition;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
 import org.essembeh.rtfm.core.library.file.FileType;
@@ -32,28 +33,21 @@ import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
 
 public class FileHandler {
-
-	public enum Logic {
-		AND, OR
-	};
-
 	/**
 	 * Attributes
 	 */
-	private final String identifier;
-	private final List<ICondition> conditions;
+	private final FileType fileType;
 	private final List<Attribute> simpleAttributes;
 	private final List<IDynamicAttribute> dynamicAttributes;
-	private final Logic logic;
+	private final AndCondition<VirtualFile> conditions;
 
 	/**
 	 * 
 	 * @param id
 	 */
-	public FileHandler(String id, Logic logic) {
-		this.identifier = id;
-		this.logic = logic;
-		conditions = new ArrayList<ICondition>();
+	public FileHandler(String id) {
+		fileType = FileType.createFiletype(id);
+		conditions = new AndCondition<VirtualFile>();
 		simpleAttributes = new ArrayList<Attribute>();
 		dynamicAttributes = new ArrayList<IDynamicAttribute>();
 	}
@@ -63,7 +57,7 @@ public class FileHandler {
 	 * @return
 	 */
 	public FileType getType() {
-		return FileType.createFiletype(identifier);
+		return fileType;
 	}
 
 	/**
@@ -84,48 +78,29 @@ public class FileHandler {
 
 	/**
 	 * 
-	 * @param condition
-	 */
-	public void addCondition(ICondition condition) {
-		this.conditions.add(condition);
-	}
-
-	/**
-	 * 
-	 * @param file
 	 * @return
 	 */
-	public boolean canHandle(VirtualFile file) {
-		if (conditions.size() == 0) {
-			return true;
-		}
-		for (ICondition condition : conditions) {
-			boolean valid = condition.isValid(file);
-			if (valid && logic == Logic.OR) {
-				return true;
-			} else if (!valid && logic == Logic.AND) {
-				return false;
-			}
-		}
-		return logic == Logic.AND ? true : false;
+	public AndCondition<VirtualFile> getConditions() {
+		return this.conditions;
 	}
 
 	/**
 	 * 
 	 * @param virtualFile
 	 * @return
-	 * @throws DynamicAttributeException
 	 */
-	public IdList<Attribute, Identifier<Attribute>> getAttributesForFile(VirtualFile virtualFile)
-			throws DynamicAttributeException {
-		IdList<Attribute, Identifier<Attribute>> attributes = new IdList<Attribute, Identifier<Attribute>>(
-				new AttributeIdentifier());
+	public IdList<Attribute, Identifier<Attribute>> getAttributesForFile(VirtualFile virtualFile) {
+		IdList<Attribute, Identifier<Attribute>> attributes = new IdList<Attribute, Identifier<Attribute>>(new AttributeIdentifier());
 
 		for (Attribute attribute : simpleAttributes) {
 			attributes.add(attribute.clone());
 		}
 		for (IDynamicAttribute attribute : dynamicAttributes) {
-			attributes.add(attribute.createAttribute(virtualFile));
+			try {
+				attributes.add(attribute.createAttribute(virtualFile));
+			} catch (DynamicAttributeException e) {
+				attributes.add(createErrorAttribute(e));
+			}
 		}
 		return attributes;
 	}
@@ -137,6 +112,17 @@ public class FileHandler {
 	 */
 	@Override
 	public String toString() {
-		return "FileHandler [identifier=" + identifier + "]";
+		return "FileHandler [fileType:" + fileType + ", simpleAttributes:" + simpleAttributes.size() + ", dynamicAttributes:" + dynamicAttributes.size() + "]";
+	}
+
+	/**
+	 * 
+	 * @param t
+	 * @return
+	 */
+	private Attribute createErrorAttribute(Throwable t) {
+		// TODO: Properties
+		Attribute out = new Attribute("core:error", t.getMessage());
+		return out;
 	}
 }

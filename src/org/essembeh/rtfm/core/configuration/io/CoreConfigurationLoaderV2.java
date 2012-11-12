@@ -19,35 +19,33 @@
  */
 package org.essembeh.rtfm.core.configuration.io;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.helpers.DefaultValidationEventHandler;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.actions.Task;
 import org.essembeh.rtfm.core.actions.Workflow;
+import org.essembeh.rtfm.core.condition.AndCondition;
+import org.essembeh.rtfm.core.condition.ICondition;
+import org.essembeh.rtfm.core.condition.MultipleCondition;
+import org.essembeh.rtfm.core.condition.OrCondition;
+import org.essembeh.rtfm.core.condition.impl.virtualfile.FileOrFolder;
+import org.essembeh.rtfm.core.condition.impl.virtualfile.FileOrFolder.InodeType;
+import org.essembeh.rtfm.core.condition.impl.virtualfile.VirtualPathMatches;
+import org.essembeh.rtfm.core.configuration.CoreConfiguration;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.TaskException;
 import org.essembeh.rtfm.core.filehandler.FileHandler;
-import org.essembeh.rtfm.core.filehandler.FileHandler.Logic;
-import org.essembeh.rtfm.core.filehandler.RegexOnPathCondition;
 import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
 import org.essembeh.rtfm.core.filehandler.dynamic.RegexAttribute;
+import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.core.utils.identifiers.TaskIdentifier;
-import org.essembeh.rtfm.core.utils.identifiers.WorkflowIdentifier;
-import org.essembeh.rtfm.core.utils.list.IdList;
-import org.essembeh.rtfm.core.utils.list.Identifier;
 import org.essembeh.rtfm.core.utils.string.StringSubstitutor;
+import org.essembeh.rtfm.core.utils.version.JaxbObjectReader;
 import org.essembeh.rtfm.model.configuration.core.version2.TAction;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionLogic;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionOnType;
 import org.essembeh.rtfm.model.configuration.core.version2.TConditionOnVirtualPath;
 import org.essembeh.rtfm.model.configuration.core.version2.TCoreConfigurationV2;
 import org.essembeh.rtfm.model.configuration.core.version2.TFileHandler;
@@ -61,44 +59,64 @@ import org.essembeh.rtfm.model.configuration.core.version2.TTask;
 
 import com.google.inject.Inject;
 
-public class CoreConfigurationLoaderV2 implements ICoreConfigurationLoader {
+public class CoreConfigurationLoaderV2 extends JaxbObjectReader<CoreConfiguration, TCoreConfigurationV2> {
 	/**
 	 * Attributes
 	 */
 	private static final Logger logger = Logger.getLogger(CoreConfigurationLoaderV2.class);
-	private StringSubstitutor stringSubstitutor;
-	private TCoreConfigurationV2 model;
+	private StringSubstitutor stringSubstitutor = null;
 
 	/**
 	 * Constructor
 	 */
 	@Inject
 	public CoreConfigurationLoaderV2() {
-		stringSubstitutor = null;
-		model = null;
+		super(TCoreConfigurationV2.class);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader#
-	 * loadConfiguration(java.io.InputStream)
+	 * @see org.essembeh.rtfm.core.utils.version.JaxbObjectReader#readObjectFromModel(java.lang.Object, org.essembeh.rtfm.core.utils.version.ILoadable)
 	 */
 	@Override
-	public void loadConfiguration(InputStream input) throws ConfigurationException {
-		model = null;
-		stringSubstitutor = new StringSubstitutor();
-		try {
-			JAXBContext context = JAXBContext.newInstance("org.essembeh.rtfm.model.configuration.core.version2");
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-			JAXBElement<TCoreConfigurationV2> root = unmarshaller.unmarshal(new StreamSource(input),
-					TCoreConfigurationV2.class);
-			model = root.getValue();
-			stringSubstitutor = read(model.getSubstitutions());
-		} catch (JAXBException e) {
-			logger.info("Cannot load core configuration version 2: " + e.getMessage());
-			throw new ConfigurationException(e.getMessage());
+	protected void readObjectFromModel(TCoreConfigurationV2 model, CoreConfiguration configuration) {
+		// String substitutions
+		stringSubstitutor = read(model.getSubstitutions());
+		// Filehandlers
+		for (TFileHandler fileHandlerModel : model.getFilehandlers().getFilehandler()) {
+			FileHandler theFileHandler = read(fileHandlerModel);
+			logger.debug("Found filehandler: " + theFileHandler);
+			configuration.getFileHandlers().add(theFileHandler);
+		}
+		// Tasks
+		Map<String, Task> tasks = new HashMap<String, Task>();
+		for (TTask taskModel : model.getTasks().getTask()) {
+			try {
+				Task task = read(taskModel);
+				logger.debug("Found task: " + task);
+				tasks.put(task.getIdentifier(), task);
+			} catch (ConfigurationException e) {
+				logger.error(e.getMessage());
+			}
+		}
+		// Workflows
+		for (TAction actionModel : model.getActions().getAction()) {
+			Workflow action = read(actionModel);
+			try {
+				// Tasks
+				for (TReference taskRef : actionModel.getWorkflow().getTask()) {
+					Task taskExecutor = tasks.get(taskRef.getRefId());
+					if (taskExecutor == null) {
+						throw new ConfigurationException("Cannot find task: " + taskRef.getRefId());
+					}
+					action.addTask(taskExecutor);
+				}
+				logger.debug("Found workflow: " + action);
+				configuration.getWorkflows().add(action);
+			} catch (ConfigurationException e) {
+				logger.error(e.getMessage());
+			}
 		}
 	}
 
@@ -120,25 +138,6 @@ public class CoreConfigurationLoaderV2 implements ICoreConfigurationLoader {
 		return out;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader#
-	 * getFileHandlers()
-	 */
-	@Override
-	public List<FileHandler> getFileHandlers() throws ConfigurationException {
-		if (model == null) {
-			throw new ConfigurationException("Model is null");
-		}
-		List<FileHandler> out = new ArrayList<FileHandler>();
-		for (TFileHandler fileHandlerModel : model.getFilehandlers().getFilehandler()) {
-			FileHandler theFileHandler = read(fileHandlerModel);
-			out.add(theFileHandler);
-		}
-		return out;
-	}
-
 	/**
 	 * 
 	 * @param model
@@ -146,16 +145,29 @@ public class CoreConfigurationLoaderV2 implements ICoreConfigurationLoader {
 	 */
 	private FileHandler read(TFileHandler model) {
 		String id = model.getId();
+		FileHandler fileHandler = new FileHandler(id);
 		// Get logic
-		logger.debug("Logic: " + model.getConditions().getLogic().toString());
-		Logic logic = Logic.valueOf(model.getConditions().getLogic().toString());
-		FileHandler fileHandler = new FileHandler(id, logic);
+		TConditionLogic logic = model.getConditions().getLogic();
+		MultipleCondition<VirtualFile> globalCondition;
+		if (TConditionLogic.AND == logic) {
+			globalCondition = new AndCondition<VirtualFile>();
+		} else {
+			globalCondition = new OrCondition<VirtualFile>();
+		}
 		// Conditions
 		if (model.getConditions() != null) {
 			for (TConditionOnVirtualPath virtualPathModel : model.getConditions().getVirtualpath()) {
-				fileHandler.addCondition(new RegexOnPathCondition(ss(virtualPathModel.getPattern())));
+				ICondition<VirtualFile> condition = new VirtualPathMatches(ss(virtualPathModel.getPattern()));
+				logger.debug("Found condition: " + condition);
+				globalCondition.addCondition(condition);
+			}
+			for (TConditionOnType conditionModel : model.getConditions().getType()) {
+				ICondition<VirtualFile> condition = new FileOrFolder(InodeType.valueOf(conditionModel.getValue().toString()));
+				logger.debug("Found condition: " + condition);
+				globalCondition.addCondition(condition);
 			}
 		}
+		fileHandler.getConditions().addCondition(globalCondition);
 		// Attributes
 		if (model.getAttributes() != null) {
 			for (TFixedAttribute fixedAttribute : model.getAttributes().getAttribute()) {
@@ -175,8 +187,8 @@ public class CoreConfigurationLoaderV2 implements ICoreConfigurationLoader {
 	 * @return
 	 */
 	private IDynamicAttribute read(TRegexAttribute model) {
-		IDynamicAttribute o = new RegexAttribute(model.getName(), model.isHidden(), Pattern.compile(ss(model
-				.getPattern())), model.getGroup(), model.isOptional());
+		IDynamicAttribute o = new RegexAttribute(model.getName(), Pattern.compile(ss(model.getPattern())), model.getGroup(),
+				model.isOptional());
 		logger.debug("Create DynamicAttribute: " + o);
 		return o;
 	}
@@ -187,46 +199,9 @@ public class CoreConfigurationLoaderV2 implements ICoreConfigurationLoader {
 	 * @return
 	 */
 	private Attribute read(TFixedAttribute model) {
-		Attribute o = new Attribute(model.getName(), model.getValue(), model.isHidden());
+		Attribute o = new Attribute(model.getName(), model.getValue());
 		logger.debug("Create Attribute: " + o);
 		return o;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader#getWorkflows
-	 * ()
-	 */
-	@Override
-	public IdList<Workflow, Identifier<Workflow>> getWorkflows() throws ConfigurationException {
-		if (model == null) {
-			throw new ConfigurationException("Model is null");
-		}
-		IdList<Workflow, Identifier<Workflow>> list = new IdList<Workflow, Identifier<Workflow>>(
-				new WorkflowIdentifier());
-		IdList<Task, TaskIdentifier> taskList = new IdList<Task, TaskIdentifier>(new TaskIdentifier());
-		for (TTask taskModel : model.getTasks().getTask()) {
-			Task task = read(taskModel);
-			logger.debug("Found task: " + task);
-			taskList.add(task);
-		}
-
-		for (TAction actionModel : model.getActions().getAction()) {
-			Workflow action = read(actionModel);
-			list.add(action);
-			// Tasks
-			for (TReference taskRef : actionModel.getWorkflow().getTask()) {
-				Task taskExecutor = taskList.get(taskRef.getRefId());
-				if (taskExecutor == null) {
-					throw new ConfigurationException("Cannot find task: " + taskRef.getRefId());
-				}
-				action.addTask(taskExecutor);
-			}
-			logger.debug("Found action: " + action);
-		}
-		return list;
 	}
 
 	/**
@@ -270,6 +245,6 @@ public class CoreConfigurationLoaderV2 implements ICoreConfigurationLoader {
 	 * @return
 	 */
 	private String ss(String input) {
-		return stringSubstitutor.apply(input);
+		return stringSubstitutor == null ? input : stringSubstitutor.apply(input);
 	}
 }

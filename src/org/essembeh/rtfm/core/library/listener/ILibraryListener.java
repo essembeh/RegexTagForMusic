@@ -22,7 +22,7 @@ package org.essembeh.rtfm.core.library.listener;
 import java.io.File;
 
 import org.essembeh.rtfm.core.library.file.FileType;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 
 public interface ILibraryListener {
@@ -31,7 +31,7 @@ public interface ILibraryListener {
 
 	void noFileHandlerForFile(VirtualFile file);
 
-	void loadLibraryNewFile(IMusicFile musicFile);
+	void loadLibraryNewFile(IXFile musicFile);
 
 	void loadLibraryFileRemoved(String virtualPath, FileType fileType);
 

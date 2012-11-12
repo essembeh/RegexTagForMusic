@@ -10,8 +10,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
-import org.essembeh.rtfm.core.library.ILibrary;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.configuration.IWorkflowService;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
 public class WorkflowModel extends DefaultComboBoxModel {
 
@@ -20,7 +20,7 @@ public class WorkflowModel extends DefaultComboBoxModel {
 	 */
 	private static final long serialVersionUID = -7840068219637080176L;
 	private final String firstElement;
-	private final ILibrary library;
+	private final IWorkflowService workflowService;
 	private final MusicFilesModel musicFilesModel;
 	private final MusicFilesSelection musicFilesSelection;
 	private final List<IWorkflowIdentifier> workflows;
@@ -31,9 +31,9 @@ public class WorkflowModel extends DefaultComboBoxModel {
 	 * @param musicFilesModel
 	 * @param musicFilesSelection
 	 */
-	public WorkflowModel(ILibrary library, MusicFilesModel musicFilesModel, MusicFilesSelection musicFilesSelection) {
+	public WorkflowModel(IWorkflowService workflowService, MusicFilesModel musicFilesModel, MusicFilesSelection musicFilesSelection) {
 		super();
-		this.library = library;
+		this.workflowService = workflowService;
 		this.musicFilesModel = musicFilesModel;
 		this.musicFilesSelection = musicFilesSelection;
 		this.workflows = new ArrayList<IWorkflowIdentifier>();
@@ -57,13 +57,13 @@ public class WorkflowModel extends DefaultComboBoxModel {
 	 * 
 	 */
 	protected void refresh() {
-		List<IMusicFile> files = musicFilesSelection.getSelectedFiles();
+		List<IXFile> files = musicFilesSelection.getSelectedFiles();
 		if (files.size() == 0) {
 			files = musicFilesModel.getFilteredFiles();
 		}
 		workflows.clear();
-		for (IMusicFile musicFile : files) {
-			for (IWorkflowIdentifier workflowIdentifier : library.getExecutionEnvironment().getWorkflowsForType(musicFile.getType())) {
+		for (IXFile musicFile : files) {
+			for (IWorkflowIdentifier workflowIdentifier : workflowService.getWorkflowsForType(musicFile.getType())) {
 				if (!workflows.contains(workflowIdentifier)) {
 					workflows.add(workflowIdentifier);
 				}

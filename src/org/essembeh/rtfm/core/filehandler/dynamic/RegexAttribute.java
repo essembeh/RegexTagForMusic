@@ -39,8 +39,8 @@ public class RegexAttribute implements IDynamicAttribute {
 
 	Attribute attribute;
 
-	public RegexAttribute(String name, boolean hidden, Pattern pattern, int group, boolean optional) {
-		this.attribute = new Attribute(name, "", hidden);
+	public RegexAttribute(String name, Pattern pattern, int group, boolean optional) {
+		this.attribute = new Attribute(name, "");
 		this.pattern = pattern;
 		this.group = group;
 		this.optional = optional;

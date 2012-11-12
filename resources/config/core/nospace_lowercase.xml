@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration-core xmlns="http://rtfm.essembeh.org/ConfigurationCore-v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration-core xmlns="http://rtfm.essembeh.org/ConfigurationCore-v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="default">
+	<!-- Substitutions are applied only on "pattern" attributes -->
+	<substitutions>
+		<substitution key="@SEPARATOR"   value="\."/>
+		<substitution key="@ANYTHING"    value="[^/ A-Z]+"/>
+		<substitution key="@YEAR"        value="[12]\d{3}"/>
+		<substitution key="@TRACKNUMBER" value="\d{2}"/>
+		<substitution key="@MP3"         value="\.mp3"/>
+	</substitutions>
 	<!-- File types -->
 	<filehandlers>
-		<filehandler id="MP3">
+		<filehandler id="Music file">
 			<conditions>
-				<virtualpath matches="/[^/ A-Z]+/[^/ A-Z]+/\d{2,3}\.[^/ A-Z]+\.mp3" />
+				<virtualpath pattern="/@ANYTHING/@ANYTHING/@TRACKNUMBER@SEPARATOR.*@MP3" />
 			</conditions>
 			<attributes>
 				<attribute name="rtfm:tagged" value="false" />
-				<attribute name="db:export" value="true" />
+				<attribute name="db:export"   value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
-				<regex-attribute name="tag:artist" pattern="/(.*)/(?:([12]\d\d\d)\.)?(.*)/(\d{2,3})\.(.*)\.\w+" group="1" />
-				<regex-attribute name="tag:year"   pattern="/(.*)/(?:([12]\d\d\d)\.)?(.*)/(\d{2,3})\.(.*)\.\w+" group="2" optional="true" />
-				<regex-attribute name="tag:album"  pattern="/(.*)/(?:([12]\d\d\d)\.)?(.*)/(\d{2,3})\.(.*)\.\w+" group="3" />
-				<regex-attribute name="tag:track"  pattern="/(.*)/(?:([12]\d\d\d)\.)?(.*)/(\d{2,3})\.(.*)\.\w+" group="4" />
-				<regex-attribute name="tag:title"  pattern="/(.*)/(?:([12]\d\d\d)\.)?(.*)/(\d{2,3})\.(.*)\.\w+" group="5" />
+				<regex-attribute name="tag:artist" pattern="/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="1" />
+				<regex-attribute name="tag:year"   pattern="/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="2" optional="true" />
+				<regex-attribute name="tag:album"  pattern="/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="3" />
+				<regex-attribute name="tag:track"  pattern="/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="4" />
+				<regex-attribute name="tag:title"  pattern="/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="5" />
 			</attributes>
 		</filehandler>
-		<filehandler id="COVER">
+		<filehandler id="Cover">
 			<conditions>
-				<virtualpath matches="/[^/ A-Z]+/[^/ A-Z]+/cover\.(jpg|jpeg|png)" />
+				<virtualpath pattern="/@ANYTHING/@ANYTHING/cover\.(jpg|jpeg|png)" />
 			</conditions>
 			<attributes>
 				<attribute name="db:export" value="false" />
 			</attributes>
 		</filehandler>
-		<filehandler id="PLAYLIST">
+		<filehandler id="Playlist">
 			<conditions>
-				<virtualpath matches="/[^/ A-Z]+/[^/ A-Z]+/playlist\.m3u" />
+				<virtualpath pattern="/@ANYTHING/@ANYTHING/playlist\.m3u" />
 			</conditions>
 			<attributes>
 				<attribute name="db:export" value="false" />
@@ -35,7 +43,7 @@
 		</filehandler>
 		<filehandler id="UNKNOWN">
 			<conditions>
-				<virtualpath matches=".*[^/]" />
+				<virtualpath pattern=".*"/>
 			</conditions>
 			<attributes>
 				<attribute name="db:export" value="false" />
@@ -66,7 +74,7 @@
 				<task ref-id="JAudioTagger-id3v2.4" />
 			</workflow>
 		</action>
-		<action id="00-tagJAudioTaggeID3v2.3" description="Tag with JAudioTagger and ID3v2.3">
+		<action id="01-tagJAudioTaggeID3v2.3" description="Tag with JAudioTagger and ID3v2.3">
 			<apply-on>
 				<filehandler ref-id="MP3" />
 			</apply-on>

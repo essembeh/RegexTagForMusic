@@ -1,8 +1,8 @@
 //
-// Ce fichier a Ã©tÃ© gÃ©nÃ©rÃ© par l'implÃ©mentation de rÃ©fÃ©rence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
+// Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Toute modification apportÃ©e Ã  ce fichier sera perdue lors de la recompilation du schÃ©ma source. 
-// GÃ©nÃ©rÃ© le : 2012.11.12 Ã  12:52:12 AM CET 
+// Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
+// Généré le : 2012.12.03 à 04:47:27 PM CET 
 //
 
 
@@ -17,13 +17,13 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour TConditionOnType complex type.
  * 
- * <p>Le fragment de schÃ©ma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TConditionOnType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="value" use="required" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TFileType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -36,29 +36,29 @@ import javax.xml.bind.annotation.XmlType;
 public class TConditionOnType {
 
     @XmlAttribute(name = "value", required = true)
-    protected String value;
+    protected TFileType value;
 
     /**
-     * Obtient la valeur de la propriÃ©tÃ© value.
+     * Obtient la valeur de la propriété value.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link TFileType }
      *     
      */
-    public String getValue() {
+    public TFileType getValue() {
         return value;
     }
 
     /**
-     * DÃ©finit la valeur de la propriÃ©tÃ© value.
+     * Définit la valeur de la propriété value.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link TFileType }
      *     
      */
-    public void setValue(String value) {
+    public void setValue(TFileType value) {
         this.value = value;
     }
 

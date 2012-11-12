@@ -17,38 +17,47 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.filter.conditions;
+package org.essembeh.rtfm.core.condition.impl.ixfile;
 
-import java.util.regex.Pattern;
+import org.essembeh.rtfm.core.condition.ICondition;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
-import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
+public class AttributeExists implements ICondition<IXFile> {
 
-public class AttributeRegexCondition implements IFilterCondition {
-
+	/**
+	 * 
+	 */
 	private final String attributeName;
-	private final Pattern regexOnValue;
+	private final boolean exists;
 
-	public AttributeRegexCondition(String attributeName, Pattern regexOnValue) {
+	/**
+	 * 
+	 * @param attributeName
+	 * @param exists
+	 */
+	public AttributeExists(String attributeName, boolean exists) {
 		this.attributeName = attributeName;
-		this.regexOnValue = regexOnValue;
+		this.exists = exists;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
+	 */
 	@Override
-	public boolean isTrue(IMusicFile musicFile) {
-		boolean condition = false;
-		Attribute attribute = musicFile.getAttributeList().get(attributeName);
-		if (attribute != null) {
-			String value = attribute.getValue();
-			condition = regexOnValue.matcher(value).matches();
-		}
-		return condition;
+	public boolean isTrue(IXFile input) {
+		return !(input.getAttributeList().containsKey(attributeName) ^ exists);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "AttributeRegexCondition [attributeName=" + attributeName + ", regexOnValue=" + regexOnValue.pattern()
-				+ "]";
+		return this.getClass().getName() + " [attributeName:" + attributeName + ", exists:" + exists + "]";
 	}
 
 }

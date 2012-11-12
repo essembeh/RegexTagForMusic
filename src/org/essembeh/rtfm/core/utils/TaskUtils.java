@@ -24,8 +24,8 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.exception.TaskException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.core.library.file.MusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.core.library.file.XFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.tasks.ITask;
 
@@ -58,13 +58,13 @@ public class TaskUtils {
 	/**
 	 * Used to set Task env. <br/>
 	 * If the value is ${foo}, return the value of "foo" attribute of the
-	 * {@link MusicFile}
+	 * {@link XFile}
 	 * 
 	 * @param value
 	 * @param musicFile
 	 * @return
 	 */
-	public static String valuateDynamicEnvironmentVariable(String value, IMusicFile musicFile) {
+	public static String valuateDynamicEnvironmentVariable(String value, IXFile musicFile) {
 		String attributeValue = value;
 		Pattern pattern = Pattern.compile("\\$\\{(.*)\\}");
 		Matcher matcher = pattern.matcher(value);

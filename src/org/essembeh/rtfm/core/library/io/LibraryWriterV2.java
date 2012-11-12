@@ -29,11 +29,13 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.essembeh.rtfm.core.exception.LibraryException;
 import org.essembeh.rtfm.core.library.ILibrary;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.Library;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
+import org.essembeh.rtfm.core.utils.version.IObjectWriter;
+import org.essembeh.rtfm.core.utils.version.exceptions.WriterException;
 import org.essembeh.rtfm.model.library.version2.ObjectFactory;
 import org.essembeh.rtfm.model.library.version2.TAttribute;
 import org.essembeh.rtfm.model.library.version2.TFile;
@@ -42,7 +44,7 @@ import org.essembeh.rtfm.model.library.version2.TRootFolder;
 
 import com.google.inject.Inject;
 
-public class LibraryWriterV2 implements ILibraryWriter {
+public class LibraryWriterV2 implements IObjectWriter<Library> {
 	/**
 	 * Attributes
 	 */
@@ -55,27 +57,27 @@ public class LibraryWriterV2 implements ILibraryWriter {
 	 */
 	@Inject
 	public LibraryWriterV2(RTFMProperties properties) {
-		this.exportableAttribute = properties.getProperty("library.musicfile.attribute.export");
+		this.exportableAttribute = properties.getProperty("attribute.export");
 		this.objectFactory = new ObjectFactory();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.core.library.io.ILibraryWriter#writeLibrary(java.io.OutputStream, org.essembeh.rtfm.core.library.Library)
+	 * @see org.essembeh.rtfm.core.utils.version.IObjectWriter#saveObject(java.io.OutputStream, org.essembeh.rtfm.core.utils.version.ISaveable)
 	 */
 	@Override
-	public void writeLibrary(OutputStream destination, ILibrary library) throws LibraryException {
-		TLibraryV2 model = toModel(library);
+	public void writeObject(OutputStream outputStream, Library element) throws WriterException {
+		TLibraryV2 model = toModel(element);
 		try {
 			JAXBContext context = JAXBContext.newInstance("org.essembeh.rtfm.model.library.version2");
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			JAXBElement<TLibraryV2> root = objectFactory.createLibrary(model);
-			marshaller.marshal(root, destination);
+			marshaller.marshal(root, outputStream);
 		} catch (JAXBException e) {
-			throw new LibraryException(e.getMessage());
+			throw new WriterException(e);
 		}
 	}
 
@@ -84,7 +86,7 @@ public class LibraryWriterV2 implements ILibraryWriter {
 	 * @param musicFile
 	 * @return
 	 */
-	private boolean isExportable(IMusicFile musicFile) {
+	private boolean isExportable(IXFile musicFile) {
 		boolean isExportable = true;
 		if (exportableAttribute != null) {
 			Attribute exportAttribute = musicFile.getAttributeList().get(exportableAttribute);
@@ -103,7 +105,7 @@ public class LibraryWriterV2 implements ILibraryWriter {
 	private TLibraryV2 toModel(ILibrary library) {
 		TLibraryV2 model = objectFactory.createTLibraryV2();
 		model.setRootFolder(toModel(library.getRootFolder()));
-		for (IMusicFile musicFile : library.getAllFiles()) {
+		for (IXFile musicFile : library.getAllFiles()) {
 			if (isExportable(musicFile)) {
 				model.getFile().add(toModel(musicFile));
 			}
@@ -127,16 +129,14 @@ public class LibraryWriterV2 implements ILibraryWriter {
 	 * @param musicFile
 	 * @return
 	 */
-	protected TFile toModel(IMusicFile musicFile) {
+	protected TFile toModel(IXFile musicFile) {
 		TFile model = objectFactory.createTFile();
 		model.setType(musicFile.getType().toString());
 		model.setVirtualpath(musicFile.getVirtualPath());
 		List<Attribute> attributeList = musicFile.getAttributeList().toList();
 		Collections.sort(attributeList);
 		for (Attribute a : attributeList) {
-			if (!a.isHidden()) {
-				model.getAttribute().add(toModel(a));
-			}
+			model.getAttribute().add(toModel(a));
 		}
 		return model;
 	}
@@ -152,4 +152,5 @@ public class LibraryWriterV2 implements ILibraryWriter {
 		model.setValue(attribute.getValue());
 		return model;
 	}
+
 }

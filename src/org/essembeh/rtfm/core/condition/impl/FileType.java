@@ -17,33 +17,48 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.filter.conditions;
+package org.essembeh.rtfm.core.condition.impl;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.essembeh.rtfm.core.library.file.FileType;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.condition.ICondition;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
-public class TypeCondition implements IFilterCondition {
+public class FileType implements ICondition<IXFile> {
 
-	private String[] validTypes;
+	/**
+	 * 
+	 */
+	private List<String> validTypes;
 
-	public TypeCondition(String... validTypes) {
-		this.validTypes = validTypes;
+	/**
+	 * 
+	 * @param validTypes
+	 */
+	public FileType(String... validTypes) {
+		this.validTypes = Arrays.asList(validTypes);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
+	 */
 	@Override
-	public boolean isTrue(IMusicFile musicFile) {
-		for (int i = 0; i < validTypes.length; i++) {
-			if (musicFile.getType().equals(FileType.getFiletype(validTypes[i]))) {
-				return true;
-			}
-		}
-		return false;
+	public boolean isTrue(IXFile input) {
+		return validTypes.contains(input.getType().getIdentifier());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "TypeCondition [validTypes=" + StringUtils.join(validTypes, ", ") + "]";
+		return this.getClass().getName() + "  [validTypes=" + StringUtils.join(validTypes, ", ") + "]";
 	}
 
 }

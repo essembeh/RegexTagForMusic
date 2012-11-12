@@ -1,8 +1,8 @@
 //
-// Ce fichier a Ã©tÃ© gÃ©nÃ©rÃ© par l'implÃ©mentation de rÃ©fÃ©rence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
+// Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Toute modification apportÃ©e Ã  ce fichier sera perdue lors de la recompilation du schÃ©ma source. 
-// GÃ©nÃ©rÃ© le : 2012.11.12 Ã  12:52:12 AM CET 
+// Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
+// Généré le : 2012.12.03 à 04:47:27 PM CET 
 //
 
 
@@ -10,6 +10,7 @@ package org.essembeh.rtfm.model.configuration.core.version2;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -17,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour TCoreConfigurationV2 complex type.
  * 
- * <p>Le fragment de schÃ©ma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TCoreConfigurationV2">
@@ -29,6 +30,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="tasks" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TTaskList" minOccurs="0"/>
  *         &lt;element name="actions" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TActionList" minOccurs="0"/>
  *       &lt;/sequence>
+ *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -53,9 +55,11 @@ public class TCoreConfigurationV2 {
     protected TTaskList tasks;
     @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
     protected TActionList actions;
+    @XmlAttribute(name = "name", required = true)
+    protected String name;
 
     /**
-     * Obtient la valeur de la propriÃ©tÃ© substitutions.
+     * Obtient la valeur de la propriété substitutions.
      * 
      * @return
      *     possible object is
@@ -67,7 +71,7 @@ public class TCoreConfigurationV2 {
     }
 
     /**
-     * DÃ©finit la valeur de la propriÃ©tÃ© substitutions.
+     * Définit la valeur de la propriété substitutions.
      * 
      * @param value
      *     allowed object is
@@ -79,7 +83,7 @@ public class TCoreConfigurationV2 {
     }
 
     /**
-     * Obtient la valeur de la propriÃ©tÃ© filehandlers.
+     * Obtient la valeur de la propriété filehandlers.
      * 
      * @return
      *     possible object is
@@ -91,7 +95,7 @@ public class TCoreConfigurationV2 {
     }
 
     /**
-     * DÃ©finit la valeur de la propriÃ©tÃ© filehandlers.
+     * Définit la valeur de la propriété filehandlers.
      * 
      * @param value
      *     allowed object is
@@ -103,7 +107,7 @@ public class TCoreConfigurationV2 {
     }
 
     /**
-     * Obtient la valeur de la propriÃ©tÃ© tasks.
+     * Obtient la valeur de la propriété tasks.
      * 
      * @return
      *     possible object is
@@ -115,7 +119,7 @@ public class TCoreConfigurationV2 {
     }
 
     /**
-     * DÃ©finit la valeur de la propriÃ©tÃ© tasks.
+     * Définit la valeur de la propriété tasks.
      * 
      * @param value
      *     allowed object is
@@ -127,7 +131,7 @@ public class TCoreConfigurationV2 {
     }
 
     /**
-     * Obtient la valeur de la propriÃ©tÃ© actions.
+     * Obtient la valeur de la propriété actions.
      * 
      * @return
      *     possible object is
@@ -139,7 +143,7 @@ public class TCoreConfigurationV2 {
     }
 
     /**
-     * DÃ©finit la valeur de la propriÃ©tÃ© actions.
+     * Définit la valeur de la propriété actions.
      * 
      * @param value
      *     allowed object is
@@ -148,6 +152,30 @@ public class TCoreConfigurationV2 {
      */
     public void setActions(TActionList value) {
         this.actions = value;
+    }
+
+    /**
+     * Obtient la valeur de la propriété name.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Définit la valeur de la propriété name.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setName(String value) {
+        this.name = value;
     }
 
 }

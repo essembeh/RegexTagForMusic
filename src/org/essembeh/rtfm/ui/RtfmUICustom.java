@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 
 import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction.ICallback;
 import org.essembeh.rtfm.ui.controller.MainController;
@@ -45,7 +45,7 @@ public class RtfmUICustom extends RtfmUI {
 
 		// Renderes
 		fileTable.setDefaultRenderer(Boolean.class, new ThreeStatesBooleanRenderer());
-		fileTable.setDefaultRenderer(IMusicFile.class, new MusicFileRenderer());
+		fileTable.setDefaultRenderer(IXFile.class, new MusicFileRenderer());
 
 		// Listeners
 		mainController.getFiltersSelection().listen(explorerTree);

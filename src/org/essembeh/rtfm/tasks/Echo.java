@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
 public class Echo implements ITask {
 
@@ -31,7 +31,7 @@ public class Echo implements ITask {
 	private Map<String, String> properties = new HashMap<String, String>();
 
 	@Override
-	public void execute(IMusicFile file) {
+	public void execute(IXFile file) {
 		for (String key : properties.keySet()) {
 			logger.info(key + " = " + properties.get(key));
 		}

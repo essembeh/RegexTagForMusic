@@ -30,7 +30,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.utils.ProcessUtils;
 import org.essembeh.rtfm.core.utils.ProcessUtils.STDOUT;
 import org.essembeh.rtfm.core.utils.TaskUtils;
@@ -130,7 +130,7 @@ public class ExternalProcess implements ITask {
 	 * .library.file.IMusicFile)
 	 */
 	@Override
-	public void execute(IMusicFile file) throws ActionException {
+	public void execute(IXFile file) throws ActionException {
 		// Build the command
 		List<String> command = new ArrayList<String>();
 		command.add(this.binaryPath);
@@ -149,7 +149,7 @@ public class ExternalProcess implements ITask {
 	 * @param processEnv
 	 * @param musicFile
 	 */
-	void updateEnvironment(Map<String, String> processEnv, IMusicFile musicFile) {
+	void updateEnvironment(Map<String, String> processEnv, IXFile musicFile) {
 		// Parse env
 		for (String key : properties.keySet()) {
 			String value = properties.get(key);

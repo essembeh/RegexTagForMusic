@@ -17,24 +17,36 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.io;
+package org.essembeh.rtfm.core.library.filter;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.essembeh.rtfm.core.exception.LibraryException;
-import org.essembeh.rtfm.core.library.ILibrary;
+import org.essembeh.rtfm.core.condition.AndCondition;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
-/**
- * 
- */
-public interface ILibraryLoader {
+public class XFileFilter extends AndCondition<IXFile> {
+
 	/**
 	 * 
-	 * @param source
-	 * @param library
-	 * @throws LibraryException
-	 * @throws IOException
+	 * @param conditions
 	 */
-	void loadLibrary(InputStream source, ILibrary library) throws LibraryException, IOException;
+	public XFileFilter() {
+		super();
+	}
+
+	/**
+	 * 
+	 * @param inList
+	 * @return
+	 */
+	public List<IXFile> filter(List<IXFile> inList) {
+		List<IXFile> outList = new ArrayList<IXFile>();
+		for (IXFile xFile : inList) {
+			if (isTrue(xFile)) {
+				outList.add(xFile);
+			}
+		}
+		return outList;
+	}
 }

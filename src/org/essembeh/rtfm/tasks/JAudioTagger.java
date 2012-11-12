@@ -21,7 +21,7 @@ package org.essembeh.rtfm.tasks;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
@@ -78,7 +78,7 @@ public class JAudioTagger implements ITask {
 	}
 
 	@Override
-	public void execute(IMusicFile mp3) throws ActionException {
+	public void execute(IXFile mp3) throws ActionException {
 		logger.debug("Step1: Remove tags");
 		removeTag(mp3);
 		setTagged(mp3, false);
@@ -88,7 +88,7 @@ public class JAudioTagger implements ITask {
 
 	}
 
-	private void setTagged(IMusicFile musicFile, Boolean tagged) {
+	private void setTagged(IXFile musicFile, Boolean tagged) {
 		logger.debug("Set tagged=" + tagged + ", file: " + musicFile);
 		Attribute taggedAttribute = musicFile.getAttributeList().get("rtfm:tagged");
 		if (taggedAttribute != null) {
@@ -98,7 +98,7 @@ public class JAudioTagger implements ITask {
 		}
 	}
 
-	private void tag(IMusicFile mp3) throws ActionException {
+	private void tag(IXFile mp3) throws ActionException {
 		// Set the tag content
 		AbstractID3v2Tag id3 = null;
 		if (this.version == VERSION.ID3V2_3) {
@@ -132,7 +132,7 @@ public class JAudioTagger implements ITask {
 		}
 	}
 
-	private void removeTag(IMusicFile mp3) throws ActionException {
+	private void removeTag(IXFile mp3) throws ActionException {
 		MP3File theMp3File = null;
 		try {
 			theMp3File = new MP3File(mp3.getFile());

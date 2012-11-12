@@ -2,138 +2,67 @@ package org.essembeh.rtfm.core.configuration;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.actions.IJob;
-import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
-import org.essembeh.rtfm.core.actions.Job;
 import org.essembeh.rtfm.core.actions.Workflow;
-import org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader;
-import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.exception.ConfigurationException;
-import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.filehandler.FileHandler;
-import org.essembeh.rtfm.core.library.file.FileType;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
-import org.essembeh.rtfm.core.library.file.MusicFile;
-import org.essembeh.rtfm.core.library.file.VirtualFile;
-import org.essembeh.rtfm.core.properties.RTFMProperties;
-import org.essembeh.rtfm.core.utils.identifiers.WorkflowIdentifier;
-import org.essembeh.rtfm.core.utils.list.IdList;
-import org.essembeh.rtfm.core.utils.list.Identifier;
+import org.essembeh.rtfm.core.utils.version.ILoadable;
+import org.essembeh.rtfm.core.utils.version.IObjectReader;
+import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
 
-import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
-public class CoreConfiguration implements IExecutionEnvironment {
+public class CoreConfiguration implements ILoadable {
 
 	/**
 	 * Attributes
 	 */
-	private final static Logger LOGGER = Logger.getLogger(CoreConfiguration.class);
-	private final static Integer DEFAULT_NBTHREADS = 4;
-	private final ICoreConfigurationLoader configurationLoader;
+	private final IObjectReader<CoreConfiguration> configurationReader;
 	private final List<FileHandler> fileHandlers;
-	private final IdList<Workflow, Identifier<Workflow>> workflows;
-	private final Executor executor;
+	private final List<Workflow> workflows;
 
 	/**
 	 * 
-	 * @param configurationLoader
-	 * @param configurationHelper
-	 * @param properties
+	 * @param configurationReader
 	 */
-	@Inject
-	public CoreConfiguration(ICoreConfigurationLoader configurationLoader, RTFMProperties properties) {
-		this.configurationLoader = configurationLoader;
+	public CoreConfiguration(@Named("CoreConfigurationReader") IObjectReader<CoreConfiguration> configurationReader) {
+		this.configurationReader = configurationReader;
 		this.fileHandlers = new ArrayList<FileHandler>();
-		this.workflows = new IdList<Workflow, Identifier<Workflow>>(new WorkflowIdentifier());
-		Integer nbThread = properties.getWithDefault("job.threads", DEFAULT_NBTHREADS);
-		LOGGER.debug("Using threads for job: " + nbThread);
-		executor = Executors.newFixedThreadPool(nbThread);
+		this.workflows = new ArrayList<Workflow>();
 	}
 
 	/**
-	 * 
-	 * @param input
-	 * @throws ConfigurationException
+	 * @return the fileHandlers
 	 */
-	public void load(InputStream input) throws ConfigurationException {
-		// Clean
-		this.fileHandlers.clear();
-		this.workflows.clear();
-		// Load
-		configurationLoader.loadConfiguration(input);
-		fileHandlers.addAll(configurationLoader.getFileHandlers());
-		workflows.addAll(configurationLoader.getWorkflows());
+	public List<FileHandler> getFileHandlers() {
+		return fileHandlers;
 	}
 
 	/**
-	 * 
-	 * @param file
-	 * @return
-	 * @throws DynamicAttributeException
+	 * @return the workflows
 	 */
-	public IMusicFile createMusicFile(VirtualFile file) throws DynamicAttributeException {
-		MusicFile musicFile = null;
-		for (FileHandler fileHandler : fileHandlers) {
-			if (fileHandler.canHandle(file)) {
-				musicFile = new MusicFile(fileHandler.getType(), file);
-				musicFile.getAttributeList().addAll(fileHandler.getAttributesForFile(musicFile.getFile()));
-				break;
-			}
-		}
-		if (musicFile == null) {
-			LOGGER.info("Cannot find filehandler for file: " + file);
-		}
-		return musicFile;
+	public List<Workflow> getWorkflows() {
+		return workflows;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.core.configuration.IExecutionEnvironment#createJob(org.essembeh.rtfm.core.actions.IWorkflowIdentifier, java.util.List)
+	 * @see org.essembeh.rtfm.core.utils.version.IResetable#reset()
 	 */
 	@Override
-	public IJob createJob(IWorkflowIdentifier workflowIdentifier, List<IMusicFile> musicFiles) throws ActionException {
-		if (!workflows.containsKey(workflowIdentifier.getIdentifier())) {
-			throw new ActionException("Unknown workflow: " + workflowIdentifier);
-		}
-		return new Job(workflows.get(workflowIdentifier.getIdentifier()), musicFiles, executor);
+	public void resetValues() {
+		fileHandlers.clear();
+		workflows.clear();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.core.configuration.IExecutionEnvironment#getAllWorkflows()
+	 * @see org.essembeh.rtfm.core.utils.version.ILoadable#load(java.io.InputStream)
 	 */
 	@Override
-	public List<IWorkflowIdentifier> getAllWorkflows() {
-		List<IWorkflowIdentifier> out = new ArrayList<IWorkflowIdentifier>();
-		for (Workflow workflow : workflows) {
-			out.add(workflow);
-		}
-		Collections.sort(out);
-		return out;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.configuration.IExecutionEnvironment#getWorkflowsForType(org.essembeh.rtfm.core.library.file.FileType)
-	 */
-	@Override
-	public List<IWorkflowIdentifier> getWorkflowsForType(FileType fileType) {
-		List<IWorkflowIdentifier> out = new ArrayList<IWorkflowIdentifier>();
-		for (Workflow workflow : workflows) {
-			if (workflow.supportType(fileType)) {
-				out.add(workflow);
-			}
-		}
-		Collections.sort(out);
-		return out;
+	public void load(InputStream inputStream) throws ReaderException {
+		configurationReader.readObject(inputStream, this);
 	}
 }

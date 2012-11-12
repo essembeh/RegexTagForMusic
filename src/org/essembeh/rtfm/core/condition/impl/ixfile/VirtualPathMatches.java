@@ -17,37 +17,34 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.configuration.io;
+package org.essembeh.rtfm.core.condition.impl.ixfile;
 
-import java.io.InputStream;
-import java.util.List;
+import org.essembeh.rtfm.core.condition.ICondition;
+import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.core.library.file.VirtualFile;
 
-import org.essembeh.rtfm.core.actions.Workflow;
-import org.essembeh.rtfm.core.exception.ConfigurationException;
-import org.essembeh.rtfm.core.filehandler.FileHandler;
-import org.essembeh.rtfm.core.utils.list.IdList;
-import org.essembeh.rtfm.core.utils.list.Identifier;
-
-public interface ICoreConfigurationLoader {
+public class VirtualPathMatches implements ICondition<IXFile> {
 
 	/**
 	 * 
-	 * @param input
-	 * @throws ConfigurationException
 	 */
-	void loadConfiguration(InputStream input) throws ConfigurationException;
+	private final ICondition<VirtualFile> condition;
 
 	/**
 	 * 
-	 * @return
-	 * @throws ConfigurationException
+	 * @param regexOnPath
 	 */
-	List<FileHandler> getFileHandlers() throws ConfigurationException;
+	public VirtualPathMatches(String regexOnPath) {
+		this.condition = new org.essembeh.rtfm.core.condition.impl.virtualfile.VirtualPathMatches(regexOnPath);
+	}
 
-	/**
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return
-	 * @throws ConfigurationException
+	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
 	 */
-	IdList<Workflow, Identifier<Workflow>> getWorkflows() throws ConfigurationException;
+	@Override
+	public boolean isTrue(IXFile input) {
+		return condition.isTrue(input.getFile());
+	}
 }

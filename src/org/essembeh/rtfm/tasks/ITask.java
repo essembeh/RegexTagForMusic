@@ -20,7 +20,7 @@
 package org.essembeh.rtfm.tasks;
 
 import org.essembeh.rtfm.core.exception.ActionException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
 public interface ITask {
 
@@ -38,6 +38,6 @@ public interface ITask {
 	 * @param file
 	 * @throws ActionException
 	 */
-	void execute(IMusicFile file) throws ActionException;
+	void execute(IXFile file) throws ActionException;
 
 }

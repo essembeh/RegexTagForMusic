@@ -21,7 +21,7 @@ package org.essembeh.rtfm.core.actions;
 
 import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.exception.TaskException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.utils.TaskUtils;
 import org.essembeh.rtfm.tasks.ITask;
 
@@ -69,7 +69,7 @@ public class Task {
 	 * @param musicFile
 	 * @throws ActionException
 	 */
-	public void execute(IMusicFile musicFile) throws ActionException {
+	public void execute(IXFile musicFile) throws ActionException {
 		task.execute(musicFile);
 	}
 

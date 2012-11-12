@@ -17,34 +17,56 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.filter.conditions;
+package org.essembeh.rtfm.core.condition.impl.ixfile;
 
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import java.util.regex.Pattern;
+
+import org.essembeh.rtfm.core.condition.ICondition;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
-public class AttributeValueCondition implements IFilterCondition {
+public class AttributeValueRegex implements ICondition<IXFile> {
 
+	/**
+	 * Attributes
+	 */
 	private final String attributeName;
-	private final String expectedValue;
+	private final Pattern regexOnValue;
 
-	public AttributeValueCondition(String attributeName, String expectedValue) {
+	/**
+	 * 
+	 * @param attributeName
+	 * @param regexOnValue
+	 */
+	public AttributeValueRegex(String attributeName, Pattern regexOnValue) {
 		this.attributeName = attributeName;
-		this.expectedValue = expectedValue;
+		this.regexOnValue = regexOnValue;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
+	 */
 	@Override
-	public boolean isTrue(IMusicFile musicFile) {
+	public boolean isTrue(IXFile xfile) {
 		boolean condition = false;
-		Attribute attribute = musicFile.getAttributeList().get(attributeName);
+		Attribute attribute = xfile.getAttributeList().get(attributeName);
 		if (attribute != null) {
-			condition = attribute.getValue().equals(expectedValue);
+			String value = attribute.getValue();
+			condition = regexOnValue.matcher(value).matches();
 		}
 		return condition;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "AttributeValueCondition [attributeName=" + attributeName + ", expectedValue=" + expectedValue + "]";
+		return this.getClass().getName() + " [attributeName=" + attributeName + ", regexOnValue=" + regexOnValue.pattern() + "]";
 	}
 
 }

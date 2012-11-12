@@ -21,31 +21,31 @@ package org.essembeh.rtfm.core.library.filter;
 
 import java.util.regex.Pattern;
 
-import org.essembeh.rtfm.core.library.filter.conditions.AttributeValueCondition;
-import org.essembeh.rtfm.core.library.filter.conditions.TypeCondition;
-import org.essembeh.rtfm.core.library.filter.conditions.VirtualPathCondition;
+import org.essembeh.rtfm.core.condition.impl.FileType;
+import org.essembeh.rtfm.core.condition.impl.ixfile.AttributeValueEquals;
+import org.essembeh.rtfm.core.condition.impl.ixfile.VirtualPathMatches;
 
 public class CommonFilters {
 
-	public static Filter noFilter() {
-		return new Filter();
+	public static XFileFilter noFilter() {
+		return new XFileFilter();
 	}
 
-	public static Filter filterOnAttribute(String attributeName, String expectedValue) {
-		Filter filter = new Filter();
-		filter.addCondition(new AttributeValueCondition(attributeName, expectedValue));
+	public static XFileFilter filterOnAttribute(String attributeName, String expectedValue) {
+		XFileFilter filter = new XFileFilter();
+		filter.addCondition(new AttributeValueEquals(attributeName, expectedValue));
 		return filter;
 	}
 
-	public static Filter filterOnType(String expectedValue) {
-		Filter filter = new Filter();
-		filter.addCondition(new TypeCondition(new String[] { expectedValue }));
+	public static XFileFilter filterOnType(String expectedValue) {
+		XFileFilter filter = new XFileFilter();
+		filter.addCondition(new FileType(new String[] { expectedValue }));
 		return filter;
 	}
 
-	public static Filter virtualPathStartsWith(String expectedValue) {
-		Filter filter = new Filter();
-		filter.addCondition(new VirtualPathCondition(Pattern.compile(Pattern.quote(expectedValue) + ".*")));
+	public static XFileFilter virtualPathStartsWith(String expectedValue) {
+		XFileFilter filter = new XFileFilter();
+		filter.addCondition(new VirtualPathMatches(Pattern.quote(expectedValue) + ".*"));
 		return filter;
 	}
 }

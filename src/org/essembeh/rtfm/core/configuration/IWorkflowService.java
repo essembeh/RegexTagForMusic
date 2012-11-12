@@ -6,9 +6,9 @@ import org.essembeh.rtfm.core.actions.IJob;
 import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.library.file.FileType;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
-public interface IExecutionEnvironment {
+public interface IWorkflowService {
 
 	/**
 	 * Creates a Job to be submitted
@@ -18,7 +18,7 @@ public interface IExecutionEnvironment {
 	 * @return
 	 * @throws ActionException
 	 */
-	IJob createJob(IWorkflowIdentifier workflowIdentifier, List<IMusicFile> musicFiles) throws ActionException;
+	IJob createJob(IWorkflowIdentifier workflowIdentifier, List<IXFile> musicFiles) throws ActionException;
 
 	/**
 	 * Get All Workflow Ids

@@ -27,14 +27,9 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.configuration.CoreConfiguration;
-import org.essembeh.rtfm.core.configuration.IExecutionEnvironment;
-import org.essembeh.rtfm.core.exception.ConfigurationException;
-import org.essembeh.rtfm.core.exception.DynamicAttributeException;
-import org.essembeh.rtfm.core.exception.LibraryException;
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.configuration.IXFileService;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
-import org.essembeh.rtfm.core.library.io.GenericLibraryIO;
 import org.essembeh.rtfm.core.library.listener.ILibraryListener;
 import org.essembeh.rtfm.core.library.listener.LibraryListenerContainer;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
@@ -43,35 +38,46 @@ import org.essembeh.rtfm.core.utils.identifiers.MusicFileIdentifier;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
 import org.essembeh.rtfm.core.utils.listener.IListenable;
+import org.essembeh.rtfm.core.utils.version.ILoadable;
+import org.essembeh.rtfm.core.utils.version.IObjectReader;
+import org.essembeh.rtfm.core.utils.version.IObjectWriter;
+import org.essembeh.rtfm.core.utils.version.ISaveable;
+import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
+import org.essembeh.rtfm.core.utils.version.exceptions.WriterException;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
-public class Library implements IListenable<ILibraryListener>, ILibrary {
+public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadable, ISaveable {
 	/**
 	 * Attributes
 	 */
 	private final static Logger logger = Logger.getLogger(Library.class);
 	private final RTFMProperties properties;
-	private final CoreConfiguration coreConfiguration;
-	private final GenericLibraryIO libraryIO;
-	private final IdList<IMusicFile, Identifier<IMusicFile>> listOfFiles;
+	private final IXFileService fileService;
+	private final IObjectReader<Library> libraryReader;
+	private final IObjectWriter<Library> libraryWriter;
+	private final IdList<IXFile, Identifier<IXFile>> listOfFiles;
 	private final LibraryListenerContainer listeners;
 	private volatile File rootFolder;
 
 	/**
 	 * 
-	 * @param libraryIO
+	 * @param libraryReader
+	 * @param libraryWriter
 	 * @param properties
-	 * @param coreConfiguration
+	 * @param fileService
 	 */
 	@Inject
-	public Library(GenericLibraryIO libraryIO, RTFMProperties properties, CoreConfiguration coreConfiguration) {
-		this.coreConfiguration = coreConfiguration;
+	public Library(@Named("LibraryReader") IObjectReader<Library> libraryReader, @Named("LibraryWriter") IObjectWriter<Library> libraryWriter,
+			RTFMProperties properties, IXFileService fileService) {
+		this.libraryReader = libraryReader;
+		this.libraryWriter = libraryWriter;
+		this.fileService = fileService;
 		this.properties = properties;
-		this.libraryIO = libraryIO;
 		this.listeners = new LibraryListenerContainer();
-		this.listOfFiles = new IdList<IMusicFile, Identifier<IMusicFile>>(new MusicFileIdentifier());
-		clear();
+		this.listOfFiles = new IdList<IXFile, Identifier<IXFile>>(new MusicFileIdentifier());
+		this.rootFolder = null;
 	}
 
 	/*
@@ -90,18 +96,8 @@ public class Library implements IListenable<ILibraryListener>, ILibrary {
 	 * @see org.essembeh.rtfm.core.library.ILibrary#getAllFiles()
 	 */
 	@Override
-	public List<IMusicFile> getAllFiles() {
+	public List<IXFile> getAllFiles() {
 		return listOfFiles.toList();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.library.ILibrary#getExecutionEnvironment()
-	 */
-	@Override
-	public IExecutionEnvironment getExecutionEnvironment() {
-		return coreConfiguration;
 	}
 
 	/*
@@ -112,43 +108,6 @@ public class Library implements IListenable<ILibraryListener>, ILibrary {
 	@Override
 	public File getRootFolder() {
 		return this.rootFolder;
-	}
-
-	/**
-	 * 
-	 * @param configuration
-	 * @throws ConfigurationException
-	 */
-	public void loadConfiguration(InputStream configuration) throws ConfigurationException {
-		clear();
-		coreConfiguration.load(configuration);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.library.ILibrary#loadFrom(java.io.InputStream)
-	 */
-	@Override
-	public void loadFrom(InputStream source) throws LibraryException, IOException {
-		clear();
-		final IdList<IMusicFile, Identifier<IMusicFile>> oldFiles = listOfFiles.newEmptyOne();
-		try {
-			libraryIO.loadLibrary(source, this);
-		} catch (LibraryException e) {
-			listeners.loadLibraryFailed();
-			throw e;
-		}
-		// Detect new files
-		for (IMusicFile iMusicFile : listOfFiles) {
-			if (!oldFiles.contains(iMusicFile)) {
-				logger.debug("New file during importation: " + iMusicFile);
-				listeners.loadLibraryNewFile(iMusicFile);
-			}
-		}
-		logger.info("File count: " + listOfFiles.size());
-		logger.info("New file: " + (listOfFiles.size() - oldFiles.size()));
-		listeners.loadLibrarySucceeeded();
 	}
 
 	/*
@@ -185,31 +144,27 @@ public class Library implements IListenable<ILibraryListener>, ILibrary {
 		}
 
 		// Clean the previous musicfiles
-		clear();
+		resetValues();
 		this.rootFolder = folder;
 
 		// Search all files
 		boolean scanHiddenFiles = properties.getBoolean("scan.hidden.files");
-		String ignoreAttribute = properties.getProperty("library.musicfile.attribute.ignore");
+		String ignoreAttribute = properties.getProperty("attribute.ignore");
 		List<File> allFiles = FileUtils.searchFilesInFolder(this.rootFolder, scanHiddenFiles);
 
 		for (File file : allFiles) {
 			logger.debug("Found: " + file.getAbsolutePath());
 			VirtualFile virtualFile = new VirtualFile(file, folder);
-			IMusicFile musicFile;
-			try {
-				musicFile = coreConfiguration.createMusicFile(virtualFile);
-				if (musicFile != null) {
-					if (ignoreAttribute != null && musicFile.getAttributeList().containsKey(ignoreAttribute)) {
-						logger.info("Ignored file: " + musicFile);
-					} else {
-						listOfFiles.add(musicFile);
-					}
+			IXFile musicFile;
+			musicFile = fileService.createMusicFile(virtualFile);
+			if (musicFile != null) {
+				if (ignoreAttribute != null && musicFile.getAttributeList().containsKey(ignoreAttribute)) {
+					logger.info("Ignored file: " + musicFile);
 				} else {
-					listeners.noFileHandlerForFile(virtualFile);
+					listOfFiles.add(musicFile);
 				}
-			} catch (DynamicAttributeException e) {
-				listeners.errorMatchingDynamicAttribute(virtualFile, e.getMessage());
+			} else {
+				listeners.noFileHandlerForFile(virtualFile);
 			}
 		}
 		logger.info("Found " + this.listOfFiles.size() + " files in folder: " + this.rootFolder.getAbsolutePath());
@@ -229,18 +184,43 @@ public class Library implements IListenable<ILibraryListener>, ILibrary {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.core.library.ILibrary#writeTo(java.io.OutputStream)
+	 * @see org.essembeh.rtfm.core.utils.version.ILoadable#resetValues()
 	 */
 	@Override
-	public void writeTo(OutputStream destination) throws LibraryException {
-		libraryIO.writeLibrary(destination, this);
+	public void resetValues() {
+		this.listOfFiles.clear();
+		this.rootFolder = null;
 	}
 
-	/**
-	 * Resets root folder and file list.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.utils.version.ILoadable#load(java.io.InputStream)
 	 */
-	private void clear() {
-		this.rootFolder = null;
-		listOfFiles.clear();
+	@Override
+	public void load(InputStream inputStream) throws ReaderException {
+		resetValues();
+		final IdList<IXFile, Identifier<IXFile>> oldFiles = listOfFiles.newEmptyOne();
+		libraryReader.readObject(inputStream, this);
+		// Detect new files
+		for (IXFile iMusicFile : listOfFiles) {
+			if (!oldFiles.contains(iMusicFile)) {
+				logger.debug("New file during importation: " + iMusicFile);
+				listeners.loadLibraryNewFile(iMusicFile);
+			}
+		}
+		logger.info("File count: " + listOfFiles.size());
+		logger.info("New file: " + (listOfFiles.size() - oldFiles.size()));
+		listeners.loadLibrarySucceeeded();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.utils.version.ISaveable#save(java.io.OutputStream)
+	 */
+	@Override
+	public void save(OutputStream outputStream) throws WriterException {
+		libraryWriter.writeObject(outputStream, this);
 	}
 }

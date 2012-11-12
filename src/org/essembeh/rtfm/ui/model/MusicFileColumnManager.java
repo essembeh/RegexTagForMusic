@@ -1,6 +1,6 @@
 package org.essembeh.rtfm.ui.model;
 
-import org.essembeh.rtfm.core.library.file.IMusicFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
 public class MusicFileColumnManager {
@@ -16,7 +16,7 @@ public class MusicFileColumnManager {
 		return columns[i];
 	}
 
-	public Object getValue(IMusicFile musicFile, int i) {
+	public Object getValue(IXFile musicFile, int i) {
 		Object out = "";
 		switch (i) {
 		case 0:
@@ -39,6 +39,6 @@ public class MusicFileColumnManager {
 		return false;
 	}
 
-	public void setValueAt(IMusicFile musicFile, Object aValue, int columnIndex) {
+	public void setValueAt(IXFile musicFile, Object aValue, int columnIndex) {
 	}
 }
