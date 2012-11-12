@@ -6,7 +6,7 @@
 //
 
 
-package org.essembeh.rtfm.model.configuration.core.version1;
+package org.essembeh.rtfm.model.configuration.core.version2;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,17 +15,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Classe Java pour TFixedAttribute complex type.
+ * <p>Classe Java pour TSubstitution complex type.
  * 
  * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
- * &lt;complexType name="TFixedAttribute">
+ * &lt;complexType name="TSubstitution">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="key" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="hidden" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -34,38 +33,36 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TFixedAttribute", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1")
-public class TFixedAttribute {
+@XmlType(name = "TSubstitution", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
+public class TSubstitution {
 
-    @XmlAttribute(name = "name", required = true)
-    protected String name;
+    @XmlAttribute(name = "key", required = true)
+    protected String key;
     @XmlAttribute(name = "value", required = true)
     protected String value;
-    @XmlAttribute(name = "hidden")
-    protected Boolean hidden;
 
     /**
-     * Obtient la valeur de la propriété name.
+     * Obtient la valeur de la propriété key.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getName() {
-        return name;
+    public String getKey() {
+        return key;
     }
 
     /**
-     * Définit la valeur de la propriété name.
+     * Définit la valeur de la propriété key.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setKey(String value) {
+        this.key = value;
     }
 
     /**
@@ -90,34 +87,6 @@ public class TFixedAttribute {
      */
     public void setValue(String value) {
         this.value = value;
-    }
-
-    /**
-     * Obtient la valeur de la propriété hidden.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
-     */
-    public boolean isHidden() {
-        if (hidden == null) {
-            return false;
-        } else {
-            return hidden;
-        }
-    }
-
-    /**
-     * Définit la valeur de la propriété hidden.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
-    public void setHidden(Boolean value) {
-        this.hidden = value;
     }
 
 }

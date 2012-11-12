@@ -6,7 +6,7 @@
 //
 
 
-package org.essembeh.rtfm.model.configuration.core.version1;
+package org.essembeh.rtfm.model.configuration.core.version2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +17,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Classe Java pour TActionList complex type.
+ * <p>Classe Java pour TWorkflow complex type.
  * 
  * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
- * &lt;complexType name="TActionList">
+ * &lt;complexType name="TWorkflow">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="action" type="{http://rtfm.essembeh.org/ConfigurationCore-v1}TAction" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="task" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TReference" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -36,41 +36,41 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TActionList", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1", propOrder = {
-    "action"
+@XmlType(name = "TWorkflow", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", propOrder = {
+    "task"
 })
-public class TActionList {
+public class TWorkflow {
 
-    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1")
-    protected List<TAction> action;
+    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", required = true)
+    protected List<TReference> task;
 
     /**
-     * Gets the value of the action property.
+     * Gets the value of the task property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the action property.
+     * This is why there is not a <CODE>set</CODE> method for the task property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getAction().add(newItem);
+     *    getTask().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link TAction }
+     * {@link TReference }
      * 
      * 
      */
-    public List<TAction> getAction() {
-        if (action == null) {
-            action = new ArrayList<TAction>();
+    public List<TReference> getTask() {
+        if (task == null) {
+            task = new ArrayList<TReference>();
         }
-        return this.action;
+        return this.task;
     }
 
 }

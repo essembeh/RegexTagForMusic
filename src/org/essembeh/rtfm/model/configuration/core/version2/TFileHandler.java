@@ -6,7 +6,7 @@
 //
 
 
-package org.essembeh.rtfm.model.configuration.core.version1;
+package org.essembeh.rtfm.model.configuration.core.version2;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -25,8 +25,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="conditions" type="{http://rtfm.essembeh.org/ConfigurationCore-v1}TConditionList"/>
- *         &lt;element name="attributes" type="{http://rtfm.essembeh.org/ConfigurationCore-v1}TAttributeList"/>
+ *         &lt;element name="conditions" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TConditionList"/>
+ *         &lt;element name="attributes" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TAttributeList"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
@@ -37,15 +37,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TFileHandler", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1", propOrder = {
+@XmlType(name = "TFileHandler", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", propOrder = {
     "conditions",
     "attributes"
 })
 public class TFileHandler {
 
-    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1", required = true)
+    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", required = true)
     protected TConditionList conditions;
-    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1", required = true)
+    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", required = true)
     protected TAttributeList attributes;
     @XmlAttribute(name = "id", required = true)
     protected String id;

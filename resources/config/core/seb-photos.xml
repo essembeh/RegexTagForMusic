@@ -1,104 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration-core xmlns="http://rtfm.essembeh.org/ConfigurationCore-v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<!-- Substitutions are applied only on "pattern" attributes -->
 	<substitutions>
-		<substitution key="@SEPARATOR"   value=" - "/>
-		<substitution key="@ANYTHING"    value="[^/]+"/>
-		<substitution key="@YEAR"        value="[12]\d{3}"/>
-		<substitution key="@TRACKNUMBER" value="\d{2,3}"/>
-		<substitution key="@MP3"         value="\.mp3"/>
+		<substitution key="@YEAR" value="[12]\d{3}"/>
+		<substitution key="@DATE" value="[12]\d{3}-[0-9x]{2}-[0-9x]{2}"/>
+		<substitution key="@NAME" value="[a-zA-Z0-9\-_ '@\.]+"/>
 	</substitutions>
 	<!-- File types -->
 	<filehandlers>
-		<filehandler id="Album track">
+		<filehandler id="Year folder">
 			<conditions>
-				<virtualpath pattern="/Albums/@ANYTHING/@ANYTHING/@TRACKNUMBER@SEPARATOR@ANYTHING@MP3" />
+				<virtualpath pattern="/@YEAR/"/>
+			</conditions>
+			<attributes>
+				<attribute name="db:export" value="true" />
+			</attributes>
+		</filehandler>
+		<filehandler id="Event folder">
+			<conditions>
+				<virtualpath pattern="/@YEAR/@DATE @NAME/"/>
+			</conditions>
+			<attributes>
+				<attribute name="db:export" value="true" />
+			</attributes>
+		</filehandler>
+		<filehandler id="Clips folder">
+			<conditions>
+				<virtualpath pattern="/@YEAR/@DATE @NAME/clips"/>
+			</conditions>
+			<attributes>
+				<attribute name="db:export" value="true" />
+			</attributes>
+		</filehandler>
+		<filehandler id="JPG">
+			<conditions>
+				<virtualpath pattern="/@YEAR/@DATE @NAME/@NAME\.(jpg|JPG)"/>
+			</conditions>
+			<attributes>
+				<attribute name="db:export" value="true" />
+			</attributes>
+		</filehandler>
+		<filehandler id="Raw Canon">
+			<conditions>
+				<virtualpath pattern="/@YEAR/@DATE @NAME/@NAME\.(cr2|CR2)"/>
+			</conditions>
+			<attributes>
+				<attribute name="db:export" value="true" />
+			</attributes>
+		</filehandler>
+		<filehandler id="Raw Nikon">
+			<conditions>
+				<virtualpath pattern="/@YEAR/@DATE @NAME/@NAME\.(nef|NEF)"/>
+			</conditions>
+			<attributes>
+				<attribute name="db:export" value="true" />
+			</attributes>
+		</filehandler>
+		<filehandler id="Clip">
+			<conditions>
+				<virtualpath pattern="/@YEAR/@DATE @NAME/clips/@NAME\.(MOV|mov|AVI|avi|MP4|mp4)"/>
+			</conditions>
+			<attributes>
+				<attribute name="db:export" value="true" />
+			</attributes>
+		</filehandler>
+		<filehandler id="ALBUMS">
+			<conditions>
+				<virtualpath pattern="/Albums/[^/]+/[^/]+/\d{2,3} - .*\.mp3" />
 			</conditions>
 			<attributes>
 				<attribute name="rtfm:tagged" value="false" />
-				<attribute name="db:export"   value="true" />
+				<attribute name="db:export" value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
-				<regex-attribute name="tag:artist" pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="1" />
-				<regex-attribute name="tag:year"   pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="3" optional="true" />
-				<regex-attribute name="tag:album"  pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="2" />
-				<regex-attribute name="tag:track"  pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="4" />
-				<regex-attribute name="tag:title"  pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@MP3" group="5" />
+				<regex-attribute name="tag:artist" pattern="/Albums/(.*)/((?:([12]\d\d\d) - )?.*)/(\d{2,3}) - (.*)\.\w+" group="1" />
+				<regex-attribute name="tag:year"   pattern="/Albums/(.*)/((?:([12]\d\d\d) - )?.*)/(\d{2,3}) - (.*)\.\w+" group="3" optional="true" />
+				<regex-attribute name="tag:album"  pattern="/Albums/(.*)/((?:([12]\d\d\d) - )?.*)/(\d{2,3}) - (.*)\.\w+" group="2" />
+				<regex-attribute name="tag:track"  pattern="/Albums/(.*)/((?:([12]\d\d\d) - )?.*)/(\d{2,3}) - (.*)\.\w+" group="4" />
+				<regex-attribute name="tag:title"  pattern="/Albums/(.*)/((?:([12]\d\d\d) - )?.*)/(\d{2,3}) - (.*)\.\w+" group="5" />
 			</attributes>
 		</filehandler>
-		<filehandler id="Cover">
+		<filehandler id="COVER">
 			<conditions>
-				<virtualpath pattern="/Albums/@ANYTHING/@ANYTHING/cover\.(jpg|jpeg|png)" />
+				<virtualpath pattern="/Albums/[^/]+/[^/]+/cover\.(jpg|jpeg|png)" />
 			</conditions>
 			<attributes>
 				<attribute name="db:export" value="false" />
 			</attributes>
 		</filehandler>
-		<filehandler id="Playlist">
+		<filehandler id="PLAYLIST">
 			<conditions>
-				<virtualpath pattern="/Albums/@ANYTHING/@ANYTHING/playlist\.m3u" />
+				<virtualpath pattern="/Albums/[^/]+/[^/]+/playlist\.m3u" />
 			</conditions>
 			<attributes>
 				<attribute name="db:export" value="false" />
 			</attributes>
 		</filehandler>
-		<filehandler id="Single">
+		<filehandler id="SINGLE">
 			<conditions>
-				<virtualpath pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)\.mp3" />
+				<virtualpath pattern="/Singles/([^/]+) - ([^/]+)\.mp3" />
 			</conditions>
 			<attributes>
 				<attribute name="rtfm:tagged" value="false" />
-				<attribute name="db:export"   value="true" />
+				<attribute name="db:export" value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
-				<attribute name="tag:album"   value="#Single" />
-				<regex-attribute name="tag:artist" pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@MP3" group="1" />
-				<regex-attribute name="tag:title"  pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@MP3" group="2" />
+				<attribute name="tag:album" value="#Single" />
+				<regex-attribute name="tag:artist" pattern="/Singles/([^/]+) - ([^/]+)\.\w+" group="1" />
+				<regex-attribute name="tag:title" pattern="/Singles/([^/]+) - ([^/]+)\.\w+" group="2" />
 			</attributes>
 		</filehandler>
-		<filehandler id="Saga">
+		<filehandler id="SAGA">
 			<conditions>
-				<virtualpath pattern="/Saga/(@ANYTHING)/(@ANYTHING)\.mp3" />
+				<virtualpath pattern="/Saga/([^/]+)/([^/]+)\.mp3" />
 			</conditions>
 			<attributes>
 				<attribute name="rtfm:tagged" value="false" />
-				<attribute name="db:export"   value="true" />
+				<attribute name="db:export" value="true" />
 				<attribute name="tag:comment" value="Tagged with RegexTagForMusic" />
-				<attribute name="tag:album"   value="#Saga" />
-				<regex-attribute name="tag:artist" pattern="/Saga/(@ANYTHING)/(@ANYTHING)@MP3" group="1" />
-				<regex-attribute name="tag:title"  pattern="/Saga/(@ANYTHING)/(@ANYTHING)@MP3" group="2" />
+				<attribute name="tag:album" value="#Saga" />
+				<regex-attribute name="tag:artist" pattern="/Saga/([^/]+)/([^/]+)\.\w+" group="1" />
+				<regex-attribute name="tag:title" pattern="/Saga/([^/]+)/([^/]+)\.\w+" group="2" />
 			</attributes>
 		</filehandler>
-		<filehandler id="Artist folder">
+		<filehandler id="FOLDER">
 			<conditions>
-				<virtualpath pattern="/Albums/@ANYTHING/" />
+				<virtualpath pattern="/Albums/[^/]+/[^/]+/" />
 			</conditions>
 			<attributes>
+				<attribute name="hasCover" value="false" />
 				<attribute name="db:export" value="false" />
-				<regex-attribute name="artist" pattern="/Albums/(@ANYTHING)/" group="1" />
-			</attributes>
-		</filehandler>
-		<filehandler id="Album folder">
-			<conditions>
-				<virtualpath pattern="/Albums/@ANYTHING/@ANYTHING/" />
-			</conditions>
-			<attributes>
-				<attribute name="hasCover"  value="false" />
-				<attribute name="db:export" value="false" />
-				<regex-attribute name="artist" pattern="/Albums/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="1" />
-				<regex-attribute name="year"   pattern="/Albums/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="2" optional="true" />
-				<regex-attribute name="album"  pattern="/Albums/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="3" />
-			</attributes>
-		</filehandler>
-		<filehandler id="Other">
-			<conditions logic="OR">
-				<virtualpath pattern="/Saga/@ANYTHING/"/>
-				<virtualpath pattern="/@ANYTHING/"/>
-			</conditions>
-			<attributes>
-				<attribute name="db:export" value="false" />
+				<regex-attribute name="artist" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="1" />
+				<regex-attribute name="year" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="2" optional="true" />
+				<regex-attribute name="album" pattern="/Albums/(.*)/(?:([12]\d\d\d) - )?(.*)/" group="3" />
 			</attributes>
 		</filehandler>
 		<filehandler id="UNKNOWN">
 			<conditions>
+				<virtualpath pattern=".*[^/]" />
 			</conditions>
 			<attributes>
 				<attribute name="db:export" value="false" />
@@ -120,7 +156,7 @@
 			<property name="version" value="ID3V2_3" />
 		</task>
 		<task id="eyed3-id3v2.4@utf8" classname="org.essembeh.rtfm.tasks.ExternalProcess">
-			<property name="binary"  value="scripts/eyeD3-tag.sh" />
+			<property name="binary" value="scripts/eyeD3-tag.sh" />
 			<property name="env.set" value="TAG_VERSION=ID3V2_4" />
 			<property name="env.set" value="TAG_FORCEUTF8=true" />
 			<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
@@ -132,7 +168,7 @@
 			<property name="env.set" value="RTFM_COMMENT=${tag:comment}" />
 		</task>
 		<task id="eyed3-id3v2.3" classname="org.essembeh.rtfm.tasks.ExternalProcess">
-			<property name="binary"  value="scripts/eyeD3-tag.sh" />
+			<property name="binary" value="scripts/eyeD3-tag.sh" />
 			<property name="env.set" value="TAG_VERSION=ID3V2_3" />
 			<property name="env.set" value="TAG_FORCEUTF8=true" />
 			<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
@@ -147,7 +183,7 @@
 			<property name="binary" value="scripts/eyeD3-remove.sh" />
 		</task>
 		<task id="echo" classname="org.essembeh.rtfm.tasks.ExternalProcess">
-			<property name="binary"  value="scripts/dummy.sh" />
+			<property name="binary" value="scripts/dummy.sh" />
 			<property name="env.set" value="RTFM_ARTIST=${tag:artist}" />
 			<property name="env.set" value="RTFM_ALBUM=${tag:album}" />
 			<property name="env.set" value="RTFM_YEAR=${tag:year}" />

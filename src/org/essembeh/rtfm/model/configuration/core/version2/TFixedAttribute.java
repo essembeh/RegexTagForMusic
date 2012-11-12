@@ -6,7 +6,7 @@
 //
 
 
-package org.essembeh.rtfm.model.configuration.core.version1;
+package org.essembeh.rtfm.model.configuration.core.version2;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TFixedAttribute", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1")
+@XmlType(name = "TFixedAttribute", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
 public class TFixedAttribute {
 
     @XmlAttribute(name = "name", required = true)

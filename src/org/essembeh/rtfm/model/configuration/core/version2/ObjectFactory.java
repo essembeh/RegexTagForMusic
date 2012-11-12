@@ -6,7 +6,7 @@
 //
 
 
-package org.essembeh.rtfm.model.configuration.core.version1;
+package org.essembeh.rtfm.model.configuration.core.version2;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
@@ -17,7 +17,7 @@ import javax.xml.namespace.QName;
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the org.essembeh.rtfm.model.configuration.core.version1 package. 
+ * generated in the org.essembeh.rtfm.model.configuration.core.version2 package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -31,21 +31,21 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _ConfigurationCore_QNAME = new QName("http://rtfm.essembeh.org/ConfigurationCore-v1", "configuration-core");
+    private final static QName _ConfigurationCore_QNAME = new QName("http://rtfm.essembeh.org/ConfigurationCore-v2", "configuration-core");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.essembeh.rtfm.model.configuration.core.version1
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.essembeh.rtfm.model.configuration.core.version2
      * 
      */
     public ObjectFactory() {
     }
 
     /**
-     * Create an instance of {@link TCoreConfigurationV1 }
+     * Create an instance of {@link TCoreConfigurationV2 }
      * 
      */
-    public TCoreConfigurationV1 createTCoreConfigurationV1() {
-        return new TCoreConfigurationV1();
+    public TCoreConfigurationV2 createTCoreConfigurationV2() {
+        return new TCoreConfigurationV2();
     }
 
     /**
@@ -78,6 +78,14 @@ public class ObjectFactory {
      */
     public TConditionOnVirtualPath createTConditionOnVirtualPath() {
         return new TConditionOnVirtualPath();
+    }
+
+    /**
+     * Create an instance of {@link TSubstitutionList }
+     * 
+     */
+    public TSubstitutionList createTSubstitutionList() {
+        return new TSubstitutionList();
     }
 
     /**
@@ -129,6 +137,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link TSubstitution }
+     * 
+     */
+    public TSubstitution createTSubstitution() {
+        return new TSubstitution();
+    }
+
+    /**
      * Create an instance of {@link TReference }
      * 
      */
@@ -177,12 +193,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TCoreConfigurationV1 }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link TCoreConfigurationV2 }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1", name = "configuration-core")
-    public JAXBElement<TCoreConfigurationV1> createConfigurationCore(TCoreConfigurationV1 value) {
-        return new JAXBElement<TCoreConfigurationV1>(_ConfigurationCore_QNAME, TCoreConfigurationV1 .class, null, value);
+    @XmlElementDecl(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", name = "configuration-core")
+    public JAXBElement<TCoreConfigurationV2> createConfigurationCore(TCoreConfigurationV2 value) {
+        return new JAXBElement<TCoreConfigurationV2>(_ConfigurationCore_QNAME, TCoreConfigurationV2 .class, null, value);
     }
 
 }

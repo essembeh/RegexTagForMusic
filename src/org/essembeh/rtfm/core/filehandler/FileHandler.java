@@ -33,20 +33,26 @@ import org.essembeh.rtfm.core.utils.list.Identifier;
 
 public class FileHandler {
 
+	public enum Logic {
+		AND, OR
+	};
+
 	/**
 	 * Attributes
 	 */
-	private String identifier;
-	private List<ICondition> conditions;
-	private List<Attribute> simpleAttributes;
-	private List<IDynamicAttribute> dynamicAttributes;
+	private final String identifier;
+	private final List<ICondition> conditions;
+	private final List<Attribute> simpleAttributes;
+	private final List<IDynamicAttribute> dynamicAttributes;
+	private final Logic logic;
 
 	/**
 	 * 
 	 * @param id
 	 */
-	public FileHandler(String id) {
+	public FileHandler(String id, Logic logic) {
 		this.identifier = id;
+		this.logic = logic;
 		conditions = new ArrayList<ICondition>();
 		simpleAttributes = new ArrayList<Attribute>();
 		dynamicAttributes = new ArrayList<IDynamicAttribute>();
@@ -90,12 +96,18 @@ public class FileHandler {
 	 * @return
 	 */
 	public boolean canHandle(VirtualFile file) {
+		if (conditions.size() == 0) {
+			return true;
+		}
 		for (ICondition condition : conditions) {
-			if (condition.isValid(file)) {
+			boolean valid = condition.isValid(file);
+			if (valid && logic == Logic.OR) {
 				return true;
+			} else if (!valid && logic == Logic.AND) {
+				return false;
 			}
 		}
-		return false;
+		return logic == Logic.AND ? true : false;
 	}
 
 	/**

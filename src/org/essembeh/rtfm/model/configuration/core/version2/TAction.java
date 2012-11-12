@@ -6,7 +6,7 @@
 //
 
 
-package org.essembeh.rtfm.model.configuration.core.version1;
+package org.essembeh.rtfm.model.configuration.core.version2;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -25,8 +25,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="apply-on" type="{http://rtfm.essembeh.org/ConfigurationCore-v1}TApplyOnList"/>
- *         &lt;element name="workflow" type="{http://rtfm.essembeh.org/ConfigurationCore-v1}TWorkflow"/>
+ *         &lt;element name="apply-on" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TApplyOnList"/>
+ *         &lt;element name="workflow" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TWorkflow"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="description" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -38,15 +38,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TAction", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1", propOrder = {
+@XmlType(name = "TAction", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", propOrder = {
     "applyOn",
     "workflow"
 })
 public class TAction {
 
-    @XmlElement(name = "apply-on", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1", required = true)
+    @XmlElement(name = "apply-on", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", required = true)
     protected TApplyOnList applyOn;
-    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1", required = true)
+    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", required = true)
     protected TWorkflow workflow;
     @XmlAttribute(name = "id", required = true)
     protected String id;

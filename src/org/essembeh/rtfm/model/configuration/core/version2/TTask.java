@@ -2,11 +2,11 @@
 // Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
-// Généré le : 2012.11.12 à 12:52:13 AM CET 
+// Généré le : 2012.11.12 à 12:52:12 AM CET 
 //
 
 
-package org.essembeh.rtfm.model.library.version2;
+package org.essembeh.rtfm.model.configuration.core.version2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,19 +18,19 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Classe Java pour TFile complex type.
+ * <p>Classe Java pour TTask complex type.
  * 
  * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
- * &lt;complexType name="TFile">
+ * &lt;complexType name="TTask">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="attribute" type="{http://rtfm.essembeh.org/Library-v2}TAttribute" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="property" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TProperty" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
- *       &lt;attribute name="type" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="virtualpath" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="classname" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -39,93 +39,93 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TFile", namespace = "http://rtfm.essembeh.org/Library-v2", propOrder = {
-    "attribute"
+@XmlType(name = "TTask", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", propOrder = {
+    "property"
 })
-public class TFile {
+public class TTask {
 
-    @XmlElement(namespace = "http://rtfm.essembeh.org/Library-v2")
-    protected List<TAttribute> attribute;
-    @XmlAttribute(name = "type", required = true)
-    protected String type;
-    @XmlAttribute(name = "virtualpath", required = true)
-    protected String virtualpath;
+    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
+    protected List<TProperty> property;
+    @XmlAttribute(name = "id", required = true)
+    protected String id;
+    @XmlAttribute(name = "classname", required = true)
+    protected String classname;
 
     /**
-     * Gets the value of the attribute property.
+     * Gets the value of the property property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the attribute property.
+     * This is why there is not a <CODE>set</CODE> method for the property property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getAttribute().add(newItem);
+     *    getProperty().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link TAttribute }
+     * {@link TProperty }
      * 
      * 
      */
-    public List<TAttribute> getAttribute() {
-        if (attribute == null) {
-            attribute = new ArrayList<TAttribute>();
+    public List<TProperty> getProperty() {
+        if (property == null) {
+            property = new ArrayList<TProperty>();
         }
-        return this.attribute;
+        return this.property;
     }
 
     /**
-     * Obtient la valeur de la propriété type.
+     * Obtient la valeur de la propriété id.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getType() {
-        return type;
+    public String getId() {
+        return id;
     }
 
     /**
-     * Définit la valeur de la propriété type.
+     * Définit la valeur de la propriété id.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setType(String value) {
-        this.type = value;
+    public void setId(String value) {
+        this.id = value;
     }
 
     /**
-     * Obtient la valeur de la propriété virtualpath.
+     * Obtient la valeur de la propriété classname.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getVirtualpath() {
-        return virtualpath;
+    public String getClassname() {
+        return classname;
     }
 
     /**
-     * Définit la valeur de la propriété virtualpath.
+     * Définit la valeur de la propriété classname.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setVirtualpath(String value) {
-        this.virtualpath = value;
+    public void setClassname(String value) {
+        this.classname = value;
     }
 
 }

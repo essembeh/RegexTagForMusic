@@ -6,7 +6,7 @@
 //
 
 
-package org.essembeh.rtfm.model.configuration.core.version1;
+package org.essembeh.rtfm.model.configuration.core.version2;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,15 +15,15 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Classe Java pour TReference complex type.
+ * <p>Classe Java pour TConditionOnType complex type.
  * 
  * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
- * &lt;complexType name="TReference">
+ * &lt;complexType name="TConditionOnType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="ref-id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -32,34 +32,34 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TReference", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1")
-public class TReference {
+@XmlType(name = "TConditionOnType", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
+public class TConditionOnType {
 
-    @XmlAttribute(name = "ref-id", required = true)
-    protected String refId;
+    @XmlAttribute(name = "value", required = true)
+    protected String value;
 
     /**
-     * Obtient la valeur de la propriété refId.
+     * Obtient la valeur de la propriété value.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getRefId() {
-        return refId;
+    public String getValue() {
+        return value;
     }
 
     /**
-     * Définit la valeur de la propriété refId.
+     * Définit la valeur de la propriété value.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setRefId(String value) {
-        this.refId = value;
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }

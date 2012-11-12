@@ -46,32 +46,36 @@ import org.essembeh.rtfm.core.utils.identifiers.TaskIdentifier;
 import org.essembeh.rtfm.core.utils.identifiers.WorkflowIdentifier;
 import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
-import org.essembeh.rtfm.model.configuration.core.version1.TAction;
-import org.essembeh.rtfm.model.configuration.core.version1.TConditionOnVirtualPath;
-import org.essembeh.rtfm.model.configuration.core.version1.TCoreConfigurationV1;
-import org.essembeh.rtfm.model.configuration.core.version1.TFileHandler;
-import org.essembeh.rtfm.model.configuration.core.version1.TFixedAttribute;
-import org.essembeh.rtfm.model.configuration.core.version1.TProperty;
-import org.essembeh.rtfm.model.configuration.core.version1.TReference;
-import org.essembeh.rtfm.model.configuration.core.version1.TRegexAttribute;
-import org.essembeh.rtfm.model.configuration.core.version1.TTask;
+import org.essembeh.rtfm.core.utils.string.StringSubstitutor;
+import org.essembeh.rtfm.model.configuration.core.version2.TAction;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionOnVirtualPath;
+import org.essembeh.rtfm.model.configuration.core.version2.TCoreConfigurationV2;
+import org.essembeh.rtfm.model.configuration.core.version2.TFileHandler;
+import org.essembeh.rtfm.model.configuration.core.version2.TFixedAttribute;
+import org.essembeh.rtfm.model.configuration.core.version2.TProperty;
+import org.essembeh.rtfm.model.configuration.core.version2.TReference;
+import org.essembeh.rtfm.model.configuration.core.version2.TRegexAttribute;
+import org.essembeh.rtfm.model.configuration.core.version2.TSubstitution;
+import org.essembeh.rtfm.model.configuration.core.version2.TSubstitutionList;
+import org.essembeh.rtfm.model.configuration.core.version2.TTask;
 
 import com.google.inject.Inject;
 
-public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
+public class CoreConfigurationLoaderV2 implements ICoreConfigurationLoader {
 	/**
 	 * Attributes
 	 */
-	private final static Logic DEFAULT_LOGIC = Logic.AND;
-	private static final Logger logger = Logger.getLogger(CoreConfigurationLoaderV1.class);
-	private TCoreConfigurationV1 model;
+	private static final Logger logger = Logger.getLogger(CoreConfigurationLoaderV2.class);
+	private StringSubstitutor stringSubstitutor;
+	private TCoreConfigurationV2 model;
 
 	/**
 	 * Constructor
 	 */
 	@Inject
-	public CoreConfigurationLoaderV1() {
-		this.model = null;
+	public CoreConfigurationLoaderV2() {
+		stringSubstitutor = null;
+		model = null;
 	}
 
 	/*
@@ -83,17 +87,37 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 	@Override
 	public void loadConfiguration(InputStream input) throws ConfigurationException {
 		model = null;
+		stringSubstitutor = new StringSubstitutor();
 		try {
-			JAXBContext context = JAXBContext.newInstance("org.essembeh.rtfm.model.configuration.core.version1");
+			JAXBContext context = JAXBContext.newInstance("org.essembeh.rtfm.model.configuration.core.version2");
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-			JAXBElement<TCoreConfigurationV1> root = unmarshaller.unmarshal(new StreamSource(input),
-					TCoreConfigurationV1.class);
+			JAXBElement<TCoreConfigurationV2> root = unmarshaller.unmarshal(new StreamSource(input),
+					TCoreConfigurationV2.class);
 			model = root.getValue();
+			stringSubstitutor = read(model.getSubstitutions());
 		} catch (JAXBException e) {
-			logger.info("Cannot load core configuration version 1: " + e.getMessage());
+			logger.info("Cannot load core configuration version 2: " + e.getMessage());
 			throw new ConfigurationException(e.getMessage());
 		}
+	}
+
+	/**
+	 * 
+	 * @param substitutions
+	 * @return
+	 */
+	private StringSubstitutor read(TSubstitutionList substitutions) {
+		StringSubstitutor out = new StringSubstitutor();
+		if (substitutions != null) {
+			for (TSubstitution sub : substitutions.getSubstitution()) {
+				String key = sub.getKey();
+				String value = sub.getValue();
+				logger.debug("Adding substitution: " + key + " --> " + value);
+				out.addSubstitution(key, value);
+			}
+		}
+		return out;
 	}
 
 	/*
@@ -122,11 +146,14 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 	 */
 	private FileHandler read(TFileHandler model) {
 		String id = model.getId();
-		FileHandler fileHandler = new FileHandler(id, DEFAULT_LOGIC);
+		// Get logic
+		logger.debug("Logic: " + model.getConditions().getLogic().toString());
+		Logic logic = Logic.valueOf(model.getConditions().getLogic().toString());
+		FileHandler fileHandler = new FileHandler(id, logic);
 		// Conditions
 		if (model.getConditions() != null) {
 			for (TConditionOnVirtualPath virtualPathModel : model.getConditions().getVirtualpath()) {
-				fileHandler.addCondition(new RegexOnPathCondition(virtualPathModel.getMatches()));
+				fileHandler.addCondition(new RegexOnPathCondition(ss(virtualPathModel.getPattern())));
 			}
 		}
 		// Attributes
@@ -148,8 +175,8 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 	 * @return
 	 */
 	private IDynamicAttribute read(TRegexAttribute model) {
-		IDynamicAttribute o = new RegexAttribute(model.getName(), model.isHidden(),
-				Pattern.compile(model.getPattern()), model.getGroup(), model.isOptional());
+		IDynamicAttribute o = new RegexAttribute(model.getName(), model.isHidden(), Pattern.compile(ss(model
+				.getPattern())), model.getGroup(), model.isOptional());
 		logger.debug("Create DynamicAttribute: " + o);
 		return o;
 	}
@@ -229,7 +256,7 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 			out = new Task(id, classname);
 			// Setting properties
 			for (TProperty property : model.getProperty()) {
-				out.setProperty(property.getName(), property.getValue());
+				out.setProperty(ss(property.getName()), ss(property.getValue()));
 			}
 		} catch (TaskException e) {
 			throw new ConfigurationException(e.getMessage());
@@ -237,4 +264,12 @@ public class CoreConfigurationLoaderV1 implements ICoreConfigurationLoader {
 		return out;
 	}
 
+	/**
+	 * 
+	 * @param input
+	 * @return
+	 */
+	private String ss(String input) {
+		return stringSubstitutor.apply(input);
+	}
 }

@@ -25,12 +25,24 @@ import org.essembeh.rtfm.core.library.file.VirtualFile;
 
 public class RegexOnPathCondition implements ICondition {
 
-	private Pattern pattern;
+	/**
+	 * Attributes
+	 */
+	private final Pattern pattern;
 
+	/**
+	 * 
+	 * @param regex
+	 */
 	public RegexOnPathCondition(String regex) {
 		pattern = Pattern.compile(regex);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.filehandler.ICondition#isValid(org.essembeh.rtfm .core.library.file.VirtualFile)
+	 */
 	@Override
 	public boolean isValid(VirtualFile file) {
 		return pattern.matcher(file.getVirtualPath()).matches();

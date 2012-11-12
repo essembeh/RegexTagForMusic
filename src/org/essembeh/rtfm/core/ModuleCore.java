@@ -19,7 +19,7 @@
  */
 package org.essembeh.rtfm.core;
 
-import org.essembeh.rtfm.core.configuration.io.CoreConfigurationLoaderV1;
+import org.essembeh.rtfm.core.configuration.io.CoreConfigurationLoaderV2;
 import org.essembeh.rtfm.core.configuration.io.ICoreConfigurationLoader;
 import org.essembeh.rtfm.core.library.io.ILibraryLoader;
 import org.essembeh.rtfm.core.library.io.ILibraryWriter;
@@ -34,8 +34,15 @@ import com.google.inject.name.Names;
 
 public class ModuleCore extends AbstractModule {
 
-	RTFMProperties mainProperties;
+	/**
+	 * Attributes
+	 */
+	private final RTFMProperties mainProperties;
 
+	/**
+	 * 
+	 * @param mainProperties
+	 */
 	public ModuleCore(RTFMProperties mainProperties) {
 		this.mainProperties = mainProperties;
 	}
@@ -47,7 +54,7 @@ public class ModuleCore extends AbstractModule {
 			bind(RTFMProperties.class).toInstance(mainProperties);
 
 			// Interfaces
-			bind(ICoreConfigurationLoader.class).to(CoreConfigurationLoaderV1.class).in(Singleton.class);
+			bind(ICoreConfigurationLoader.class).to(CoreConfigurationLoaderV2.class).in(Singleton.class);
 			bind(ILibraryLoader.class).annotatedWith(Names.named("LibraryLoaderV1")).to(LibraryLoaderV1.class);
 			bind(ILibraryLoader.class).annotatedWith(Names.named("LibraryLoaderV2")).to(LibraryLoaderV2.class);
 			bind(ILibraryWriter.class).to(LibraryWriterV2.class);

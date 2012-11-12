@@ -6,7 +6,7 @@
 //
 
 
-package org.essembeh.rtfm.model.configuration.core.version1;
+package org.essembeh.rtfm.model.configuration.core.version2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +26,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="attribute" type="{http://rtfm.essembeh.org/ConfigurationCore-v1}TFixedAttribute" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="regex-attribute" type="{http://rtfm.essembeh.org/ConfigurationCore-v1}TRegexAttribute" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="attribute" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TFixedAttribute" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="regex-attribute" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TRegexAttribute" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -37,15 +37,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TAttributeList", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1", propOrder = {
+@XmlType(name = "TAttributeList", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", propOrder = {
     "attribute",
     "regexAttribute"
 })
 public class TAttributeList {
 
-    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1")
+    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
     protected List<TFixedAttribute> attribute;
-    @XmlElement(name = "regex-attribute", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v1")
+    @XmlElement(name = "regex-attribute", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
     protected List<TRegexAttribute> regexAttribute;
 
     /**
