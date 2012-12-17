@@ -24,16 +24,14 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import org.essembeh.rtfm.core.library.ILibrary;
 import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
+import org.essembeh.rtfm.core.utils.jaxb.JaxbUtils;
 import org.essembeh.rtfm.core.utils.version.IObjectWriter;
 import org.essembeh.rtfm.core.utils.version.exceptions.WriterException;
 import org.essembeh.rtfm.model.library.version2.ObjectFactory;
@@ -70,12 +68,7 @@ public class LibraryWriterV2 implements IObjectWriter<Library> {
 	public void writeObject(OutputStream outputStream, Library element) throws WriterException {
 		TLibraryV2 model = toModel(element);
 		try {
-			JAXBContext context = JAXBContext.newInstance("org.essembeh.rtfm.model.library.version2");
-			Marshaller marshaller = context.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			JAXBElement<TLibraryV2> root = objectFactory.createLibrary(model);
-			marshaller.marshal(root, outputStream);
+			JaxbUtils.writeJaxbObject(outputStream, objectFactory.createLibrary(model), TLibraryV2.class);
 		} catch (JAXBException e) {
 			throw new WriterException(e);
 		}

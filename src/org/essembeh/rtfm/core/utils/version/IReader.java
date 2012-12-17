@@ -4,13 +4,12 @@ import java.io.InputStream;
 
 import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
 
-public interface IObjectReader<T extends ILoadable> {
+public interface IReader {
 
 	/**
 	 * 
 	 * @param inputStream
-	 * @param element
 	 * @throws ReaderException
 	 */
-	void readObject(InputStream inputStream, T element) throws ReaderException;
+	void read(InputStream inputStream) throws ReaderException;
 }

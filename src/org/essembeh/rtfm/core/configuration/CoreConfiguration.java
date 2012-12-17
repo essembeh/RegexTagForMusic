@@ -5,19 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.essembeh.rtfm.core.actions.Workflow;
+import org.essembeh.rtfm.core.configuration.io.ICoreConfigurationProvider;
 import org.essembeh.rtfm.core.filehandler.FileHandler;
 import org.essembeh.rtfm.core.utils.version.ILoadable;
-import org.essembeh.rtfm.core.utils.version.IObjectReader;
 import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
-
-import com.google.inject.name.Named;
 
 public class CoreConfiguration implements ILoadable {
 
 	/**
 	 * Attributes
 	 */
-	private final IObjectReader<CoreConfiguration> configurationReader;
+	private final ICoreConfigurationProvider configurationReader;
 	private final List<FileHandler> fileHandlers;
 	private final List<Workflow> workflows;
 
@@ -25,7 +23,7 @@ public class CoreConfiguration implements ILoadable {
 	 * 
 	 * @param configurationReader
 	 */
-	public CoreConfiguration(@Named("CoreConfigurationReader") IObjectReader<CoreConfiguration> configurationReader) {
+	public CoreConfiguration(ICoreConfigurationProvider configurationReader) {
 		this.configurationReader = configurationReader;
 		this.fileHandlers = new ArrayList<FileHandler>();
 		this.workflows = new ArrayList<Workflow>();
@@ -48,21 +46,17 @@ public class CoreConfiguration implements ILoadable {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.core.utils.version.IResetable#reset()
-	 */
-	@Override
-	public void resetValues() {
-		fileHandlers.clear();
-		workflows.clear();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.essembeh.rtfm.core.utils.version.ILoadable#load(java.io.InputStream)
 	 */
 	@Override
 	public void load(InputStream inputStream) throws ReaderException {
-		configurationReader.readObject(inputStream, this);
+		// Clear
+		fileHandlers.clear();
+		workflows.clear();
+		// Read
+		configurationReader.read(inputStream);
+		// Update
+		fileHandlers.addAll(configurationReader.getFileHandlers());
+		workflows.addAll(configurationReader.getWorkflows());
 	}
 }

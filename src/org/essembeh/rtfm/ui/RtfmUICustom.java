@@ -98,20 +98,6 @@ public class RtfmUICustom extends RtfmUI {
 		setAttributesPanelVisible(false);
 		contentPane.add(mainController.getStatusPanel(), BorderLayout.SOUTH);
 
-		// Configurations
-		final JComboBox configurationComboBox = new JComboBox(mainController.getConfigurationModel());
-		actionPanel.add(configurationComboBox);
-		configurationComboBox.setSelectedIndex(0);
-		configurationComboBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Object selection = configurationComboBox.getSelectedItem();
-				if (selection != null && selection instanceof String) {
-					mainController.loadConfiguration((String) selection);
-				}
-			}
-		});
-
 	}
 
 	protected void setAttributesPanelVisible(boolean visible) {

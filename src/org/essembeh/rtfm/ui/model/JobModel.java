@@ -80,6 +80,11 @@ public class JobModel extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * 
+	 * @author seb
+	 * 
+	 */
 	private class FileWithStatus {
 		private final IXFile musicFile;
 		private boolean finished;

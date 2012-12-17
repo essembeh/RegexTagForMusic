@@ -11,16 +11,18 @@ import org.essembeh.rtfm.core.actions.IJob;
 import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.core.actions.Job;
 import org.essembeh.rtfm.core.actions.Workflow;
-import org.essembeh.rtfm.core.configuration.io.MultiCoreConfigurationReader;
+import org.essembeh.rtfm.core.configuration.io.ICoreConfigurationProvider;
 import org.essembeh.rtfm.core.exception.ActionException;
 import org.essembeh.rtfm.core.filehandler.FileHandler;
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.library.file.XFile;
+import org.essembeh.rtfm.core.library.io.ILibraryProvider;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class CoreConfigurationServices extends CoreConfiguration implements IWorkflowService, IXFileService {
 
@@ -37,31 +39,37 @@ public class CoreConfigurationServices extends CoreConfiguration implements IWor
 	 * @param properties
 	 */
 	@Inject
-	public CoreConfigurationServices(MultiCoreConfigurationReader reader, RTFMProperties properties) {
-		super(reader);
+	public CoreConfigurationServices(@Named("CoreConfigurationReader") ICoreConfigurationProvider configurationReader, RTFMProperties properties) {
+		super(configurationReader);
 		Integer nbThread = properties.getWithDefault("job.threads", DEFAULT_NBTHREADS);
 		logger.debug("Using threads for job: " + nbThread);
 		executor = Executors.newFixedThreadPool(nbThread);
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param file
-	 * @return
+	 * @see org.essembeh.rtfm.core.configuration.IXFileService#createXFile(org.essembeh.rtfm.core.library.file.VirtualFile,
+	 * org.essembeh.rtfm.core.library.io.ILibraryProvider)
 	 */
-	public IXFile createMusicFile(VirtualFile file) {
-		XFile musicFile = null;
+	public IXFile createXFile(VirtualFile file, ILibraryProvider provider) {
+		XFile out = null;
 		for (FileHandler fileHandler : getFileHandlers()) {
 			if (fileHandler.getConditions().isTrue(file)) {
-				musicFile = new XFile(fileHandler.getType(), file);
-				musicFile.getAttributeList().addAll(fileHandler.getAttributesForFile(musicFile.getFile()));
+				logger.debug("Found filhandler: " + fileHandler + ", for file: " + file);
+				out = new XFile(fileHandler.getType(), file);
+				out.getAttributeList().addAll(fileHandler.getAttributesForFile(out.getFile()));
+				if (provider != null && provider.fileExists(file)) {
+					logger.debug("Updating attributes for file: " + file);
+					out.getAttributeList().addAll(provider.getAttributesOfFile(file));
+				}
 				break;
 			}
 		}
-		if (musicFile == null) {
+		if (out == null) {
 			logger.info("Cannot find filehandler for file: " + file);
 		}
-		return musicFile;
+		return out;
 	}
 
 	/*

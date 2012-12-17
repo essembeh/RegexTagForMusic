@@ -62,12 +62,12 @@ public class MainController {
 	 * @throws FileNotFoundException
 	 */
 	@Inject
-	public MainController(Library library, CoreConfigurationServices configurationServices, ConfigurationHelper configurationHelper) throws ConfigurationException,
-			FileNotFoundException {
+	public MainController(Library library, CoreConfigurationServices configurationServices, ConfigurationHelper configurationHelper)
+			throws ConfigurationException, FileNotFoundException {
 		this.library = library;
 		this.configurationServices = configurationServices;
 		this.configurationHelper = configurationHelper;
-		
+
 		// Load default conf
 		try {
 			this.configurationServices.load(this.configurationHelper.getDefaultConfiguration());
@@ -203,6 +203,7 @@ public class MainController {
 				String message = "Library loaded: " + currentDatabase.getName() + ", found " + TextUtils.plural(library.getAllFiles().size(), "file");
 				statusBar.printMessage(message);
 			} catch (Exception e) {
+				e.printStackTrace();
 				statusBar.printError(e);
 			}
 		}

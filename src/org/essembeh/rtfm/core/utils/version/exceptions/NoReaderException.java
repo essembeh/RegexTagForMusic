@@ -10,10 +10,9 @@ public class NoReaderException extends ReaderException {
 
 	/**
 	 * 
-	 * @param element
 	 */
-	public NoReaderException(Object element) {
-		super("No reader for element: " + element);
+	public NoReaderException() {
+		super("No reader found");
 	}
 
 

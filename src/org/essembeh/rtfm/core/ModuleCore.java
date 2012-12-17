@@ -19,16 +19,16 @@
  */
 package org.essembeh.rtfm.core;
 
-import org.essembeh.rtfm.core.configuration.CoreConfiguration;
 import org.essembeh.rtfm.core.configuration.CoreConfigurationServices;
 import org.essembeh.rtfm.core.configuration.IWorkflowService;
 import org.essembeh.rtfm.core.configuration.IXFileService;
+import org.essembeh.rtfm.core.configuration.io.ICoreConfigurationProvider;
 import org.essembeh.rtfm.core.configuration.io.MultiCoreConfigurationReader;
 import org.essembeh.rtfm.core.library.Library;
+import org.essembeh.rtfm.core.library.io.ILibraryProvider;
 import org.essembeh.rtfm.core.library.io.LibraryWriterV2;
 import org.essembeh.rtfm.core.library.io.MultiLibraryReader;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
-import org.essembeh.rtfm.core.utils.version.IObjectReader;
 import org.essembeh.rtfm.core.utils.version.IObjectWriter;
 
 import com.google.inject.AbstractModule;
@@ -61,16 +61,14 @@ public class ModuleCore extends AbstractModule {
 			bind(CoreConfigurationServices.class).in(Singleton.class);
 			bind(IWorkflowService.class).to(CoreConfigurationServices.class).in(Singleton.class);
 			bind(IXFileService.class).to(CoreConfigurationServices.class).in(Singleton.class);
-			
+
 			// IO
-			bind(new TypeLiteral<IObjectReader<Library>>() {
-			}).annotatedWith(Names.named("LibraryReader")).to(MultiLibraryReader.class);
+			bind(ILibraryProvider.class).annotatedWith(Names.named("LibraryReader")).to(MultiLibraryReader.class);
+			bind(ICoreConfigurationProvider.class).annotatedWith(Names.named("CoreConfigurationReader")).to(MultiCoreConfigurationReader.class);
 
 			bind(new TypeLiteral<IObjectWriter<Library>>() {
 			}).annotatedWith(Names.named("LibraryWriter")).to(LibraryWriterV2.class);
 
-			bind(new TypeLiteral<IObjectReader<CoreConfiguration>>() {
-			}).annotatedWith(Names.named("CoreConfigurationReader")).to(MultiCoreConfigurationReader.class);
 
 		} catch (Exception e) {
 			addError(e);

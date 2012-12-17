@@ -19,7 +19,10 @@
  */
 package org.essembeh.rtfm.core.configuration.io;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -33,7 +36,6 @@ import org.essembeh.rtfm.core.condition.OrCondition;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.FileOrFolder;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.FileOrFolder.InodeType;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.VirtualPathMatches;
-import org.essembeh.rtfm.core.configuration.CoreConfiguration;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.TaskException;
 import org.essembeh.rtfm.core.filehandler.FileHandler;
@@ -42,7 +44,8 @@ import org.essembeh.rtfm.core.filehandler.dynamic.RegexAttribute;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.utils.string.StringSubstitutor;
-import org.essembeh.rtfm.core.utils.version.JaxbObjectReader;
+import org.essembeh.rtfm.core.utils.version.JaxbReader;
+import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
 import org.essembeh.rtfm.model.configuration.core.version2.TAction;
 import org.essembeh.rtfm.model.configuration.core.version2.TConditionLogic;
 import org.essembeh.rtfm.model.configuration.core.version2.TConditionOnType;
@@ -59,65 +62,19 @@ import org.essembeh.rtfm.model.configuration.core.version2.TTask;
 
 import com.google.inject.Inject;
 
-public class CoreConfigurationLoaderV2 extends JaxbObjectReader<CoreConfiguration, TCoreConfigurationV2> {
+public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> implements ICoreConfigurationProvider {
 	/**
 	 * Attributes
 	 */
-	private static final Logger logger = Logger.getLogger(CoreConfigurationLoaderV2.class);
+	private static final Logger logger = Logger.getLogger(CoreConfigurationReaderV2.class);
 	private StringSubstitutor stringSubstitutor = null;
 
 	/**
 	 * Constructor
 	 */
 	@Inject
-	public CoreConfigurationLoaderV2() {
+	public CoreConfigurationReaderV2() {
 		super(TCoreConfigurationV2.class);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.utils.version.JaxbObjectReader#readObjectFromModel(java.lang.Object, org.essembeh.rtfm.core.utils.version.ILoadable)
-	 */
-	@Override
-	protected void readObjectFromModel(TCoreConfigurationV2 model, CoreConfiguration configuration) {
-		// String substitutions
-		stringSubstitutor = read(model.getSubstitutions());
-		// Filehandlers
-		for (TFileHandler fileHandlerModel : model.getFilehandlers().getFilehandler()) {
-			FileHandler theFileHandler = read(fileHandlerModel);
-			logger.debug("Found filehandler: " + theFileHandler);
-			configuration.getFileHandlers().add(theFileHandler);
-		}
-		// Tasks
-		Map<String, Task> tasks = new HashMap<String, Task>();
-		for (TTask taskModel : model.getTasks().getTask()) {
-			try {
-				Task task = read(taskModel);
-				logger.debug("Found task: " + task);
-				tasks.put(task.getIdentifier(), task);
-			} catch (ConfigurationException e) {
-				logger.error(e.getMessage());
-			}
-		}
-		// Workflows
-		for (TAction actionModel : model.getActions().getAction()) {
-			Workflow action = read(actionModel);
-			try {
-				// Tasks
-				for (TReference taskRef : actionModel.getWorkflow().getTask()) {
-					Task taskExecutor = tasks.get(taskRef.getRefId());
-					if (taskExecutor == null) {
-						throw new ConfigurationException("Cannot find task: " + taskRef.getRefId());
-					}
-					action.addTask(taskExecutor);
-				}
-				logger.debug("Found workflow: " + action);
-				configuration.getWorkflows().add(action);
-			} catch (ConfigurationException e) {
-				logger.error(e.getMessage());
-			}
-		}
 	}
 
 	/**
@@ -187,8 +144,7 @@ public class CoreConfigurationLoaderV2 extends JaxbObjectReader<CoreConfiguratio
 	 * @return
 	 */
 	private IDynamicAttribute read(TRegexAttribute model) {
-		IDynamicAttribute o = new RegexAttribute(model.getName(), Pattern.compile(ss(model.getPattern())), model.getGroup(),
-				model.isOptional());
+		IDynamicAttribute o = new RegexAttribute(model.getName(), Pattern.compile(ss(model.getPattern())), model.getGroup(), model.isOptional());
 		logger.debug("Create DynamicAttribute: " + o);
 		return o;
 	}
@@ -245,6 +201,80 @@ public class CoreConfigurationLoaderV2 extends JaxbObjectReader<CoreConfiguratio
 	 * @return
 	 */
 	private String ss(String input) {
+		if (stringSubstitutor == null && modelAvailable()) {
+			stringSubstitutor = read(getModel().getSubstitutions());
+		}
 		return stringSubstitutor == null ? input : stringSubstitutor.apply(input);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.configuration.io.ICoreConfigurationProvider#getFileHandlers()
+	 */
+	@Override
+	public List<FileHandler> getFileHandlers() {
+		List<FileHandler> out = new ArrayList<FileHandler>();
+		if (modelAvailable()) {
+			for (TFileHandler fileHandlerModel : getModel().getFilehandlers().getFilehandler()) {
+				FileHandler theFileHandler = read(fileHandlerModel);
+				logger.debug("Found filehandler: " + theFileHandler);
+				out.add(theFileHandler);
+			}
+		}
+		return out;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.configuration.io.ICoreConfigurationProvider#getWorkflows()
+	 */
+	@Override
+	public List<Workflow> getWorkflows() {
+		List<Workflow> out = new ArrayList<Workflow>();
+		if (modelAvailable()) {
+			// Tasks
+			Map<String, Task> tasks = new HashMap<String, Task>();
+			for (TTask taskModel : getModel().getTasks().getTask()) {
+				try {
+					Task task = read(taskModel);
+					logger.debug("Found task: " + task);
+					tasks.put(task.getIdentifier(), task);
+				} catch (ConfigurationException e) {
+					logger.error(e.getMessage());
+				}
+			}
+			// Workflows
+			for (TAction actionModel : getModel().getActions().getAction()) {
+				Workflow action = read(actionModel);
+				try {
+					// Tasks
+					for (TReference taskRef : actionModel.getWorkflow().getTask()) {
+						Task taskExecutor = tasks.get(taskRef.getRefId());
+						if (taskExecutor == null) {
+							throw new ConfigurationException("Cannot find task: " + taskRef.getRefId());
+						}
+						action.addTask(taskExecutor);
+					}
+					logger.debug("Found workflow: " + action);
+					out.add(action);
+				} catch (ConfigurationException e) {
+					logger.error(e.getMessage());
+				}
+			}
+		}
+		return out;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.utils.version.JaxbReader#read(java.io.InputStream)
+	 */
+	@Override
+	public void read(InputStream inputStream) throws ReaderException {
+		stringSubstitutor = null;
+		super.read(inputStream);
 	}
 }

@@ -13,8 +13,4 @@ public interface ILoadable {
 	 */
 	void load(InputStream inputStream) throws ReaderException;
 
-	/**
-	 * 
-	 */
-	void resetValues();
 }

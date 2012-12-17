@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.configuration.IXFileService;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
+import org.essembeh.rtfm.core.library.io.ILibraryProvider;
 import org.essembeh.rtfm.core.library.listener.ILibraryListener;
 import org.essembeh.rtfm.core.library.listener.LibraryListenerContainer;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
@@ -39,7 +40,6 @@ import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
 import org.essembeh.rtfm.core.utils.listener.IListenable;
 import org.essembeh.rtfm.core.utils.version.ILoadable;
-import org.essembeh.rtfm.core.utils.version.IObjectReader;
 import org.essembeh.rtfm.core.utils.version.IObjectWriter;
 import org.essembeh.rtfm.core.utils.version.ISaveable;
 import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
@@ -55,7 +55,7 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 	private final static Logger logger = Logger.getLogger(Library.class);
 	private final RTFMProperties properties;
 	private final IXFileService fileService;
-	private final IObjectReader<Library> libraryReader;
+	private final ILibraryProvider libraryReader;
 	private final IObjectWriter<Library> libraryWriter;
 	private final IdList<IXFile, Identifier<IXFile>> listOfFiles;
 	private final LibraryListenerContainer listeners;
@@ -69,7 +69,7 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 	 * @param fileService
 	 */
 	@Inject
-	public Library(@Named("LibraryReader") IObjectReader<Library> libraryReader, @Named("LibraryWriter") IObjectWriter<Library> libraryWriter,
+	public Library(@Named("LibraryReader") ILibraryProvider libraryReader, @Named("LibraryWriter") IObjectWriter<Library> libraryWriter,
 			RTFMProperties properties, IXFileService fileService) {
 		this.libraryReader = libraryReader;
 		this.libraryWriter = libraryWriter;
@@ -137,14 +137,25 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 	 */
 	@Override
 	public void scanFolder(File folder) throws IOException {
+		internalScanFolder(rootFolder, null);
+	}
 
-		if (!folder.exists() || !folder.isDirectory()) {
-			listeners.scanFolderFailed(folder);
+	/**
+	 * 
+	 * @param folder
+	 * @param libraryProvider
+	 * @throws IOException
+	 */
+	public void internalScanFolder(File folder, ILibraryProvider libraryProvider) throws IOException {
+		// Clean the previous musicfiles
+		resetValues();
+
+		// Check if valid folder
+		if (folder == null || !folder.exists() || !folder.isDirectory()) {
 			throw new IOException("The root folder is invalid: " + folder.getAbsolutePath());
 		}
 
-		// Clean the previous musicfiles
-		resetValues();
+		// Save root folder
 		this.rootFolder = folder;
 
 		// Search all files
@@ -155,16 +166,15 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 		for (File file : allFiles) {
 			logger.debug("Found: " + file.getAbsolutePath());
 			VirtualFile virtualFile = new VirtualFile(file, folder);
-			IXFile musicFile;
-			musicFile = fileService.createMusicFile(virtualFile);
-			if (musicFile != null) {
-				if (ignoreAttribute != null && musicFile.getAttributeList().containsKey(ignoreAttribute)) {
-					logger.info("Ignored file: " + musicFile);
+			IXFile xFile = fileService.createXFile(virtualFile, libraryProvider);
+			if (xFile != null) {
+				if (ignoreAttribute != null && xFile.getAttributeList().containsKey(ignoreAttribute)) {
+					logger.info("Ignored file: " + xFile);
 				} else {
-					listOfFiles.add(musicFile);
+					listOfFiles.add(xFile);
 				}
 			} else {
-				listeners.noFileHandlerForFile(virtualFile);
+				logger.warn("No filehandler for file: " + virtualFile);
 			}
 		}
 		logger.info("Found " + this.listOfFiles.size() + " files in folder: " + this.rootFolder.getAbsolutePath());
@@ -181,12 +191,10 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 		return "Library [rootFolder=" + rootFolder + ", files: " + listOfFiles.size() + "]";
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see org.essembeh.rtfm.core.utils.version.ILoadable#resetValues()
+	 * 
 	 */
-	@Override
 	public void resetValues() {
 		this.listOfFiles.clear();
 		this.rootFolder = null;
@@ -200,18 +208,12 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 	@Override
 	public void load(InputStream inputStream) throws ReaderException {
 		resetValues();
-		final IdList<IXFile, Identifier<IXFile>> oldFiles = listOfFiles.newEmptyOne();
-		libraryReader.readObject(inputStream, this);
-		// Detect new files
-		for (IXFile iMusicFile : listOfFiles) {
-			if (!oldFiles.contains(iMusicFile)) {
-				logger.debug("New file during importation: " + iMusicFile);
-				listeners.loadLibraryNewFile(iMusicFile);
-			}
+		libraryReader.read(inputStream);
+		try {
+			internalScanFolder(libraryReader.getRootFolder(), libraryReader);
+		} catch (IOException e) {
+			throw new ReaderException(e);
 		}
-		logger.info("File count: " + listOfFiles.size());
-		logger.info("New file: " + (listOfFiles.size() - oldFiles.size()));
-		listeners.loadLibrarySucceeeded();
 	}
 
 	/*
