@@ -137,7 +137,8 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 	 */
 	@Override
 	public void scanFolder(File folder) throws IOException {
-		internalScanFolder(rootFolder, null);
+		resetValues();
+		internalScanFolder(folder, null);
 	}
 
 	/**
@@ -147,9 +148,6 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 	 * @throws IOException
 	 */
 	public void internalScanFolder(File folder, ILibraryProvider libraryProvider) throws IOException {
-		// Clean the previous musicfiles
-		resetValues();
-
 		// Check if valid folder
 		if (folder == null || !folder.exists() || !folder.isDirectory()) {
 			throw new IOException("The root folder is invalid: " + folder.getAbsolutePath());
@@ -160,7 +158,6 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 
 		// Search all files
 		boolean scanHiddenFiles = properties.getBoolean("scan.hidden.files");
-		String ignoreAttribute = properties.getProperty("attribute.ignore");
 		List<File> allFiles = FileUtils.searchFilesInFolder(this.rootFolder, scanHiddenFiles);
 
 		for (File file : allFiles) {
@@ -168,11 +165,7 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 			VirtualFile virtualFile = new VirtualFile(file, folder);
 			IXFile xFile = fileService.createXFile(virtualFile, libraryProvider);
 			if (xFile != null) {
-				if (ignoreAttribute != null && xFile.getAttributeList().containsKey(ignoreAttribute)) {
-					logger.info("Ignored file: " + xFile);
-				} else {
 					listOfFiles.add(xFile);
-				}
 			} else {
 				logger.warn("No filehandler for file: " + virtualFile);
 			}

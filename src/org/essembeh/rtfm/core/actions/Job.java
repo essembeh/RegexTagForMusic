@@ -64,7 +64,7 @@ public class Job extends JobListenerContainer implements IJob {
 	 */
 	private void executeOneFile(IXFile musicFile) {
 		process(workflow, musicFile);
-		if (workflow.supportType(musicFile.getType())) {
+		if (workflow.supportFile(musicFile)) {
 			try {
 				for (Task task : workflow.getTaskList()) {
 					task.execute(musicFile);

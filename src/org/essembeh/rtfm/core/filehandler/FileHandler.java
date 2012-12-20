@@ -22,10 +22,12 @@ package org.essembeh.rtfm.core.filehandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.essembeh.rtfm.core.condition.AndCondition;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
 import org.essembeh.rtfm.core.library.file.FileType;
+import org.essembeh.rtfm.core.library.file.IVirtualFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.utils.identifiers.AttributeIdentifier;
@@ -39,7 +41,7 @@ public class FileHandler {
 	private final FileType fileType;
 	private final List<Attribute> simpleAttributes;
 	private final List<IDynamicAttribute> dynamicAttributes;
-	private final AndCondition<VirtualFile> conditions;
+	private final AndCondition<IVirtualFile> conditions;
 
 	/**
 	 * 
@@ -47,7 +49,7 @@ public class FileHandler {
 	 */
 	public FileHandler(String id) {
 		fileType = FileType.createFiletype(id);
-		conditions = new AndCondition<VirtualFile>();
+		conditions = new AndCondition<IVirtualFile>();
 		simpleAttributes = new ArrayList<Attribute>();
 		dynamicAttributes = new ArrayList<IDynamicAttribute>();
 	}
@@ -80,7 +82,7 @@ public class FileHandler {
 	 * 
 	 * @return
 	 */
-	public AndCondition<VirtualFile> getConditions() {
+	public AndCondition<IVirtualFile> getConditions() {
 		return this.conditions;
 	}
 
@@ -112,7 +114,7 @@ public class FileHandler {
 	 */
 	@Override
 	public String toString() {
-		return "FileHandler [fileType:" + fileType + ", simpleAttributes:" + simpleAttributes.size() + ", dynamicAttributes:" + dynamicAttributes.size() + "]";
+		return ReflectionToStringBuilder.toString(this);
 	}
 
 	/**

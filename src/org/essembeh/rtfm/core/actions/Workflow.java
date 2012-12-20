@@ -23,8 +23,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.essembeh.rtfm.core.library.file.FileType;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.essembeh.rtfm.core.condition.AndCondition;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
 /**
  * 
@@ -37,7 +38,7 @@ public class Workflow implements IWorkflowIdentifier {
 	 */
 	private final String identifier;
 	private final String description;
-	private final List<String> applyOnTypes;
+	private final AndCondition<IXFile> conditions;
 	private final List<Task> tasks;
 
 	/**
@@ -49,17 +50,16 @@ public class Workflow implements IWorkflowIdentifier {
 	public Workflow(final String identifier, final String description) {
 		this.description = description;
 		this.identifier = identifier;
-		applyOnTypes = new ArrayList<String>();
+		conditions = new AndCondition<IXFile>();
 		tasks = new ArrayList<Task>();
 	}
 
 	/**
-	 * Reference a type the action can handle.
 	 * 
-	 * @param type
+	 * @return
 	 */
-	public void addSupportedType(final String type) {
-		applyOnTypes.add(type);
+	public AndCondition<IXFile> getConditions() {
+		return this.conditions;
 	}
 
 	/**
@@ -74,11 +74,11 @@ public class Workflow implements IWorkflowIdentifier {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.core.actions.IWorkflowIdentifier#supportType(org.essembeh .rtfm.core.library.file.FileType)
+	 * @see org.essembeh.rtfm.core.actions.IWorkflowIdentifier#supportFile(org.essembeh.rtfm.core.library.file.IXFile)
 	 */
 	@Override
-	public boolean supportType(final FileType type) {
-		return applyOnTypes.contains(type.getIdentifier());
+	public boolean supportFile(IXFile file) {
+		return conditions.isTrue(file);
 	}
 
 	/*
@@ -101,16 +101,29 @@ public class Workflow implements IWorkflowIdentifier {
 		return identifier;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Task> getTaskList() {
 		return Collections.unmodifiableList(tasks);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "Workflow [identifier=" + identifier + ", description=" + description + ", applyOnTypes=" + StringUtils.join(applyOnTypes, ",") + ", tasks="
-				+ StringUtils.join(tasks, ",") + "]";
+		return ReflectionToStringBuilder.toString(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(IWorkflowIdentifier o) {
 		return identifier.compareTo(o.getIdentifier());

@@ -17,23 +17,24 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.library.file;
+package org.essembeh.rtfm.tasks;
 
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.core.utils.list.IdList;
-import org.essembeh.rtfm.core.utils.list.Identifier;
+import org.essembeh.rtfm.core.exception.ActionException;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
-public interface IXFile extends Comparable<IXFile>, IVirtualFile {
+public class ThrowException implements ITask {
 
-	/**
-	 * 
-	 * @return
-	 */
-	FileType getType();
+	private String message = "Default message";
 
-	/**
-	 * 
-	 * @return
-	 */
-	IdList<Attribute, Identifier<Attribute>> getAttributeList();
+	@Override
+	public void execute(IXFile file) throws ActionException {
+		throw new ActionException(message);
+	}
+
+	@Override
+	public void setProperty(String key, String value) {
+		if ("message".equalsIgnoreCase(key)) {
+			message = value;
+		}
+	}
 }

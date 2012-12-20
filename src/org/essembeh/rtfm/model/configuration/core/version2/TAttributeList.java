@@ -1,8 +1,8 @@
 //
-// Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
+// Ce fichier a t gnr par l'implmentation de rfrence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
-// Généré le : 2012.12.03 à 04:47:27 PM CET 
+// Toute modification apporte ˆ ce fichier sera perdue lors de la recompilation du schma source. 
+// Gnr le : 2013.01.25 ˆ 12:27:08 PM CET 
 //
 
 
@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour TAttributeList complex type.
  * 
- * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TAttributeList">

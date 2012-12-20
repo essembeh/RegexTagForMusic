@@ -17,28 +17,32 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.condition.impl.ixfile;
+package org.essembeh.rtfm.core.condition.impl.virtualfile;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.essembeh.rtfm.core.condition.ICondition;
-import org.essembeh.rtfm.core.configuration.IWorkflowService;
-import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.core.library.file.IVirtualFile;
 
-public class CanExecuteWorkflow implements ICondition<IXFile> {
+import com.google.common.io.Files;
 
-	/**
-	 * 
-	 */
-	private final String actionName;
-	private final IWorkflowService workflowService;
+public class Extension<T extends IVirtualFile> implements ICondition<T> {
+
+	private final List<String> extensions;
+	private final boolean caseSensitive;
 
 	/**
 	 * 
-	 * @param workflowService
-	 * @param actionName
+	 * @param regexOnPath
 	 */
-	public CanExecuteWorkflow(IWorkflowService workflowService, String actionName) {
-		this.actionName = actionName;
-		this.workflowService = workflowService;
+	public Extension(String extensionsList, boolean caseSensitive) {
+		this.extensions = new ArrayList<String>();
+		this.caseSensitive = caseSensitive;
+		for (String ext : extensionsList.split(" ")) {
+			extensions.add(caseSensitive ? ext : ext.toLowerCase());
+		}
 	}
 
 	/*
@@ -47,8 +51,9 @@ public class CanExecuteWorkflow implements ICondition<IXFile> {
 	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
 	 */
 	@Override
-	public boolean isTrue(IXFile input) {
-		return workflowService.getWorkflowsForType(input.getType()).contains(actionName);
+	public boolean isTrue(T input) {
+		String extension = Files.getFileExtension(input.getVirtualPath());
+		return extensions.contains(caseSensitive ? extension : extension.toLowerCase());
 	}
 
 	/*
@@ -58,7 +63,7 @@ public class CanExecuteWorkflow implements ICondition<IXFile> {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " [actionName=" + actionName + "]";
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

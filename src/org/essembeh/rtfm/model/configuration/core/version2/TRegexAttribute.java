@@ -1,8 +1,8 @@
 //
-// Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
+// Ce fichier a ŽtŽ gŽnŽrŽ par l'implŽmentation de rŽfŽrence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
-// Généré le : 2012.12.03 à 04:47:27 PM CET 
+// Toute modification apportŽe ˆ ce fichier sera perdue lors de la recompilation du schŽma source. 
+// GŽnŽrŽ le : 2013.01.25 ˆ 12:27:08 PM CET 
 //
 
 
@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour TRegexAttribute complex type.
  * 
- * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schŽma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TRegexAttribute">
@@ -51,7 +51,7 @@ public class TRegexAttribute {
     protected Boolean hidden;
 
     /**
-     * Obtient la valeur de la propriété name.
+     * Obtient la valeur de la propriŽtŽ name.
      * 
      * @return
      *     possible object is
@@ -63,7 +63,7 @@ public class TRegexAttribute {
     }
 
     /**
-     * Définit la valeur de la propriété name.
+     * DŽfinit la valeur de la propriŽtŽ name.
      * 
      * @param value
      *     allowed object is
@@ -75,7 +75,7 @@ public class TRegexAttribute {
     }
 
     /**
-     * Obtient la valeur de la propriété pattern.
+     * Obtient la valeur de la propriŽtŽ pattern.
      * 
      * @return
      *     possible object is
@@ -87,7 +87,7 @@ public class TRegexAttribute {
     }
 
     /**
-     * Définit la valeur de la propriété pattern.
+     * DŽfinit la valeur de la propriŽtŽ pattern.
      * 
      * @param value
      *     allowed object is
@@ -99,7 +99,7 @@ public class TRegexAttribute {
     }
 
     /**
-     * Obtient la valeur de la propriété group.
+     * Obtient la valeur de la propriŽtŽ group.
      * 
      * @return
      *     possible object is
@@ -115,7 +115,7 @@ public class TRegexAttribute {
     }
 
     /**
-     * Définit la valeur de la propriété group.
+     * DŽfinit la valeur de la propriŽtŽ group.
      * 
      * @param value
      *     allowed object is
@@ -127,7 +127,7 @@ public class TRegexAttribute {
     }
 
     /**
-     * Obtient la valeur de la propriété optional.
+     * Obtient la valeur de la propriŽtŽ optional.
      * 
      * @return
      *     possible object is
@@ -143,7 +143,7 @@ public class TRegexAttribute {
     }
 
     /**
-     * Définit la valeur de la propriété optional.
+     * DŽfinit la valeur de la propriŽtŽ optional.
      * 
      * @param value
      *     allowed object is
@@ -155,7 +155,7 @@ public class TRegexAttribute {
     }
 
     /**
-     * Obtient la valeur de la propriété hidden.
+     * Obtient la valeur de la propriŽtŽ hidden.
      * 
      * @return
      *     possible object is
@@ -171,7 +171,7 @@ public class TRegexAttribute {
     }
 
     /**
-     * Définit la valeur de la propriété hidden.
+     * DŽfinit la valeur de la propriŽtŽ hidden.
      * 
      * @param value
      *     allowed object is

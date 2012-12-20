@@ -1,8 +1,8 @@
 //
-// Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
+// Ce fichier a ŽtŽ gŽnŽrŽ par l'implŽmentation de rŽfŽrence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
-// Généré le : 2012.12.03 à 04:47:27 PM CET 
+// Toute modification apportŽe ˆ ce fichier sera perdue lors de la recompilation du schŽma source. 
+// GŽnŽrŽ le : 2013.01.25 ˆ 12:27:08 PM CET 
 //
 
 
@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour TFileHandler complex type.
  * 
- * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schŽma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TFileHandler">
@@ -51,7 +51,7 @@ public class TFileHandler {
     protected String id;
 
     /**
-     * Obtient la valeur de la propriété conditions.
+     * Obtient la valeur de la propriŽtŽ conditions.
      * 
      * @return
      *     possible object is
@@ -63,7 +63,7 @@ public class TFileHandler {
     }
 
     /**
-     * Définit la valeur de la propriété conditions.
+     * DŽfinit la valeur de la propriŽtŽ conditions.
      * 
      * @param value
      *     allowed object is
@@ -75,7 +75,7 @@ public class TFileHandler {
     }
 
     /**
-     * Obtient la valeur de la propriété attributes.
+     * Obtient la valeur de la propriŽtŽ attributes.
      * 
      * @return
      *     possible object is
@@ -87,7 +87,7 @@ public class TFileHandler {
     }
 
     /**
-     * Définit la valeur de la propriété attributes.
+     * DŽfinit la valeur de la propriŽtŽ attributes.
      * 
      * @param value
      *     allowed object is
@@ -99,7 +99,7 @@ public class TFileHandler {
     }
 
     /**
-     * Obtient la valeur de la propriété id.
+     * Obtient la valeur de la propriŽtŽ id.
      * 
      * @return
      *     possible object is
@@ -111,7 +111,7 @@ public class TFileHandler {
     }
 
     /**
-     * Définit la valeur de la propriété id.
+     * DŽfinit la valeur de la propriŽtŽ id.
      * 
      * @param value
      *     allowed object is

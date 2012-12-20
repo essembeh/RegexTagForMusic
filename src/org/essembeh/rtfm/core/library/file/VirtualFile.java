@@ -23,24 +23,51 @@ import java.io.File;
 
 import org.essembeh.rtfm.core.utils.FileUtils;
 
-public class VirtualFile extends File {
-
+public class VirtualFile extends File implements IVirtualFile {
+	/**
+	 * Attributes
+	 */
 	private static final long serialVersionUID = 2859877446763137741L;
+	private final String virtualPath;
 
-	String virtualPath;
-
+	/**
+	 * 
+	 * @param file
+	 * @param parent
+	 */
 	public VirtualFile(File file, File parent) {
 		super(file.getAbsolutePath());
 		this.virtualPath = FileUtils.extractRelativePath(file, parent);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.file.IVirtualFile#getVirtualPath()
+	 */
+	@Override
 	public String getVirtualPath() {
 		return virtualPath;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.io.File#toString()
+	 */
 	@Override
 	public String toString() {
 		return virtualPath;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.file.IVirtualFile#getFile()
+	 */
+	@Override
+	public File getFile() {
+		return this;
 	}
 
 }

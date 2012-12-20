@@ -1,8 +1,8 @@
 //
-// Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
+// Ce fichier a ŽtŽ gŽnŽrŽ par l'implŽmentation de rŽfŽrence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
-// Généré le : 2012.12.03 à 04:47:27 PM CET 
+// Toute modification apportŽe ˆ ce fichier sera perdue lors de la recompilation du schŽma source. 
+// GŽnŽrŽ le : 2013.01.25 ˆ 12:27:08 PM CET 
 //
 
 
@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour TFixedAttribute complex type.
  * 
- * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schŽma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TFixedAttribute">
@@ -45,7 +45,7 @@ public class TFixedAttribute {
     protected Boolean hidden;
 
     /**
-     * Obtient la valeur de la propriété name.
+     * Obtient la valeur de la propriŽtŽ name.
      * 
      * @return
      *     possible object is
@@ -57,7 +57,7 @@ public class TFixedAttribute {
     }
 
     /**
-     * Définit la valeur de la propriété name.
+     * DŽfinit la valeur de la propriŽtŽ name.
      * 
      * @param value
      *     allowed object is
@@ -69,7 +69,7 @@ public class TFixedAttribute {
     }
 
     /**
-     * Obtient la valeur de la propriété value.
+     * Obtient la valeur de la propriŽtŽ value.
      * 
      * @return
      *     possible object is
@@ -81,7 +81,7 @@ public class TFixedAttribute {
     }
 
     /**
-     * Définit la valeur de la propriété value.
+     * DŽfinit la valeur de la propriŽtŽ value.
      * 
      * @param value
      *     allowed object is
@@ -93,7 +93,7 @@ public class TFixedAttribute {
     }
 
     /**
-     * Obtient la valeur de la propriété hidden.
+     * Obtient la valeur de la propriŽtŽ hidden.
      * 
      * @return
      *     possible object is
@@ -109,7 +109,7 @@ public class TFixedAttribute {
     }
 
     /**
-     * Définit la valeur de la propriété hidden.
+     * DŽfinit la valeur de la propriŽtŽ hidden.
      * 
      * @param value
      *     allowed object is

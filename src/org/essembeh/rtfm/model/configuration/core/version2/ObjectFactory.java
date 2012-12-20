@@ -1,8 +1,8 @@
 //
-// Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
+// Ce fichier a ŽtŽ gŽnŽrŽ par l'implŽmentation de rŽfŽrence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
-// Généré le : 2012.12.03 à 04:47:27 PM CET 
+// Toute modification apportŽe ˆ ce fichier sera perdue lors de la recompilation du schŽma source. 
+// GŽnŽrŽ le : 2013.01.25 ˆ 12:27:08 PM CET 
 //
 
 
@@ -49,19 +49,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TRegexAttribute }
+     * Create an instance of {@link TConditionTrue }
      * 
      */
-    public TRegexAttribute createTRegexAttribute() {
-        return new TRegexAttribute();
-    }
-
-    /**
-     * Create an instance of {@link TConditionOnType }
-     * 
-     */
-    public TConditionOnType createTConditionOnType() {
-        return new TConditionOnType();
+    public TConditionTrue createTConditionTrue() {
+        return new TConditionTrue();
     }
 
     /**
@@ -73,51 +65,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TConditionOnVirtualPath }
-     * 
-     */
-    public TConditionOnVirtualPath createTConditionOnVirtualPath() {
-        return new TConditionOnVirtualPath();
-    }
-
-    /**
-     * Create an instance of {@link TSubstitutionList }
-     * 
-     */
-    public TSubstitutionList createTSubstitutionList() {
-        return new TSubstitutionList();
-    }
-
-    /**
      * Create an instance of {@link TAction }
      * 
      */
     public TAction createTAction() {
         return new TAction();
-    }
-
-    /**
-     * Create an instance of {@link TActionList }
-     * 
-     */
-    public TActionList createTActionList() {
-        return new TActionList();
-    }
-
-    /**
-     * Create an instance of {@link TAttributeList }
-     * 
-     */
-    public TAttributeList createTAttributeList() {
-        return new TAttributeList();
-    }
-
-    /**
-     * Create an instance of {@link TFixedAttribute }
-     * 
-     */
-    public TFixedAttribute createTFixedAttribute() {
-        return new TFixedAttribute();
     }
 
     /**
@@ -137,14 +89,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TSubstitution }
-     * 
-     */
-    public TSubstitution createTSubstitution() {
-        return new TSubstitution();
-    }
-
-    /**
      * Create an instance of {@link TReference }
      * 
      */
@@ -153,11 +97,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TFileHandlerList }
+     * Create an instance of {@link TConditionVirtualPathMatchesVirtualFile }
      * 
      */
-    public TFileHandlerList createTFileHandlerList() {
-        return new TFileHandlerList();
+    public TConditionVirtualPathMatchesVirtualFile createTConditionVirtualPathMatchesVirtualFile() {
+        return new TConditionVirtualPathMatchesVirtualFile();
     }
 
     /**
@@ -169,6 +113,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link TFileHandlerList }
+     * 
+     */
+    public TFileHandlerList createTFileHandlerList() {
+        return new TFileHandlerList();
+    }
+
+    /**
      * Create an instance of {@link TTask }
      * 
      */
@@ -177,19 +129,123 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TConditionList }
-     * 
-     */
-    public TConditionList createTConditionList() {
-        return new TConditionList();
-    }
-
-    /**
      * Create an instance of {@link TApplyOnList }
      * 
      */
     public TApplyOnList createTApplyOnList() {
         return new TApplyOnList();
+    }
+
+    /**
+     * Create an instance of {@link TConditionTypeEqualsXFile }
+     * 
+     */
+    public TConditionTypeEqualsXFile createTConditionTypeEqualsXFile() {
+        return new TConditionTypeEqualsXFile();
+    }
+
+    /**
+     * Create an instance of {@link TConditionAttributeExistsXFile }
+     * 
+     */
+    public TConditionAttributeExistsXFile createTConditionAttributeExistsXFile() {
+        return new TConditionAttributeExistsXFile();
+    }
+
+    /**
+     * Create an instance of {@link TConditionGroupXFile }
+     * 
+     */
+    public TConditionGroupXFile createTConditionGroupXFile() {
+        return new TConditionGroupXFile();
+    }
+
+    /**
+     * Create an instance of {@link TRegexAttribute }
+     * 
+     */
+    public TRegexAttribute createTRegexAttribute() {
+        return new TRegexAttribute();
+    }
+
+    /**
+     * Create an instance of {@link TSubstitutionList }
+     * 
+     */
+    public TSubstitutionList createTSubstitutionList() {
+        return new TSubstitutionList();
+    }
+
+    /**
+     * Create an instance of {@link TConditionExtensionVirtualFile }
+     * 
+     */
+    public TConditionExtensionVirtualFile createTConditionExtensionVirtualFile() {
+        return new TConditionExtensionVirtualFile();
+    }
+
+    /**
+     * Create an instance of {@link TConditionGroupVirtualFile }
+     * 
+     */
+    public TConditionGroupVirtualFile createTConditionGroupVirtualFile() {
+        return new TConditionGroupVirtualFile();
+    }
+
+    /**
+     * Create an instance of {@link TAttributeList }
+     * 
+     */
+    public TAttributeList createTAttributeList() {
+        return new TAttributeList();
+    }
+
+    /**
+     * Create an instance of {@link TActionList }
+     * 
+     */
+    public TActionList createTActionList() {
+        return new TActionList();
+    }
+
+    /**
+     * Create an instance of {@link TFixedAttribute }
+     * 
+     */
+    public TFixedAttribute createTFixedAttribute() {
+        return new TFixedAttribute();
+    }
+
+    /**
+     * Create an instance of {@link TSubstitution }
+     * 
+     */
+    public TSubstitution createTSubstitution() {
+        return new TSubstitution();
+    }
+
+    /**
+     * Create an instance of {@link TConditionAttributeValueMatchesXFile }
+     * 
+     */
+    public TConditionAttributeValueMatchesXFile createTConditionAttributeValueMatchesXFile() {
+        return new TConditionAttributeValueMatchesXFile();
+    }
+
+    /**
+     * Create an instance of {@link TConditionAttributeValueEqualsXFile }
+     * 
+     */
+    public TConditionAttributeValueEqualsXFile createTConditionAttributeValueEqualsXFile() {
+        return new TConditionAttributeValueEqualsXFile();
+    }
+
+    /**
+     * Create an instance of {@link TConditionFileOrFilderVirtualFile }
+     * 
+     */
+    public TConditionFileOrFilderVirtualFile createTConditionFileOrFilderVirtualFile() {
+        return new TConditionFileOrFilderVirtualFile();
     }
 
     /**

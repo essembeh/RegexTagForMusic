@@ -28,54 +28,90 @@ import org.essembeh.rtfm.core.utils.list.IdList;
 import org.essembeh.rtfm.core.utils.list.Identifier;
 
 /**
- * Represent a file in Music Folder. Not only MP3 but every file in the folder,
- * covers, playlists ...
+ * Represent a file in Music Folder. Not only MP3 but every file in the folder, covers, playlists ...
  * 
  * @author seb
  * 
  */
 public class XFile implements IXFile {
 
+	/**
+	 * Attributes
+	 */
 	protected static Logger logger = Logger.getLogger(XFile.class);
 
 	private final FileType type;
 	private final VirtualFile file;
 	private final IdList<Attribute, Identifier<Attribute>> attributeList;
 
+	/**
+	 * 
+	 * @param type
+	 * @param virtualFile
+	 */
 	public XFile(FileType type, VirtualFile virtualFile) {
 		this.type = type;
 		this.file = virtualFile;
 		this.attributeList = new IdList<Attribute, Identifier<Attribute>>(new AttributeIdentifier());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.file.IXFile#getType()
+	 */
 	@Override
 	public FileType getType() {
 		return type;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.file.IVirtualFile#getVirtualPath()
+	 */
 	@Override
 	public String getVirtualPath() {
 		return file.getVirtualPath();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(IXFile other) {
 		return getVirtualPath().compareTo(other.getVirtualPath());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.file.IVirtualFile#getFile()
+	 */
 	@Override
 	public VirtualFile getFile() {
 		return file;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.file.IXFile#getAttributeList()
+	 */
 	@Override
 	public IdList<Attribute, Identifier<Attribute>> getAttributeList() {
 		return attributeList;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "MusicFile [type=" + type + ", file=" + file + ", attributeList="
-				+ StringUtils.join(attributeList, ", ") + "]";
+		return "XFile [type=" + type + ", file=" + file + ", attributeList=" + StringUtils.join(attributeList, ", ") + "]";
 	}
 }

@@ -15,16 +15,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Classe Java pour TFixedAttribute complex type.
+ * <p>Classe Java pour TConditionExtension_VirtualFile complex type.
  * 
  * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
- * &lt;complexType name="TFixedAttribute">
+ * &lt;complexType name="TConditionExtension_VirtualFile">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="list" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="caseSensitive" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -33,60 +33,64 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TFixedAttribute", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
-public class TFixedAttribute {
+@XmlType(name = "TConditionExtension_VirtualFile", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
+public class TConditionExtensionVirtualFile {
 
-    @XmlAttribute(name = "name", required = true)
-    protected String name;
-    @XmlAttribute(name = "value", required = true)
-    protected String value;
+    @XmlAttribute(name = "list", required = true)
+    protected String list;
+    @XmlAttribute(name = "caseSensitive")
+    protected Boolean caseSensitive;
 
     /**
-     * Obtient la valeur de la propriété name.
+     * Obtient la valeur de la propriété list.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getName() {
-        return name;
+    public String getList() {
+        return list;
     }
 
     /**
-     * Définit la valeur de la propriété name.
+     * Définit la valeur de la propriété list.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setList(String value) {
+        this.list = value;
     }
 
     /**
-     * Obtient la valeur de la propriété value.
+     * Obtient la valeur de la propriété caseSensitive.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link Boolean }
      *     
      */
-    public String getValue() {
-        return value;
+    public boolean isCaseSensitive() {
+        if (caseSensitive == null) {
+            return false;
+        } else {
+            return caseSensitive;
+        }
     }
 
     /**
-     * Définit la valeur de la propriété value.
+     * Définit la valeur de la propriété caseSensitive.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link Boolean }
      *     
      */
-    public void setValue(String value) {
-        this.value = value;
+    public void setCaseSensitive(Boolean value) {
+        this.caseSensitive = value;
     }
 
 }

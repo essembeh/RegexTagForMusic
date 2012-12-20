@@ -30,29 +30,42 @@ import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.actions.Task;
 import org.essembeh.rtfm.core.actions.Workflow;
 import org.essembeh.rtfm.core.condition.AndCondition;
-import org.essembeh.rtfm.core.condition.ICondition;
 import org.essembeh.rtfm.core.condition.MultipleCondition;
 import org.essembeh.rtfm.core.condition.OrCondition;
+import org.essembeh.rtfm.core.condition.impl.virtualfile.AlwaysTrue;
+import org.essembeh.rtfm.core.condition.impl.virtualfile.Extension;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.FileOrFolder;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.FileOrFolder.InodeType;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.VirtualPathMatches;
+import org.essembeh.rtfm.core.condition.impl.xfile.AttributeExists;
+import org.essembeh.rtfm.core.condition.impl.xfile.AttributeValueEquals;
+import org.essembeh.rtfm.core.condition.impl.xfile.TypeEquals;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.TaskException;
 import org.essembeh.rtfm.core.filehandler.FileHandler;
 import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
 import org.essembeh.rtfm.core.filehandler.dynamic.RegexAttribute;
-import org.essembeh.rtfm.core.library.file.VirtualFile;
+import org.essembeh.rtfm.core.library.file.IVirtualFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.utils.string.StringSubstitutor;
 import org.essembeh.rtfm.core.utils.version.JaxbReader;
 import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
 import org.essembeh.rtfm.model.configuration.core.version2.TAction;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionLogic;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionOnType;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionOnVirtualPath;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionAttributeExistsXFile;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionAttributeValueEqualsXFile;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionAttributeValueMatchesXFile;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionExtensionVirtualFile;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionFileOrFilderVirtualFile;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionGroupVirtualFile;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionGroupXFile;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionTrue;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionTypeEqualsXFile;
+import org.essembeh.rtfm.model.configuration.core.version2.TConditionVirtualPathMatchesVirtualFile;
 import org.essembeh.rtfm.model.configuration.core.version2.TCoreConfigurationV2;
 import org.essembeh.rtfm.model.configuration.core.version2.TFileHandler;
 import org.essembeh.rtfm.model.configuration.core.version2.TFixedAttribute;
+import org.essembeh.rtfm.model.configuration.core.version2.TGroupLogic;
 import org.essembeh.rtfm.model.configuration.core.version2.TProperty;
 import org.essembeh.rtfm.model.configuration.core.version2.TReference;
 import org.essembeh.rtfm.model.configuration.core.version2.TRegexAttribute;
@@ -103,28 +116,8 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 	private FileHandler read(TFileHandler model) {
 		String id = model.getId();
 		FileHandler fileHandler = new FileHandler(id);
-		// Get logic
-		TConditionLogic logic = model.getConditions().getLogic();
-		MultipleCondition<VirtualFile> globalCondition;
-		if (TConditionLogic.AND == logic) {
-			globalCondition = new AndCondition<VirtualFile>();
-		} else {
-			globalCondition = new OrCondition<VirtualFile>();
-		}
-		// Conditions
-		if (model.getConditions() != null) {
-			for (TConditionOnVirtualPath virtualPathModel : model.getConditions().getVirtualpath()) {
-				ICondition<VirtualFile> condition = new VirtualPathMatches(ss(virtualPathModel.getPattern()));
-				logger.debug("Found condition: " + condition);
-				globalCondition.addCondition(condition);
-			}
-			for (TConditionOnType conditionModel : model.getConditions().getType()) {
-				ICondition<VirtualFile> condition = new FileOrFolder(InodeType.valueOf(conditionModel.getValue().toString()));
-				logger.debug("Found condition: " + condition);
-				globalCondition.addCondition(condition);
-			}
-		}
-		fileHandler.getConditions().addCondition(globalCondition);
+		// Get conditions
+		fileHandler.getConditions().addCondition(read(model.getConditions()));
 		// Attributes
 		if (model.getAttributes() != null) {
 			for (TFixedAttribute fixedAttribute : model.getAttributes().getAttribute()) {
@@ -136,6 +129,86 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 		}
 		logger.debug("Create Filehandler: " + fileHandler);
 		return fileHandler;
+	}
+
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 */
+	private MultipleCondition<IVirtualFile> read(TConditionGroupVirtualFile model) {
+		MultipleCondition<IVirtualFile> out;
+		if (model.getLogic() == TGroupLogic.OR) {
+			out = new OrCondition<IVirtualFile>();
+		} else {
+			out = new AndCondition<IVirtualFile>();
+		}
+		for (Object child : model.getTrueOrGroupOrVirtualPathMatches()) {
+			if (child instanceof TConditionTrue) {
+				out.addCondition(new AlwaysTrue<IVirtualFile>());
+			} else if (child instanceof TConditionGroupVirtualFile) {
+				TConditionGroupVirtualFile childObject = (TConditionGroupVirtualFile) child;
+				out.addCondition(read(childObject));
+			} else if (child instanceof TConditionVirtualPathMatchesVirtualFile) {
+				TConditionVirtualPathMatchesVirtualFile childObject = (TConditionVirtualPathMatchesVirtualFile) child;
+				out.addCondition(new VirtualPathMatches<IVirtualFile>(ss(childObject.getPattern())));
+			} else if (child instanceof TConditionExtensionVirtualFile) {
+				TConditionExtensionVirtualFile childObject = (TConditionExtensionVirtualFile) child;
+				out.addCondition(new Extension<IVirtualFile>(ss(childObject.getList()), childObject.isCaseSensitive()));
+			} else if (child instanceof TConditionFileOrFilderVirtualFile) {
+				TConditionFileOrFilderVirtualFile childObject = (TConditionFileOrFilderVirtualFile) child;
+				out.addCondition(new FileOrFolder<IVirtualFile>(InodeType.valueOf(childObject.getType())));
+			} else {
+				logger.error("Unsupported condition: " + child.getClass());
+			}
+		}
+		return out;
+	}
+
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 */
+	private MultipleCondition<IXFile> read(TConditionGroupXFile model) {
+		MultipleCondition<IXFile> out;
+		if (model.getLogic() == TGroupLogic.OR) {
+			out = new OrCondition<IXFile>();
+		} else {
+			out = new AndCondition<IXFile>();
+		}
+		for (Object child : model.getTrueOrGroupOrTypeEquals()) {
+			if (child instanceof TConditionTrue) {
+				out.addCondition(new AlwaysTrue<IXFile>());
+			} else if (child instanceof TConditionGroupXFile) {
+				TConditionGroupXFile childObject = (TConditionGroupXFile) child;
+				out.addCondition(read(childObject));
+			} else if (child instanceof TConditionVirtualPathMatchesVirtualFile) {
+				TConditionVirtualPathMatchesVirtualFile childObject = (TConditionVirtualPathMatchesVirtualFile) child;
+				out.addCondition(new VirtualPathMatches<IXFile>(ss(childObject.getPattern())));
+			} else if (child instanceof TConditionExtensionVirtualFile) {
+				TConditionExtensionVirtualFile childObject = (TConditionExtensionVirtualFile) child;
+				out.addCondition(new Extension<IXFile>(ss(childObject.getList()), childObject.isCaseSensitive()));
+			} else if (child instanceof TConditionTypeEqualsXFile) {
+				TConditionTypeEqualsXFile childObject = (TConditionTypeEqualsXFile) child;
+				out.addCondition(new TypeEquals<IXFile>(childObject.getValue()));
+			} else if (child instanceof TConditionAttributeExistsXFile) {
+				TConditionAttributeExistsXFile childObject = (TConditionAttributeExistsXFile) child;
+				out.addCondition(new AttributeExists<IXFile>(childObject.getName(), childObject.isExists()));
+			} else if (child instanceof TConditionAttributeValueEqualsXFile) {
+				TConditionAttributeValueEqualsXFile childObject = (TConditionAttributeValueEqualsXFile) child;
+				out.addCondition(new AttributeValueEquals<IXFile>(childObject.getName(), childObject.getValue()));
+			} else if (child instanceof TConditionAttributeValueMatchesXFile) {
+				TConditionAttributeValueMatchesXFile childObject = (TConditionAttributeValueMatchesXFile) child;
+				out.addCondition(new AttributeValueEquals<IXFile>(childObject.getName(), ss(childObject.getPattern())));
+			} else if (child instanceof TConditionFileOrFilderVirtualFile) {
+				TConditionFileOrFilderVirtualFile childObject = (TConditionFileOrFilderVirtualFile) child;
+				out.addCondition(new FileOrFolder<IXFile>(InodeType.valueOf(childObject.getType())));
+			} else {
+				logger.error("Unsupported condition: " + child.getClass());
+			}
+		}
+		return out;
 	}
 
 	/**
@@ -167,9 +240,7 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 	 */
 	private Workflow read(TAction model) {
 		Workflow out = new Workflow(model.getId(), model.getDescription());
-		for (TReference ref : model.getApplyOn().getFilehandler()) {
-			out.addSupportedType(ref.getRefId());
-		}
+		out.getConditions().addCondition(read(model.getConditions()));
 		return out;
 	}
 

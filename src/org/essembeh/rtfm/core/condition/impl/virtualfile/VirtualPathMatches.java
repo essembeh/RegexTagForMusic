@@ -22,9 +22,9 @@ package org.essembeh.rtfm.core.condition.impl.virtualfile;
 import java.util.regex.Pattern;
 
 import org.essembeh.rtfm.core.condition.ICondition;
-import org.essembeh.rtfm.core.library.file.VirtualFile;
+import org.essembeh.rtfm.core.library.file.IVirtualFile;
 
-public class VirtualPathMatches implements ICondition<VirtualFile> {
+public class VirtualPathMatches<T extends IVirtualFile> implements ICondition<T> {
 
 	private final Pattern regexOnPath;
 
@@ -42,7 +42,7 @@ public class VirtualPathMatches implements ICondition<VirtualFile> {
 	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
 	 */
 	@Override
-	public boolean isTrue(VirtualFile input) {
+	public boolean isTrue(T input) {
 		return regexOnPath.matcher(input.getVirtualPath()).matches();
 	}
 

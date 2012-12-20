@@ -17,25 +17,28 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.condition.impl.ixfile;
+package org.essembeh.rtfm.core.condition.impl.xfile;
 
 import org.essembeh.rtfm.core.condition.ICondition;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.VirtualFile;
+import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
-public class VirtualPathMatches implements ICondition<IXFile> {
+public class AttributeValueEquals<T extends IXFile> implements ICondition<T> {
 
 	/**
 	 * 
 	 */
-	private final ICondition<VirtualFile> condition;
+	private final String attributeName;
+	private final String expectedValue;
 
 	/**
 	 * 
-	 * @param regexOnPath
+	 * @param attributeName
+	 * @param expectedValue
 	 */
-	public VirtualPathMatches(String regexOnPath) {
-		this.condition = new org.essembeh.rtfm.core.condition.impl.virtualfile.VirtualPathMatches(regexOnPath);
+	public AttributeValueEquals(String attributeName, String expectedValue) {
+		this.attributeName = attributeName;
+		this.expectedValue = expectedValue;
 	}
 
 	/*
@@ -44,7 +47,23 @@ public class VirtualPathMatches implements ICondition<IXFile> {
 	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
 	 */
 	@Override
-	public boolean isTrue(IXFile input) {
-		return condition.isTrue(input.getFile());
+	public boolean isTrue(T input) {
+		boolean condition = false;
+		Attribute attribute = input.getAttributeList().get(attributeName);
+		if (attribute != null) {
+			condition = attribute.getValue().equals(expectedValue);
+		}
+		return condition;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return this.getClass().getName() + " [attributeName=" + attributeName + ", expectedValue=" + expectedValue + "]";
+	}
+
 }

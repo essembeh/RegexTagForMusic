@@ -115,11 +115,7 @@ public class CoreConfigurationServices extends CoreConfiguration implements IWor
 	@Override
 	public List<IWorkflowIdentifier> getWorkflowsForType(FileType fileType) {
 		List<IWorkflowIdentifier> out = new ArrayList<IWorkflowIdentifier>();
-		for (Workflow workflow : getWorkflows()) {
-			if (workflow.supportType(fileType)) {
-				out.add(workflow);
-			}
-		}
+		// TODO
 		Collections.sort(out);
 		return out;
 	}

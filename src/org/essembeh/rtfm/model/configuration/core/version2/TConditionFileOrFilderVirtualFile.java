@@ -15,15 +15,22 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Classe Java pour TReference complex type.
+ * <p>Classe Java pour TConditionFileOrFilder_VirtualFile complex type.
  * 
  * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
- * &lt;complexType name="TReference">
+ * &lt;complexType name="TConditionFileOrFilder_VirtualFile">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="ref-id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="type" use="required">
+ *         &lt;simpleType>
+ *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *             &lt;enumeration value="FILE"/>
+ *             &lt;enumeration value="FOLDER"/>
+ *           &lt;/restriction>
+ *         &lt;/simpleType>
+ *       &lt;/attribute>
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -32,34 +39,34 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TReference", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
-public class TReference {
+@XmlType(name = "TConditionFileOrFilder_VirtualFile", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2")
+public class TConditionFileOrFilderVirtualFile {
 
-    @XmlAttribute(name = "ref-id", required = true)
-    protected String refId;
+    @XmlAttribute(name = "type", required = true)
+    protected String type;
 
     /**
-     * Obtient la valeur de la propriété refId.
+     * Obtient la valeur de la propriété type.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getRefId() {
-        return refId;
+    public String getType() {
+        return type;
     }
 
     /**
-     * Définit la valeur de la propriété refId.
+     * Définit la valeur de la propriété type.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setRefId(String value) {
-        this.refId = value;
+    public void setType(String value) {
+        this.type = value;
     }
 
 }

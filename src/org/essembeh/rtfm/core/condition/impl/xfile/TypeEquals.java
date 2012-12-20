@@ -17,27 +17,24 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.condition.impl.ixfile;
+package org.essembeh.rtfm.core.condition.impl.xfile;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.essembeh.rtfm.core.condition.ICondition;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
-public class AttributeValueEquals implements ICondition<IXFile> {
+public class TypeEquals<T extends IXFile> implements ICondition<T> {
 
 	/**
 	 * 
 	 */
-	private final String attributeName;
 	private final String expectedValue;
 
 	/**
 	 * 
-	 * @param attributeName
 	 * @param expectedValue
 	 */
-	public AttributeValueEquals(String attributeName, String expectedValue) {
-		this.attributeName = attributeName;
+	public TypeEquals(String expectedValue) {
 		this.expectedValue = expectedValue;
 	}
 
@@ -47,13 +44,8 @@ public class AttributeValueEquals implements ICondition<IXFile> {
 	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
 	 */
 	@Override
-	public boolean isTrue(IXFile input) {
-		boolean condition = false;
-		Attribute attribute = input.getAttributeList().get(attributeName);
-		if (attribute != null) {
-			condition = attribute.getValue().equals(expectedValue);
-		}
-		return condition;
+	public boolean isTrue(T input) {
+		return input.getType().getIdentifier().equals(expectedValue);
 	}
 
 	/*
@@ -63,7 +55,7 @@ public class AttributeValueEquals implements ICondition<IXFile> {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " [attributeName=" + attributeName + ", expectedValue=" + expectedValue + "]";
+		return ReflectionToStringBuilder.toString(this);
 	}
 
 }

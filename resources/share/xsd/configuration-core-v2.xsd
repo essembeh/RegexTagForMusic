@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rtfm="http://rtfm.essembeh.org/ConfigurationCore-v2" targetNamespace="http://rtfm.essembeh.org/ConfigurationCore-v2"
 	elementFormDefault="qualified">
+	<!-- CONDITIONS -->
+	<xs:complexType name="TConditionTrue">
+	</xs:complexType>
+	<xs:complexType name="TConditionTypeEquals_XFile">
+		<xs:attribute name="value" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="TConditionAttributeExists_XFile">
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="exists" type="xs:boolean" use="optional" default="false" />
+	</xs:complexType>
+	<xs:complexType name="TConditionAttributeValueEquals_XFile">
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="value" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="TConditionAttributeValueMatches_XFile">
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="pattern" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="TConditionVirtualPathMatches_VirtualFile">
+		<xs:attribute name="pattern" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="TConditionExtension_VirtualFile">
+		<xs:attribute name="list" type="xs:string" use="required" />
+		<xs:attribute name="caseSensitive" type="xs:boolean" default="false" use="optional" />
+	</xs:complexType>
+	<xs:complexType name="TConditionFileOrFilder_VirtualFile">
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="FILE" />
+					<xs:enumeration value="FOLDER" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:simpleType name="TGroupLogic">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OR" />
+			<xs:enumeration value="AND" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TConditionGroup_VirtualFile">
+		<xs:choice minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="true" type="rtfm:TConditionTrue" />
+			<xs:element name="group" type="rtfm:TConditionGroup_VirtualFile" />
+			<xs:element name="virtualPathMatches" type="rtfm:TConditionVirtualPathMatches_VirtualFile" />
+			<xs:element name="fileOrFilder" type="rtfm:TConditionFileOrFilder_VirtualFile" />
+			<xs:element name="extension" type="rtfm:TConditionExtension_VirtualFile"/>
+		</xs:choice>
+		<xs:attribute name="logic" type="rtfm:TGroupLogic" use="required" />
+	</xs:complexType>
+	<xs:complexType name="TConditionGroup_XFile">
+		<xs:choice minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="true" type="rtfm:TConditionTrue" />
+			<xs:element name="group" type="rtfm:TConditionGroup_XFile" />
+			<xs:element name="typeEquals" type="rtfm:TConditionTypeEquals_XFile" />
+			<xs:element name="attributeExists" type="rtfm:TConditionAttributeExists_XFile" />
+			<xs:element name="attributeValueEquals" type="rtfm:TConditionAttributeValueEquals_XFile" />
+			<xs:element name="attributeValueMatches" type="rtfm:TConditionAttributeValueMatches_XFile" />
+			<xs:element name="virtualPathMatches" type="rtfm:TConditionVirtualPathMatches_VirtualFile" />
+			<xs:element name="fileOrFilder" type="rtfm:TConditionFileOrFilder_VirtualFile" />
+			<xs:element name="extension" type="rtfm:TConditionExtension_VirtualFile"/>
+		</xs:choice>
+		<xs:attribute name="logic" type="rtfm:TGroupLogic" use="required" />
+	</xs:complexType>
+	<!-- END CONDITIONS -->
 	<xs:complexType name="TReference">
 		<xs:attribute name="ref-id" type="xs:string" use="required" />
 	</xs:complexType>
@@ -20,31 +86,6 @@
 			<xs:element name="attribute" type="rtfm:TFixedAttribute" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="regex-attribute" type="rtfm:TRegexAttribute" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="TConditionOnVirtualPath">
-		<xs:attribute name="pattern" type="xs:string" use="required" />
-	</xs:complexType>
-	<xs:simpleType name="TFileType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="FILE" />
-			<xs:enumeration value="FOLDER" />
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:complexType name="TConditionOnType">
-		<xs:attribute name="value" type="rtfm:TFileType" use="required" />
-	</xs:complexType>
-	<xs:simpleType name="TConditionLogic">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="OR" />
-			<xs:enumeration value="AND" />
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:complexType name="TConditionList">
-		<xs:sequence>
-			<xs:element name="virtualpath" type="rtfm:TConditionOnVirtualPath" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element name="type" type="rtfm:TConditionOnType" minOccurs="0" maxOccurs="unbounded" />
-		</xs:sequence>
-		<xs:attribute name="logic" type="rtfm:TConditionLogic" default="AND"/>
 	</xs:complexType>
 	<xs:complexType name="TProperty">
 		<xs:attribute name="name" type="xs:string" use="required" />
@@ -69,7 +110,7 @@
 	</xs:complexType>
 	<xs:complexType name="TAction">
 		<xs:sequence>
-			<xs:element name="apply-on" type="rtfm:TApplyOnList" minOccurs="1" maxOccurs="1" />
+			<xs:element name="conditions" type="rtfm:TConditionGroup_XFile" minOccurs="1" maxOccurs="1" />
 			<xs:element name="workflow" type="rtfm:TWorkflow" minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:string" use="required" />
@@ -77,7 +118,7 @@
 	</xs:complexType>
 	<xs:complexType name="TFileHandler">
 		<xs:sequence>
-			<xs:element name="conditions" type="rtfm:TConditionList" minOccurs="1" maxOccurs="1" />
+			<xs:element name="conditions" type="rtfm:TConditionGroup_VirtualFile" minOccurs="1" maxOccurs="1" />
 			<xs:element name="attributes" type="rtfm:TAttributeList" minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:string" use="required" />

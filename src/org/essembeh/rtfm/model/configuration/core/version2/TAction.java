@@ -1,8 +1,8 @@
 //
-// Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
+// Ce fichier a ŽtŽ gŽnŽrŽ par l'implŽmentation de rŽfŽrence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
-// Généré le : 2012.12.03 à 04:47:27 PM CET 
+// Toute modification apportŽe ˆ ce fichier sera perdue lors de la recompilation du schŽma source. 
+// GŽnŽrŽ le : 2013.01.25 ˆ 12:27:08 PM CET 
 //
 
 
@@ -18,14 +18,14 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour TAction complex type.
  * 
- * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schŽma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TAction">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="apply-on" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TApplyOnList"/>
+ *         &lt;element name="conditions" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TConditionGroup_XFile"/>
  *         &lt;element name="workflow" type="{http://rtfm.essembeh.org/ConfigurationCore-v2}TWorkflow"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -39,13 +39,13 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TAction", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", propOrder = {
-    "applyOn",
+    "conditions",
     "workflow"
 })
 public class TAction {
 
-    @XmlElement(name = "apply-on", namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", required = true)
-    protected TApplyOnList applyOn;
+    @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", required = true)
+    protected TConditionGroupXFile conditions;
     @XmlElement(namespace = "http://rtfm.essembeh.org/ConfigurationCore-v2", required = true)
     protected TWorkflow workflow;
     @XmlAttribute(name = "id", required = true)
@@ -54,31 +54,31 @@ public class TAction {
     protected String description;
 
     /**
-     * Obtient la valeur de la propriété applyOn.
+     * Obtient la valeur de la propriŽtŽ conditions.
      * 
      * @return
      *     possible object is
-     *     {@link TApplyOnList }
+     *     {@link TConditionGroupXFile }
      *     
      */
-    public TApplyOnList getApplyOn() {
-        return applyOn;
+    public TConditionGroupXFile getConditions() {
+        return conditions;
     }
 
     /**
-     * Définit la valeur de la propriété applyOn.
+     * DŽfinit la valeur de la propriŽtŽ conditions.
      * 
      * @param value
      *     allowed object is
-     *     {@link TApplyOnList }
+     *     {@link TConditionGroupXFile }
      *     
      */
-    public void setApplyOn(TApplyOnList value) {
-        this.applyOn = value;
+    public void setConditions(TConditionGroupXFile value) {
+        this.conditions = value;
     }
 
     /**
-     * Obtient la valeur de la propriété workflow.
+     * Obtient la valeur de la propriŽtŽ workflow.
      * 
      * @return
      *     possible object is
@@ -90,7 +90,7 @@ public class TAction {
     }
 
     /**
-     * Définit la valeur de la propriété workflow.
+     * DŽfinit la valeur de la propriŽtŽ workflow.
      * 
      * @param value
      *     allowed object is
@@ -102,7 +102,7 @@ public class TAction {
     }
 
     /**
-     * Obtient la valeur de la propriété id.
+     * Obtient la valeur de la propriŽtŽ id.
      * 
      * @return
      *     possible object is
@@ -114,7 +114,7 @@ public class TAction {
     }
 
     /**
-     * Définit la valeur de la propriété id.
+     * DŽfinit la valeur de la propriŽtŽ id.
      * 
      * @param value
      *     allowed object is
@@ -126,7 +126,7 @@ public class TAction {
     }
 
     /**
-     * Obtient la valeur de la propriété description.
+     * Obtient la valeur de la propriŽtŽ description.
      * 
      * @return
      *     possible object is
@@ -138,7 +138,7 @@ public class TAction {
     }
 
     /**
-     * Définit la valeur de la propriété description.
+     * DŽfinit la valeur de la propriŽtŽ description.
      * 
      * @param value
      *     allowed object is

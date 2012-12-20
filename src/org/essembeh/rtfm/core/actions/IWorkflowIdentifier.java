@@ -19,7 +19,7 @@
  */
 package org.essembeh.rtfm.core.actions;
 
-import org.essembeh.rtfm.core.library.file.FileType;
+import org.essembeh.rtfm.core.library.file.IXFile;
 
 /**
  * 
@@ -32,17 +32,17 @@ public interface IWorkflowIdentifier extends Comparable<IWorkflowIdentifier> {
 	 * @param type
 	 * @return
 	 */
-	public boolean supportType(final FileType type);
+	boolean supportFile(IXFile xFile);
 
 	/**
 	 * 
 	 * @return
 	 */
-	public String getDescription();
+	String getDescription();
 
 	/**
 	 * 
 	 * @return
 	 */
-	public String getIdentifier();
+	String getIdentifier();
 }

@@ -20,9 +20,9 @@
 package org.essembeh.rtfm.core.condition.impl.virtualfile;
 
 import org.essembeh.rtfm.core.condition.ICondition;
-import org.essembeh.rtfm.core.library.file.VirtualFile;
+import org.essembeh.rtfm.core.library.file.IVirtualFile;
 
-public class FileOrFolder implements ICondition<VirtualFile> {
+public class FileOrFolder<T extends IVirtualFile> implements ICondition<T> {
 
 	/**
 	 * 
@@ -50,10 +50,10 @@ public class FileOrFolder implements ICondition<VirtualFile> {
 	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
 	 */
 	@Override
-	public boolean isTrue(VirtualFile file) {
+	public boolean isTrue(T file) {
 		boolean out = false;
-		if (file != null && file.exists()) {
-			out = (file.isDirectory() && type == InodeType.FOLDER) || (file.isFile() && type == InodeType.FILE);
+		if (file != null && file.getFile() != null && file.getFile().exists()) {
+			out = (file.getFile().isDirectory() && type == InodeType.FOLDER) || (file.getFile().isFile() && type == InodeType.FILE);
 		}
 		return out;
 	}

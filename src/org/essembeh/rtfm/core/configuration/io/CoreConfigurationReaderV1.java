@@ -28,12 +28,16 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.actions.Task;
 import org.essembeh.rtfm.core.actions.Workflow;
+import org.essembeh.rtfm.core.condition.OrCondition;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.VirtualPathMatches;
+import org.essembeh.rtfm.core.condition.impl.xfile.TypeEquals;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.exception.TaskException;
 import org.essembeh.rtfm.core.filehandler.FileHandler;
 import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
 import org.essembeh.rtfm.core.filehandler.dynamic.RegexAttribute;
+import org.essembeh.rtfm.core.library.file.IVirtualFile;
+import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.utils.version.JaxbReader;
 import org.essembeh.rtfm.model.configuration.core.version1.TAction;
@@ -73,7 +77,7 @@ public class CoreConfigurationReaderV1 extends JaxbReader<TCoreConfigurationV1> 
 		// Conditions
 		if (model.getConditions() != null) {
 			for (TConditionOnVirtualPath virtualPathModel : model.getConditions().getVirtualpath()) {
-				fileHandler.getConditions().addCondition(new VirtualPathMatches(virtualPathModel.getMatches()));
+				fileHandler.getConditions().addCondition(new VirtualPathMatches<IVirtualFile>(virtualPathModel.getMatches()));
 			}
 		}
 		// Attributes
@@ -118,9 +122,11 @@ public class CoreConfigurationReaderV1 extends JaxbReader<TCoreConfigurationV1> 
 	 */
 	private Workflow read(TAction model) {
 		Workflow out = new Workflow(model.getId(), model.getDescription());
+		OrCondition<IXFile> conditions = new OrCondition<IXFile>();
 		for (TReference ref : model.getApplyOn().getFilehandler()) {
-			out.addSupportedType(ref.getRefId());
+			conditions.addCondition(new TypeEquals<IXFile>(ref.getRefId()));
 		}
+		out.getConditions().addCondition(conditions);
 		return out;
 	}
 
