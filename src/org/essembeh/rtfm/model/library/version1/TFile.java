@@ -1,10 +1,3 @@
-//
-// Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.6 
-// Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
-// Généré le : 2013.01.25 à 12:27:09 PM CET 
-//
-
 
 package org.essembeh.rtfm.model.library.version1;
 
@@ -17,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour TFile complex type.
  * 
- * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schÈma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TFile">
@@ -45,7 +38,7 @@ public class TFile {
     protected Boolean tagged;
 
     /**
-     * Obtient la valeur de la propriété type.
+     * Obtient la valeur de la propriÈtÈ type.
      * 
      * @return
      *     possible object is
@@ -57,7 +50,7 @@ public class TFile {
     }
 
     /**
-     * Définit la valeur de la propriété type.
+     * DÈfinit la valeur de la propriÈtÈ type.
      * 
      * @param value
      *     allowed object is
@@ -69,7 +62,7 @@ public class TFile {
     }
 
     /**
-     * Obtient la valeur de la propriété path.
+     * Obtient la valeur de la propriÈtÈ path.
      * 
      * @return
      *     possible object is
@@ -81,7 +74,7 @@ public class TFile {
     }
 
     /**
-     * Définit la valeur de la propriété path.
+     * DÈfinit la valeur de la propriÈtÈ path.
      * 
      * @param value
      *     allowed object is
@@ -93,7 +86,7 @@ public class TFile {
     }
 
     /**
-     * Obtient la valeur de la propriété tagged.
+     * Obtient la valeur de la propriÈtÈ tagged.
      * 
      * @return
      *     possible object is
@@ -105,7 +98,7 @@ public class TFile {
     }
 
     /**
-     * Définit la valeur de la propriété tagged.
+     * DÈfinit la valeur de la propriÈtÈ tagged.
      * 
      * @param value
      *     allowed object is

@@ -66,21 +66,20 @@
 	<!-- Generate classes from XSD -->
 	<target name="generateModel">
 		<delete dir="${src}/org/essembeh/rtfm/model/" />
-		<xjc destdir="${src}" package="org.essembeh.rtfm.model.configuration.core.version1">
-			<schema dir="${xsd}" includes="configuration-core-v1.xsd" />
+		<xjc destdir="${src}" package="org.essembeh.rtfm.model.configuration.core">
+			<schema dir="${xsd}" includes="configuration-core.xsd" />
 			<arg value="-npa" />
-		</xjc>
-		<xjc destdir="${src}" package="org.essembeh.rtfm.model.configuration.core.version2">
-			<schema dir="${xsd}" includes="configuration-core-v2.xsd" />
-			<arg value="-npa" />
+			<arg value="-no-header" />
 		</xjc>
 		<xjc destdir="${src}" package="org.essembeh.rtfm.model.library.version1">
 			<schema dir="${xsd}" includes="library-v1.xsd" />
 			<arg value="-npa" />
+			<arg value="-no-header" />
 		</xjc>
 		<xjc destdir="${src}" package="org.essembeh.rtfm.model.library.version2">
 			<schema dir="${xsd}" includes="library-v2.xsd" />
 			<arg value="-npa" />
+			<arg value="-no-header" />
 		</xjc>
 	</target>
 		

@@ -1,5 +1,5 @@
 
-package org.essembeh.rtfm.model.library.version2;
+package org.essembeh.rtfm.model.configuration.core;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,15 +8,15 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Classe Java pour TRootFolder complex type.
+ * <p>Classe Java pour TReference complex type.
  * 
  * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
- * &lt;complexType name="TRootFolder">
+ * &lt;complexType name="TReference">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="path" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="ref-id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -25,34 +25,34 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TRootFolder", namespace = "http://rtfm.essembeh.org/Library-v2")
-public class TRootFolder {
+@XmlType(name = "TReference", namespace = "http://rtfm.essembeh.org/ConfigurationCore")
+public class TReference {
 
-    @XmlAttribute(name = "path", required = true)
-    protected String path;
+    @XmlAttribute(name = "ref-id", required = true)
+    protected String refId;
 
     /**
-     * Obtient la valeur de la propriété path.
+     * Obtient la valeur de la propriété refId.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getPath() {
-        return path;
+    public String getRefId() {
+        return refId;
     }
 
     /**
-     * Définit la valeur de la propriété path.
+     * Définit la valeur de la propriété refId.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setPath(String value) {
-        this.path = value;
+    public void setRefId(String value) {
+        this.refId = value;
     }
 
 }
