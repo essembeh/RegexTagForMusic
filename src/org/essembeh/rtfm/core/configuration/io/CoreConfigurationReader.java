@@ -21,15 +21,12 @@ package org.essembeh.rtfm.core.configuration.io;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.actions.Task;
-import org.essembeh.rtfm.core.actions.Workflow;
 import org.essembeh.rtfm.core.condition.AndCondition;
+import org.essembeh.rtfm.core.condition.ICondition;
 import org.essembeh.rtfm.core.condition.MultipleCondition;
 import org.essembeh.rtfm.core.condition.OrCondition;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.AlwaysTrue;
@@ -40,54 +37,55 @@ import org.essembeh.rtfm.core.condition.impl.virtualfile.VirtualPathMatches;
 import org.essembeh.rtfm.core.condition.impl.xfile.AttributeExists;
 import org.essembeh.rtfm.core.condition.impl.xfile.AttributeValueEquals;
 import org.essembeh.rtfm.core.condition.impl.xfile.TypeEquals;
-import org.essembeh.rtfm.core.exception.ConfigurationException;
-import org.essembeh.rtfm.core.exception.TaskException;
 import org.essembeh.rtfm.core.filehandler.FileHandler;
 import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
 import org.essembeh.rtfm.core.filehandler.dynamic.RegexAttribute;
+import org.essembeh.rtfm.core.filehandler.dynamic.SimpleAttribute;
 import org.essembeh.rtfm.core.library.file.IVirtualFile;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
+import org.essembeh.rtfm.core.utils.commoninterfaces.IConfigurable;
 import org.essembeh.rtfm.core.utils.string.StringSubstitutor;
 import org.essembeh.rtfm.core.utils.version.JaxbReader;
 import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
-import org.essembeh.rtfm.model.configuration.core.version2.TAction;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionAttributeExistsXFile;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionAttributeValueEqualsXFile;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionAttributeValueMatchesXFile;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionExtensionVirtualFile;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionFileOrFilderVirtualFile;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionGroupVirtualFile;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionGroupXFile;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionTrue;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionTypeEqualsXFile;
-import org.essembeh.rtfm.model.configuration.core.version2.TConditionVirtualPathMatchesVirtualFile;
-import org.essembeh.rtfm.model.configuration.core.version2.TCoreConfigurationV2;
-import org.essembeh.rtfm.model.configuration.core.version2.TFileHandler;
-import org.essembeh.rtfm.model.configuration.core.version2.TFixedAttribute;
-import org.essembeh.rtfm.model.configuration.core.version2.TGroupLogic;
-import org.essembeh.rtfm.model.configuration.core.version2.TProperty;
-import org.essembeh.rtfm.model.configuration.core.version2.TReference;
-import org.essembeh.rtfm.model.configuration.core.version2.TRegexAttribute;
-import org.essembeh.rtfm.model.configuration.core.version2.TSubstitution;
-import org.essembeh.rtfm.model.configuration.core.version2.TSubstitutionList;
-import org.essembeh.rtfm.model.configuration.core.version2.TTask;
+import org.essembeh.rtfm.core.workflow.TaskDescription;
+import org.essembeh.rtfm.core.workflow.Workflow;
+import org.essembeh.rtfm.model.configuration.core.TAction;
+import org.essembeh.rtfm.model.configuration.core.TConditionAttributeExistsXFile;
+import org.essembeh.rtfm.model.configuration.core.TConditionAttributeValueEqualsXFile;
+import org.essembeh.rtfm.model.configuration.core.TConditionAttributeValueMatchesXFile;
+import org.essembeh.rtfm.model.configuration.core.TConditionExtensionVirtualFile;
+import org.essembeh.rtfm.model.configuration.core.TConditionFileOrFilderVirtualFile;
+import org.essembeh.rtfm.model.configuration.core.TConditionGroupVirtualFile;
+import org.essembeh.rtfm.model.configuration.core.TConditionGroupXFile;
+import org.essembeh.rtfm.model.configuration.core.TConditionTrue;
+import org.essembeh.rtfm.model.configuration.core.TConditionTypeEqualsXFile;
+import org.essembeh.rtfm.model.configuration.core.TConditionVirtualPathMatchesVirtualFile;
+import org.essembeh.rtfm.model.configuration.core.TCoreConfiguration;
+import org.essembeh.rtfm.model.configuration.core.TFileHandler;
+import org.essembeh.rtfm.model.configuration.core.TFixedAttribute;
+import org.essembeh.rtfm.model.configuration.core.TGroupLogic;
+import org.essembeh.rtfm.model.configuration.core.TProperty;
+import org.essembeh.rtfm.model.configuration.core.TReference;
+import org.essembeh.rtfm.model.configuration.core.TRegexAttribute;
+import org.essembeh.rtfm.model.configuration.core.TSubstitution;
+import org.essembeh.rtfm.model.configuration.core.TSubstitutionList;
+import org.essembeh.rtfm.model.configuration.core.TTask;
 
 import com.google.inject.Inject;
 
-public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> implements ICoreConfigurationProvider {
+public class CoreConfigurationReader extends JaxbReader<TCoreConfiguration> implements ICoreConfigurationProvider {
 	/**
 	 * Attributes
 	 */
-	private static final Logger logger = Logger.getLogger(CoreConfigurationReaderV2.class);
+	private static final Logger logger = Logger.getLogger(CoreConfigurationReader.class);
 	private StringSubstitutor stringSubstitutor = null;
 
 	/**
 	 * Constructor
 	 */
 	@Inject
-	public CoreConfigurationReaderV2() {
-		super(TCoreConfigurationV2.class);
+	public CoreConfigurationReader() {
+		super(TCoreConfiguration.class);
 	}
 
 	/**
@@ -124,7 +122,7 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 				fileHandler.addAttribute(read(fixedAttribute));
 			}
 			for (TRegexAttribute regexAttribute : model.getAttributes().getRegexAttribute()) {
-				fileHandler.addDynamicAttribute(read(regexAttribute));
+				fileHandler.addAttribute(read(regexAttribute));
 			}
 		}
 		logger.debug("Create Filehandler: " + fileHandler);
@@ -136,7 +134,7 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 	 * @param model
 	 * @return
 	 */
-	private MultipleCondition<IVirtualFile> read(TConditionGroupVirtualFile model) {
+	private ICondition<IVirtualFile> read(TConditionGroupVirtualFile model) {
 		MultipleCondition<IVirtualFile> out;
 		if (model.getLogic() == TGroupLogic.OR) {
 			out = new OrCondition<IVirtualFile>();
@@ -170,7 +168,7 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 	 * @param model
 	 * @return
 	 */
-	private MultipleCondition<IXFile> read(TConditionGroupXFile model) {
+	private ICondition<IXFile> read(TConditionGroupXFile model) {
 		MultipleCondition<IXFile> out;
 		if (model.getLogic() == TGroupLogic.OR) {
 			out = new OrCondition<IXFile>();
@@ -227,8 +225,8 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 	 * @param model
 	 * @return
 	 */
-	private Attribute read(TFixedAttribute model) {
-		Attribute o = new Attribute(model.getName(), model.getValue());
+	private IDynamicAttribute read(TFixedAttribute model) {
+		IDynamicAttribute o = new SimpleAttribute(model.getName(), model.getValue());
 		logger.debug("Create Attribute: " + o);
 		return o;
 	}
@@ -238,9 +236,11 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 	 * @param model
 	 * @return
 	 */
-	private Workflow read(TAction model) {
-		Workflow out = new Workflow(model.getId(), model.getDescription());
-		out.getConditions().addCondition(read(model.getConditions()));
+	private List<String> read(List<TReference> model) {
+		List<String> out = new ArrayList<String>();
+		for (TReference ref : model) {
+			out.add(ref.getRefId());
+		}
 		return out;
 	}
 
@@ -248,21 +248,32 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 	 * 
 	 * @param model
 	 * @return
-	 * @throws ConfigurationException
 	 */
-	private Task read(TTask model) throws ConfigurationException {
-		Task out;
-		try {
-			String id = model.getId();
-			String classname = model.getClassname();
-			out = new Task(id, classname);
-			// Setting properties
-			for (TProperty property : model.getProperty()) {
-				out.setProperty(ss(property.getName()), ss(property.getValue()));
+	private Workflow read(TAction model) {
+		return new Workflow(model.getId(), model.getDescription(), read(model.getConditions()), read(model.getWorkflow().getTask()));
+	}
+
+	/**
+	 * 
+	 * @param configurable
+	 * @param properties
+	 */
+	private void configure(IConfigurable configurable, List<TProperty> properties) {
+		if (properties != null) {
+			for (TProperty property : properties) {
+				configurable.setProperty(property.getName(), property.getValue());
 			}
-		} catch (TaskException e) {
-			throw new ConfigurationException(e.getMessage());
 		}
+	}
+
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 */
+	private TaskDescription read(TTask model) {
+		TaskDescription out = new TaskDescription(model.getId(), model.getClassname());
+		configure(out, model.getProperty());
 		return out;
 	}
 
@@ -299,40 +310,34 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.essembeh.rtfm.core.configuration.io.ICoreConfigurationProvider#getTasks()
+	 */
+	@Override
+	public List<TaskDescription> getTasks() {
+		List<TaskDescription> out = new ArrayList<TaskDescription>();
+		if (modelAvailable()) {
+			for (TTask taskModel : getModel().getTasks().getTask()) {
+				TaskDescription task = read(taskModel);
+				logger.debug("Found task: " + task);
+				out.add(task);
+			}
+		}
+		return out;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.essembeh.rtfm.core.configuration.io.ICoreConfigurationProvider#getWorkflows()
 	 */
 	@Override
 	public List<Workflow> getWorkflows() {
 		List<Workflow> out = new ArrayList<Workflow>();
 		if (modelAvailable()) {
-			// Tasks
-			Map<String, Task> tasks = new HashMap<String, Task>();
-			for (TTask taskModel : getModel().getTasks().getTask()) {
-				try {
-					Task task = read(taskModel);
-					logger.debug("Found task: " + task);
-					tasks.put(task.getIdentifier(), task);
-				} catch (ConfigurationException e) {
-					logger.error(e.getMessage());
-				}
-			}
-			// Workflows
 			for (TAction actionModel : getModel().getActions().getAction()) {
 				Workflow action = read(actionModel);
-				try {
-					// Tasks
-					for (TReference taskRef : actionModel.getWorkflow().getTask()) {
-						Task taskExecutor = tasks.get(taskRef.getRefId());
-						if (taskExecutor == null) {
-							throw new ConfigurationException("Cannot find task: " + taskRef.getRefId());
-						}
-						action.addTask(taskExecutor);
-					}
-					logger.debug("Found workflow: " + action);
-					out.add(action);
-				} catch (ConfigurationException e) {
-					logger.error(e.getMessage());
-				}
+				logger.debug("Found workflow: " + action);
+				out.add(action);
 			}
 		}
 		return out;
@@ -348,4 +353,5 @@ public class CoreConfigurationReaderV2 extends JaxbReader<TCoreConfigurationV2> 
 		stringSubstitutor = null;
 		super.read(inputStream);
 	}
+
 }

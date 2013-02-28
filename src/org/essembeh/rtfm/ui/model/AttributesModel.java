@@ -2,6 +2,7 @@ package org.essembeh.rtfm.ui.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.swing.event.ChangeEvent;
@@ -12,7 +13,6 @@ import javax.swing.table.AbstractTableModel;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
 public class AttributesModel extends AbstractTableModel {
 
@@ -65,13 +65,13 @@ public class AttributesModel extends AbstractTableModel {
 		List<IXFile> files = musicFilesSelection.getSelectedFiles();
 		data.clear();
 		for (IXFile musicFile : files) {
-			for (Attribute attribute : musicFile.getAttributeList()) {
-				if (data.containsKey(attribute.getName())) {
-					if (!data.get(attribute.getName()).equals(attribute.getValue())) {
-						data.put(attribute.getName(), MULTIPLE_VALUES);
+			for (Entry<String, String> attribute : musicFile.getAttributes().entrySet()) {
+				if (data.containsKey(attribute.getKey())) {
+					if (!data.get(attribute.getKey()).equals(attribute.getValue())) {
+						data.put(attribute.getKey(), MULTIPLE_VALUES);
 					}
 				} else {
-					data.put(attribute.getName(), attribute.getValue());
+					data.put(attribute.getKey(), attribute.getValue());
 				}
 			}
 		}
@@ -156,8 +156,7 @@ public class AttributesModel extends AbstractTableModel {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object,
-	 * int, int)
+	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
 	 */
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
@@ -168,11 +167,8 @@ public class AttributesModel extends AbstractTableModel {
 			logger.info("Update attribute: " + attributeName + ", with value: " + aValue);
 			List<IXFile> list = musicFilesSelection.getSelectedFiles();
 			for (IXFile musicFile : list) {
-				Attribute attribute = musicFile.getAttributeList().get(attributeName);
-				if (attribute != null) {
-					logger.debug("Update file: " + musicFile);
-					attribute.setValue(aValue.toString());
-				}
+				logger.debug("Update file: " + musicFile);
+				musicFile.getAttributes().updateIfExists(attributeName, aValue.toString());
 			}
 			refresh();
 		}

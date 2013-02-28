@@ -122,9 +122,11 @@
 		</task>
 		<task id="JAudioTagger-id3v2.4" classname="org.essembeh.rtfm.tasks.JAudioTagger">
 			<property name="version" value="ID3V2_4" />
+			<property name="tagged-attribute" value="music:tagged?" />
 		</task>
 		<task id="JAudioTagger-id3v2.3" classname="org.essembeh.rtfm.tasks.JAudioTagger">
 			<property name="version" value="ID3V2_3" />
+			<property name="tagged-attribute" value="music:tagged?" />
 		</task>
 		<task id="eyed3-id3v2.4@utf8" classname="org.essembeh.rtfm.tasks.ExternalProcess">
 			<property name="binary" value="scripts/eyeD3-tag.sh" />

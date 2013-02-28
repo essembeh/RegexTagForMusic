@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.exception.ActionException;
+import org.essembeh.rtfm.core.exception.WorkflowException;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.utils.ProcessUtils;
 import org.essembeh.rtfm.core.utils.ProcessUtils.STDOUT;
@@ -40,7 +40,7 @@ import org.essembeh.rtfm.core.utils.TaskUtils;
  * @author seb
  * 
  */
-public class ExternalProcess implements ITask {
+public class ExternalProcess implements IExecutable {
 
 	static protected Logger logger = Logger.getLogger(ExternalProcess.class);
 
@@ -73,9 +73,9 @@ public class ExternalProcess implements ITask {
 	 * 
 	 * @param processBuilder
 	 * @return
-	 * @throws ActionException
+	 * @throws WorkflowException
 	 */
-	protected int runProcess(ProcessBuilder processBuilder) throws ActionException {
+	protected int runProcess(ProcessBuilder processBuilder) throws WorkflowException {
 		int rc = 0;
 		// Launch the process
 		Process process = null;
@@ -90,9 +90,9 @@ public class ExternalProcess implements ITask {
 				logger.debug(ProcessUtils.getProcessSysOut(process, STDOUT.stdout));
 			}
 		} catch (IOException e) {
-			throw new ActionException(e.getMessage());
+			throw new WorkflowException(e.getMessage());
 		} catch (InterruptedException e) {
-			throw new ActionException(e.getMessage());
+			throw new WorkflowException(e.getMessage());
 		} finally {
 			ProcessUtils.end(process);
 		}
@@ -125,12 +125,10 @@ public class ExternalProcess implements ITask {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.essembeh.rtfm.core.actions.IRTFMTask#execute(org.essembeh.rtfm.core
-	 * .library.file.IMusicFile)
+	 * @see org.essembeh.rtfm.core.actions.IRTFMTask#execute(org.essembeh.rtfm.core .library.file.IMusicFile)
 	 */
 	@Override
-	public void execute(IXFile file) throws ActionException {
+	public void execute(IXFile file) throws WorkflowException {
 		// Build the command
 		List<String> command = new ArrayList<String>();
 		command.add(this.binaryPath);

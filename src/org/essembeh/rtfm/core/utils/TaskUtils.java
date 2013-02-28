@@ -26,8 +26,7 @@ import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.exception.TaskException;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.XFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.tasks.ITask;
+import org.essembeh.rtfm.tasks.IExecutable;
 
 public class TaskUtils {
 
@@ -39,12 +38,12 @@ public class TaskUtils {
 	 * @return
 	 * @throws TaskException
 	 */
-	public static ITask instantiateTask(String identifier) throws TaskException {
+	public static IExecutable instantiateTask(String identifier) throws TaskException {
 		logger.debug("Instantiate class: " + identifier);
-		ITask task = null;
+		IExecutable task = null;
 		try {
 			Class<?> clazz = Class.forName(identifier);
-			task = (ITask) clazz.newInstance();
+			task = (IExecutable) clazz.newInstance();
 		} catch (ClassNotFoundException e) {
 			throw new TaskException(e);
 		} catch (InstantiationException e) {
@@ -57,28 +56,20 @@ public class TaskUtils {
 
 	/**
 	 * Used to set Task env. <br/>
-	 * If the value is ${foo}, return the value of "foo" attribute of the
-	 * {@link XFile}
+	 * If the value is ${foo}, return the value of "foo" attribute of the {@link XFile}
 	 * 
 	 * @param value
-	 * @param musicFile
+	 * @param xFile
 	 * @return
 	 */
-	public static String valuateDynamicEnvironmentVariable(String value, IXFile musicFile) {
+	public static String valuateDynamicEnvironmentVariable(String value, IXFile xFile) {
 		String attributeValue = value;
 		Pattern pattern = Pattern.compile("\\$\\{(.*)\\}");
 		Matcher matcher = pattern.matcher(value);
 		if (matcher.matches()) {
 			String attributeName = matcher.group(1);
 			logger.debug("Dynamic value: " + value + ", attribute name: " + attributeName);
-			Attribute attribute = musicFile.getAttributeList().get(attributeName);
-			if (attribute != null) {
-				attributeValue = attribute.getValue();
-				logger.debug("Found value: " + attributeValue);
-			} else {
-				attributeValue = "";
-				logger.warn("Cannot find attribute: " + attributeName + ", on file: " + musicFile);
-			}
+			attributeValue = xFile.getAttributes().get(attributeName, "");
 		}
 		return attributeValue;
 	}

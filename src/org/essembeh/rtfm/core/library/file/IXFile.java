@@ -19,9 +19,7 @@
  */
 package org.essembeh.rtfm.core.library.file;
 
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.core.utils.list.IdList;
-import org.essembeh.rtfm.core.utils.list.Identifier;
+import org.essembeh.rtfm.core.library.file.attributes.Attributes;
 
 public interface IXFile extends Comparable<IXFile>, IVirtualFile {
 
@@ -35,5 +33,5 @@ public interface IXFile extends Comparable<IXFile>, IVirtualFile {
 	 * 
 	 * @return
 	 */
-	IdList<Attribute, Identifier<Attribute>> getAttributeList();
+	Attributes getAttributes();
 }

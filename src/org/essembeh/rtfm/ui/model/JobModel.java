@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.essembeh.rtfm.core.exception.ActionException;
+import org.essembeh.rtfm.core.exception.WorkflowException;
 import org.essembeh.rtfm.core.library.file.IXFile;
 
 public class JobModel extends AbstractTableModel {
@@ -61,7 +61,7 @@ public class JobModel extends AbstractTableModel {
 		return count;
 	}
 
-	public void jobFinished(IXFile file, ActionException e) {
+	public void jobFinished(IXFile file, WorkflowException e) {
 		int index = 0;
 		FileWithStatus theFile = null;
 		for (FileWithStatus fileWithStatus : data) {
@@ -88,7 +88,7 @@ public class JobModel extends AbstractTableModel {
 	private class FileWithStatus {
 		private final IXFile musicFile;
 		private boolean finished;
-		private ActionException exception;
+		private WorkflowException exception;
 
 		public FileWithStatus(IXFile file) {
 			musicFile = file;
@@ -100,7 +100,7 @@ public class JobModel extends AbstractTableModel {
 			finished = true;
 		}
 
-		public void finishWithError(ActionException e) {
+		public void finishWithError(WorkflowException e) {
 			finish();
 			exception = e;
 		}
@@ -109,7 +109,7 @@ public class JobModel extends AbstractTableModel {
 			return musicFile;
 		}
 
-		public ActionException getException() {
+		public WorkflowException getException() {
 			return exception;
 		}
 

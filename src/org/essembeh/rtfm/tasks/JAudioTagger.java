@@ -20,11 +20,10 @@
 package org.essembeh.rtfm.tasks;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.exception.ActionException;
+import org.essembeh.rtfm.core.exception.WorkflowException;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.core.utils.list.IdList;
-import org.essembeh.rtfm.core.utils.list.Identifier;
+import org.essembeh.rtfm.core.library.file.attributes.Attributes;
+import org.essembeh.rtfm.core.utils.commoninterfaces.impl.AbstractConfigurable;
 import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
@@ -34,17 +33,18 @@ import org.jaudiotagger.tag.id3.ID3v23Tag;
 import org.jaudiotagger.tag.id3.ID3v24Tag;
 
 /**
- * Tag writer that use the JAudioTagger Java library. JAudioTagger Library
- * website: http://www.jthink.net/jaudiotagger/
+ * Tag writer that use the JAudioTagger Java library. JAudioTagger Library website: http://www.jthink.net/jaudiotagger/
  * 
- * For now this tag writer support ID3v2.3 and ID3v2.4 but no UTF8 encoding.
- * Note that removing the tag does not remove data from mp3, it just wipes the
- * ID3 header.
+ * For now this tag writer support ID3v2.3 and ID3v2.4 but no UTF8 encoding. Note that removing the tag does not remove data from mp3, it just wipes the ID3
+ * header.
  * 
  * @author seb
  * 
  */
-public class JAudioTagger implements ITask {
+public class JAudioTagger extends AbstractConfigurable implements IExecutable {
+
+	private final static String PROPERTY_TAGGED_ATTRIBUTE_KEY = "tagged-attribute";
+	private final static String PROPERTY_VERSION_KEY = "version";
 
 	private static Logger logger = Logger.getLogger(JAudioTagger.class);
 
@@ -68,37 +68,19 @@ public class JAudioTagger implements ITask {
 	}
 
 	@Override
-	public void setProperty(String name, String value) {
-		if ("version".equals(name)) {
-			this.version = VERSION.valueOf(value);
-			logger.debug("Setting tag version to: " + this.version.toString());
-		} else {
-			logger.warn("Invalid property for tagger: " + name + "=" + value);
-		}
-	}
-
-	@Override
-	public void execute(IXFile mp3) throws ActionException {
+	public void execute(IXFile mp3) throws WorkflowException {
 		logger.debug("Step1: Remove tags");
 		removeTag(mp3);
 		setTagged(mp3, false);
 		logger.debug("Step2: Tag");
 		tag(mp3);
 		setTagged(mp3, true);
-
 	}
 
-	private void setTagged(IXFile musicFile, Boolean tagged) {
-		logger.debug("Set tagged=" + tagged + ", file: " + musicFile);
-		Attribute taggedAttribute = musicFile.getAttributeList().get("rtfm:tagged");
-		if (taggedAttribute != null) {
-			taggedAttribute.setValue(tagged.toString());
-		} else {
-			logger.warn("Cannot update attribute tagged, attribute not found");
+	private void tag(IXFile mp3) throws WorkflowException {
+		if (getProperties().containsKey(PROPERTY_VERSION_KEY)) {
+			version = VERSION.valueOf(getProperties().get(PROPERTY_VERSION_KEY));
 		}
-	}
-
-	private void tag(IXFile mp3) throws ActionException {
 		// Set the tag content
 		AbstractID3v2Tag id3 = null;
 		if (this.version == VERSION.ID3V2_3) {
@@ -110,16 +92,16 @@ public class JAudioTagger implements ITask {
 		}
 		try {
 			logger.debug("Generating tag content");
-			IdList<Attribute, Identifier<Attribute>> attributes = mp3.getAttributeList();
-			setIfNotNull(id3, attributes.get(attributeArtist), FieldKey.ARTIST);
-			setIfNotNull(id3, attributes.get(attributeAlbum), FieldKey.ALBUM);
-			setIfNotNull(id3, attributes.get(attributeYear), FieldKey.YEAR);
-			setIfNotNull(id3, attributes.get(attributeTitle), FieldKey.TITLE);
-			setIfNotNull(id3, attributes.get(attributeTrack), FieldKey.TRACK);
-			setIfNotNull(id3, attributes.get(attributeComment), FieldKey.COMMENT);
+			Attributes attributes = mp3.getAttributes();
+			setIfNotNull(id3, attributes.getAttributeValue(attributeArtist), FieldKey.ARTIST);
+			setIfNotNull(id3, attributes.getAttributeValue(attributeAlbum), FieldKey.ALBUM);
+			setIfNotNull(id3, attributes.getAttributeValue(attributeYear), FieldKey.YEAR);
+			setIfNotNull(id3, attributes.getAttributeValue(attributeTitle), FieldKey.TITLE);
+			setIfNotNull(id3, attributes.getAttributeValue(attributeTrack), FieldKey.TRACK);
+			setIfNotNull(id3, attributes.getAttributeValue(attributeComment), FieldKey.COMMENT);
 		} catch (Exception e) {
 			logger.error("Error creating ID3Tag");
-			throw new ActionException(e);
+			throw new WorkflowException(e);
 		}
 		try {
 			logger.debug("Saving tag to file : " + mp3.getFile());
@@ -128,11 +110,11 @@ public class JAudioTagger implements ITask {
 			file.save();
 		} catch (Exception e) {
 			logger.error("Error writing ID3Tag to file: " + mp3.getFile());
-			throw new ActionException(e);
+			throw new WorkflowException(e);
 		}
 	}
 
-	private void removeTag(IXFile mp3) throws ActionException {
+	private void removeTag(IXFile mp3) throws WorkflowException {
 		MP3File theMp3File = null;
 		try {
 			theMp3File = new MP3File(mp3.getFile());
@@ -156,17 +138,26 @@ public class JAudioTagger implements ITask {
 			theMp3File.save();
 		} catch (Exception e) {
 			logger.error("Error while trying to open file fot tag removing: " + mp3.getFile());
-			throw new ActionException(e);
+			throw new WorkflowException(e);
 		}
 	}
 
-	private void setIfNotNull(AbstractID3v2Tag tag, Attribute field, FieldKey key) throws KeyNotFoundException,
-			FieldDataInvalidException {
-		if (field != null) {
-			String value = field.getValue();
-			if (value != null) {
-				tag.setField(key, field.getValue());
-			}
+	private void setIfNotNull(AbstractID3v2Tag tag, String value, FieldKey key) throws KeyNotFoundException, FieldDataInvalidException {
+		if (value != null) {
+			tag.setField(key, value);
 		}
 	}
+
+	private void setTagged(IXFile musicFile, Boolean tagged) {
+		logger.debug("Set tagged=" + tagged + ", file: " + musicFile);
+		if (getProperties().containsKey(PROPERTY_TAGGED_ATTRIBUTE_KEY)) {
+			String attributeName = getProperties().get(PROPERTY_TAGGED_ATTRIBUTE_KEY);
+			if (!musicFile.getAttributes().updateIfExists(attributeName, tagged.toString())) {
+				logger.warn("Cannot update attribute tagged, attribute not found");
+			}
+		} else {
+			logger.warn("No tagged attribute to update: " + PROPERTY_TAGGED_ATTRIBUTE_KEY);
+		}
+	}
+
 }

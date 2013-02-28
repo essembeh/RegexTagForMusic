@@ -19,6 +19,7 @@
  */
 package org.essembeh.rtfm.core.condition.impl.xfile;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.essembeh.rtfm.core.condition.ICondition;
 import org.essembeh.rtfm.core.library.file.IXFile;
 
@@ -47,7 +48,7 @@ public class AttributeExists<T extends IXFile> implements ICondition<T> {
 	 */
 	@Override
 	public boolean isTrue(T input) {
-		return !(input.getAttributeList().containsKey(attributeName) ^ exists);
+		return !(input.getAttributes().contains(attributeName) ^ exists);
 	}
 
 	/*
@@ -57,7 +58,7 @@ public class AttributeExists<T extends IXFile> implements ICondition<T> {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " [attributeName:" + attributeName + ", exists:" + exists + "]";
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

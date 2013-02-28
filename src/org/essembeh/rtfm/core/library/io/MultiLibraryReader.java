@@ -2,14 +2,13 @@ package org.essembeh.rtfm.core.library.io;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
-import org.essembeh.rtfm.core.library.file.VirtualFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.utils.version.MultiReader;
 
 import com.google.inject.Inject;
 
-public class MultiLibraryReader extends MultiReader<ILibraryProvider> implements ILibraryProvider {
+public class MultiLibraryReader extends MultiReader<ILibraryReader> implements ILibraryReader {
 
 	/**
 	 * 
@@ -23,31 +22,31 @@ public class MultiLibraryReader extends MultiReader<ILibraryProvider> implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.core.utils.version2.ILibraryLoader#fileExists(org.essembeh.rtfm.core.library.file.VirtualFile)
-	 */
-	@Override
-	public boolean fileExists(VirtualFile virtualFile) {
-		return getLastReader().fileExists(virtualFile);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.utils.version2.ILibraryLoader#getAttributesOfFile(org.essembeh.rtfm.core.library.file.VirtualFile)
-	 */
-	@Override
-	public List<Attribute> getAttributesOfFile(VirtualFile virtualFile) {
-		return getLastReader().getAttributesOfFile(virtualFile);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.essembeh.rtfm.core.library.io.ILibraryProvider#getRootFolder()
 	 */
 	@Override
 	public File getRootFolder() {
 		return getLastReader().getRootFolder();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.io.ILibraryReader#getListOfFiles()
+	 */
+	@Override
+	public List<String> getListOfFiles() {
+		return getLastReader().getListOfFiles();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.io.ILibraryReader#getAttributesForFile(java.lang.String)
+	 */
+	@Override
+	public Map<String, String> getAttributesForFile(String virtualPath) {
+		return getLastReader().getAttributesForFile(virtualPath);
 	}
 
 }

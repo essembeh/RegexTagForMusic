@@ -2,13 +2,18 @@ package org.essembeh.rtfm.core.configuration;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import org.essembeh.rtfm.core.actions.Workflow;
 import org.essembeh.rtfm.core.configuration.io.ICoreConfigurationProvider;
 import org.essembeh.rtfm.core.filehandler.FileHandler;
 import org.essembeh.rtfm.core.utils.version.ILoadable;
 import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
+import org.essembeh.rtfm.core.workflow.TaskDescription;
+import org.essembeh.rtfm.core.workflow.Workflow;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class CoreConfiguration implements ILoadable {
 
@@ -18,22 +23,33 @@ public class CoreConfiguration implements ILoadable {
 	private final ICoreConfigurationProvider configurationReader;
 	private final List<FileHandler> fileHandlers;
 	private final List<Workflow> workflows;
+	private final List<TaskDescription> tasks;
 
 	/**
 	 * 
 	 * @param configurationReader
 	 */
-	public CoreConfiguration(ICoreConfigurationProvider configurationReader) {
+	@Inject
+	public CoreConfiguration(@Named("CoreConfigurationReader") ICoreConfigurationProvider configurationReader) {
 		this.configurationReader = configurationReader;
 		this.fileHandlers = new ArrayList<FileHandler>();
 		this.workflows = new ArrayList<Workflow>();
+		this.tasks = new ArrayList<TaskDescription>();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<TaskDescription> getTaskDescriptions() {
+		return Collections.unmodifiableList(tasks);
 	}
 
 	/**
 	 * @return the fileHandlers
 	 */
 	public List<FileHandler> getFileHandlers() {
-		return fileHandlers;
+		return Collections.unmodifiableList(fileHandlers);
 	}
 
 	/**
@@ -53,10 +69,12 @@ public class CoreConfiguration implements ILoadable {
 		// Clear
 		fileHandlers.clear();
 		workflows.clear();
+		tasks.clear();
 		// Read
 		configurationReader.read(inputStream);
 		// Update
 		fileHandlers.addAll(configurationReader.getFileHandlers());
 		workflows.addAll(configurationReader.getWorkflows());
+		tasks.addAll(configurationReader.getTasks());
 	}
 }

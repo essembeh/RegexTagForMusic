@@ -17,15 +17,20 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.utils.identifiers;
+package org.essembeh.rtfm.tasks;
 
-import org.essembeh.rtfm.core.actions.Workflow;
-import org.essembeh.rtfm.core.utils.list.Identifier;
+import org.essembeh.rtfm.core.exception.WorkflowException;
+import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.core.utils.commoninterfaces.IConfigurable;
 
-public class WorkflowIdentifier implements Identifier<Workflow> {
+public interface IExecutable extends IConfigurable {
 
-	@Override
-	public String getId(Workflow o) {
-		return o.getIdentifier();
-	}
+	/**
+	 * Execute the task
+	 * 
+	 * @param file
+	 * @throws WorkflowException
+	 */
+	void execute(IXFile file) throws WorkflowException;
+
 }

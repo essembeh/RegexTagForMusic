@@ -22,60 +22,53 @@ package org.essembeh.rtfm.core.filehandler.dynamic;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
-public class RegexAttribute implements IDynamicAttribute {
+public class RegexAttribute extends AbstractNamedAttribute {
 
 	static protected Logger logger = Logger.getLogger(RegexAttribute.class);
 
-	Pattern pattern;
-
-	int group;
-
-	boolean optional = false;
-
-	Attribute attribute;
+	private final Pattern pattern;
+	private final int group;
+	private final boolean optional;
 
 	public RegexAttribute(String name, Pattern pattern, int group, boolean optional) {
-		this.attribute = new Attribute(name, "");
+		super(name);
 		this.pattern = pattern;
 		this.group = group;
 		this.optional = optional;
 	}
 
 	@Override
-	public Attribute createAttribute(VirtualFile file) throws DynamicAttributeException {
-		Attribute theAttribute = null;
-		String attributeValue = null;
+	public String getValue(VirtualFile file) throws DynamicAttributeException {
+		String out = null;
 		String virtualPath = file.getVirtualPath();
 		Matcher matcher = this.pattern.matcher(virtualPath);
 		if (matcher.matches() && (matcher.groupCount() >= this.group)) {
-			attributeValue = matcher.group(this.group);
+			out = matcher.group(this.group);
 		}
 
-		if (attributeValue != null) {
-			logger.debug("Match: " + toString() + ", on: " + virtualPath + ", result: " + attributeValue);
-			theAttribute = attribute.clone();
-			theAttribute.setValue(attributeValue);
+		if (out != null) {
+			logger.debug("Match: " + toString() + ", on: " + virtualPath + ", result: " + out);
 		} else if (this.optional) {
 			logger.debug("Optional regex attribute: " + toString() + ", did not match on:" + virtualPath);
 		} else {
 			logger.error("Mandatory regex attribute: " + toString() + ", did not match on:" + virtualPath);
-			throw new DynamicAttributeException(file, attribute.getName());
+			throw new DynamicAttributeException(file, getName());
 		}
-		return theAttribute;
+		return out;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return attribute.toString() + pattern.pattern() + " (" + group + ")" + (optional ? "?" : "");
-	}
-
-	@Override
-	public String getName() {
-		return attribute.getName();
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

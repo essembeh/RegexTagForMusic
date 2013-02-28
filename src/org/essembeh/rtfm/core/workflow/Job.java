@@ -17,7 +17,7 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.actions;
+package org.essembeh.rtfm.core.workflow;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,73 +25,76 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
-import org.essembeh.rtfm.core.actions.listener.JobListenerContainer;
-import org.essembeh.rtfm.core.exception.ActionException;
+import org.apache.log4j.Logger;
+import org.essembeh.rtfm.core.exception.WorkflowException;
 import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.tasks.IExecutable;
 
 /**
  * 
  * @author seb
  * 
  */
-public class Job extends JobListenerContainer implements IJob {
+public class Job {
 	/**
 	 * Attributes
 	 */
-	private final Workflow workflow;
+	private final static Logger LOGGER = Logger.getLogger(Job.class);
 	private final List<IXFile> files;
+	private final List<IExecutable> executables;
 	private final Executor executor;
 
 	/**
-	 * Constructor
 	 * 
-	 * @param workflow
-	 *            the workflow containing tasks
+	 * @param executables
 	 * @param files
-	 *            the file to process
 	 * @param executor
-	 *            the executor used to submit tasks
 	 */
-	public Job(Workflow workflow, List<IXFile> files, Executor executor) {
-		this.workflow = workflow;
+	public Job(List<IExecutable> executables, List<IXFile> files, Executor executor) {
+		this.executables = executables;
 		this.files = new ArrayList<IXFile>(files);
 		this.executor = executor;
 	}
 
 	/**
 	 * 
-	 * @param musicFile
+	 * @param file
+	 * @param progressMonitor
 	 */
-	private void executeOneFile(IXFile musicFile) {
-		process(workflow, musicFile);
-		if (workflow.supportFile(musicFile)) {
-			try {
-				for (Task task : workflow.getTaskList()) {
-					task.execute(musicFile);
-				}
-				succeeded(workflow, musicFile);
-			} catch (ActionException e) {
-				error(workflow, musicFile, e);
+	private void executeOneFile(IXFile file, IJobProgressMonitor progressMonitor) {
+		progressMonitor.process(file);
+		try {
+			for (IExecutable executable : executables) {
+				executable.execute(file);
 			}
-		} else {
-			error(workflow, musicFile, new ActionException("Unsupported filetype: " + musicFile));
+			progressMonitor.succeeded(file);
+		} catch (WorkflowException e) {
+			LOGGER.error("Error on current file; " + file, e);
+			progressMonitor.error(file, e);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see org.essembeh.rtfm.core.actions.IJob#submit()
+	 * @return
 	 */
-	@Override
-	public void submit() {
-		start(workflow);
+	public List<IXFile> getFileList() {
+		return Collections.unmodifiableList(files);
+	}
+
+	/**
+	 * 
+	 * @param progressMonitor
+	 */
+	public void submit(final IJobProgressMonitor progressMonitor) {
+		LOGGER.info("Starting workflow on " + files.size() + " files");
+		progressMonitor.start();
 		final CountDownLatch latch = new CountDownLatch(files.size());
 		for (final IXFile musicFile : files) {
 			executor.execute(new Runnable() {
 				@Override
 				public void run() {
-					executeOneFile(musicFile);
+					executeOneFile(musicFile, progressMonitor);
 					latch.countDown();
 				}
 			});
@@ -101,31 +104,10 @@ public class Job extends JobListenerContainer implements IJob {
 			public void run() {
 				try {
 					latch.await();
-				} catch (InterruptedException e) {
-					// TODO: wtf?
+				} catch (InterruptedException ignored) {
 				}
-				end(workflow);
+				progressMonitor.end();
 			}
 		});
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.actions.IJob#getMusicFiles()
-	 */
-	@Override
-	public List<IXFile> getMusicFiles() {
-		return Collections.unmodifiableList(files);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.actions.IJob#getWorkflowIdentifier()
-	 */
-	@Override
-	public IWorkflowIdentifier getWorkflowIdentifier() {
-		return workflow;
 	}
 }

@@ -20,15 +20,12 @@
 
 package org.essembeh.rtfm.core.library.file;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.core.utils.identifiers.AttributeIdentifier;
-import org.essembeh.rtfm.core.utils.list.IdList;
-import org.essembeh.rtfm.core.utils.list.Identifier;
+import org.essembeh.rtfm.core.library.file.attributes.Attributes;
 
 /**
- * Represent a file in Music Folder. Not only MP3 but every file in the folder, covers, playlists ...
+ * Represent a file with attributes
  * 
  * @author seb
  * 
@@ -42,7 +39,7 @@ public class XFile implements IXFile {
 
 	private final FileType type;
 	private final VirtualFile file;
-	private final IdList<Attribute, Identifier<Attribute>> attributeList;
+	private final Attributes attributes;
 
 	/**
 	 * 
@@ -52,66 +49,36 @@ public class XFile implements IXFile {
 	public XFile(FileType type, VirtualFile virtualFile) {
 		this.type = type;
 		this.file = virtualFile;
-		this.attributeList = new IdList<Attribute, Identifier<Attribute>>(new AttributeIdentifier());
+		this.attributes = new Attributes();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.library.file.IXFile#getType()
-	 */
 	@Override
 	public FileType getType() {
 		return type;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.library.file.IVirtualFile#getVirtualPath()
-	 */
 	@Override
 	public String getVirtualPath() {
 		return file.getVirtualPath();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
 	public int compareTo(IXFile other) {
 		return getVirtualPath().compareTo(other.getVirtualPath());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.library.file.IVirtualFile#getFile()
-	 */
 	@Override
 	public VirtualFile getFile() {
 		return file;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.library.file.IXFile#getAttributeList()
-	 */
 	@Override
-	public IdList<Attribute, Identifier<Attribute>> getAttributeList() {
-		return attributeList;
+	public Attributes getAttributes() {
+		return attributes;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "XFile [type=" + type + ", file=" + file + ", attributeList=" + StringUtils.join(attributeList, ", ") + "]";
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

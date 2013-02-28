@@ -19,35 +19,22 @@
  */
 package org.essembeh.rtfm.tasks;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
+import org.essembeh.rtfm.core.utils.commoninterfaces.impl.AbstractConfigurable;
 
-public class UpdateAttributes implements ITask {
+public class UpdateAttributes extends AbstractConfigurable implements IExecutable {
 	private static final Logger logger = Logger.getLogger(UpdateAttributes.class);
-	Map<String, String> attributes = new HashMap<String, String>();
-
-	@Override
-	public void setProperty(String name, String value) {
-		attributes.put(name, value);
-
-	}
 
 	@Override
 	public void execute(IXFile file) {
-		for (String key : attributes.keySet()) {
-			String value = attributes.get(key);
-			Attribute attr = file.getAttributeList().get(key);
-			if (attr == null) {
-				logger.debug("Create attribute: " + key + " = " + value);
-				Attribute newAttr = new Attribute(key, value);
-				file.getAttributeList().add(newAttr);
+		for (Entry<String, String> e : getProperties().entrySet()) {
+			if (file.getAttributes().updateOrCreate(e.getKey(), e.getValue())) {
+				logger.debug("Set attribute: " + e.getKey() + " = " + e.getValue());
 			} else {
-				logger.debug("Set attribute: " + key + " = " + value);
-				attr.setValue(value);
+				logger.debug("Create attribute: " + e.getKey() + " = " + e.getValue());
 			}
 		}
 	}

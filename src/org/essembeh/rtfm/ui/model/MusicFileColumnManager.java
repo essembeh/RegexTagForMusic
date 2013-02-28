@@ -1,7 +1,6 @@
 package org.essembeh.rtfm.ui.model;
 
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
 public class MusicFileColumnManager {
 
@@ -26,8 +25,8 @@ public class MusicFileColumnManager {
 			out = musicFile;
 			break;
 		case 2:
-			Attribute attribute = musicFile.getAttributeList().get("rtfm:tagged");
-			out = attribute == null ? null : Boolean.parseBoolean(attribute.getValue());
+			String attributeValue = musicFile.getAttributes().getAttributeValue("music:tagged?");
+			out = attributeValue == null ? null : Boolean.parseBoolean(attributeValue);
 			break;
 		default:
 			break;

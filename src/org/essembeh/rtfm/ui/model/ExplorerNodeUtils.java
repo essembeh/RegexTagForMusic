@@ -14,7 +14,6 @@ import javax.swing.tree.TreeNode;
 import org.essembeh.rtfm.core.library.ILibrary;
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.library.filter.CommonFilters;
 import org.essembeh.rtfm.core.library.filter.XFileFilter;
 import org.essembeh.rtfm.core.utils.FileUtils;
@@ -112,9 +111,9 @@ public class ExplorerNodeUtils {
 		DefaultMutableTreeNode root = newNode(nodeName);
 		List<String> values = new ArrayList<String>();
 		for (IXFile musicFile : library.getAllFiles()) {
-			Attribute att = musicFile.getAttributeList().get(attributeName);
-			if (att != null && !values.contains(att.getValue())) {
-				values.add(att.getValue());
+			String attributeValue = musicFile.getAttributes().getAttributeValue(attributeName);
+			if (attributeValue != null && !values.contains(attributeValue)) {
+				values.add(attributeValue);
 			}
 		}
 		Collections.sort(values);

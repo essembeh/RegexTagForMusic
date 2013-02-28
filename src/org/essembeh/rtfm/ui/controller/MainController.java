@@ -11,16 +11,16 @@ import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.essembeh.rtfm.core.actions.IJob;
-import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.core.configuration.ConfigurationHelper;
-import org.essembeh.rtfm.core.configuration.CoreConfigurationServices;
-import org.essembeh.rtfm.core.exception.ActionException;
+import org.essembeh.rtfm.core.configuration.CoreConfiguration;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.utils.TextUtils;
 import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
+import org.essembeh.rtfm.core.workflow.ExecutionManager;
+import org.essembeh.rtfm.core.workflow.Job;
+import org.essembeh.rtfm.core.workflow.Workflow;
 import org.essembeh.rtfm.ui.dialog.JobDialogCustom;
 import org.essembeh.rtfm.ui.model.AttributesModel;
 import org.essembeh.rtfm.ui.model.ConfigurationModel;
@@ -42,7 +42,7 @@ public class MainController {
 	 * 
 	 */
 	private final Library library;
-	private final CoreConfigurationServices configurationServices;
+	private final ExecutionManager executionManager;
 	private final ConfigurationHelper configurationHelper;
 	private final FiltersModel filtersModel;
 	private final FiltersSelection filtersSelection;
@@ -56,21 +56,26 @@ public class MainController {
 
 	/**
 	 * 
+	 * @param configurationServices
 	 * @param library
+	 * @param executionManager
 	 * @param configurationHelper
 	 * @throws ConfigurationException
 	 * @throws FileNotFoundException
 	 */
 	@Inject
-	public MainController(Library library, CoreConfigurationServices configurationServices, ConfigurationHelper configurationHelper)
-			throws ConfigurationException, FileNotFoundException {
+	public MainController(	CoreConfiguration configurationServices,
+							Library library,
+							ExecutionManager executionManager,
+							ConfigurationHelper configurationHelper) throws ConfigurationException,
+			FileNotFoundException {
 		this.library = library;
-		this.configurationServices = configurationServices;
+		this.executionManager = executionManager;
 		this.configurationHelper = configurationHelper;
 
 		// Load default conf
 		try {
-			this.configurationServices.load(this.configurationHelper.getDefaultConfiguration());
+			configurationServices.load(this.configurationHelper.getDefaultConfiguration());
 		} catch (ReaderException e) {
 			throw new ConfigurationException(e.getMessage());
 		}
@@ -83,7 +88,7 @@ public class MainController {
 		this.musicFilesSelection = new MusicFilesSelection(musicFilesModel);
 
 		this.attributesModel = new AttributesModel(musicFilesModel, musicFilesSelection);
-		this.workflowModel = new WorkflowModel(configurationServices, musicFilesModel, musicFilesSelection);
+		this.workflowModel = new WorkflowModel(executionManager, musicFilesModel, musicFilesSelection);
 		this.configurationModel = new ConfigurationModel(configurationHelper);
 
 		this.statusBar = new StatusBar();
@@ -105,18 +110,18 @@ public class MainController {
 
 	/**
 	 * 
-	 * @param workflowIdentifier
+	 * @param workflow
 	 */
-	public void executeWorkFlow(IWorkflowIdentifier workflowIdentifier) {
+	public void executeWorkFlow(Workflow workflow) {
 		List<IXFile> files = musicFilesSelection.getSelectedFiles();
 		if (files.size() == 0) {
 			files = musicFilesModel.getFilteredFiles();
 		}
 		try {
-			IJob job = configurationServices.createJob(workflowIdentifier, files);
-			JobDialogCustom jobDialogCustom = new JobDialogCustom(job);
+			Job job = executionManager.createJob(workflow, files);
+			JobDialogCustom jobDialogCustom = new JobDialogCustom(workflow, job);
 			jobDialogCustom.setVisible(true);
-		} catch (ActionException e) {
+		} catch (Exception e) {
 			statusBar.printError(e);
 		}
 	}
@@ -200,7 +205,8 @@ public class MainController {
 			currentDatabase = fileChooser.getSelectedFile();
 			try {
 				library.load(new FileInputStream(currentDatabase));
-				String message = "Library loaded: " + currentDatabase.getName() + ", found " + TextUtils.plural(library.getAllFiles().size(), "file");
+				String message = "Library loaded: " + currentDatabase.getName() + ", found "
+						+ TextUtils.plural(library.getAllFiles().size(), "file");
 				statusBar.printMessage(message);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -260,21 +266,6 @@ public class MainController {
 			} catch (Exception e) {
 				statusBar.printError(e);
 			}
-		}
-
-	}
-
-	/**
-	 * 
-	 * @param selection
-	 */
-	public void loadConfiguration(String selection) {
-		try {
-			library.resetValues();
-			configurationServices.load(configurationHelper.getConfiguration(selection));
-			statusBar.printMessage("Configuration loaded: " + selection);
-		} catch (Exception e) {
-			statusBar.printMessage("Error loading configuration: " + selection);
 		}
 	}
 }

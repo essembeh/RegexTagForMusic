@@ -19,9 +19,11 @@
  */
 package org.essembeh.rtfm.core.condition.impl.xfile;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.essembeh.rtfm.core.condition.ICondition;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
+
+import com.google.common.base.Objects;
 
 public class AttributeValueEquals<T extends IXFile> implements ICondition<T> {
 
@@ -48,12 +50,8 @@ public class AttributeValueEquals<T extends IXFile> implements ICondition<T> {
 	 */
 	@Override
 	public boolean isTrue(T input) {
-		boolean condition = false;
-		Attribute attribute = input.getAttributeList().get(attributeName);
-		if (attribute != null) {
-			condition = attribute.getValue().equals(expectedValue);
-		}
-		return condition;
+		return input.getAttributes().contains(attributeName)
+				&& Objects.equal(expectedValue, input.getAttributes().getAttributeValue(attributeName));
 	}
 
 	/*
@@ -63,7 +61,7 @@ public class AttributeValueEquals<T extends IXFile> implements ICondition<T> {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " [attributeName=" + attributeName + ", expectedValue=" + expectedValue + "]";
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

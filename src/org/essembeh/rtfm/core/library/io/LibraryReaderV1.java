@@ -20,25 +20,25 @@
 package org.essembeh.rtfm.core.library.io;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.library.file.VirtualFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 import org.essembeh.rtfm.core.utils.version.JaxbReader;
+import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
 import org.essembeh.rtfm.model.library.version1.TFile;
 import org.essembeh.rtfm.model.library.version1.TLibraryV1;
 
 import com.google.inject.Inject;
 
-public class LibraryReaderV1 extends JaxbReader<TLibraryV1> implements ILibraryProvider {
+public class LibraryReaderV1 extends JaxbReader<TLibraryV1> implements ILibraryReader {
 	/**
 	 * Attributes
 	 */
-	private final static String RTFM_TAGGED = "rtfm:tagged";
-	private final static Logger logger = Logger.getLogger(LibraryReaderV1.class);
+	private final static String RTFM_TAGGED = "music:tagged?";
+	private final Map<String, TFile> cache;
 
 	/**
 	 * 
@@ -46,50 +46,21 @@ public class LibraryReaderV1 extends JaxbReader<TLibraryV1> implements ILibraryP
 	@Inject
 	public LibraryReaderV1() {
 		super(TLibraryV1.class);
+		this.cache = new HashMap<String, TFile>();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.essembeh.rtfm.core.library.io.ILibraryLoader#fileExists(org.essembeh.rtfm.core.library.file.VirtualFile)
+	 * @see org.essembeh.rtfm.core.utils.version.JaxbReader#read(java.io.InputStream)
 	 */
 	@Override
-	public boolean fileExists(VirtualFile virtualFile) {
-		return findFile(virtualFile) != null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.essembeh.rtfm.core.library.io.ILibraryLoader#getAttributesOfFile(org.essembeh.rtfm.core.library.file.VirtualFile)
-	 */
-	@Override
-	public List<Attribute> getAttributesOfFile(VirtualFile virtualFile) {
-		List<Attribute> out = new ArrayList<Attribute>();
-		TFile modelFile = findFile(virtualFile);
-		if (modelFile != null) {
-			out.add(new Attribute(RTFM_TAGGED, modelFile.isTagged().toString()));
+	public void read(InputStream inputStream) throws ReaderException {
+		cache.clear();
+		super.read(inputStream);
+		for (TFile modelFile : getModel().getFile()) {
+			cache.put(modelFile.getPath(), modelFile);
 		}
-		return out;
-	}
-
-	/**
-	 * 
-	 * @param virtualFile
-	 * @return
-	 */
-	private TFile findFile(VirtualFile virtualFile) {
-		TFile out = null;
-		if (virtualFile != null && modelAvailable()) {
-			for (TFile modelFile : getModel().getFile()) {
-				if (ObjectUtils.equals(modelFile.getPath(), virtualFile.getVirtualPath())) {
-					out = modelFile;
-					break;
-				}
-			}
-		}
-		logger.debug("Finding file: " + virtualFile + ", found: " + out);
-		return out;
 	}
 
 	/*
@@ -102,6 +73,31 @@ public class LibraryReaderV1 extends JaxbReader<TLibraryV1> implements ILibraryP
 		File out = null;
 		if (modelAvailable()) {
 			out = new File(getModel().getPath());
+		}
+		return out;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.io.ILibraryReader#getListOfFiles()
+	 */
+	@Override
+	public List<String> getListOfFiles() {
+		return Arrays.asList(cache.keySet().toArray(new String[0]));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.essembeh.rtfm.core.library.io.ILibraryReader#getAttributesForFile(java.lang.String)
+	 */
+	@Override
+	public Map<String, String> getAttributesForFile(String virtualPath) {
+		Map<String, String> out = null;
+		if (cache.containsKey(virtualPath)) {
+			out = new HashMap<String, String>();
+			out.put(RTFM_TAGGED, cache.get(virtualPath).isTagged().toString());
 		}
 		return out;
 	}

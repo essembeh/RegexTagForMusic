@@ -19,17 +19,17 @@
  */
 package org.essembeh.rtfm.core;
 
-import org.essembeh.rtfm.core.configuration.CoreConfigurationServices;
-import org.essembeh.rtfm.core.configuration.IWorkflowService;
-import org.essembeh.rtfm.core.configuration.IXFileService;
+import org.essembeh.rtfm.core.configuration.CoreConfiguration;
 import org.essembeh.rtfm.core.configuration.io.ICoreConfigurationProvider;
 import org.essembeh.rtfm.core.configuration.io.MultiCoreConfigurationReader;
+import org.essembeh.rtfm.core.filehandler.FileHandlerManager;
 import org.essembeh.rtfm.core.library.Library;
-import org.essembeh.rtfm.core.library.io.ILibraryProvider;
+import org.essembeh.rtfm.core.library.io.ILibraryReader;
 import org.essembeh.rtfm.core.library.io.LibraryWriterV2;
 import org.essembeh.rtfm.core.library.io.MultiLibraryReader;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.core.utils.version.IObjectWriter;
+import org.essembeh.rtfm.core.workflow.ExecutionManager;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
@@ -58,18 +58,17 @@ public class ModuleCore extends AbstractModule {
 			bind(RTFMProperties.class).toInstance(mainProperties);
 
 			// Singleton for the configuration and services
-			bind(CoreConfigurationServices.class).in(Singleton.class);
-			bind(IWorkflowService.class).to(CoreConfigurationServices.class).in(Singleton.class);
-			bind(IXFileService.class).to(CoreConfigurationServices.class).in(Singleton.class);
+			bind(CoreConfiguration.class).in(Singleton.class);
+			bind(ExecutionManager.class).in(Singleton.class);
+			bind(FileHandlerManager.class).in(Singleton.class);
 
 			// IO
-			bind(ILibraryProvider.class).annotatedWith(Names.named("LibraryReader")).to(MultiLibraryReader.class);
-			bind(ICoreConfigurationProvider.class).annotatedWith(Names.named("CoreConfigurationReader")).to(MultiCoreConfigurationReader.class);
+			bind(ILibraryReader.class).annotatedWith(Names.named("LibraryReader")).to(MultiLibraryReader.class);
+			bind(ICoreConfigurationProvider.class).annotatedWith(Names.named("CoreConfigurationReader")).to(
+					MultiCoreConfigurationReader.class);
 
 			bind(new TypeLiteral<IObjectWriter<Library>>() {
 			}).annotatedWith(Names.named("LibraryWriter")).to(LibraryWriterV2.class);
-
-
 		} catch (Exception e) {
 			addError(e);
 		}

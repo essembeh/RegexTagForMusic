@@ -9,9 +9,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
-import org.essembeh.rtfm.core.configuration.IWorkflowService;
 import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.core.workflow.ExecutionManager;
+import org.essembeh.rtfm.core.workflow.Workflow;
 
 public class WorkflowModel extends DefaultComboBoxModel {
 
@@ -20,23 +20,25 @@ public class WorkflowModel extends DefaultComboBoxModel {
 	 */
 	private static final long serialVersionUID = -7840068219637080176L;
 	private final String firstElement;
-	private final IWorkflowService workflowService;
+	private final ExecutionManager executionManager;
 	private final MusicFilesModel musicFilesModel;
 	private final MusicFilesSelection musicFilesSelection;
-	private final List<IWorkflowIdentifier> workflows;
+	private final List<Workflow> workflows;
 
 	/**
 	 * 
-	 * @param library
+	 * @param executionManager
 	 * @param musicFilesModel
 	 * @param musicFilesSelection
 	 */
-	public WorkflowModel(IWorkflowService workflowService, MusicFilesModel musicFilesModel, MusicFilesSelection musicFilesSelection) {
+	public WorkflowModel(	ExecutionManager executionManager,
+							MusicFilesModel musicFilesModel,
+							MusicFilesSelection musicFilesSelection) {
 		super();
-		this.workflowService = workflowService;
+		this.executionManager = executionManager;
 		this.musicFilesModel = musicFilesModel;
 		this.musicFilesSelection = musicFilesSelection;
-		this.workflows = new ArrayList<IWorkflowIdentifier>();
+		this.workflows = new ArrayList<Workflow>();
 		this.firstElement = "Choose an action";
 		// Setup listeners
 		musicFilesModel.addTableModelListener(new TableModelListener() {
@@ -62,11 +64,9 @@ public class WorkflowModel extends DefaultComboBoxModel {
 			files = musicFilesModel.getFilteredFiles();
 		}
 		workflows.clear();
-		for (IXFile musicFile : files) {
-			for (IWorkflowIdentifier workflowIdentifier : workflowService.getWorkflowsForType(musicFile.getType())) {
-				if (!workflows.contains(workflowIdentifier)) {
-					workflows.add(workflowIdentifier);
-				}
+		for (Workflow workflowIdentifier : executionManager.getCompatibleWorkflows(files)) {
+			if (!workflows.contains(workflowIdentifier)) {
+				workflows.add(workflowIdentifier);
 			}
 		}
 		fireContentsChanged(this, 0, getSize());

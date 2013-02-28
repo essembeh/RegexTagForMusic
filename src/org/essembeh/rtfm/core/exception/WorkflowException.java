@@ -17,15 +17,36 @@
  * RegexTagForMusic. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.essembeh.rtfm.core.utils.identifiers;
+package org.essembeh.rtfm.core.exception;
 
-import org.essembeh.rtfm.core.actions.Task;
-import org.essembeh.rtfm.core.utils.list.Identifier;
+/**
+ * 
+ * @author seb
+ * 
+ */
+public class WorkflowException extends RTFMException {
 
-public class TaskIdentifier implements Identifier<Task> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4336333940987166349L;
 
-	@Override
-	public String getId(Task o) {
-		return o.getIdentifier();
+	/**
+	 * Constructor
+	 * 
+	 * @param message
+	 */
+	public WorkflowException(String message) {
+		super(message);
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param t
+	 */
+	public WorkflowException(Throwable t) {
+		super(t);
+	}
+
 }

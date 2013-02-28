@@ -21,9 +21,9 @@ package org.essembeh.rtfm.core.condition.impl.xfile;
 
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.essembeh.rtfm.core.condition.ICondition;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
 
 public class AttributeValueRegex<T extends IXFile> implements ICondition<T> {
 
@@ -49,14 +49,9 @@ public class AttributeValueRegex<T extends IXFile> implements ICondition<T> {
 	 * @see org.essembeh.rtfm.core.condition.ICondition#isTrue(java.lang.Object)
 	 */
 	@Override
-	public boolean isTrue(T xfile) {
-		boolean condition = false;
-		Attribute attribute = xfile.getAttributeList().get(attributeName);
-		if (attribute != null) {
-			String value = attribute.getValue();
-			condition = regexOnValue.matcher(value).matches();
-		}
-		return condition;
+	public boolean isTrue(T input) {
+		return input.getAttributes().contains(attributeName)
+				&& regexOnValue.matcher(input.getAttributes().getAttributeValue(attributeName)).matches();
 	}
 
 	/*
@@ -66,7 +61,6 @@ public class AttributeValueRegex<T extends IXFile> implements ICondition<T> {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " [attributeName=" + attributeName + ", regexOnValue=" + regexOnValue.pattern() + "]";
+		return ToStringBuilder.reflectionToString(this);
 	}
-
 }

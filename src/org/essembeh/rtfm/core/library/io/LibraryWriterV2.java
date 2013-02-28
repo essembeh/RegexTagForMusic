@@ -21,15 +21,13 @@ package org.essembeh.rtfm.core.library.io;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
 import org.essembeh.rtfm.core.library.ILibrary;
 import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
+import org.essembeh.rtfm.core.library.file.attributes.Attributes;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.core.utils.jaxb.JaxbUtils;
 import org.essembeh.rtfm.core.utils.version.IObjectWriter;
@@ -82,10 +80,7 @@ public class LibraryWriterV2 implements IObjectWriter<Library> {
 	private boolean isExportable(IXFile musicFile) {
 		boolean isExportable = true;
 		if (exportableAttribute != null) {
-			Attribute exportAttribute = musicFile.getAttributeList().get(exportableAttribute);
-			if (Boolean.FALSE.toString().equalsIgnoreCase(exportAttribute.getValue())) {
-				isExportable = false;
-			}
+			isExportable = Boolean.TRUE.toString().equalsIgnoreCase(musicFile.getAttributes().getAttributeValue(exportableAttribute));
 		}
 		return isExportable;
 	}
@@ -126,23 +121,13 @@ public class LibraryWriterV2 implements IObjectWriter<Library> {
 		TFile model = objectFactory.createTFile();
 		model.setType(musicFile.getType().toString());
 		model.setVirtualpath(musicFile.getVirtualPath());
-		List<Attribute> attributeList = musicFile.getAttributeList().toList();
-		Collections.sort(attributeList);
-		for (Attribute a : attributeList) {
-			model.getAttribute().add(toModel(a));
+		Attributes attributeList = musicFile.getAttributes();
+		for (String attributeName : attributeList.getAllNames()) {
+			TAttribute modelAttribute = objectFactory.createTAttribute();
+			modelAttribute.setName(attributeName);
+			modelAttribute.setValue(attributeList.getAttributeValue(attributeName));
+			model.getAttribute().add(modelAttribute);
 		}
-		return model;
-	}
-
-	/**
-	 * 
-	 * @param attribute
-	 * @return
-	 */
-	protected TAttribute toModel(Attribute attribute) {
-		TAttribute model = objectFactory.createTAttribute();
-		model.setName(attribute.getName());
-		model.setValue(attribute.getValue());
 		return model;
 	}
 

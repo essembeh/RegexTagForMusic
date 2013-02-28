@@ -20,7 +20,9 @@
 package org.essembeh.rtfm.core.filehandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.essembeh.rtfm.core.condition.AndCondition;
@@ -29,18 +31,13 @@ import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
 import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IVirtualFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attribute;
-import org.essembeh.rtfm.core.utils.identifiers.AttributeIdentifier;
-import org.essembeh.rtfm.core.utils.list.IdList;
-import org.essembeh.rtfm.core.utils.list.Identifier;
 
 public class FileHandler {
 	/**
 	 * Attributes
 	 */
 	private final FileType fileType;
-	private final List<Attribute> simpleAttributes;
-	private final List<IDynamicAttribute> dynamicAttributes;
+	private final List<IDynamicAttribute> attributes;
 	private final AndCondition<IVirtualFile> conditions;
 
 	/**
@@ -50,8 +47,7 @@ public class FileHandler {
 	public FileHandler(String id) {
 		fileType = FileType.createFiletype(id);
 		conditions = new AndCondition<IVirtualFile>();
-		simpleAttributes = new ArrayList<Attribute>();
-		dynamicAttributes = new ArrayList<IDynamicAttribute>();
+		attributes = new ArrayList<IDynamicAttribute>();
 	}
 
 	/**
@@ -66,16 +62,8 @@ public class FileHandler {
 	 * 
 	 * @param attribute
 	 */
-	public void addAttribute(Attribute attribute) {
-		this.simpleAttributes.add(attribute);
-	}
-
-	/**
-	 * 
-	 * @param attribute
-	 */
-	public void addDynamicAttribute(IDynamicAttribute attribute) {
-		this.dynamicAttributes.add(attribute);
+	public void addAttribute(IDynamicAttribute attribute) {
+		this.attributes.add(attribute);
 	}
 
 	/**
@@ -90,21 +78,17 @@ public class FileHandler {
 	 * 
 	 * @param virtualFile
 	 * @return
+	 * @throws DynamicAttributeException
 	 */
-	public IdList<Attribute, Identifier<Attribute>> getAttributesForFile(VirtualFile virtualFile) {
-		IdList<Attribute, Identifier<Attribute>> attributes = new IdList<Attribute, Identifier<Attribute>>(new AttributeIdentifier());
-
-		for (Attribute attribute : simpleAttributes) {
-			attributes.add(attribute.clone());
-		}
-		for (IDynamicAttribute attribute : dynamicAttributes) {
-			try {
-				attributes.add(attribute.createAttribute(virtualFile));
-			} catch (DynamicAttributeException e) {
-				attributes.add(createErrorAttribute(e));
+	public Map<String, String> getAttributesForFile(VirtualFile virtualFile) throws DynamicAttributeException {
+		Map<String, String> out = new HashMap<String, String>();
+		for (IDynamicAttribute dynamicAttributes : attributes) {
+			String value = dynamicAttributes.getValue(virtualFile);
+			if (value != null) {
+				out.put(dynamicAttributes.getName(), value);
 			}
 		}
-		return attributes;
+		return out;
 	}
 
 	/*
@@ -115,16 +99,5 @@ public class FileHandler {
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this);
-	}
-
-	/**
-	 * 
-	 * @param t
-	 * @return
-	 */
-	private Attribute createErrorAttribute(Throwable t) {
-		// TODO: Properties
-		Attribute out = new Attribute("core:error", t.getMessage());
-		return out;
 	}
 }

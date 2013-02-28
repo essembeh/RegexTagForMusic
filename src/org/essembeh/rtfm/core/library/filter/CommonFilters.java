@@ -21,10 +21,12 @@ package org.essembeh.rtfm.core.library.filter;
 
 import java.util.regex.Pattern;
 
+import org.essembeh.rtfm.core.condition.ICondition;
 import org.essembeh.rtfm.core.condition.impl.FileType;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.VirtualPathMatches;
 import org.essembeh.rtfm.core.condition.impl.xfile.AttributeValueEquals;
 import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.core.workflow.Workflow;
 
 public class CommonFilters {
 
@@ -47,6 +49,18 @@ public class CommonFilters {
 	public static XFileFilter virtualPathStartsWith(String expectedValue) {
 		XFileFilter filter = new XFileFilter();
 		filter.addCondition(new VirtualPathMatches<IXFile>(Pattern.quote(expectedValue) + ".*"));
+		return filter;
+	}
+
+	public static XFileFilter supportedByWorkflow(final Workflow workflow) {
+		XFileFilter filter = new XFileFilter();
+		filter.addCondition(new ICondition<IXFile>() {
+
+			@Override
+			public boolean isTrue(IXFile input) {
+				return workflow != null && workflow.supportFile(input);
+			}
+		});
 		return filter;
 	}
 }

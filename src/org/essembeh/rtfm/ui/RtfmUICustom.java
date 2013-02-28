@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
-import org.essembeh.rtfm.core.actions.IWorkflowIdentifier;
 import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.core.workflow.Workflow;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction.ICallback;
 import org.essembeh.rtfm.ui.controller.MainController;
@@ -71,12 +71,13 @@ public class RtfmUICustom extends RtfmUI {
 			}
 		})));
 
-		actionPanel.add(showHideAttributesButton = new JButton(new DefaultRtfmAction("Attributes", Image.ATTRIBUTES, new ICallback() {
-			@Override
-			public void execute() {
-				setAttributesPanelVisible(!splitPaneCenterRight.getRightComponent().isVisible());
-			}
-		})));
+		actionPanel.add(showHideAttributesButton = new JButton(new DefaultRtfmAction("Attributes", Image.ATTRIBUTES,
+				new ICallback() {
+					@Override
+					public void execute() {
+						setAttributesPanelVisible(!splitPaneCenterRight.getRightComponent().isVisible());
+					}
+				})));
 
 		final JComboBox comboBox = new JComboBox(mainController.getWorkflowModel());
 		actionPanel.add(comboBox);
@@ -86,8 +87,8 @@ public class RtfmUICustom extends RtfmUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Object selectedWorkflow = comboBox.getSelectedItem();
-				if (selectedWorkflow != null && selectedWorkflow instanceof IWorkflowIdentifier) {
-					mainController.executeWorkFlow((IWorkflowIdentifier) selectedWorkflow);
+				if (selectedWorkflow != null && selectedWorkflow instanceof Workflow) {
+					mainController.executeWorkFlow((Workflow) selectedWorkflow);
 				}
 				comboBox.setSelectedIndex(0);
 

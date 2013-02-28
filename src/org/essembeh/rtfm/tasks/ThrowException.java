@@ -19,16 +19,16 @@
  */
 package org.essembeh.rtfm.tasks;
 
-import org.essembeh.rtfm.core.exception.ActionException;
+import org.essembeh.rtfm.core.exception.WorkflowException;
 import org.essembeh.rtfm.core.library.file.IXFile;
 
-public class ThrowException implements ITask {
+public class ThrowException implements IExecutable {
 
 	private String message = "Default message";
 
 	@Override
-	public void execute(IXFile file) throws ActionException {
-		throw new ActionException(message);
+	public void execute(IXFile file) throws WorkflowException {
+		throw new WorkflowException(message);
 	}
 
 	@Override
