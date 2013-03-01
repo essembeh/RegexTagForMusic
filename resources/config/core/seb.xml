@@ -2,6 +2,7 @@
 <configuration-core xmlns="http://rtfm.essembeh.org/ConfigurationCore" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<!-- Substitutions are applied only on "pattern" attributes -->
 	<substitutions>
+		<substitution key="@ALBUMPREFIX" value="/Albums" />
 		<substitution key="@SEPARATOR" value=" - " />
 		<substitution key="@ANYTHING" value="[^/]+" />
 		<substitution key="@DOT-EXT" value="\.[a-zA-Z0-9]+" />
@@ -13,7 +14,7 @@
 		<filehandler id="Album mp3">
 			<conditions logic="AND">
 				<fileOrFilder type="FILE" />
-				<virtualPathMatches pattern="/Albums/@ANYTHING/@ANYTHING/@TRACKNUMBER@SEPARATOR@ANYTHING@DOT-EXT" />
+				<virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/@TRACKNUMBER@SEPARATOR@ANYTHING@DOT-EXT" />
 				<extension list="mp3" caseSensitive="true" />
 			</conditions>
 			<attributes>
@@ -21,17 +22,17 @@
 				<attribute name="core:export?" value="true" />
 				<attribute name="music:tagged?" value="false" />
 				<attribute name="music:comment" value="Tagged with RegexTagForMusic" />
-				<regex-attribute name="music:artist" pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="1" />
-				<regex-attribute name="music:year" pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="3" optional="true" />
-				<regex-attribute name="music:album" pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="2" />
-				<regex-attribute name="music:track" pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="4" />
-				<regex-attribute name="music:title" pattern="/Albums/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="5" />
+				<regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="1" />
+				<regex-attribute name="music:year" pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="3" optional="true" />
+				<regex-attribute name="music:album" pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="2" />
+				<regex-attribute name="music:track" pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="4" />
+				<regex-attribute name="music:title" pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="5" />
 			</attributes>
 		</filehandler>
 		<filehandler id="Cover">
 			<conditions logic="AND">
 				<fileOrFilder type="FILE" />
-				<virtualPathMatches pattern="/Albums/@ANYTHING/@ANYTHING/cover@DOT-EXT" />
+				<virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/cover@DOT-EXT" />
 				<extension list="jpg png" caseSensitive="true" />
 			</conditions>
 			<attributes>
@@ -73,24 +74,24 @@
 		<filehandler id="Artist folder">
 			<conditions logic="AND">
 				<fileOrFilder type="FOLDER" />
-				<virtualPathMatches pattern="/Albums/@ANYTHING/" />
+				<virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/" />
 			</conditions>
 			<attributes>
 				<attribute name="core:export?" value="false" />
-				<regex-attribute name="music:artist" pattern="/Albums/(@ANYTHING)/" group="1" />
+				<regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/" group="1" />
 			</attributes>
 		</filehandler>
 		<filehandler id="Album folder">
 			<conditions logic="AND">
 				<fileOrFilder type="FOLDER" />
-				<virtualPathMatches pattern="/Albums/@ANYTHING/@ANYTHING/" />
+				<virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/" />
 			</conditions>
 			<attributes>
 				<attribute name="core:export?" value="false" />
 				<attribute name="music:hasCover" value="false" />
-				<regex-attribute name="music:artist" pattern="/Albums/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="1" />
-				<regex-attribute name="music:year" pattern="/Albums/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="2" optional="true" />
-				<regex-attribute name="music:album" pattern="/Albums/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="3" />
+				<regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="1" />
+				<regex-attribute name="music:year" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="2" optional="true" />
+				<regex-attribute name="music:album" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="3" />
 			</attributes>
 		</filehandler>
 		<filehandler id="IGNORED">
