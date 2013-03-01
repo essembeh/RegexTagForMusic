@@ -16,6 +16,8 @@ import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.filter.CommonFilters;
 import org.essembeh.rtfm.core.library.filter.XFileFilter;
+import org.essembeh.rtfm.core.properties.RTFMProperties;
+import org.essembeh.rtfm.core.properties.SpecialAttribute;
 import org.essembeh.rtfm.core.utils.FileUtils;
 
 public class ExplorerNodeUtils {
@@ -25,14 +27,16 @@ public class ExplorerNodeUtils {
 	 */
 	private final ILibrary library;
 	private final DefaultMutableTreeNode root;
+	private final RTFMProperties properties;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param library
 	 */
-	public ExplorerNodeUtils(ILibrary library) {
+	public ExplorerNodeUtils(ILibrary library, RTFMProperties properties) {
 		this.library = library;
+		this.properties = properties;
 		root = newNode("Filters");
 	}
 
@@ -43,7 +47,7 @@ public class ExplorerNodeUtils {
 	public TreeNode buildRoot() {
 		root.removeAllChildren();
 		root.add(newNode("All files", CommonFilters.noFilter()));
-		root.add(newNode("Non tagged", CommonFilters.filterOnAttribute("rtfm:tagged", "false")));
+		root.add(newNode("Non tagged", CommonFilters.filterOnAttribute(properties.getSpecialAttribute(SpecialAttribute.MUSIC_TAGGED), "false")));
 		root.add(fileSystem());
 		root.add(byType());
 		root.add(byAttribute("Artist", "tag:artist"));
@@ -72,8 +76,7 @@ public class ExplorerNodeUtils {
 	 * @return
 	 */
 	private DefaultMutableTreeNode folderToNode(File folder, File root) {
-		DefaultMutableTreeNode node = newNode(folder.getName(),
-				CommonFilters.virtualPathStartsWith(FileUtils.extractRelativePath(folder, root)), true);
+		DefaultMutableTreeNode node = newNode(folder.getName(), CommonFilters.virtualPathStartsWith(FileUtils.extractRelativePath(folder, root)), true);
 		List<File> ls = Arrays.asList(folder.listFiles());
 		Collections.sort(ls, new Comparator<File>() {
 			@Override

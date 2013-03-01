@@ -13,6 +13,7 @@ import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.filter.XFileFilter;
 import org.essembeh.rtfm.core.library.listener.DefaultLibraryListener;
+import org.essembeh.rtfm.core.properties.RTFMProperties;
 
 public class MusicFilesModel extends AbstractTableModel {
 
@@ -28,14 +29,15 @@ public class MusicFilesModel extends AbstractTableModel {
 	/**
 	 * 
 	 * @param library
-	 * @param explorerModel
+	 * @param properties
+	 * @param filtersSelection
 	 */
-	public MusicFilesModel(final Library library, FiltersSelection filtersSelection) {
+	public MusicFilesModel(final Library library, RTFMProperties properties, FiltersSelection filtersSelection) {
 		super();
 		this.library = library;
 		this.filtersSelection = filtersSelection;
 		this.currentList = new ArrayList<IXFile>();
-		this.columnManager = new MusicFileColumnManager();
+		this.columnManager = new MusicFileColumnManager(properties);
 
 		setupListeners();
 		refresh();

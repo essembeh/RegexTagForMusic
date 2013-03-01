@@ -80,7 +80,7 @@
 				<virtualPathMatches pattern=".*/\.DS_Store"/>
 			</conditions>
 			<attributes>
-				<attribute name="ui:hide" value="true" />
+				<attribute name="ui:hide?" value="true" />
 				<attribute name="core:export?" value="false" />
 			</attributes>
 		</filehandler>

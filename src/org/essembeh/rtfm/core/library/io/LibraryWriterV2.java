@@ -29,6 +29,7 @@ import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.attributes.Attributes;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
+import org.essembeh.rtfm.core.properties.SpecialAttribute;
 import org.essembeh.rtfm.core.utils.jaxb.JaxbUtils;
 import org.essembeh.rtfm.core.utils.version.IObjectWriter;
 import org.essembeh.rtfm.core.utils.version.exceptions.WriterException;
@@ -53,7 +54,7 @@ public class LibraryWriterV2 implements IObjectWriter<Library> {
 	 */
 	@Inject
 	public LibraryWriterV2(RTFMProperties properties) {
-		this.exportableAttribute = properties.getProperty("attribute.export");
+		this.exportableAttribute = properties.getSpecialAttribute(SpecialAttribute.DB_EXPORT);
 		this.objectFactory = new ObjectFactory();
 	}
 

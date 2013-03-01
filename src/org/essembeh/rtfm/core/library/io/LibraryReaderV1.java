@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.essembeh.rtfm.core.properties.RTFMProperties;
+import org.essembeh.rtfm.core.properties.SpecialAttribute;
 import org.essembeh.rtfm.core.utils.version.JaxbReader;
 import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
 import org.essembeh.rtfm.model.library.version1.TFile;
@@ -37,16 +39,17 @@ public class LibraryReaderV1 extends JaxbReader<TLibraryV1> implements ILibraryR
 	/**
 	 * Attributes
 	 */
-	private final static String RTFM_TAGGED = "music:tagged?";
 	private final Map<String, TFile> cache;
+	private final RTFMProperties properties;
 
 	/**
 	 * 
 	 */
 	@Inject
-	public LibraryReaderV1() {
+	public LibraryReaderV1(RTFMProperties properties) {
 		super(TLibraryV1.class);
 		this.cache = new HashMap<String, TFile>();
+		this.properties = properties;
 	}
 
 	/*
@@ -97,7 +100,10 @@ public class LibraryReaderV1 extends JaxbReader<TLibraryV1> implements ILibraryR
 		Map<String, String> out = null;
 		if (cache.containsKey(virtualPath)) {
 			out = new HashMap<String, String>();
-			out.put(RTFM_TAGGED, cache.get(virtualPath).isTagged().toString());
+			String attributeName = properties.getSpecialAttribute(SpecialAttribute.MUSIC_TAGGED);
+			if (attributeName != null) {
+				out.put(attributeName, cache.get(virtualPath).isTagged().toString());
+			}
 		}
 		return out;
 	}

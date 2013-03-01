@@ -16,6 +16,7 @@ import org.essembeh.rtfm.core.configuration.CoreConfiguration;
 import org.essembeh.rtfm.core.exception.ConfigurationException;
 import org.essembeh.rtfm.core.library.Library;
 import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.core.utils.TextUtils;
 import org.essembeh.rtfm.core.utils.version.exceptions.ReaderException;
 import org.essembeh.rtfm.core.workflow.ExecutionManager;
@@ -60,15 +61,13 @@ public class MainController {
 	 * @param library
 	 * @param executionManager
 	 * @param configurationHelper
+	 * @param properties
 	 * @throws ConfigurationException
 	 * @throws FileNotFoundException
 	 */
 	@Inject
-	public MainController(	CoreConfiguration configurationServices,
-							Library library,
-							ExecutionManager executionManager,
-							ConfigurationHelper configurationHelper) throws ConfigurationException,
-			FileNotFoundException {
+	public MainController(CoreConfiguration configurationServices, Library library, ExecutionManager executionManager, ConfigurationHelper configurationHelper,
+			RTFMProperties properties) throws ConfigurationException, FileNotFoundException {
 		this.library = library;
 		this.executionManager = executionManager;
 		this.configurationHelper = configurationHelper;
@@ -81,10 +80,10 @@ public class MainController {
 		}
 
 		// UI
-		this.filtersModel = new FiltersModel(library, new ExplorerNodeUtils(library), true);
+		this.filtersModel = new FiltersModel(library, new ExplorerNodeUtils(library, properties), true);
 		this.filtersSelection = new FiltersSelection();
 
-		this.musicFilesModel = new MusicFilesModel(library, filtersSelection);
+		this.musicFilesModel = new MusicFilesModel(library, properties, filtersSelection);
 		this.musicFilesSelection = new MusicFilesSelection(musicFilesModel);
 
 		this.attributesModel = new AttributesModel(musicFilesModel, musicFilesSelection);
@@ -205,8 +204,7 @@ public class MainController {
 			currentDatabase = fileChooser.getSelectedFile();
 			try {
 				library.load(new FileInputStream(currentDatabase));
-				String message = "Library loaded: " + currentDatabase.getName() + ", found "
-						+ TextUtils.plural(library.getAllFiles().size(), "file");
+				String message = "Library loaded: " + currentDatabase.getName() + ", found " + TextUtils.plural(library.getAllFiles().size(), "file");
 				statusBar.printMessage(message);
 			} catch (Exception e) {
 				e.printStackTrace();

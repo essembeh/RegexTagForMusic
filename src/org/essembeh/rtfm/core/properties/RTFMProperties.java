@@ -35,4 +35,5 @@ public interface RTFMProperties {
 	
 	public <T> T getWithDefault(String key, T defaultValue);
 
+	public String getSpecialAttribute(SpecialAttribute specialAttribute);
 }

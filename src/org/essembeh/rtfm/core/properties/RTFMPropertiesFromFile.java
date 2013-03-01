@@ -111,4 +111,9 @@ public class RTFMPropertiesFromFile implements RTFMProperties {
 		}
 		return out == null ? defaultValue : out;
 	}
+
+	@Override
+	public String getSpecialAttribute(SpecialAttribute specialAttribute) {
+		return getProperty(specialAttribute.getKey());
+	}
 }
