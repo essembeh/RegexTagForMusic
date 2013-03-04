@@ -55,7 +55,6 @@ public class CommonFilters {
 	public static XFileFilter supportedByWorkflow(final Workflow workflow) {
 		XFileFilter filter = new XFileFilter();
 		filter.addCondition(new ICondition<IXFile>() {
-
 			@Override
 			public boolean isTrue(IXFile input) {
 				return workflow != null && workflow.supportFile(input);

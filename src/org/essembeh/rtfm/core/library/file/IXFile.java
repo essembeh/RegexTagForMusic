@@ -19,7 +19,6 @@
  */
 package org.essembeh.rtfm.core.library.file;
 
-import org.essembeh.rtfm.core.library.file.attributes.Attributes;
 
 public interface IXFile extends Comparable<IXFile>, IVirtualFile {
 

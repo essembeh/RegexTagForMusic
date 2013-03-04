@@ -26,8 +26,8 @@ import javax.xml.bind.JAXBException;
 
 import org.essembeh.rtfm.core.library.ILibrary;
 import org.essembeh.rtfm.core.library.Library;
+import org.essembeh.rtfm.core.library.file.Attributes;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attributes;
 import org.essembeh.rtfm.core.properties.RTFMProperties;
 import org.essembeh.rtfm.core.properties.SpecialAttribute;
 import org.essembeh.rtfm.core.utils.jaxb.JaxbUtils;

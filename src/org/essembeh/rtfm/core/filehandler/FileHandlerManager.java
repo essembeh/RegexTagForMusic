@@ -1,15 +1,15 @@
 package org.essembeh.rtfm.core.filehandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.configuration.CoreConfiguration;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
+import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
+import org.essembeh.rtfm.core.library.file.IVirtualFile;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.library.file.XFile;
+import org.essembeh.rtfm.core.properties.RTFMProperties;
+import org.essembeh.rtfm.core.properties.SpecialAttribute;
 
 import com.google.inject.Inject;
 
@@ -17,48 +17,62 @@ public class FileHandlerManager {
 
 	private final static Logger LOGGER = Logger.getLogger(FileHandlerManager.class);
 	private final CoreConfiguration configuration;
+	private final RTFMProperties properties;
 
 	/**
 	 * 
 	 * @param configuration
+	 * @param properties
 	 */
 	@Inject
-	public FileHandlerManager(CoreConfiguration configuration) {
+	public FileHandlerManager(CoreConfiguration configuration, RTFMProperties properties) {
 		this.configuration = configuration;
+		this.properties = properties;
 	}
 
 	/**
 	 * 
 	 * @param file
 	 * @return
-	 * @throws DynamicAttributeException
 	 */
-	public IXFile createXFile(VirtualFile file) throws DynamicAttributeException {
+	public IXFile createXFile(VirtualFile file) {
 		XFile out = null;
-		for (FileHandler fileHandler : configuration.getFileHandlers()) {
-			if (fileHandler.getConditions().isTrue(file)) {
-				LOGGER.debug("Found filhandler: " + fileHandler + ", for file: " + file);
-				out = new XFile(fileHandler.getType(), file);
-				out.getAttributes().putAll(fileHandler.getAttributesForFile(out.getFile()));
-				break;
+		FileHandler fh = getFileHandlerForFile(file);
+		if (fh != null) {
+			LOGGER.debug("Found filhandler: " + fh + ", for file: " + file);
+			out = new XFile(fh.getFileType(), file);
+			// Attributes
+			for (IDynamicAttribute attribute : fh.getAttributes()) {
+				try {
+					String value = attribute.getValue(file);
+					if (value != null) {
+						out.getAttributes().updateOrCreate(attribute.getName(), value);
+					} else {
+						LOGGER.debug("Null valud for attribute: " + attribute);
+					}
+				} catch (DynamicAttributeException e) {
+					LOGGER.error("Error with attribute: " + attribute, e);
+					out.getAttributes().appendAttributeValue(properties.getSpecialAttribute(SpecialAttribute.ERROR), e.getMessage());
+				}
 			}
-		}
-		if (out == null) {
+		} else {
 			LOGGER.info("Cannot find filehandler for file: " + file);
 		}
 		return out;
 	}
 
 	/**
+	 * Searches for a valid filehandler
 	 * 
+	 * @param virtualFile
 	 * @return
 	 */
-	public List<String> getDeclaredFileTypes() {
-		List<String> out = new ArrayList<String>();
-		for (FileHandler fileHandler : configuration.getFileHandlers()) {
-			out.add(fileHandler.getType());
+	private FileHandler getFileHandlerForFile(IVirtualFile virtualFile) {
+		for (FileHandler fh : configuration.getFileHandlers()) {
+			if (fh.getConditions().isTrue(virtualFile)) {
+				return fh;
+			}
 		}
-		Collections.sort(out);
-		return Collections.unmodifiableList(out);
+		return null;
 	}
 }

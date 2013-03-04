@@ -163,15 +163,11 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 		for (File file : allFiles) {
 			logger.debug("Found: " + file.getAbsolutePath());
 			VirtualFile virtualFile = new VirtualFile(file, folder);
-			try {
-				IXFile xFile = fileHandlerManager.createXFile(virtualFile);
-				if (xFile != null) {
-					listOfFiles.add(xFile);
-				} else {
-					logger.warn("No filehandler for file: " + virtualFile);
-				}
-			} catch (Exception e) {
-				logger.error("Error creating file: " + virtualFile, e);
+			IXFile xFile = fileHandlerManager.createXFile(virtualFile);
+			if (xFile != null) {
+				listOfFiles.add(xFile);
+			} else {
+				logger.warn("No filehandler for file: " + virtualFile);
 			}
 		}
 		logger.info("Found " + this.listOfFiles.size() + " files in folder: " + this.rootFolder.getAbsolutePath());

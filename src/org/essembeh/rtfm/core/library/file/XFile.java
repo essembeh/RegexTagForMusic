@@ -22,7 +22,6 @@ package org.essembeh.rtfm.core.library.file;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.core.library.file.attributes.Attributes;
 
 /**
  * Represent a file with attributes

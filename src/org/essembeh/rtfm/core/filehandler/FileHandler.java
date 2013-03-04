@@ -20,16 +20,12 @@
 package org.essembeh.rtfm.core.filehandler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.essembeh.rtfm.core.condition.AndCondition;
-import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
 import org.essembeh.rtfm.core.library.file.IVirtualFile;
-import org.essembeh.rtfm.core.library.file.VirtualFile;
 
 public class FileHandler {
 	/**
@@ -74,20 +70,17 @@ public class FileHandler {
 	}
 
 	/**
-	 * 
-	 * @param virtualFile
-	 * @return
-	 * @throws DynamicAttributeException
+	 * @return the fileType
 	 */
-	public Map<String, String> getAttributesForFile(VirtualFile virtualFile) throws DynamicAttributeException {
-		Map<String, String> out = new HashMap<String, String>();
-		for (IDynamicAttribute dynamicAttributes : attributes) {
-			String value = dynamicAttributes.getValue(virtualFile);
-			if (value != null) {
-				out.put(dynamicAttributes.getName(), value);
-			}
-		}
-		return out;
+	public String getFileType() {
+		return fileType;
+	}
+
+	/**
+	 * @return the attributes
+	 */
+	public List<IDynamicAttribute> getAttributes() {
+		return attributes;
 	}
 
 	/*

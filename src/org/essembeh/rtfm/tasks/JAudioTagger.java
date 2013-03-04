@@ -21,8 +21,8 @@ package org.essembeh.rtfm.tasks;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.exception.WorkflowException;
+import org.essembeh.rtfm.core.library.file.Attributes;
 import org.essembeh.rtfm.core.library.file.IXFile;
-import org.essembeh.rtfm.core.library.file.attributes.Attributes;
 import org.essembeh.rtfm.core.utils.commoninterfaces.impl.AbstractConfigurable;
 import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldDataInvalidException;

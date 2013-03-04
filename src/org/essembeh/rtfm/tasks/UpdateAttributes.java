@@ -33,8 +33,6 @@ public class UpdateAttributes extends AbstractConfigurable implements IExecutabl
 		for (Entry<String, String> e : getProperties().entrySet()) {
 			if (file.getAttributes().updateOrCreate(e.getKey(), e.getValue())) {
 				logger.debug("Set attribute: " + e.getKey() + " = " + e.getValue());
-			} else {
-				logger.debug("Create attribute: " + e.getKey() + " = " + e.getValue());
 			}
 		}
 	}

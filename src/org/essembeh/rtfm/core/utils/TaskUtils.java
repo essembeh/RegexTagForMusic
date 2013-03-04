@@ -69,7 +69,7 @@ public class TaskUtils {
 		if (matcher.matches()) {
 			String attributeName = matcher.group(1);
 			logger.debug("Dynamic value: " + value + ", attribute name: " + attributeName);
-			attributeValue = xFile.getAttributes().get(attributeName, "");
+			attributeValue = xFile.getAttributes().getAttributeValue(attributeName, "");
 		}
 		return attributeValue;
 	}
