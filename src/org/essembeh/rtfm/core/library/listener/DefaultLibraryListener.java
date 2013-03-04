@@ -21,7 +21,6 @@ package org.essembeh.rtfm.core.library.listener;
 
 import java.io.File;
 
-import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 
@@ -46,7 +45,7 @@ public class DefaultLibraryListener implements ILibraryListener {
 	}
 
 	@Override
-	public void loadLibraryFileRemoved(String virtualPath, FileType fileType) {
+	public void loadLibraryFileRemoved(String virtualPath, String fileType) {
 		// TODO Auto-generated method stub
 
 	}

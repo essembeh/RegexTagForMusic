@@ -45,7 +45,7 @@ public class TypeEquals<T extends IXFile> implements ICondition<T> {
 	 */
 	@Override
 	public boolean isTrue(T input) {
-		return input.getType().getIdentifier().equals(expectedValue);
+		return input.getType().equals(expectedValue);
 	}
 
 	/*

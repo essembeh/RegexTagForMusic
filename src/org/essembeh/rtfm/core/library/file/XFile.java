@@ -37,7 +37,7 @@ public class XFile implements IXFile {
 	 */
 	protected static Logger logger = Logger.getLogger(XFile.class);
 
-	private final FileType type;
+	private final String type;
 	private final VirtualFile file;
 	private final Attributes attributes;
 
@@ -46,14 +46,14 @@ public class XFile implements IXFile {
 	 * @param type
 	 * @param virtualFile
 	 */
-	public XFile(FileType type, VirtualFile virtualFile) {
+	public XFile(String type, VirtualFile virtualFile) {
 		this.type = type;
 		this.file = virtualFile;
 		this.attributes = new Attributes();
 	}
 
 	@Override
-	public FileType getType() {
+	public String getType() {
 		return type;
 	}
 

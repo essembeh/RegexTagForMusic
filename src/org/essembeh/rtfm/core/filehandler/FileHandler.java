@@ -28,7 +28,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.essembeh.rtfm.core.condition.AndCondition;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
 import org.essembeh.rtfm.core.filehandler.dynamic.IDynamicAttribute;
-import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IVirtualFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 
@@ -36,7 +35,7 @@ public class FileHandler {
 	/**
 	 * Attributes
 	 */
-	private final FileType fileType;
+	private final String fileType;
 	private final List<IDynamicAttribute> attributes;
 	private final AndCondition<IVirtualFile> conditions;
 
@@ -45,7 +44,7 @@ public class FileHandler {
 	 * @param id
 	 */
 	public FileHandler(String id) {
-		fileType = FileType.createFiletype(id);
+		fileType = id;
 		conditions = new AndCondition<IVirtualFile>();
 		attributes = new ArrayList<IDynamicAttribute>();
 	}
@@ -54,7 +53,7 @@ public class FileHandler {
 	 * 
 	 * @return
 	 */
-	public FileType getType() {
+	public String getType() {
 		return fileType;
 	}
 

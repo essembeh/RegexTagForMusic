@@ -26,7 +26,7 @@ public class MusicFileColumnManager {
 		Object out = "";
 		switch (i) {
 		case 0:
-			out = musicFile.getType().getIdentifier();
+			out = musicFile.getType();
 			break;
 		case 1:
 			out = musicFile;

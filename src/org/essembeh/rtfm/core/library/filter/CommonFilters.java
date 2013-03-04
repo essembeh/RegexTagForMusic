@@ -22,9 +22,9 @@ package org.essembeh.rtfm.core.library.filter;
 import java.util.regex.Pattern;
 
 import org.essembeh.rtfm.core.condition.ICondition;
-import org.essembeh.rtfm.core.condition.impl.FileType;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.VirtualPathMatches;
 import org.essembeh.rtfm.core.condition.impl.xfile.AttributeValueEquals;
+import org.essembeh.rtfm.core.condition.impl.xfile.TypeEquals;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.workflow.Workflow;
 
@@ -42,7 +42,7 @@ public class CommonFilters {
 
 	public static XFileFilter filterOnType(String expectedValue) {
 		XFileFilter filter = new XFileFilter();
-		filter.addCondition(new FileType(new String[] { expectedValue }));
+		filter.addCondition(new TypeEquals<IXFile>(expectedValue));
 		return filter;
 	}
 

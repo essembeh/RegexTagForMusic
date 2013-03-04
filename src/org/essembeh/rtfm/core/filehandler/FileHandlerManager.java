@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.configuration.CoreConfiguration;
 import org.essembeh.rtfm.core.exception.DynamicAttributeException;
-import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.library.file.XFile;
@@ -54,8 +53,8 @@ public class FileHandlerManager {
 	 * 
 	 * @return
 	 */
-	public List<FileType> getDeclaredFileTypes() {
-		List<FileType> out = new ArrayList<FileType>();
+	public List<String> getDeclaredFileTypes() {
+		List<String> out = new ArrayList<String>();
 		for (FileHandler fileHandler : configuration.getFileHandlers()) {
 			out.add(fileHandler.getType());
 		}

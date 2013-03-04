@@ -27,7 +27,7 @@ public interface IXFile extends Comparable<IXFile>, IVirtualFile {
 	 * 
 	 * @return
 	 */
-	FileType getType();
+	String getType();
 
 	/**
 	 * 

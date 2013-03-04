@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import org.essembeh.rtfm.core.library.ILibrary;
-import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.filter.CommonFilters;
 import org.essembeh.rtfm.core.library.filter.XFileFilter;
@@ -98,8 +99,12 @@ public class ExplorerNodeUtils {
 	 */
 	private MutableTreeNode byType() {
 		DefaultMutableTreeNode root = newNode("Type");
-		for (FileType type : FileType.getAllFileTypes()) {
-			root.add(newNode(type.getIdentifier(), CommonFilters.filterOnType(type.getIdentifier())));
+		Set<String> types = new HashSet<String>();
+		for (IXFile file : library.getAllFiles()) {
+			types.add(file.getType());
+		}
+		for (String type : types) {
+			root.add(newNode(type, CommonFilters.filterOnType(type)));
 		}
 		return root;
 	}

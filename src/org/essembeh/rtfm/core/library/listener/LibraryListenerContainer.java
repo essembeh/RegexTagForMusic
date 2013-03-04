@@ -21,7 +21,6 @@ package org.essembeh.rtfm.core.library.listener;
 
 import java.io.File;
 
-import org.essembeh.rtfm.core.library.file.FileType;
 import org.essembeh.rtfm.core.library.file.IXFile;
 import org.essembeh.rtfm.core.library.file.VirtualFile;
 import org.essembeh.rtfm.core.utils.listener.ListenerContainer;
@@ -59,7 +58,7 @@ public class LibraryListenerContainer extends ListenerContainer<ILibraryListener
 	}
 
 	@Override
-	public void loadLibraryFileRemoved(final String virtualPath, final FileType type) {
+	public void loadLibraryFileRemoved(final String virtualPath, final String type) {
 		forEachListener(new ListenerAction<ILibraryListener>() {
 			@Override
 			public void execute(ILibraryListener listener) {
