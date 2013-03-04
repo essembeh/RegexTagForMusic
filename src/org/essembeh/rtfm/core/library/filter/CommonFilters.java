@@ -22,10 +22,14 @@ package org.essembeh.rtfm.core.library.filter;
 import java.util.regex.Pattern;
 
 import org.essembeh.rtfm.core.condition.ICondition;
+import org.essembeh.rtfm.core.condition.impl.virtualfile.AlwaysFalse;
 import org.essembeh.rtfm.core.condition.impl.virtualfile.VirtualPathMatches;
+import org.essembeh.rtfm.core.condition.impl.xfile.AttributeExists;
 import org.essembeh.rtfm.core.condition.impl.xfile.AttributeValueEquals;
 import org.essembeh.rtfm.core.condition.impl.xfile.TypeEquals;
 import org.essembeh.rtfm.core.library.file.IXFile;
+import org.essembeh.rtfm.core.properties.RTFMProperties;
+import org.essembeh.rtfm.core.properties.SpecialAttribute;
 import org.essembeh.rtfm.core.workflow.Workflow;
 
 public class CommonFilters {
@@ -61,5 +65,12 @@ public class CommonFilters {
 			}
 		});
 		return filter;
+	}
+
+	public static XFileFilter filesWithErrors(RTFMProperties properties) {
+		XFileFilter out = new XFileFilter();
+		String errorAttributeName = properties.getSpecialAttribute(SpecialAttribute.ERROR);
+		out.addCondition(errorAttributeName == null ? new AlwaysFalse<IXFile>() : new AttributeExists<IXFile>(errorAttributeName, true));
+		return out;
 	}
 }

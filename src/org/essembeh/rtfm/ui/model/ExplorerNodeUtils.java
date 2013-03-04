@@ -48,7 +48,8 @@ public class ExplorerNodeUtils {
 	public TreeNode buildRoot() {
 		root.removeAllChildren();
 		root.add(newNode("All files", CommonFilters.noFilter()));
-		root.add(newNode("Non tagged", CommonFilters.filterOnAttribute(properties.getSpecialAttribute(SpecialAttribute.MUSIC_TAGGED), "false")));
+		root.add(newNode("Non tagged", CommonFilters.filterOnAttribute(properties.getSpecialAttribute(SpecialAttribute.MUSIC_TAGGED), Boolean.FALSE.toString())));
+		root.add(newNode("With error", CommonFilters.filesWithErrors(properties)));
 		root.add(fileSystem());
 		root.add(byType());
 		root.add(byAttribute("Artist", "tag:artist"));

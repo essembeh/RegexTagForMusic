@@ -4,4 +4,4 @@ dist/
 .settings/
 build/
 test/
-
+*.patch
