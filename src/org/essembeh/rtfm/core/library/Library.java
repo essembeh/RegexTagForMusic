@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.filehandler.FileHandlerManager;
@@ -137,17 +139,16 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 	 */
 	@Override
 	public void scanFolder(File folder) throws IOException {
-		resetValues();
-		internalScanFolder(folder, null);
+		internalScanFolder(folder);
 	}
 
 	/**
 	 * 
 	 * @param folder
-	 * @param libraryProvider
 	 * @throws IOException
 	 */
-	public void internalScanFolder(File folder, ILibraryReader libraryProvider) throws IOException {
+	public void internalScanFolder(File folder) throws IOException {
+		resetValues();
 		// Check if valid folder
 		if (folder == null || !folder.exists() || !folder.isDirectory()) {
 			throw new IOException("The root folder is invalid: " + folder.getAbsolutePath());
@@ -203,7 +204,20 @@ public class Library implements IListenable<ILibraryListener>, ILibrary, ILoadab
 		resetValues();
 		libraryReader.read(inputStream);
 		try {
-			internalScanFolder(libraryReader.getRootFolder(), libraryReader);
+			internalScanFolder(libraryReader.getRootFolder());
+			
+			// Arrange previous files
+			List<String> previousFiles = libraryReader.getListOfFiles();
+			for (IXFile file : listOfFiles) {
+				// test if previous file exists
+				if (previousFiles.contains(file.getVirtualPath())) {
+					// Get attibutes
+					Map<String, String> attributes = libraryReader.getAttributesForFile(file.getVirtualPath());
+					for (Entry<String, String> e : attributes.entrySet()) {
+						file.getAttributes().updateIfExists(e.getKey(), e.getValue());
+					}
+				}
+			}
 		} catch (IOException e) {
 			throw new ReaderException(e);
 		}
