@@ -1,0 +1,85 @@
+package org.essembeh.rtfm.fs.content;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang3.BooleanUtils;
+
+public class Attributes {
+
+	private final static String ERROR_MESSAGE_SEPARATOR = ",";
+	public final static String EXPORT_KEY = "core:export?";
+	public final static String FILEHANDLER_KEY = "core:filehandler";
+	public final static String ERROR_KEY = "core:error";
+
+	private Map<String, String> attributes;
+
+	public Attributes() {
+		attributes = new HashMap<String, String>();
+	}
+
+	public List<String> sortedKeys() {
+		List<String> out = new ArrayList<>(attributes.keySet());
+		Collections.sort(out);
+		return Collections.unmodifiableList(out);
+	}
+
+	public Set<String> keySet() {
+		return attributes.keySet();
+	}
+
+	public String getValue(String name) {
+		return attributes.get(name);
+	}
+
+	public String getValue(String name, String defaultValue) {
+		String value = getValue(name);
+		return value == null ? defaultValue : value;
+	}
+
+	public String setValue(String name, String value) {
+		return attributes.put(name, value);
+	}
+
+	public boolean delete(String name) {
+		return attributes.remove(name) != null;
+	}
+
+	public boolean contains(String name) {
+		return attributes.containsKey(name);
+	}
+
+	public int count() {
+		return attributes.size();
+	}
+
+	public void updateError(String message) {
+		if (message != null) {
+			String value = getValue(ERROR_KEY);
+			if (value != null && value.length() > 0) {
+				value += ERROR_MESSAGE_SEPARATOR + message;
+			} else {
+				value = message;
+			}
+			setValue(ERROR_KEY, value);
+		} else {
+			attributes.remove(ERROR_KEY);
+		}
+	}
+
+	public String getFilehandler() {
+		return getValue(FILEHANDLER_KEY);
+	}
+
+	public String setFilehandler(String value) {
+		return setValue(FILEHANDLER_KEY, value);
+	}
+
+	public boolean isExportable() {
+		return !BooleanUtils.isFalse(BooleanUtils.toBooleanObject(getValue(EXPORT_KEY)));
+	}
+}

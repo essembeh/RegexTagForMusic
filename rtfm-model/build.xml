@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="rtfm-model" basedir="." default="generateModel">
+
+	<!--  PROPERTIES -->
+	<property name="src" value="src/" />
+	<property name="lib" value="libraries/" />
+	<property name="res" value="resources/" />
+
+	<!-- CLASSPATHS -->
+	<fileset id="fileset.lib.jaxb" dir="${lib}">
+		<include name="jaxb*/*.jar" />
+	</fileset>
+	<path id="classpath.jaxb">
+		<fileset refid="fileset.lib.jaxb" />
+	</path>
+
+	<!-- Task definition -->
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+		<classpath refid="classpath.jaxb" />
+	</taskdef>
+
+	<!-- Generate classes from XSD -->
+	<target name="generateModel">
+		<delete dir="${src}/org/essembeh/rtfm/model/gen/" />
+		<xjc destdir="${src}" package="org.essembeh.rtfm.model.gen.filesystem.v1">
+			<schema dir="${res}/model/" includes="filesystem-v1.xsd" />
+			<arg value="-npa" />
+			<arg value="-no-header" />
+		</xjc>
+		<xjc destdir="${src}" package="org.essembeh.rtfm.model.gen.configuration.v1">
+			<schema dir="${res}/model/" includes="configuration-v1.xsd" />
+			<arg value="-npa" />
+			<arg value="-no-header" />
+		</xjc>
+	</target>
+</project>

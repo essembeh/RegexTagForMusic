@@ -1,7 +1,3 @@
-dist/
-.classpath
-.project
-.settings/
-build/
-test/
+/*/.settings/
+/*/bin/
 *.patch

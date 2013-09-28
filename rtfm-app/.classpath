@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/rtfm-fs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/rtfm-model"/>
+	<classpathentry kind="lib" path="/rtfm-fs/libraries/apache-log4j-1.2.17/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="/rtfm-fs/libraries/commons-io-2.4/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="/rtfm-fs/libraries/commons-lang3-3.1/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/rtfm-model/libraries/jaxb-ri-2.2.6/jaxb-api.jar"/>
+	<classpathentry kind="lib" path="/rtfm-model/libraries/jaxb-ri-2.2.6/jaxb-impl.jar"/>
+	<classpathentry kind="lib" path="/rtfm-model/libraries/jaxb-ri-2.2.6/jaxb-xjc.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
