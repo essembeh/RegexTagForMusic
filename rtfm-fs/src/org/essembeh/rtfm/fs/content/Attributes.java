@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -45,6 +46,14 @@ public class Attributes {
 		return attributes.put(name, value);
 	}
 
+	public boolean updateValue(String name, String value) {
+		if (attributes.containsKey(name)) {
+			attributes.put(name, value);
+			return true;
+		}
+		return false;
+	}
+
 	public boolean delete(String name) {
 		return attributes.remove(name) != null;
 	}
@@ -81,5 +90,9 @@ public class Attributes {
 
 	public boolean isExportable() {
 		return !BooleanUtils.isFalse(BooleanUtils.toBooleanObject(getValue(EXPORT_KEY)));
+	}
+
+	public Set<Entry<String, String>> entrySet() {
+		return attributes.entrySet();
 	}
 }

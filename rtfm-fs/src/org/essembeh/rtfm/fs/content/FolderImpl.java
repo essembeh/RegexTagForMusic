@@ -69,4 +69,9 @@ public class FolderImpl extends ResourceImpl implements IFolder {
 		return out;
 	}
 
+	@Override
+	public List<IResource> getAllResources() {
+		return getFilteredResources(null);
+	}
+
 }

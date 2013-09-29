@@ -14,6 +14,8 @@ public interface IFolder extends IResource {
 
 	void addResource(IResource resource) throws ResourceAlreadyExistsException;
 
+	List<IResource> getAllResources();
+
 	List<IResource> getFilteredResources(ICondition condition);
 
 }
