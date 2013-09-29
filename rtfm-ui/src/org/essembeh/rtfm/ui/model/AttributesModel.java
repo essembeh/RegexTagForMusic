@@ -14,6 +14,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.ui.utils.SelectionTool;
 
 public class AttributesModel extends AbstractTableModel {
 
@@ -67,13 +68,8 @@ public class AttributesModel extends AbstractTableModel {
 	public void refresh() {
 		data.clear();
 		selectedResources.clear();
-		List<IResource> content = resourceModel.getContent();
-		for (int i : resourceTable.getSelectedRows()) {
-			if (i < content.size()) {
-				selectedResources.add(content.get(i));
-			}
-		}
-		for (IResource r : selectedResources) {
+		for (IResource r : SelectionTool.getSelectedResources(resourceTable)) {
+			selectedResources.add(r);
 			for (Entry<String, String> attribute : r.getAttributes().entrySet()) {
 				if (data.containsKey(attribute.getKey())) {
 					if (!data.get(attribute.getKey()).equals(attribute.getValue())) {

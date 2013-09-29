@@ -4,15 +4,13 @@ import java.awt.Component;
 
 import javax.swing.JList;
 import javax.swing.JMenuItem;
+import javax.swing.ListCellRenderer;
 
 import org.essembeh.rtfm.app.workflow.IWorkflow;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
 import org.essembeh.rtfm.ui.utils.Image;
-import org.jdesktop.swingx.renderer.DefaultListRenderer;
 
-public class WorkflowRenderer extends DefaultListRenderer {
-
-	private static final long serialVersionUID = 3479421995917780195L;
+public class WorkflowRenderer implements ListCellRenderer<Object> {
 
 	@SuppressWarnings("rawtypes")
 	@Override

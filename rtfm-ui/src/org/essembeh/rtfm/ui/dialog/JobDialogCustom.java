@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 
+import javax.swing.SwingUtilities;
+
 import org.essembeh.rtfm.app.exception.ExecutionException;
 import org.essembeh.rtfm.app.utils.TextUtils;
 import org.essembeh.rtfm.app.workflow.IJob;
@@ -41,48 +43,55 @@ public class JobDialogCustom extends JobDialog {
 			@Override
 			public void start() {
 				startTime = new Date();
-				synchronized (progressBar) {
-					progressBar.setValue(0);
-				}
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						progressBar.setValue(0);
+					}
+				});
 			}
 
 			@Override
 			public void end() {
-				synchronized (progressBar) {
-					progressBar.setValue(progressBar.getValue() + 1);
-				}
-				cancelButton.setEnabled(true);
-				int totalTime = (int) ((new Date().getTime() - startTime.getTime()) / 1000);
-				statusValue.setText("Job executed on " + TextUtils.plural(job.getResources().size(), "file") + " with "
-						+ TextUtils.plural(jobModel.getErrorCount(), "error") + " in "
-						+ TextUtils.plural(totalTime, "second"));
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						progressBar.setValue(0);
+						cancelButton.setEnabled(true);
+						int totalTime = (int) ((new Date().getTime() - startTime.getTime()) / 1000);
+						statusValue.setText("Job executed on " + TextUtils.plural(job.getResources().size(), "file")
+								+ " with " + TextUtils.plural(jobModel.getErrorCount(), "error") + " in "
+								+ TextUtils.plural(totalTime, "second"));
+					}
+				});
 			}
 
 			@Override
-			public void error(IResource resource, ExecutionException e) {
-				synchronized (progressBar) {
-					jobModel.jobFinished(resource, e);
-					progressBar.setValue(progressBar.getValue() + 1);
-				}
+			public void error(final IResource resource, final ExecutionException e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						jobModel.jobFinished(resource, e);
+						progressBar.setValue(progressBar.getValue() + 1);
+					}
+				});
 			}
 
 			@Override
-			public void succeeded(IResource resource) {
-				synchronized (progressBar) {
-					jobModel.jobFinished(resource, null);
-					progressBar.setValue(progressBar.getValue() + 1);
-				}
+			public void succeeded(final IResource resource) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						jobModel.jobFinished(resource, null);
+						progressBar.setValue(progressBar.getValue() + 1);
+					}
+				});
 			}
 
 			@Override
 			public void process(IResource resource) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void notSupportedResource(IResource resource) {
-				// TODO Auto-generated method stub
+				error(resource, new ExecutionException("Resource not supported"));
 
 			}
 		};
@@ -90,11 +99,16 @@ public class JobDialogCustom extends JobDialog {
 		submitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					job.submit(progressMonitor);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+				new Thread() {
+					@Override
+					public void run() {
+						try {
+							job.submit(progressMonitor);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+					}
+				}.run();
 				submitButton.setEnabled(false);
 				cancelButton.setEnabled(false);
 			}

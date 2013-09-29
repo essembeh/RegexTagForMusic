@@ -42,6 +42,8 @@ public class DefaultRtfmAction extends AbstractAction {
 
 	@Override
 	final public void actionPerformed(ActionEvent e) {
-		runnable.run();
+		if (runnable != null) {
+			runnable.run();
+		}
 	}
 }

@@ -16,7 +16,7 @@ import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
 public class WorkflowManager implements IWorkflowManager {
 
-	private final static Integer DEFAULT_NBTHREADS = 1;
+	private final static Integer DEFAULT_NBTHREADS = 4;
 	private final Map<String, Workflow> workflows;
 
 	public WorkflowManager() {
@@ -68,7 +68,8 @@ public class WorkflowManager implements IWorkflowManager {
 	}
 
 	@Override
-	public IJob createJob(IWorkflow workflow, List<IResource> resources, int nbThreads) throws TaskInstanciationException {
+	public IJob createJob(IWorkflow workflow, List<IResource> resources, int nbThreads)
+			throws TaskInstanciationException {
 		IJob out = null;
 		if (nbThreads < 2) {
 			out = new OneThreadJob(workflow.getExecutables(), resources);

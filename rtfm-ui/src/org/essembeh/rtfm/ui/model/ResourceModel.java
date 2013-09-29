@@ -11,15 +11,11 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.TableModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 
 import org.essembeh.rtfm.app.Application;
 import org.essembeh.rtfm.fs.condition.ICondition;
-import org.essembeh.rtfm.fs.condition.MultipleCondition;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
-import org.essembeh.rtfm.fs.util.ConditionUtils;
-import org.essembeh.rtfm.ui.model.ExplorerNodeUtils.NamedFilter;
+import org.essembeh.rtfm.ui.utils.SelectionTool;
 
 public class ResourceModel extends AbstractModel<TableModelListener> implements TableModel {
 
@@ -34,47 +30,30 @@ public class ResourceModel extends AbstractModel<TableModelListener> implements 
 
 			@Override
 			public void treeStructureChanged(TreeModelEvent e) {
-				refreshWithSelectedFilters(explorerTree);
+				refresh(SelectionTool.getSelectedCondition(explorerTree));
 			}
 
 			@Override
 			public void treeNodesRemoved(TreeModelEvent e) {
-				refreshWithSelectedFilters(explorerTree);
+				refresh(SelectionTool.getSelectedCondition(explorerTree));
 			}
 
 			@Override
 			public void treeNodesInserted(TreeModelEvent e) {
-				refreshWithSelectedFilters(explorerTree);
+				refresh(SelectionTool.getSelectedCondition(explorerTree));
 			}
 
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
-				refreshWithSelectedFilters(explorerTree);
+				refresh(SelectionTool.getSelectedCondition(explorerTree));
 			}
 		});
 		explorerTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
-				refreshWithSelectedFilters(explorerTree);
+				refresh(SelectionTool.getSelectedCondition(explorerTree));
 			}
 		});
-	}
-
-	protected void refreshWithSelectedFilters(JTree explorerTree) {
-		MultipleCondition condition = ConditionUtils.andCondition();
-		TreePath[] selectedPaths = explorerTree.getSelectionPaths();
-		if (selectedPaths != null) {
-			for (TreePath treePath : selectedPaths) {
-				Object lastPathElement = treePath.getLastPathComponent();
-				if (lastPathElement instanceof DefaultMutableTreeNode) {
-					Object userObject = ((DefaultMutableTreeNode) lastPathElement).getUserObject();
-					if (userObject instanceof NamedFilter) {
-						condition.addCondition(((NamedFilter) userObject).getCondition());
-					}
-				}
-			}
-		}
-		refresh(condition);
 	}
 
 	public void refresh(ICondition c) {

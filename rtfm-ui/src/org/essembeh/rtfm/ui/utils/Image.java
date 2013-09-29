@@ -16,17 +16,17 @@ public class Image {
 	/**
 	 * Commons images
 	 */
-	public final static Image SCAN_FOLDER = new Image("icons/library-scan.png");
-	public final static Image OPEN_LIBRARY = new Image("icons/library-open.png");
-	public final static Image SAVE_LIBRARY = new Image("icons/library-save.png");
-	public final static Image WORKFLOW = new Image("icons/workflow.png");
-	public final static Image ATTRIBUTES = new Image("icons/attributes.png");
-	public final static Image DIALOG_QUESTION = new Image("icons/dialog-question.png");
-	public final static Image DIALOG_INFORMATION = new Image("icons/dialog-information.png");
-	public final static Image DIALOG_WARNING = new Image("icons/dialog-warning.png");
-	public final static Image DIALOG_ERROR = new Image("icons/dialog-error.png");
-	public final static Image DIALOG_YES = new Image("icons/dialog-yes.png");
-	public final static Image DIALOG_NO = new Image("icons/dialog-no.png");
+	public final static Image SCAN_FOLDER = new Image("library-scan.png");
+	public final static Image OPEN_LIBRARY = new Image("library-open.png");
+	public final static Image SAVE_LIBRARY = new Image("library-save.png");
+	public final static Image WORKFLOW = new Image("workflow.png");
+	public final static Image ATTRIBUTES = new Image("attributes.png");
+	public final static Image DIALOG_QUESTION = new Image("dialog-question.png");
+	public final static Image DIALOG_INFORMATION = new Image("dialog-information.png");
+	public final static Image DIALOG_WARNING = new Image("dialog-warning.png");
+	public final static Image DIALOG_ERROR = new Image("dialog-error.png");
+	public final static Image DIALOG_YES = new Image("dialog-yes.png");
+	public final static Image DIALOG_NO = new Image("dialog-no.png");
 
 	/**
 	 * Logger
