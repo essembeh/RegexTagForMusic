@@ -9,7 +9,7 @@ import org.essembeh.rtfm.app.exception.UnknownTaskException;
 public class LaunchUI {
 
 	public static void main(String[] args) throws UnknownTaskException, FileNotFoundException, JAXBException {
-		RtfmUICustom ui = new RtfmUICustom();
+		RtfmController ui = new RtfmController();
 		ui.pack();
 		ui.setVisible(true);
 	}

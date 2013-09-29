@@ -78,13 +78,22 @@ public class ResourceModel extends AbstractModel<TableModelListener> implements 
 	}
 
 	public void refresh(ICondition c) {
-		content.clear();
 		if (app.getProject() != null) {
-			content.addAll(app.getProject().getRootFolder().getFilteredResources(c));
-		}
-		TableModelEvent event = new TableModelEvent(this);
-		for (TableModelListener l : listeners) {
-			l.tableChanged(event);
+			List<IResource> newContent = app.getProject().getRootFolder().getFilteredResources(c);
+			if (!content.equals(newContent)) {
+				content.clear();
+				content.addAll(newContent);
+				TableModelEvent event = new TableModelEvent(this);
+				for (TableModelListener l : listeners) {
+					l.tableChanged(event);
+				}
+			}
+		} else {
+			content.clear();
+			TableModelEvent event = new TableModelEvent(this);
+			for (TableModelListener l : listeners) {
+				l.tableChanged(event);
+			}
 		}
 	}
 
@@ -136,4 +145,7 @@ public class ResourceModel extends AbstractModel<TableModelListener> implements 
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 	}
 
+	public List<IResource> getContent() {
+		return content;
+	}
 }

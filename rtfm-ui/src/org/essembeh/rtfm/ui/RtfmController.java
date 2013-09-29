@@ -8,25 +8,26 @@ import javax.xml.bind.JAXBException;
 
 import org.essembeh.rtfm.app.Application;
 import org.essembeh.rtfm.app.exception.UnknownTaskException;
-import org.essembeh.rtfm.fs.content.interfaces.IResource;
 import org.essembeh.rtfm.fs.exception.FileSystemException;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
+import org.essembeh.rtfm.ui.model.AttributesModel;
 import org.essembeh.rtfm.ui.model.ExplorerNodeUtils;
 import org.essembeh.rtfm.ui.model.FilterModel;
 import org.essembeh.rtfm.ui.model.ResourceModel;
+import org.essembeh.rtfm.ui.renderers.AlternatibeRenderer;
 import org.essembeh.rtfm.ui.renderers.ResourceRenderer;
-import org.essembeh.rtfm.ui.renderers.ThreeStatesBooleanRenderer;
 import org.essembeh.rtfm.ui.utils.Image;
 
-public class RtfmUICustom extends RtfmUI {
+public class RtfmController extends RtfmUI {
 
 	private static final long serialVersionUID = -6158596439845992908L;
 	private final JButton showHideAttributesButton;
 	private final Application app;
 	private final ResourceModel resourceModel;
 	private final FilterModel filterModel;
+	private final AttributesModel attributesModel;
 
-	public RtfmUICustom() throws UnknownTaskException, FileNotFoundException, JAXBException {
+	public RtfmController() throws UnknownTaskException, FileNotFoundException, JAXBException {
 		super();
 
 		app = new Application();
@@ -35,17 +36,18 @@ public class RtfmUICustom extends RtfmUI {
 		// Model
 		explorerTree.setModel(filterModel = new FilterModel(new ExplorerNodeUtils(app), true));
 		fileTable.setModel(resourceModel = new ResourceModel(app, explorerTree));
+		attributeTable.setModel(attributesModel = new AttributesModel(resourceModel, fileTable, filterModel));
 
-		// Size & style
-		//		fileTable.getColumnModel().getColumn(0).setMinWidth(100);
-		//		fileTable.getColumnModel().getColumn(0).setMaxWidth(100);
-		//		fileTable.getColumnModel().getColumn(0).setPreferredWidth(100);
-		//		attributeTable.getColumnModel().getColumn(0).setPreferredWidth(80);
-		//		attributeTable.getColumnModel().getColumn(1).setPreferredWidth(200);
+		//	 Size & style
+		fileTable.getColumnModel().getColumn(0).setMinWidth(100);
+		fileTable.getColumnModel().getColumn(0).setMaxWidth(100);
+		fileTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+		attributeTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+		attributeTable.getColumnModel().getColumn(1).setPreferredWidth(200);
 
 		// Renderes
-		fileTable.setDefaultRenderer(Boolean.class, new ThreeStatesBooleanRenderer());
-		fileTable.setDefaultRenderer(IResource.class, new ResourceRenderer());
+		fileTable.setDefaultRenderer(Object.class, new ResourceRenderer());
+		attributeTable.setDefaultRenderer(Object.class, new AlternatibeRenderer());
 
 		// Add actions
 		actionPanel.add(new JButton(new DefaultRtfmAction("Scan", Image.SCAN_FOLDER, new Runnable() {
