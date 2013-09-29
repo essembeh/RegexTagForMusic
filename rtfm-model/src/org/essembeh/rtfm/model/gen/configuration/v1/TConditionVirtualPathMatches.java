@@ -1,3 +1,4 @@
+
 package org.essembeh.rtfm.model.gen.configuration.v1;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -5,12 +6,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
+
 /**
- * <p>
- * Classe Java pour TConditionVirtualPathMatches complex type.
+ * <p>Classe Java pour TConditionVirtualPathMatches complex type.
  * 
- * <p>
- * Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TConditionVirtualPathMatches">
@@ -28,28 +28,31 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "TConditionVirtualPathMatches", namespace = "http://rtfm.essembeh.org/Configuration/1")
 public class TConditionVirtualPathMatches {
 
-	@XmlAttribute(name = "pattern", required = true)
-	protected String pattern;
+    @XmlAttribute(name = "pattern", required = true)
+    protected String pattern;
 
-	/**
-	 * Obtient la valeur de la propriété pattern.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getPattern() {
-		return pattern;
-	}
+    /**
+     * Obtient la valeur de la propriété pattern.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPattern() {
+        return pattern;
+    }
 
-	/**
-	 * Définit la valeur de la propriété pattern.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setPattern(String value) {
-		this.pattern = value;
-	}
+    /**
+     * Définit la valeur de la propriété pattern.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPattern(String value) {
+        this.pattern = value;
+    }
 
 }

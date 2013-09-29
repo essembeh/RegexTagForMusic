@@ -10,7 +10,7 @@ import javax.xml.bind.JAXBException;
 import org.essembeh.rtfm.fs.content.interfaces.IFolder;
 import org.essembeh.rtfm.fs.content.interfaces.IProject;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
-import org.essembeh.rtfm.model.gen.JaxbUtils;
+import org.essembeh.rtfm.model.JaxbUtils;
 import org.essembeh.rtfm.model.gen.filesystem.v1.ObjectFactory;
 import org.essembeh.rtfm.model.gen.filesystem.v1.TAttributeList;
 import org.essembeh.rtfm.model.gen.filesystem.v1.TProject;

@@ -1,16 +1,15 @@
+
 package org.essembeh.rtfm.model.gen.configuration.v1;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
 
+
 /**
- * <p>
- * Classe Java pour TGroupLogic.
+ * <p>Classe Java pour TGroupLogic.
  * 
+ * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * <p>
- * Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
- * <p>
- * 
  * <pre>
  * &lt;simpleType name="TGroupLogic">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -25,14 +24,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum TGroupLogic {
 
-	OR, AND;
+    OR,
+    AND;
 
-	public String value() {
-		return name();
-	}
+    public String value() {
+        return name();
+    }
 
-	public static TGroupLogic fromValue(String v) {
-		return valueOf(v);
-	}
+    public static TGroupLogic fromValue(String v) {
+        return valueOf(v);
+    }
 
 }

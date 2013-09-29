@@ -26,7 +26,7 @@ import org.essembeh.rtfm.fs.exception.FileSystemException;
 import org.essembeh.rtfm.fs.io.ProjectReaderScannerExtension;
 import org.essembeh.rtfm.fs.io.ProjectScanner;
 import org.essembeh.rtfm.fs.io.ProjectWriter;
-import org.essembeh.rtfm.model.gen.JaxbReader;
+import org.essembeh.rtfm.model.JaxbReader;
 
 public class Application {
 

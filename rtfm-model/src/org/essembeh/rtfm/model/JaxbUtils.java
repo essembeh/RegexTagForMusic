@@ -1,4 +1,4 @@
-package org.essembeh.rtfm.model.gen;
+package org.essembeh.rtfm.model;
 
 import java.io.InputStream;
 import java.io.OutputStream;

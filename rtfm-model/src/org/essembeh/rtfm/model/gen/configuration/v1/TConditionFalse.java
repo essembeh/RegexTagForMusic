@@ -1,15 +1,15 @@
+
 package org.essembeh.rtfm.model.gen.configuration.v1;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
+
 /**
- * <p>
- * Classe Java pour TConditionFalse complex type.
+ * <p>Classe Java pour TConditionFalse complex type.
  * 
- * <p>
- * Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TConditionFalse">
@@ -25,5 +25,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TConditionFalse", namespace = "http://rtfm.essembeh.org/Configuration/1")
 public class TConditionFalse {
+
 
 }

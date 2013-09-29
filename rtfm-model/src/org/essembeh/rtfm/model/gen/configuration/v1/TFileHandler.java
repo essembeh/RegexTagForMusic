@@ -1,3 +1,4 @@
+
 package org.essembeh.rtfm.model.gen.configuration.v1;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +7,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+
 /**
- * <p>
- * Classe Java pour TFileHandler complex type.
+ * <p>Classe Java pour TFileHandler complex type.
  * 
- * <p>
- * Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TFileHandler">
@@ -30,77 +30,89 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TFileHandler", namespace = "http://rtfm.essembeh.org/Configuration/1", propOrder = { "conditions", "attributes" })
+@XmlType(name = "TFileHandler", namespace = "http://rtfm.essembeh.org/Configuration/1", propOrder = {
+    "conditions",
+    "attributes"
+})
 public class TFileHandler {
 
-	@XmlElement(required = true)
-	protected TConditionGroup conditions;
-	@XmlElement(required = true)
-	protected TAttributeList attributes;
-	@XmlAttribute(name = "id", required = true)
-	protected String id;
+    @XmlElement(required = true)
+    protected TConditionGroup conditions;
+    @XmlElement(required = true)
+    protected TAttributeList attributes;
+    @XmlAttribute(name = "id", required = true)
+    protected String id;
 
-	/**
-	 * Obtient la valeur de la propriété conditions.
-	 * 
-	 * @return possible object is {@link TConditionGroup }
-	 * 
-	 */
-	public TConditionGroup getConditions() {
-		return conditions;
-	}
+    /**
+     * Obtient la valeur de la propriété conditions.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TConditionGroup }
+     *     
+     */
+    public TConditionGroup getConditions() {
+        return conditions;
+    }
 
-	/**
-	 * Définit la valeur de la propriété conditions.
-	 * 
-	 * @param value
-	 *            allowed object is {@link TConditionGroup }
-	 * 
-	 */
-	public void setConditions(TConditionGroup value) {
-		this.conditions = value;
-	}
+    /**
+     * Définit la valeur de la propriété conditions.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TConditionGroup }
+     *     
+     */
+    public void setConditions(TConditionGroup value) {
+        this.conditions = value;
+    }
 
-	/**
-	 * Obtient la valeur de la propriété attributes.
-	 * 
-	 * @return possible object is {@link TAttributeList }
-	 * 
-	 */
-	public TAttributeList getAttributes() {
-		return attributes;
-	}
+    /**
+     * Obtient la valeur de la propriété attributes.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TAttributeList }
+     *     
+     */
+    public TAttributeList getAttributes() {
+        return attributes;
+    }
 
-	/**
-	 * Définit la valeur de la propriété attributes.
-	 * 
-	 * @param value
-	 *            allowed object is {@link TAttributeList }
-	 * 
-	 */
-	public void setAttributes(TAttributeList value) {
-		this.attributes = value;
-	}
+    /**
+     * Définit la valeur de la propriété attributes.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TAttributeList }
+     *     
+     */
+    public void setAttributes(TAttributeList value) {
+        this.attributes = value;
+    }
 
-	/**
-	 * Obtient la valeur de la propriété id.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getId() {
-		return id;
-	}
+    /**
+     * Obtient la valeur de la propriété id.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * Définit la valeur de la propriété id.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setId(String value) {
-		this.id = value;
-	}
+    /**
+     * Définit la valeur de la propriété id.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setId(String value) {
+        this.id = value;
+    }
 
 }

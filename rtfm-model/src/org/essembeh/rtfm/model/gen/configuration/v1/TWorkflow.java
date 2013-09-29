@@ -1,3 +1,4 @@
+
 package org.essembeh.rtfm.model.gen.configuration.v1;
 
 import java.util.ArrayList;
@@ -8,12 +9,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+
 /**
- * <p>
- * Classe Java pour TWorkflow complex type.
+ * <p>Classe Java pour TWorkflow complex type.
  * 
- * <p>
- * Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="TWorkflow">
@@ -43,157 +43,175 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TWorkflow", namespace = "http://rtfm.essembeh.org/Configuration/1", propOrder = { "conditions", "tasks" })
+@XmlType(name = "TWorkflow", namespace = "http://rtfm.essembeh.org/Configuration/1", propOrder = {
+    "conditions",
+    "tasks"
+})
 public class TWorkflow {
 
-	@XmlElement(required = true)
-	protected TConditionGroup conditions;
-	@XmlElement(required = true)
-	protected TWorkflow.Tasks tasks;
-	@XmlAttribute(name = "id", required = true)
-	protected String id;
-	@XmlAttribute(name = "description", required = true)
-	protected String description;
+    @XmlElement(required = true)
+    protected TConditionGroup conditions;
+    @XmlElement(required = true)
+    protected TWorkflow.Tasks tasks;
+    @XmlAttribute(name = "id", required = true)
+    protected String id;
+    @XmlAttribute(name = "description", required = true)
+    protected String description;
 
-	/**
-	 * Obtient la valeur de la propriété conditions.
-	 * 
-	 * @return possible object is {@link TConditionGroup }
-	 * 
-	 */
-	public TConditionGroup getConditions() {
-		return conditions;
-	}
+    /**
+     * Obtient la valeur de la propriété conditions.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TConditionGroup }
+     *     
+     */
+    public TConditionGroup getConditions() {
+        return conditions;
+    }
 
-	/**
-	 * Définit la valeur de la propriété conditions.
-	 * 
-	 * @param value
-	 *            allowed object is {@link TConditionGroup }
-	 * 
-	 */
-	public void setConditions(TConditionGroup value) {
-		this.conditions = value;
-	}
+    /**
+     * Définit la valeur de la propriété conditions.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TConditionGroup }
+     *     
+     */
+    public void setConditions(TConditionGroup value) {
+        this.conditions = value;
+    }
 
-	/**
-	 * Obtient la valeur de la propriété tasks.
-	 * 
-	 * @return possible object is {@link TWorkflow.Tasks }
-	 * 
-	 */
-	public TWorkflow.Tasks getTasks() {
-		return tasks;
-	}
+    /**
+     * Obtient la valeur de la propriété tasks.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TWorkflow.Tasks }
+     *     
+     */
+    public TWorkflow.Tasks getTasks() {
+        return tasks;
+    }
 
-	/**
-	 * Définit la valeur de la propriété tasks.
-	 * 
-	 * @param value
-	 *            allowed object is {@link TWorkflow.Tasks }
-	 * 
-	 */
-	public void setTasks(TWorkflow.Tasks value) {
-		this.tasks = value;
-	}
+    /**
+     * Définit la valeur de la propriété tasks.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TWorkflow.Tasks }
+     *     
+     */
+    public void setTasks(TWorkflow.Tasks value) {
+        this.tasks = value;
+    }
 
-	/**
-	 * Obtient la valeur de la propriété id.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getId() {
-		return id;
-	}
+    /**
+     * Obtient la valeur de la propriété id.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * Définit la valeur de la propriété id.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setId(String value) {
-		this.id = value;
-	}
+    /**
+     * Définit la valeur de la propriété id.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setId(String value) {
+        this.id = value;
+    }
 
-	/**
-	 * Obtient la valeur de la propriété description.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * Obtient la valeur de la propriété description.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * Définit la valeur de la propriété description.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String }
-	 * 
-	 */
-	public void setDescription(String value) {
-		this.description = value;
-	}
+    /**
+     * Définit la valeur de la propriété description.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDescription(String value) {
+        this.description = value;
+    }
 
-	/**
-	 * <p>
-	 * Classe Java pour anonymous complex type.
-	 * 
-	 * <p>
-	 * Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
-	 * 
-	 * <pre>
-	 * &lt;complexType>
-	 *   &lt;complexContent>
-	 *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-	 *       &lt;sequence>
-	 *         &lt;element name="task" type="{http://rtfm.essembeh.org/Configuration/1}TReference" maxOccurs="unbounded"/>
-	 *       &lt;/sequence>
-	 *     &lt;/restriction>
-	 *   &lt;/complexContent>
-	 * &lt;/complexType>
-	 * </pre>
-	 * 
-	 * 
-	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
-	@XmlType(name = "", propOrder = { "task" })
-	public static class Tasks {
 
-		@XmlElement(required = true)
-		protected List<TReference> task;
+    /**
+     * <p>Classe Java pour anonymous complex type.
+     * 
+     * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+     * 
+     * <pre>
+     * &lt;complexType>
+     *   &lt;complexContent>
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       &lt;sequence>
+     *         &lt;element name="task" type="{http://rtfm.essembeh.org/Configuration/1}TReference" maxOccurs="unbounded"/>
+     *       &lt;/sequence>
+     *     &lt;/restriction>
+     *   &lt;/complexContent>
+     * &lt;/complexType>
+     * </pre>
+     * 
+     * 
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "task"
+    })
+    public static class Tasks {
 
-		/**
-		 * Gets the value of the task property.
-		 * 
-		 * <p>
-		 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there
-		 * is not a <CODE>set</CODE> method for the task property.
-		 * 
-		 * <p>
-		 * For example, to add a new item, do as follows:
-		 * 
-		 * <pre>
-		 * getTask().add(newItem);
-		 * </pre>
-		 * 
-		 * 
-		 * <p>
-		 * Objects of the following type(s) are allowed in the list {@link TReference }
-		 * 
-		 * 
-		 */
-		public List<TReference> getTask() {
-			if (task == null) {
-				task = new ArrayList<TReference>();
-			}
-			return this.task;
-		}
+        @XmlElement(required = true)
+        protected List<TReference> task;
 
-	}
+        /**
+         * Gets the value of the task property.
+         * 
+         * <p>
+         * This accessor method returns a reference to the live list,
+         * not a snapshot. Therefore any modification you make to the
+         * returned list will be present inside the JAXB object.
+         * This is why there is not a <CODE>set</CODE> method for the task property.
+         * 
+         * <p>
+         * For example, to add a new item, do as follows:
+         * <pre>
+         *    getTask().add(newItem);
+         * </pre>
+         * 
+         * 
+         * <p>
+         * Objects of the following type(s) are allowed in the list
+         * {@link TReference }
+         * 
+         * 
+         */
+        public List<TReference> getTask() {
+            if (task == null) {
+                task = new ArrayList<TReference>();
+            }
+            return this.task;
+        }
+
+    }
 
 }
