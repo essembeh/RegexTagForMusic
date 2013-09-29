@@ -20,7 +20,7 @@ public abstract class ProjectVisitor {
 	}
 
 	final public void visitProject(IProject project) {
-		visitResource(project);
+		visitResource(project.getRootFolder());
 	}
 
 	final public void visitFolder(IFolder folder) {

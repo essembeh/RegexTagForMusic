@@ -80,7 +80,7 @@ public class ResourceModel extends AbstractModel<TableModelListener> implements 
 	public void refresh(ICondition c) {
 		content.clear();
 		if (app.getProject() != null) {
-			content.addAll(app.getProject().getFilteredResources(c));
+			content.addAll(app.getProject().getRootFolder().getFilteredResources(c));
 		}
 		TableModelEvent event = new TableModelEvent(this);
 		for (TableModelListener l : listeners) {

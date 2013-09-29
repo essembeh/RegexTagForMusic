@@ -38,40 +38,51 @@ public class Test2 {
 				System.out.println("");
 			}
 		}.visitProject(project);
-		System.out.println("Folder: " + project.getFile().getAbsolutePath());
-		System.out.println("Resources: " + project.countResources());
+		System.out.println("Folder: " + project.getRootFolder().getFile().getAbsolutePath());
+		System.out.println("Resources: " + project.getRootFolder().countResources());
 		System.out.println("----------------------------------------------------------");
 	}
 
-	private static void tagFiles(IProject project, IWorkflowManager workflowManager) throws TaskInstanciationException, InterruptedException {
+	private static void tagFiles(IProject project, IWorkflowManager workflowManager) throws TaskInstanciationException,
+			InterruptedException {
 		List<IResource> files;
-		files = project.getFilteredResources(new AndCondition().addCondition(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString())).addCondition(CONDITION));
+		files = project.getRootFolder().getFilteredResources(
+				new AndCondition().addCondition(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString()))
+						.addCondition(CONDITION));
 		System.out.println("Non tagged files: " + files.size());
 		IWorkflow workflow = workflowManager.getWorkflow("10-tag-eyed3");
 		IJob job = workflowManager.createJob(workflow, files);
 		job.submit(new DefaultJobProgressMonitor());
-		files = project.getFilteredResources(new AndCondition().addCondition(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString())).addCondition(CONDITION));
+		files = project.getRootFolder().getFilteredResources(
+				new AndCondition().addCondition(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString()))
+						.addCondition(CONDITION));
 		System.out.println("Non tagged files: " + files.size());
 		for (IResource iResource : files) {
 			System.err.println(iResource.getVirtualPath());
 		}
 	}
 
-	private static void untagFiles(IProject project, IWorkflowManager workflowManager) throws TaskInstanciationException, InterruptedException {
+	private static void untagFiles(IProject project, IWorkflowManager workflowManager)
+			throws TaskInstanciationException, InterruptedException {
 		List<IResource> files;
-		files = project.getFilteredResources(new AndCondition().addCondition(new AttributeValueEquals("music:tagged?", Boolean.TRUE.toString())).addCondition(CONDITION));
+		files = project.getRootFolder().getFilteredResources(
+				new AndCondition().addCondition(new AttributeValueEquals("music:tagged?", Boolean.TRUE.toString()))
+						.addCondition(CONDITION));
 		System.out.println("Tagged files: " + files.size());
 		IWorkflow workflow = workflowManager.getWorkflow("20-remove-tags");
 		IJob job = workflowManager.createJob(workflow, files);
 		job.submit(new DefaultJobProgressMonitor());
-		files = project.getFilteredResources(new AndCondition().addCondition(new AttributeValueEquals("music:tagged?", Boolean.TRUE.toString())).addCondition(CONDITION));
+		files = project.getRootFolder().getFilteredResources(
+				new AndCondition().addCondition(new AttributeValueEquals("music:tagged?", Boolean.TRUE.toString()))
+						.addCondition(CONDITION));
 		System.out.println("Tagged files: " + files.size());
 		for (IResource iResource : files) {
 			System.err.println(iResource.getVirtualPath());
 		}
 	}
 
-	public static void main(String[] args) throws UnknownTaskException, FileNotFoundException, JAXBException, FileSystemException, TaskInstanciationException, InterruptedException {
+	public static void main(String[] args) throws UnknownTaskException, FileNotFoundException, JAXBException,
+			FileSystemException, TaskInstanciationException, InterruptedException {
 		File configurationFile = new File("resources/seb.xml");
 		File rootFolder = new File("resources/roots/seb");
 

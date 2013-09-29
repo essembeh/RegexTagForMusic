@@ -32,12 +32,13 @@ public class Test {
 				System.out.println("");
 			}
 		}.visitProject(project);
-		System.out.println("Folder: " + project.getFile().getAbsolutePath());
-		System.out.println("Resources: " + project.countResources());
+		System.out.println("Folder: " + project.getRootFolder().getFile().getAbsolutePath());
+		System.out.println("Resources: " + project.getRootFolder().countResources());
 		System.out.println("----------------------------------------------------------");
 	}
 
-	public static void main(String[] args) throws UnknownTaskException, FileNotFoundException, JAXBException, FileSystemException, TaskInstanciationException, InterruptedException {
+	public static void main(String[] args) throws UnknownTaskException, FileNotFoundException, JAXBException,
+			FileSystemException, TaskInstanciationException, InterruptedException {
 		File configurationFile = new File("resources/seb.xml");
 		File rootFolder = new File("resources/roots/seb");
 		File save1 = new File("save1.xml");
@@ -51,7 +52,10 @@ public class Test {
 		IProject project = app.scanFolder(rootFolder);
 		dumpProject(project);
 
-		System.out.println("Nontagged files: " + project.getFilteredResources(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString())).size());
+		System.out.println("Nontagged files: "
+				+ project.getRootFolder()
+						.getFilteredResources(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString()))
+						.size());
 
 		System.out.println("Save project");
 		app.saveProject(save1);
@@ -62,7 +66,7 @@ public class Test {
 			System.out.println("    " + id + ": " + workflowManager.getWorkflow(id).getDescription());
 		}
 		IWorkflow workflow = workflowManager.getWorkflow("99-dummy");
-		IJob job = workflowManager.createJob(workflow, project.getFilteredResources(null));
+		IJob job = workflowManager.createJob(workflow, project.getRootFolder().getAllResources());
 		job.submit(new DefaultJobProgressMonitor() {
 			@Override
 			public void start() {
@@ -75,7 +79,10 @@ public class Test {
 			}
 		});
 
-		System.out.println("Nontagged files: " + project.getFilteredResources(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString())).size());
+		System.out.println("Nontagged files: "
+				+ project.getRootFolder()
+						.getFilteredResources(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString()))
+						.size());
 
 		System.out.println("Save project");
 		app.saveProject(save2);
@@ -83,6 +90,9 @@ public class Test {
 		System.out.println("Project load");
 		project = app.loadProject(save2);
 		dumpProject(project);
-		System.out.println("Nontagged files: " + project.getFilteredResources(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString())).size());
+		System.out.println("Nontagged files: "
+				+ project.getRootFolder()
+						.getFilteredResources(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString()))
+						.size());
 	}
 }

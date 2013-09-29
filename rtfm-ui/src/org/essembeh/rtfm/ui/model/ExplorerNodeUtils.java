@@ -73,7 +73,7 @@ public class ExplorerNodeUtils {
 	private MutableTreeNode byAttribute(String nodeName, String attributeName) {
 		DefaultMutableTreeNode root = newNode(nodeName);
 		List<String> values = new ArrayList<String>();
-		for (IResource r : application.getProject().getAllResources()) {
+		for (IResource r : application.getProject().getRootFolder().getAllResources()) {
 			String attributeValue = r.getAttributes().getValue(attributeName);
 			if (attributeValue != null && !values.contains(attributeValue)) {
 				values.add(attributeValue);

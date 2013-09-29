@@ -28,9 +28,9 @@ public class ProjectWriter {
 	private TProject projectToModel(IProject project) {
 		TProject out = FACTORY.createTProject();
 		out.setName(project.getName());
-		out.setPath(project.getFile().getAbsolutePath());
+		out.setPath(project.getRootFolder().getFile().getAbsolutePath());
 		TResourceList resourceList = FACTORY.createTResourceList();
-		resourceToModel(project, resourceList);
+		resourceToModel(project.getRootFolder(), resourceList);
 		out.setResources(resourceList);
 		return out;
 	}

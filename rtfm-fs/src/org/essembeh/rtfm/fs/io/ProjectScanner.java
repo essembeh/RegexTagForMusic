@@ -26,7 +26,7 @@ public class ProjectScanner {
 			throw new IllegalArgumentException("Not a valid folder: " + folder.getAbsolutePath());
 		}
 		IProject out = new ProjectImpl(folder);
-		scanFolder(out);
+		scanFolder(out.getRootFolder());
 		return out;
 	}
 

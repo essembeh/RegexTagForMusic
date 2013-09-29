@@ -18,7 +18,8 @@ import org.essembeh.rtfm.fs.exception.FileSystemException;
 
 public class Music {
 
-	public static void main(String[] args) throws UnknownTaskException, FileNotFoundException, JAXBException, FileSystemException, TaskInstanciationException, InterruptedException {
+	public static void main(String[] args) throws UnknownTaskException, FileNotFoundException, JAXBException,
+			FileSystemException, TaskInstanciationException, InterruptedException {
 		File configurationFile = new File("resources/seb.xml");
 		File rootFolder = new File("/media/raid/Multimedia/Music");
 		File save1 = new File("music.xml");
@@ -30,10 +31,13 @@ public class Music {
 		System.out.println("Scan folder");
 		IProject project = app.scanFolder(rootFolder);
 
-		System.out.println("Folder: " + project.getFile().getAbsolutePath());
-		System.out.println("Resources: " + project.countResources());
+		System.out.println("Folder: " + project.getRootFolder().getFile().getAbsolutePath());
+		System.out.println("Resources: " + project.getRootFolder().countResources());
 
-		System.out.println("Nontagged files: " + project.getFilteredResources(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString())).size());
+		System.out.println("Nontagged files: "
+				+ project.getRootFolder()
+						.getFilteredResources(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString()))
+						.size());
 
 		System.out.println("Save project");
 		app.saveProject(save1);
@@ -44,7 +48,7 @@ public class Music {
 			System.out.println("    " + id + ": " + workflowManager.getWorkflow(id).getDescription());
 		}
 		IWorkflow workflow = workflowManager.getWorkflow("99-dummy");
-		IJob job = workflowManager.createJob(workflow, project.getFilteredResources(null));
+		IJob job = workflowManager.createJob(workflow, project.getRootFolder().getAllResources());
 		job.submit(new DefaultJobProgressMonitor() {
 			@Override
 			public void start() {
@@ -57,7 +61,10 @@ public class Music {
 			}
 		});
 
-		System.out.println("Nontagged files: " + project.getFilteredResources(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString())).size());
+		System.out.println("Nontagged files: "
+				+ project.getRootFolder()
+						.getFilteredResources(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString()))
+						.size());
 
 	}
 }
