@@ -17,13 +17,15 @@ import org.essembeh.rtfm.app.exception.UnknownTaskException;
 import org.essembeh.rtfm.app.utils.TextUtils;
 import org.essembeh.rtfm.app.workflow.IJob;
 import org.essembeh.rtfm.app.workflow.IWorkflow;
+import org.essembeh.rtfm.app.workflow.impl.WorkflowSupportCondition;
 import org.essembeh.rtfm.fs.content.interfaces.IProject;
 import org.essembeh.rtfm.fs.exception.FileSystemException;
+import org.essembeh.rtfm.fs.util.ConditionUtils;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
 import org.essembeh.rtfm.ui.dialog.JobDialogCustom;
-import org.essembeh.rtfm.ui.model.AttributesModel;
+import org.essembeh.rtfm.ui.model.AttributeModel;
 import org.essembeh.rtfm.ui.model.ExplorerNodeUtils;
-import org.essembeh.rtfm.ui.model.FilterModel;
+import org.essembeh.rtfm.ui.model.ConditionModel;
 import org.essembeh.rtfm.ui.model.ResourceModel;
 import org.essembeh.rtfm.ui.model.WorkflowModel;
 import org.essembeh.rtfm.ui.panel.StatusBar;
@@ -31,6 +33,7 @@ import org.essembeh.rtfm.ui.renderers.AlternatibeRenderer;
 import org.essembeh.rtfm.ui.renderers.ResourceRenderer;
 import org.essembeh.rtfm.ui.renderers.WorkflowRenderer;
 import org.essembeh.rtfm.ui.utils.Image;
+import org.essembeh.rtfm.ui.utils.SelectionTool;
 
 public class RtfmController extends RtfmUI {
 
@@ -39,9 +42,9 @@ public class RtfmController extends RtfmUI {
 
 	private final JButton showHideAttributesButton;
 	private final Application app;
+	private final ConditionModel conditionModel;
 	private final ResourceModel resourceModel;
-	private final FilterModel filterModel;
-	private final AttributesModel attributesModel;
+	private final AttributeModel attributesModel;
 	private final WorkflowModel workflowModel;
 	private final StatusBar statusBar;
 	private File lastLibrary = null;
@@ -53,19 +56,20 @@ public class RtfmController extends RtfmUI {
 		app.loadConfiguration(new File("../rtfm-test/resources/seb.xml"));
 
 		// Model
-		explorerTree.setModel(filterModel = new FilterModel(new ExplorerNodeUtils(app), true));
-		fileTable.setModel(resourceModel = new ResourceModel(app, explorerTree));
-		attributeTable.setModel(attributesModel = new AttributesModel(resourceModel, fileTable, filterModel));
+		conditionTree.setModel(conditionModel = new ConditionModel(new ExplorerNodeUtils(app), true));
+		resourceTable.setModel(resourceModel = new ResourceModel(app, conditionTree));
+		attributeTable.setModel(attributesModel = new AttributeModel(resourceModel, resourceTable, conditionModel));
 
 		//	 Size & style
-		fileTable.getColumnModel().getColumn(0).setMinWidth(100);
-		fileTable.getColumnModel().getColumn(0).setMaxWidth(100);
-		fileTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+		resourceTable.getColumnModel().getColumn(0).setMinWidth(100);
+		resourceTable.getColumnModel().getColumn(0).setMaxWidth(200);
+		resourceTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+
 		attributeTable.getColumnModel().getColumn(0).setPreferredWidth(80);
 		attributeTable.getColumnModel().getColumn(1).setPreferredWidth(200);
 
 		// Renderes
-		fileTable.setDefaultRenderer(Object.class, new ResourceRenderer());
+		resourceTable.setDefaultRenderer(Object.class, new ResourceRenderer());
 		attributeTable.setDefaultRenderer(Object.class, new AlternatibeRenderer());
 
 		// Add actions
@@ -97,7 +101,7 @@ public class RtfmController extends RtfmUI {
 				})));
 
 		final JComboBox<Object> comboBox = new JComboBox<>(workflowModel = new WorkflowModel(app, resourceModel,
-				fileTable));
+				resourceTable));
 		actionPanel.add(comboBox);
 		comboBox.setRenderer(new WorkflowRenderer());
 		comboBox.setSelectedIndex(0);
@@ -106,14 +110,7 @@ public class RtfmController extends RtfmUI {
 			public void actionPerformed(ActionEvent e) {
 				Object selectedWorkflow = comboBox.getSelectedItem();
 				if (selectedWorkflow != null && selectedWorkflow instanceof IWorkflow) {
-					try {
-						IJob job = app.getWorkflowManager().createJob((IWorkflow) selectedWorkflow,
-								workflowModel.getSelectedResources());
-						JobDialogCustom dialog = new JobDialogCustom((IWorkflow) selectedWorkflow, job);
-						dialog.setVisible(true);
-					} catch (TaskInstanciationException e1) {
-						statusBar.printError(e1.getMessage());
-					}
+					executeWorkflow((IWorkflow) selectedWorkflow);
 				}
 				comboBox.setSelectedIndex(0);
 
@@ -124,6 +121,21 @@ public class RtfmController extends RtfmUI {
 		setAttributesPanelVisible(false);
 		contentPane.add(statusBar = new StatusBar(), BorderLayout.SOUTH);
 
+	}
+
+	protected void executeWorkflow(IWorkflow workflow) {
+		try {
+			IJob job = app.getWorkflowManager()
+					.createJob(
+							workflow,
+							ConditionUtils.filter(workflowModel.getSelectedResources(), new WorkflowSupportCondition(
+									workflow)));
+			JobDialogCustom dialog = new JobDialogCustom(workflow, job);
+			dialog.setVisible(true);
+			resourceModel.refresh(SelectionTool.getSelectedCondition(conditionTree));
+		} catch (TaskInstanciationException e1) {
+			statusBar.printError(e1.getMessage());
+		}
 	}
 
 	protected void setAttributesPanelVisible(boolean visible) {
@@ -152,7 +164,7 @@ public class RtfmController extends RtfmUI {
 			} catch (FileSystemException e) {
 				statusBar.printError(e.getMessage());
 			}
-			filterModel.refresh();
+			conditionModel.refresh();
 		}
 	}
 
@@ -170,7 +182,7 @@ public class RtfmController extends RtfmUI {
 			} catch (FileSystemException | FileNotFoundException | JAXBException e) {
 				statusBar.printError(e.getMessage());
 			}
-			filterModel.refresh();
+			conditionModel.refresh();
 		}
 	}
 

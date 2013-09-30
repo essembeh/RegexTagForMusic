@@ -59,11 +59,12 @@
 				<extension list="mp3" caseSensitive="true" />
 			</conditions>
 			<attributes>
-				<attribute name="core:type"     value="audio/mp3" />
-				<attribute name="core:export?"  value="true" />
-				<attribute name="music:tagged?" value="false" />
-				<attribute name="music:comment" value="Tagged with RegexTagForMusic" />
-				<attribute name="music:album"   value="#Single" />
+				<attribute name="core:mime-type" value="audio/mp3" />
+				<attribute name="core:export?"   value="true" />
+				<attribute name="music:tagged?"  value="false" />
+				<attribute name="music:comment"  value="Tagged with RegexTagForMusic" />
+				<attribute name="music:album"    value="#Single" />
+				<attribute name="plop"    value="PLOP" />
 				<regex-attribute name="music:artist" pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@DOT-EXT" group="1" />
 				<regex-attribute name="music:title"  pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@DOT-EXT" group="2" />
 			</attributes>
@@ -199,6 +200,10 @@
 		<task id="delete" classname="org.essembeh.rtfm.exec.tasks.Echo">
 			<property name="message" value="remove the file" />
 		</task>
+		<task id="sleep" classname="org.essembeh.rtfm.exec.tasks.ExternalProcess">
+			<property name="command" value="/bin/sleep" />
+			<property name="command" value="1" />
+		</task>
 	</tasks>
 	<workflows>
 		<workflow id="00-marsk-as-non-tagged" description="Mark as non tagged">
@@ -256,6 +261,7 @@
 			<tasks>
 				<task ref-id="stat" />
 				<task ref-id="env" />
+				<task ref-id="sleep" />
 			</tasks>
 		</workflow>
 	</workflows>

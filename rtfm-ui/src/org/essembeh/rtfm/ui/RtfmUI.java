@@ -21,8 +21,8 @@ public class RtfmUI extends JFrame {
 	private static final long serialVersionUID = 3838131239724672622L;
 	protected JPanel contentPane;
 	protected JPanel actionPanel;
-	protected JTree explorerTree;
-	protected JTable fileTable;
+	protected JTree conditionTree;
+	protected JTable resourceTable;
 	protected JTable attributeTable;
 	protected JPanel workflowPanel;
 	protected JSplitPane splitPaneCenterRight;
@@ -54,8 +54,8 @@ public class RtfmUI extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		panel.add(scrollPane, BorderLayout.CENTER);
 
-		explorerTree = new JTree();
-		scrollPane.setViewportView(explorerTree);
+		conditionTree = new JTree();
+		scrollPane.setViewportView(conditionTree);
 
 		splitPaneCenterRight = new JSplitPane();
 		splitPaneLeftCenter.setRightComponent(splitPaneCenterRight);
@@ -67,8 +67,8 @@ public class RtfmUI extends JFrame {
 		JScrollPane scrollPane_1 = new JScrollPane();
 		panel_1.add(scrollPane_1, BorderLayout.CENTER);
 
-		fileTable = new JTable();
-		scrollPane_1.setViewportView(fileTable);
+		resourceTable = new JTable();
+		scrollPane_1.setViewportView(resourceTable);
 
 		JPanel panel_2 = new JPanel();
 		splitPaneCenterRight.setRightComponent(panel_2);

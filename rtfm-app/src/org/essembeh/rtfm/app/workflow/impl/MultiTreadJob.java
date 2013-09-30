@@ -40,7 +40,7 @@ public class MultiTreadJob implements IJob {
 
 	@Override
 	public void submit(final IJobProgressMonitor progressMonitor) throws InterruptedException {
-		ExecutorService executor = Executors.newFixedThreadPool(nbThreads);
+		final ExecutorService executor = Executors.newFixedThreadPool(nbThreads);
 		progressMonitor.start();
 		final CountDownLatch latch = new CountDownLatch(resources.size());
 		for (final IResource resource : resources) {
@@ -52,9 +52,20 @@ public class MultiTreadJob implements IJob {
 				}
 			});
 		}
-		latch.await();
-		executor.shutdown();
-		progressMonitor.end();
+		executor.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					latch.await();
+				} catch (InterruptedException ignored) {
+				}
+				progressMonitor.end();
+				executor.shutdown();
+			}
+		});
+//		latch.await();
+//		executor.shutdown();
+//		progressMonitor.end();
 	}
 
 	private void executeOneFile(IResource resource, IJobProgressMonitor progressMonitor) {

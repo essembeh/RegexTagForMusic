@@ -16,12 +16,12 @@ import org.apache.log4j.Logger;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 import org.essembeh.rtfm.ui.utils.SelectionTool;
 
-public class AttributesModel extends AbstractTableModel {
+public class AttributeModel extends AbstractTableModel {
 
 	/**
 	 * Attributes
 	 */
-	private static final Logger logger = Logger.getLogger(AttributesModel.class);
+	private static final Logger logger = Logger.getLogger(AttributeModel.class);
 	private static final long serialVersionUID = -2842406342280768095L;
 	private static final String[] TITLES = new String[] { "Name", "Value" };
 	private static final String MULTIPLE_VALUES = "...";
@@ -29,7 +29,7 @@ public class AttributesModel extends AbstractTableModel {
 	private final JTable resourceTable;
 	private final TreeMap<String, String> data;
 	private final List<IResource> selectedResources;
-	private final FilterModel filterModel;
+	private final ConditionModel filterModel;
 
 	/**
 	 * 
@@ -37,7 +37,7 @@ public class AttributesModel extends AbstractTableModel {
 	 * @param musicFilesModel
 	 * @param musicFilesSelection
 	 */
-	public AttributesModel(ResourceModel resourceModel, JTable resourceTable, FilterModel filterModel) {
+	public AttributeModel(ResourceModel resourceModel, JTable resourceTable, ConditionModel filterModel) {
 		this.filterModel = filterModel;
 		this.resourceModel = resourceModel;
 		this.resourceTable = resourceTable;
