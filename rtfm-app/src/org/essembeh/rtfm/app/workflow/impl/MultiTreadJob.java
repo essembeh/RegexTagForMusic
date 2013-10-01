@@ -63,9 +63,6 @@ public class MultiTreadJob implements IJob {
 				executor.shutdown();
 			}
 		});
-//		latch.await();
-//		executor.shutdown();
-//		progressMonitor.end();
 	}
 
 	private void executeOneFile(IResource resource, IJobProgressMonitor progressMonitor) {

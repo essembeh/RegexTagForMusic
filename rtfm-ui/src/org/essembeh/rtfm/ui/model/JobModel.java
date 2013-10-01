@@ -40,9 +40,9 @@ public class JobModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		String out = "";
-		if (columnIndex < data.size()) {
-			ResourceWithStatus fileWithStatus = data.get(rowIndex);
-			out = columnIndex == 0 ? fileWithStatus.getResource().getVirtualPath().toString() : fileWithStatus
+		if (columnIndex < TITLES.length) {
+			ResourceWithStatus resourceWithStatus = data.get(rowIndex);
+			out = columnIndex == 0 ? resourceWithStatus.getResource().getVirtualPath().toString() : resourceWithStatus
 					.getStatus();
 		}
 		return out;
