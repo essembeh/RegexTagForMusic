@@ -5,24 +5,23 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.app.config.ConfigurationReader;
+import org.essembeh.rtfm.app.config.RtfmProperties;
 import org.essembeh.rtfm.app.exception.UnknownTaskException;
 import org.essembeh.rtfm.app.filehandler.FileHandler;
 import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension;
 import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension.AttributeErrorOption;
-import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension.AttributeExistsOption;
 import org.essembeh.rtfm.app.workflow.IWorkflowManager;
 import org.essembeh.rtfm.app.workflow.impl.Workflow;
 import org.essembeh.rtfm.app.workflow.impl.WorkflowManager;
 import org.essembeh.rtfm.fs.content.interfaces.IProject;
 import org.essembeh.rtfm.fs.exception.FileSystemException;
+import org.essembeh.rtfm.fs.io.NoHiddenFilesScannerExtension;
 import org.essembeh.rtfm.fs.io.ProjectReaderScannerExtension;
 import org.essembeh.rtfm.fs.io.ProjectScanner;
 import org.essembeh.rtfm.fs.io.ProjectWriter;
@@ -35,13 +34,13 @@ public class Application {
 
 	private IProject project;
 	private final WorkflowManager workflowManager;
-	private final Map<String, String> properties;
+	private final RtfmProperties properties;
 	private final List<FileHandler> fileHandlers;
 
 	public Application() {
 		project = null;
 		workflowManager = new WorkflowManager();
-		properties = new HashMap<>();
+		properties = new RtfmProperties();
 		fileHandlers = new ArrayList<>();
 	}
 
@@ -63,28 +62,33 @@ public class Application {
 		properties.putAll(configurationReader.readProperties());
 	}
 
+	private ProjectScanner getConfiguredProjectScanner() {
+		ProjectScanner out = new ProjectScanner();
+		// Hidden files
+		if (properties.ignoreHiddenResources()) {
+			out.addExtension(new NoHiddenFilesScannerExtension());
+		}
+		// File handlers
+		FileHandlerScannerExtension extension = new FileHandlerScannerExtension(fileHandlers);
+		extension.setAttributeErrorOption(AttributeErrorOption.UPDATE_ERROR_ATTRIBUTE);
+		out.addExtension(extension);
+		return out;
+	}
+
 	public IProject loadProject(File libraryFile) throws FileSystemException, FileNotFoundException, JAXBException {
 		project = null;
-		ProjectScanner scanner = new ProjectScanner();
-		// Handle filehandlers
-		FileHandlerScannerExtension fileHandlerScannerExtension = new FileHandlerScannerExtension(
-				AttributeErrorOption.UPDATE_ERROR_ATTRIBUTE, AttributeExistsOption.UPDATE, fileHandlers);
-		scanner.addExtension(fileHandlerScannerExtension);
+		ProjectScanner scanner = getConfiguredProjectScanner();
 		// Handle existing attributes
-		ProjectReaderScannerExtension projectReaderScannerExtension = new ProjectReaderScannerExtension(
+		ProjectReaderScannerExtension readerExtension = new ProjectReaderScannerExtension(
 				JaxbReader.readProject(new FileInputStream(libraryFile)));
-		scanner.addExtension(projectReaderScannerExtension);
+		scanner.addExtension(readerExtension);
 		// Scan root folder
-		return (project = scanner.scanFolder(projectReaderScannerExtension.getRootFolder()));
+		return (project = scanner.scanFolder(readerExtension.getRootFolder()));
 	}
 
 	public IProject scanFolder(File rootFolder) throws FileSystemException {
 		project = null;
-		ProjectScanner scanner = new ProjectScanner();
-		// Handle filehandlers
-		FileHandlerScannerExtension fileHandlerScannerExtension = new FileHandlerScannerExtension(
-				AttributeErrorOption.UPDATE_ERROR_ATTRIBUTE, AttributeExistsOption.UPDATE, fileHandlers);
-		scanner.addExtension(fileHandlerScannerExtension);
+		ProjectScanner scanner = getConfiguredProjectScanner();
 		// Scan root folder
 		return (project = scanner.scanFolder(rootFolder));
 	}
@@ -102,12 +106,7 @@ public class Application {
 		return workflowManager;
 	}
 
-	public String getProperty(String key) {
-		return getProperty(key, null);
-	}
-
-	public String getProperty(String key, String defautlValue) {
-		String out = properties.get(key);
-		return out == null ? defautlValue : out;
+	public RtfmProperties getProperties() {
+		return properties;
 	}
 }

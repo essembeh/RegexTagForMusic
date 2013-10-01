@@ -5,8 +5,9 @@
 		Application properties
 	 -->
 	<properties>
-		<property name="fs:ignore.hidden"     value="false"/>
-		<property name="workflow:job.threads" value="4"/>
+		<property name="fs:ignore.hidden"     value="false" />
+		<property name="workflow:job.threads" value="4" />
+		<property name="ui:hidden.attribute"  value="" />
 	</properties>
 	<!-- 
 		Substitutions are applied only on "pattern" attributes 

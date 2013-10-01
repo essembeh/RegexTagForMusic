@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.app.exception.RegexAttributeException;
+import org.essembeh.rtfm.app.exception.AttributeException;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
 public class RegexAttributeGenerator extends AbstractAttributeGenerator {
@@ -24,7 +24,7 @@ public class RegexAttributeGenerator extends AbstractAttributeGenerator {
 	}
 
 	@Override
-	public String getValue(IResource resource) throws RegexAttributeException {
+	public String getValue(IResource resource) throws AttributeException {
 		String out = null;
 		String virtualPath = resource.getVirtualPath().toString();
 		Matcher matcher = this.pattern.matcher(virtualPath);
@@ -38,7 +38,7 @@ public class RegexAttributeGenerator extends AbstractAttributeGenerator {
 			logger.debug("Optional regex attribute: " + toString() + ", did not match on:" + virtualPath);
 		} else {
 			logger.error("Mandatory regex attribute: " + toString() + ", did not match on:" + virtualPath);
-			throw new RegexAttributeException(resource, getName());
+			throw new AttributeException(resource, getName());
 		}
 		return out;
 	}
