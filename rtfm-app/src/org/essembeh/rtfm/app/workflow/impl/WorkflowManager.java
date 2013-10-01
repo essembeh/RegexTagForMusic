@@ -70,13 +70,7 @@ public class WorkflowManager implements IWorkflowManager {
 	@Override
 	public IJob createJob(IWorkflow workflow, List<IResource> resources, int nbThreads)
 			throws TaskInstanciationException {
-		IJob out = null;
-		if (nbThreads < 2) {
-			out = new OneThreadJob(workflow.getExecutables(), resources);
-		} else {
-			out = new MultiTreadJob(workflow.getCondition(), workflow.getExecutables(), resources, nbThreads);
-		}
-		return out;
+		return new MultiTreadJob(workflow.getCondition(), workflow.getExecutables(), resources, nbThreads);
 	}
 
 }

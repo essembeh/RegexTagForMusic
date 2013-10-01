@@ -12,6 +12,7 @@ import org.essembeh.rtfm.app.workflow.IExecutable;
 import org.essembeh.rtfm.app.workflow.IJob;
 import org.essembeh.rtfm.app.workflow.IJobProgressMonitor;
 import org.essembeh.rtfm.fs.condition.ICondition;
+import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
 /**
@@ -69,6 +70,7 @@ public class MultiTreadJob implements IJob {
 		if (condition != null && !condition.isTrue(resource)) {
 			progressMonitor.notSupportedResource(resource);
 		} else {
+			Attributes savedAttributes = resource.getAttributes().copy();
 			progressMonitor.process(resource);
 			try {
 				for (IExecutable executable : executables) {
@@ -77,6 +79,7 @@ public class MultiTreadJob implements IJob {
 				progressMonitor.succeeded(resource);
 			} catch (ExecutionException e) {
 				progressMonitor.error(resource, e);
+				resource.getAttributes().restore(savedAttributes);
 			}
 		}
 	}

@@ -95,4 +95,17 @@ public class Attributes {
 	public Set<Entry<String, String>> entrySet() {
 		return attributes.entrySet();
 	}
+
+	public Attributes copy() {
+		Attributes out = new Attributes();
+		out.attributes.putAll(attributes);
+		return out;
+	}
+
+	public void restore(Attributes in) {
+		if (this != in && in != null) {
+			attributes.clear();
+			attributes.putAll(in.attributes);
+		}
+	}
 }
