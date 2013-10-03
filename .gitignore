@@ -1,6 +1,13 @@
+# Eclipse
 /*/.settings/
 /*/bin/
+
+# tests files
 /rtfm-test/*xml
+/rtfm-test/resources/roots/seb/
+/rtfm-test/resources/roots/default/
 /rtfm-ui/*xml
+
+# git
 *.patch
 
