@@ -60,6 +60,12 @@ public class JobModel extends AbstractTableModel {
 
 	public void updateStatus(ExecutionStatus<IResource, SimpleStatus> s) {
 		statusMap.put(s.getObject(), s);
-		fireTableCellUpdated(resources.indexOf(s.getObject()), 1);
+		if (s.getSeverity().isOk() && onlyKeepErrorFiles) {
+			int index = resources.indexOf(s.getObject());
+			resources.remove(index);
+			fireTableRowsDeleted(index, index);
+		} else {
+			fireTableCellUpdated(resources.indexOf(s.getObject()), 1);
+		}
 	}
 }
