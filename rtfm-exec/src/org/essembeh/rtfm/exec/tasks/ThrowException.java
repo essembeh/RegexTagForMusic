@@ -8,7 +8,7 @@ import org.essembeh.rtfm.fs.content.interfaces.IResource;
 public class ThrowException extends AbstractConfigurable implements IExecutable {
 
 	@Override
-	public void execute(IResource resource) throws ExecutionException {
+	public int execute(IResource resource) throws ExecutionException {
 		String message = getFirstProperty("message");
 		throw new ExecutionException(message == null ? "No message" : message);
 	}

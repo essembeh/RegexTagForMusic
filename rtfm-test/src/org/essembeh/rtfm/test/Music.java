@@ -8,7 +8,7 @@ import javax.xml.bind.JAXBException;
 import org.essembeh.rtfm.app.Application;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.exception.UnknownTaskException;
-import org.essembeh.rtfm.app.workflow.IJob;
+import org.essembeh.rtfm.app.utils.JobUtils;
 import org.essembeh.rtfm.app.workflow.IWorkflow;
 import org.essembeh.rtfm.app.workflow.IWorkflowManager;
 import org.essembeh.rtfm.app.workflow.impl.DefaultJobProgressMonitor;
@@ -47,19 +47,9 @@ public class Music {
 		for (String id : workflowManager.getWorkflowIds()) {
 			System.out.println("    " + id + ": " + workflowManager.getWorkflow(id).getDescription());
 		}
-		IWorkflow workflow = workflowManager.getWorkflow("99-dummy");
-		IJob job = workflowManager.createJob(workflow, project.getRootFolder().getAllResources());
-		job.submit(new DefaultJobProgressMonitor() {
-			@Override
-			public void start() {
-				System.out.println("Start execution");
-			}
-
-			@Override
-			public void end() {
-				System.out.println("End execution");
-			}
-		});
+		IWorkflow workflow = workflowManager.getWorkflow("99-test-OK");
+		JobUtils.synExec(workflowManager.createJob(workflow, project.getRootFolder().getAllResources()),
+				new DefaultJobProgressMonitor());
 
 		System.out.println("Nontagged files: "
 				+ project.getRootFolder()

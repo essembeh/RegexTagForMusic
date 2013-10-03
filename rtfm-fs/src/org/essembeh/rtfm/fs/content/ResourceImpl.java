@@ -2,6 +2,7 @@ package org.essembeh.rtfm.fs.content;
 
 import java.io.File;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.essembeh.rtfm.fs.content.interfaces.IFolder;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
@@ -56,5 +57,15 @@ public abstract class ResourceImpl implements IResource {
 	@Override
 	public String getName() {
 		return file.getName();
+	}
+
+	@Override
+	public int compareTo(IResource o) {
+		return ObjectUtils.compare(getVirtualPath(), o.getVirtualPath());
+	}
+
+	@Override
+	public String toString() {
+		return ObjectUtils.toString(virtualPath, "unknown");
 	}
 }

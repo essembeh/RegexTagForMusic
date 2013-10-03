@@ -66,6 +66,14 @@ public class Attributes {
 		return attributes.size();
 	}
 
+	public void removeErrors() {
+		attributes.remove(ERROR_KEY);
+	}
+
+	public void updateError(Exception e) {
+		updateError(e == null ? "no message" : e.getMessage());
+	}
+
 	public void updateError(String message) {
 		if (message != null) {
 			String value = getValue(ERROR_KEY);
@@ -75,8 +83,6 @@ public class Attributes {
 				value = message;
 			}
 			setValue(ERROR_KEY, value);
-		} else {
-			attributes.remove(ERROR_KEY);
 		}
 	}
 

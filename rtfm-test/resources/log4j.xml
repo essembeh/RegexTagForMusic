@@ -40,6 +40,10 @@
 		<level value="INFO" />
 		<appender-ref ref="console" />
 	</logger>
+	<logger name="org.essembeh.rtfm.exec.tasks.ExternalProcess" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="console" />
+	</logger>
 	<root>
 		<level value="INFO" />
 		<appender-ref ref="console" />

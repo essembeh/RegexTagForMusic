@@ -1,33 +1,19 @@
 package org.essembeh.rtfm.app.workflow.impl;
 
-import org.essembeh.rtfm.app.exception.ExecutionException;
+import org.essembeh.rtfm.app.workflow.IJob;
 import org.essembeh.rtfm.app.workflow.IJobProgressMonitor;
+import org.essembeh.rtfm.app.workflow.report.ExecutionStatus;
+import org.essembeh.rtfm.app.workflow.report.SimpleStatus;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
 public class DefaultJobProgressMonitor implements IJobProgressMonitor {
 
 	@Override
-	public void start() {
+	public void resourceDone(ExecutionStatus<IResource, SimpleStatus> s) {
 	}
 
 	@Override
-	public void end() {
-	}
-
-	@Override
-	public void error(IResource resource, ExecutionException e) {
-	}
-
-	@Override
-	public void succeeded(IResource resource) {
-	}
-
-	@Override
-	public void process(IResource resource) {
-	}
-
-	@Override
-	public void notSupportedResource(IResource resource) {
+	public void end(ExecutionStatus<IJob, ExecutionStatus<IResource, SimpleStatus>> status) {
 	}
 
 }

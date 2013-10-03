@@ -2,10 +2,11 @@ package org.essembeh.rtfm.fs.content;
 
 import java.io.File;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.essembeh.rtfm.fs.util.ArrayTools;
 
-public class VirtualPath {
+public class VirtualPath implements Comparable<VirtualPath> {
 
 	public final static String SEPARATOR = "/";
 	public final static VirtualPath ROOT = new VirtualPath(SEPARATOR);
@@ -21,7 +22,8 @@ public class VirtualPath {
 	}
 
 	public VirtualPath(String virtualPath) {
-		this(StringUtils.split(virtualPath, SEPARATOR), virtualPath.startsWith(SEPARATOR), virtualPath.endsWith(SEPARATOR));
+		this(StringUtils.split(virtualPath, SEPARATOR), virtualPath.startsWith(SEPARATOR), virtualPath
+				.endsWith(SEPARATOR));
 	}
 
 	public VirtualPath(VirtualPath parent, String child, boolean isFolder) {
@@ -37,11 +39,13 @@ public class VirtualPath {
 	}
 
 	public VirtualPath addPrefix(String segment) {
-		return new VirtualPath(ArrayTools.concat(StringUtils.split(segment, SEPARATOR), segments), segment.startsWith(SEPARATOR), isFolder);
+		return new VirtualPath(ArrayTools.concat(StringUtils.split(segment, SEPARATOR), segments),
+				segment.startsWith(SEPARATOR), isFolder);
 	}
 
 	public VirtualPath addSuffix(String segment) {
-		return new VirtualPath(ArrayTools.concat(segments, StringUtils.split(segment, SEPARATOR)), isAbsolute, segment.endsWith(SEPARATOR));
+		return new VirtualPath(ArrayTools.concat(segments, StringUtils.split(segment, SEPARATOR)), isAbsolute,
+				segment.endsWith(SEPARATOR));
 	}
 
 	public VirtualPath parent() {
@@ -80,19 +84,12 @@ public class VirtualPath {
 
 	@Override
 	public String toString() {
-		return (isAbsolute ? SEPARATOR : "") + StringUtils.join(segments, SEPARATOR) + (isFolder && segments.length > 0 ? SEPARATOR : "");
+		return (isAbsolute ? SEPARATOR : "") + StringUtils.join(segments, SEPARATOR)
+				+ (isFolder && segments.length > 0 ? SEPARATOR : "");
 	}
 
-	public static void main(String[] args) {
-		String[] tests = { "/", "/toto", "/toto/", "/toto/tata", "/toto/tata/" };
-		for (String p : tests) {
-			System.out.println("in: " + p);
-			VirtualPath vp = new VirtualPath(p);
-			System.out.println(vp);
-			System.out.println(vp.removeFirstSegment());
-			System.out.println(vp.parent());
-			System.out.println();
-
-		}
+	@Override
+	public int compareTo(VirtualPath o) {
+		return ObjectUtils.compare(toString(), o.toString());
 	}
 }

@@ -9,7 +9,7 @@ import javax.xml.bind.JAXBException;
 import org.essembeh.rtfm.app.Application;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.exception.UnknownTaskException;
-import org.essembeh.rtfm.app.workflow.IJob;
+import org.essembeh.rtfm.app.utils.JobUtils;
 import org.essembeh.rtfm.app.workflow.IWorkflow;
 import org.essembeh.rtfm.app.workflow.IWorkflowManager;
 import org.essembeh.rtfm.app.workflow.impl.DefaultJobProgressMonitor;
@@ -21,7 +21,7 @@ import org.essembeh.rtfm.fs.content.interfaces.IResource;
 import org.essembeh.rtfm.fs.exception.FileSystemException;
 import org.essembeh.rtfm.fs.util.ProjectVisitor;
 
-public class Test2 {
+public class TestTag {
 
 	// private final static ICondition CONDITION = new VirtualPathMatches(Pattern.compile(Pattern.quote("/Singles/Harry (feat. Sally) - Just a Song.mp3")));
 	private final static ICondition CONDITION = null;
@@ -51,8 +51,7 @@ public class Test2 {
 						.addCondition(CONDITION));
 		System.out.println("Non tagged files: " + files.size());
 		IWorkflow workflow = workflowManager.getWorkflow("10-tag-eyed3");
-		IJob job = workflowManager.createJob(workflow, files);
-		job.submit(new DefaultJobProgressMonitor());
+		JobUtils.synExec(workflowManager.createJob(workflow, files), new DefaultJobProgressMonitor());
 		files = project.getRootFolder().getFilteredResources(
 				new AndCondition().addCondition(new AttributeValueEquals("music:tagged?", Boolean.FALSE.toString()))
 						.addCondition(CONDITION));
@@ -70,8 +69,7 @@ public class Test2 {
 						.addCondition(CONDITION));
 		System.out.println("Tagged files: " + files.size());
 		IWorkflow workflow = workflowManager.getWorkflow("20-remove-tags");
-		IJob job = workflowManager.createJob(workflow, files);
-		job.submit(new DefaultJobProgressMonitor());
+		JobUtils.synExec(workflowManager.createJob(workflow, files), new DefaultJobProgressMonitor());
 		files = project.getRootFolder().getFilteredResources(
 				new AndCondition().addCondition(new AttributeValueEquals("music:tagged?", Boolean.TRUE.toString()))
 						.addCondition(CONDITION));

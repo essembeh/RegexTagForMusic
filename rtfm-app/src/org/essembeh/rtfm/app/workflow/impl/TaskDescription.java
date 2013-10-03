@@ -21,7 +21,7 @@ public class TaskDescription implements IConfigurable {
 	public TaskDescription(String id, String classname) {
 		this.id = id;
 		this.classname = classname;
-		properties = new ArrayList<>();
+		this.properties = new ArrayList<>();
 	}
 
 	@Override

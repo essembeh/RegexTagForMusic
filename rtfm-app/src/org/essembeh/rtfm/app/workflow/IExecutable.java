@@ -6,6 +6,6 @@ import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
 public interface IExecutable extends IConfigurable {
 
-	void execute(IResource resource) throws ExecutionException;
+	int execute(IResource resource) throws ExecutionException;
 
 }

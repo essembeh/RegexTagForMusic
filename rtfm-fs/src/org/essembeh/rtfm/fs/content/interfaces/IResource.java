@@ -5,7 +5,7 @@ import java.io.File;
 import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.VirtualPath;
 
-public interface IResource {
+public interface IResource extends Comparable<IResource> {
 
 	File getFile();
 

@@ -11,9 +11,10 @@ public class Echo extends AbstractConfigurable implements IExecutable {
 	private static final Logger logger = Logger.getLogger(Echo.class);
 
 	@Override
-	public void execute(IResource resource) {
+	public int execute(IResource resource) {
 		for (Pair<String, String> property : getProperties()) {
 			logger.info(property.getKey() + " = " + property.getValue());
 		}
+		return 0;
 	}
 }

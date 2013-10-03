@@ -26,6 +26,7 @@ public class ExternalProcess implements IExecutable {
 
 	private final List<String> commandList;
 	private final List<Pair<String, String>> envList;
+	private Integer userReturnCode = null;
 
 	public ExternalProcess() {
 		logger.debug("New external process");
@@ -46,6 +47,9 @@ public class ExternalProcess implements IExecutable {
 		} else if ("command".equals(name)) {
 			logger.debug("Command: " + value);
 			commandList.add(value);
+		} else if ("rc".equals(name)) {
+			logger.debug("Return code: " + value);
+			userReturnCode = Integer.parseInt(value);
 		} else {
 			logger.warn("Invalid property for tagger: " + name + "=" + value);
 		}
@@ -85,7 +89,7 @@ public class ExternalProcess implements IExecutable {
 	}
 
 	@Override
-	public void execute(IResource resource) throws ExecutionException {
+	public int execute(IResource resource) throws ExecutionException {
 		// Build the command
 		List<String> command = new ArrayList<String>();
 		// Args
@@ -96,8 +100,10 @@ public class ExternalProcess implements IExecutable {
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		processBuilder.redirectErrorStream(true);
 		for (Pair<String, String> pair : envList) {
-			processBuilder.environment().put(pair.getKey(), TaskUtils.valuateDynamicEnvironmentVariable(pair.getValue(), resource));
+			processBuilder.environment().put(pair.getKey(),
+					TaskUtils.valuateDynamicEnvironmentVariable(pair.getValue(), resource));
 		}
-		runProcess(processBuilder);
+		int rc = runProcess(processBuilder);
+		return userReturnCode == null ? rc : userReturnCode;
 	}
 }

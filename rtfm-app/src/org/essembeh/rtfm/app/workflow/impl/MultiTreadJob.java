@@ -7,10 +7,15 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.essembeh.rtfm.app.exception.ExecutionException;
+import org.essembeh.rtfm.app.utils.StatusUtils;
 import org.essembeh.rtfm.app.workflow.IExecutable;
 import org.essembeh.rtfm.app.workflow.IJob;
 import org.essembeh.rtfm.app.workflow.IJobProgressMonitor;
+import org.essembeh.rtfm.app.workflow.report.ExecutionStatus;
+import org.essembeh.rtfm.app.workflow.report.Severity;
+import org.essembeh.rtfm.app.workflow.report.SimpleStatus;
 import org.essembeh.rtfm.fs.condition.ICondition;
 import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
@@ -23,32 +28,34 @@ import org.essembeh.rtfm.fs.content.interfaces.IResource;
 public class MultiTreadJob implements IJob {
 
 	private final ICondition condition;
-	private final List<IResource> resources;
-	private final List<IExecutable> executables;
+	private final List<ImmutablePair<TaskDescription, IExecutable>> executables;
 	private final int nbThreads;
+	private final List<IResource> resources;
+	private final ExecutionStatus<IJob, ExecutionStatus<IResource, SimpleStatus>> status;
 
-	public MultiTreadJob(ICondition condition, List<IExecutable> executables, List<IResource> resources, int nbThreads) {
+	public MultiTreadJob(	ICondition condition,
+							List<ImmutablePair<TaskDescription, IExecutable>> executables,
+							List<IResource> resources,
+							int nbThreads) {
 		this.condition = condition;
 		this.executables = Collections.unmodifiableList(new ArrayList<>(executables));
-		this.resources = Collections.unmodifiableList(new ArrayList<IResource>(resources));
+		this.resources = Collections.unmodifiableList(new ArrayList<>(resources));
 		this.nbThreads = nbThreads;
-	}
-
-	@Override
-	public List<IResource> getResources() {
-		return resources;
+		this.status = new ExecutionStatus<IJob, ExecutionStatus<IResource, SimpleStatus>>(this);
 	}
 
 	@Override
 	public void submit(final IJobProgressMonitor progressMonitor) throws InterruptedException {
+		status.start();
 		final ExecutorService executor = Executors.newFixedThreadPool(nbThreads);
-		progressMonitor.start();
 		final CountDownLatch latch = new CountDownLatch(resources.size());
 		for (final IResource resource : resources) {
 			executor.execute(new Runnable() {
 				@Override
 				public void run() {
-					executeOneFile(resource, progressMonitor);
+					ExecutionStatus<IResource, SimpleStatus> s = executeOneFile(resource);
+					status.addStatus(s);
+					progressMonitor.resourceDone(s);
 					latch.countDown();
 				}
 			});
@@ -60,27 +67,49 @@ public class MultiTreadJob implements IJob {
 					latch.await();
 				} catch (InterruptedException ignored) {
 				}
-				progressMonitor.end();
+				status.end();
+				progressMonitor.end(status);
 				executor.shutdown();
 			}
 		});
 	}
 
-	private void executeOneFile(IResource resource, IJobProgressMonitor progressMonitor) {
+	private ExecutionStatus<IResource, SimpleStatus> executeOneFile(IResource resource) {
+		ExecutionStatus<IResource, SimpleStatus> status = new ExecutionStatus<>(resource);
 		if (condition != null && !condition.isTrue(resource)) {
-			progressMonitor.notSupportedResource(resource);
+			status.addStatus(new SimpleStatus(Severity.WARNING, "Resource not supported"));
 		} else {
 			Attributes savedAttributes = resource.getAttributes().copy();
-			progressMonitor.process(resource);
-			try {
-				for (IExecutable executable : executables) {
-					executable.execute(resource);
+			for (ImmutablePair<TaskDescription, IExecutable> p : executables) {
+				try {
+					int returnCode = p.getValue().execute(resource);
+					status.addStatus(StatusUtils.executableEnd(p.getLeft(), returnCode));
+				} catch (ExecutionException e) {
+					resource.getAttributes().restore(savedAttributes);
+					status.addStatus(StatusUtils.executableException(p.getLeft(), e));
+					break;
 				}
-				progressMonitor.succeeded(resource);
-			} catch (ExecutionException e) {
-				progressMonitor.error(resource, e);
-				resource.getAttributes().restore(savedAttributes);
 			}
 		}
+		return status;
+	}
+
+	@Override
+	public void updateErrorResources() {
+		for (ExecutionStatus<IResource, SimpleStatus> s : status.getList()) {
+			IResource resource = s.getObject();
+			if (s.getSeverity().isKo()) {
+				resource.getAttributes().updateError(s.getMessage());
+			}
+		}
+	}
+
+	public ExecutionStatus<IJob, ExecutionStatus<IResource, SimpleStatus>> getStatus() {
+		return status;
+	}
+
+	@Override
+	public List<IResource> getResources() {
+		return Collections.unmodifiableList(resources);
 	}
 }

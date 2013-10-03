@@ -49,11 +49,12 @@ public class JAudioTagger extends AbstractConfigurable implements IExecutable {
 	}
 
 	@Override
-	public void execute(IResource resource) throws ExecutionException {
+	public int execute(IResource resource) throws ExecutionException {
 		logger.debug("Step1: Remove tags");
 		removeTag(resource);
 		logger.debug("Step2: Tag");
 		tag(resource);
+		return 0;
 	}
 
 	private void tag(IResource resource) throws ExecutionException {

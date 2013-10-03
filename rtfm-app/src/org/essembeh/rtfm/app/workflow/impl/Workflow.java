@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.workflow.IExecutable;
 import org.essembeh.rtfm.app.workflow.IWorkflow;
@@ -33,10 +34,10 @@ public class Workflow implements IWorkflow {
 	}
 
 	@Override
-	public List<IExecutable> getExecutables() throws TaskInstanciationException {
-		List<IExecutable> out = new ArrayList<>();
+	public List<ImmutablePair<TaskDescription, IExecutable>> getExecutables() throws TaskInstanciationException {
+		List<ImmutablePair<TaskDescription, IExecutable>> out = new ArrayList<>();
 		for (TaskDescription task : taskDescriptions) {
-			out.add(task.createInstance());
+			out.add(ImmutablePair.of(task, task.createInstance()));
 		}
 		return Collections.unmodifiableList(out);
 	}

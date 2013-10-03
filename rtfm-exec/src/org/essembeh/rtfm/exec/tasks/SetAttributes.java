@@ -10,7 +10,7 @@ public class SetAttributes extends AbstractConfigurable implements IExecutable {
 	private static final Logger logger = Logger.getLogger(SetAttributes.class);
 
 	@Override
-	public void execute(IResource resource) {
+	public int execute(IResource resource) {
 		for (Pair<String, String> e : getProperties()) {
 			if (resource.getAttributes().contains(e.getKey())) {
 				logger.debug("Update attribute: " + e.getKey() + " = " + e.getValue());
@@ -19,5 +19,6 @@ public class SetAttributes extends AbstractConfigurable implements IExecutable {
 			}
 			resource.getAttributes().setValue(e.getKey(), e.getValue());
 		}
+		return 0;
 	}
 }
