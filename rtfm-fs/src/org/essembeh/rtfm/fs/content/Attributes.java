@@ -16,6 +16,7 @@ public class Attributes {
 	public final static String EXPORT_KEY = "core:export?";
 	public final static String FILEHANDLER_KEY = "core:filehandler";
 	public final static String ERROR_KEY = "core:error";
+	public final static String DATE_KEY = "core:date";
 
 	private Map<String, String> attributes;
 
@@ -84,6 +85,10 @@ public class Attributes {
 			}
 			setValue(ERROR_KEY, value);
 		}
+	}
+
+	public String setDate(String date) {
+		return setValue(DATE_KEY, date);
 	}
 
 	public String getFilehandler() {

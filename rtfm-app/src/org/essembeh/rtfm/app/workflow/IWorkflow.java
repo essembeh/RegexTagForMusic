@@ -15,6 +15,10 @@ public interface IWorkflow extends Comparable<IWorkflow> {
 
 	ICondition getCondition();
 
+	boolean isAuto();
+
+	boolean isUser();
+
 	List<ImmutablePair<TaskDescription, IExecutable>> getExecutables() throws TaskInstanciationException;
 
 }

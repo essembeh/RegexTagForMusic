@@ -12,14 +12,22 @@ import javax.xml.bind.JAXBException;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.app.config.ConfigurationReader;
 import org.essembeh.rtfm.app.config.RtfmProperties;
+import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.exception.UnknownTaskException;
 import org.essembeh.rtfm.app.filehandler.FileHandler;
 import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension;
 import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension.AttributeErrorOption;
+import org.essembeh.rtfm.app.utils.DateUtils;
+import org.essembeh.rtfm.app.utils.JobUtils;
+import org.essembeh.rtfm.app.workflow.IWorkflow;
 import org.essembeh.rtfm.app.workflow.IWorkflowManager;
+import org.essembeh.rtfm.app.workflow.impl.DefaultJobProgressMonitor;
 import org.essembeh.rtfm.app.workflow.impl.Workflow;
 import org.essembeh.rtfm.app.workflow.impl.WorkflowManager;
+import org.essembeh.rtfm.fs.condition.impl.AttributeValueEquals;
+import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.interfaces.IProject;
+import org.essembeh.rtfm.fs.content.interfaces.IResource;
 import org.essembeh.rtfm.fs.exception.FileSystemException;
 import org.essembeh.rtfm.fs.io.NoHiddenFilesScannerExtension;
 import org.essembeh.rtfm.fs.io.ProjectReaderScannerExtension;
@@ -63,7 +71,7 @@ public class Application {
 	}
 
 	private ProjectScanner getConfiguredProjectScanner() {
-		ProjectScanner out = new ProjectScanner();
+		ProjectScanner out = new ProjectScanner(DateUtils.now());
 		// Hidden files
 		if (properties.ignoreHiddenResources()) {
 			out.addExtension(new NoHiddenFilesScannerExtension());
@@ -75,6 +83,22 @@ public class Application {
 		return out;
 	}
 
+	private void executeAutomaticWorkflows(IProject project, String scanDate) {
+		// Search new files
+		List<IResource> resources = project.getRootFolder().getFilteredResources(
+				new AttributeValueEquals(Attributes.DATE_KEY, scanDate));
+
+		for (IWorkflow workflow : workflowManager.getWorkflows()) {
+			if (workflow.isAuto()) {
+				try {
+					JobUtils.synExec(workflowManager.createJob(workflow, resources), new DefaultJobProgressMonitor());
+				} catch (TaskInstanciationException | InterruptedException e) {
+					logger.error("Cannot run auto workflow: " + workflow, e);
+				}
+			}
+		}
+	}
+
 	public IProject loadProject(File libraryFile) throws FileSystemException, FileNotFoundException, JAXBException {
 		project = null;
 		ProjectScanner scanner = getConfiguredProjectScanner();
@@ -83,14 +107,20 @@ public class Application {
 				JaxbReader.readProject(new FileInputStream(libraryFile)));
 		scanner.addExtension(readerExtension);
 		// Scan root folder
-		return (project = scanner.scanFolder(readerExtension.getRootFolder()));
+		project = scanner.scanFolder(readerExtension.getRootFolder());
+		// Run auto workflows
+		executeAutomaticWorkflows(project, scanner.getDate());
+		return project;
 	}
 
 	public IProject scanFolder(File rootFolder) throws FileSystemException {
 		project = null;
 		ProjectScanner scanner = getConfiguredProjectScanner();
 		// Scan root folder
-		return (project = scanner.scanFolder(rootFolder));
+		project = scanner.scanFolder(rootFolder);
+		// Run auto workflows
+		executeAutomaticWorkflows(project, scanner.getDate());
+		return project;
 	}
 
 	public void saveProject(File libraryFile) throws FileNotFoundException, JAXBException {

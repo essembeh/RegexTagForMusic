@@ -35,6 +35,8 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;/sequence>
  *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="description" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="user" type="{http://www.w3.org/2001/XMLSchema}boolean" default="true" />
+ *       &lt;attribute name="auto" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -57,6 +59,10 @@ public class TWorkflow {
     protected String id;
     @XmlAttribute(name = "description", required = true)
     protected String description;
+    @XmlAttribute(name = "user")
+    protected Boolean user;
+    @XmlAttribute(name = "auto")
+    protected Boolean auto;
 
     /**
      * Obtient la valeur de la propriété conditions.
@@ -152,6 +158,62 @@ public class TWorkflow {
      */
     public void setDescription(String value) {
         this.description = value;
+    }
+
+    /**
+     * Obtient la valeur de la propriété user.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public boolean isUser() {
+        if (user == null) {
+            return true;
+        } else {
+            return user;
+        }
+    }
+
+    /**
+     * Définit la valeur de la propriété user.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setUser(Boolean value) {
+        this.user = value;
+    }
+
+    /**
+     * Obtient la valeur de la propriété auto.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public boolean isAuto() {
+        if (auto == null) {
+            return false;
+        } else {
+            return auto;
+        }
+    }
+
+    /**
+     * Définit la valeur de la propriété auto.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setAuto(Boolean value) {
+        this.auto = value;
     }
 
 

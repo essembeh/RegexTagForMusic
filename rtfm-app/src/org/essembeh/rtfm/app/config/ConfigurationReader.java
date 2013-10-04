@@ -108,7 +108,8 @@ public class ConfigurationReader {
 
 	private Workflow readWorkflow(TWorkflow workflowModel, Map<String, TaskDescription> taskDescriptions)
 			throws UnknownTaskException {
-		Workflow out = new Workflow(workflowModel.getId(), workflowModel.getDescription());
+		Workflow out = new Workflow(workflowModel.getId(), workflowModel.getDescription(), workflowModel.isUser(),
+				workflowModel.isAuto());
 		out.setCondition(readCondition(workflowModel.getConditions()));
 		for (TReference taskReference : workflowModel.getTasks().getTask()) {
 			TaskDescription taskDescription = taskDescriptions.get(taskReference.getRefId());

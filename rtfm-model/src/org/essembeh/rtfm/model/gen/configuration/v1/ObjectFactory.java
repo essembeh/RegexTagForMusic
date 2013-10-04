@@ -24,6 +24,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
+    private final static QName _Configuration_QNAME = new QName("http://rtfm.essembeh.org/Configuration/1", "configuration");
     private final static QName _TConditionGroupExtension_QNAME = new QName("", "extension");
     private final static QName _TConditionGroupAttributeValueEquals_QNAME = new QName("", "attributeValueEquals");
     private final static QName _TConditionGroupAttributeExists_QNAME = new QName("", "attributeExists");
@@ -33,7 +34,6 @@ public class ObjectFactory {
     private final static QName _TConditionGroupGroup_QNAME = new QName("", "group");
     private final static QName _TConditionGroupFileOrFilder_QNAME = new QName("", "fileOrFilder");
     private final static QName _TConditionGroupAttributeValueMatches_QNAME = new QName("", "attributeValueMatches");
-    private final static QName _Configuration_QNAME = new QName("http://rtfm.essembeh.org/Configuration/1", "configuration");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.essembeh.rtfm.model.gen.configuration.v1
@@ -243,6 +243,15 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link TConfiguration }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://rtfm.essembeh.org/Configuration/1", name = "configuration")
+    public JAXBElement<TConfiguration> createConfiguration(TConfiguration value) {
+        return new JAXBElement<TConfiguration>(_Configuration_QNAME, TConfiguration.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link TConditionExtension }{@code >}}
      * 
      */
@@ -321,15 +330,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "", name = "attributeValueMatches", scope = TConditionGroup.class)
     public JAXBElement<TConditionAttributeValueMatches> createTConditionGroupAttributeValueMatches(TConditionAttributeValueMatches value) {
         return new JAXBElement<TConditionAttributeValueMatches>(_TConditionGroupAttributeValueMatches_QNAME, TConditionAttributeValueMatches.class, TConditionGroup.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TConfiguration }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://rtfm.essembeh.org/Configuration/1", name = "configuration")
-    public JAXBElement<TConfiguration> createConfiguration(TConfiguration value) {
-        return new JAXBElement<TConfiguration>(_Configuration_QNAME, TConfiguration.class, null, value);
     }
 
 }

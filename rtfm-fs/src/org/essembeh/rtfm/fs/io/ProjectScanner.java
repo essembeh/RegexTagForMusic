@@ -16,8 +16,10 @@ import org.essembeh.rtfm.fs.exception.ResourceAlreadyExistsException;
 public class ProjectScanner {
 
 	private final List<IScannerExtension> extensions;
+	private final String date;
 
-	public ProjectScanner() {
+	public ProjectScanner(String date) {
+		this.date = date;
 		this.extensions = new ArrayList<>();
 	}
 
@@ -51,6 +53,7 @@ public class ProjectScanner {
 					} else {
 						resource = new FileImpl(file);
 					}
+					resource.getAttributes().setDate(date);
 					folder.addResource(resource);
 					for (IScannerExtension e : extensions) {
 						e.postCreation(resource);
@@ -72,5 +75,9 @@ public class ProjectScanner {
 
 	public void removeExtension(IScannerExtension extension) {
 		extensions.remove(extension);
+	}
+	
+	public String getDate() {
+		return date;
 	}
 }

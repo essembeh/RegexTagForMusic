@@ -17,11 +17,15 @@ public class Workflow implements IWorkflow {
 	private final String description;
 	private final List<TaskDescription> taskDescriptions;
 	private ICondition condition;
+	private final boolean auto;
+	private final boolean user;
 
-	public Workflow(String id, String description) {
+	public Workflow(String id, String description, boolean user, boolean auto) {
 		this.id = id;
 		this.description = description;
 		this.condition = null;
+		this.auto = auto;
+		this.user = user;
 		this.taskDescriptions = new ArrayList<>();
 	}
 
@@ -60,5 +64,15 @@ public class Workflow implements IWorkflow {
 	@Override
 	public ICondition getCondition() {
 		return condition;
+	}
+
+	@Override
+	public boolean isAuto() {
+		return auto;
+	}
+
+	@Override
+	public boolean isUser() {
+		return user;
 	}
 }

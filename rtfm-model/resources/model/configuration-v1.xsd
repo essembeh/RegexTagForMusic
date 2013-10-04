@@ -143,6 +143,8 @@
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:string" use="required" />
 		<xs:attribute name="description" type="xs:string" use="required" />
+		<xs:attribute name="user" type="xs:boolean" use="optional" default="true" />
+		<xs:attribute name="auto" type="xs:boolean" use="optional" default="false" />
 	</xs:complexType>
 	
 	
