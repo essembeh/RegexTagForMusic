@@ -3,6 +3,7 @@ package org.essembeh.rtfm.ui.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
@@ -11,6 +12,7 @@ import javax.swing.tree.TreeNode;
 import org.essembeh.rtfm.app.Application;
 import org.essembeh.rtfm.fs.condition.ICondition;
 import org.essembeh.rtfm.fs.content.Attributes;
+import org.essembeh.rtfm.fs.content.interfaces.IFolder;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 import org.essembeh.rtfm.fs.util.ConditionUtils;
 
@@ -30,8 +32,8 @@ public class ExplorerNodeUtils {
 		root.add(newNode("Non tagged", ConditionUtils.attributeValueEquals("music:tagged?", "false")));
 		root.add(newNode("With error", ConditionUtils.attributeExists(Attributes.ERROR_KEY, true)));
 		if (application.getProject() != null) {
-			//		root.add(fileSystem());
 			root.add(newResources());
+			root.add(fileSystem());
 			root.add(byType());
 			root.add(byAttribute("Artist", "music:artist"));
 			root.add(byAttribute("Album", "music:album"));
@@ -40,32 +42,28 @@ public class ExplorerNodeUtils {
 		return root;
 	}
 
-	//	private MutableTreeNode fileSystem() {
-	//		File rootFolder = library.getRootFolder();
-	//		DefaultMutableTreeNode root = newNode("Filesystem");
-	//		if (rootFolder != null) {
-	//			root.add(folderToNode(rootFolder, rootFolder));
-	//		}
-	//		return root;
-	//	}
+	private MutableTreeNode fileSystem() {
+		IFolder rootFolder = application.getProject().getRootFolder();
+		DefaultMutableTreeNode out = newNode("Filesystem");
+		for (IResource r : rootFolder.getResources()) {
+			if (r instanceof IFolder) {
+				out.add(folderToNode((IFolder) r));
+			}
+		}
+		return out;
+	}
 
-	//	private DefaultMutableTreeNode folderToNode(File folder, File root) {
-	//		DefaultMutableTreeNode node = newNode(folder.getName(),
-	//				CommonFilters.virtualPathStartsWith(FileUtils.extractRelativePath(folder, root)), true);
-	//		List<File> ls = Arrays.asList(folder.listFiles());
-	//		Collections.sort(ls, new Comparator<File>() {
-	//			@Override
-	//			public int compare(File a, File b) {
-	//				return a.getAbsolutePath().compareTo(b.getAbsolutePath());
-	//			}
-	//		});
-	//		for (File sub : ls) {
-	//			if (sub.isDirectory()) {
-	//				node.add(folderToNode(sub, root));
-	//			}
-	//		}
-	//		return node;
-	//	}
+	private DefaultMutableTreeNode folderToNode(IFolder folder) {
+		String escapedVirtualPath = Pattern.quote(folder.getVirtualPath().toString());
+		DefaultMutableTreeNode out = newNode(folder.getName(),
+				ConditionUtils.virtualPathMatches(Pattern.compile("^" + escapedVirtualPath + ".*")), true);
+		for (IResource r : folder.getResources()) {
+			if (r instanceof IFolder) {
+				out.add(folderToNode((IFolder) r));
+			}
+		}
+		return out;
+	}
 
 	private MutableTreeNode newResources() {
 		String date = application.getProject().getScanDate();

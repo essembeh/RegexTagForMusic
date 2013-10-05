@@ -29,7 +29,7 @@ import org.essembeh.rtfm.fs.condition.impl.AttributeValueEquals;
 import org.essembeh.rtfm.fs.condition.impl.AttributeValueMatches;
 import org.essembeh.rtfm.fs.condition.impl.Extension;
 import org.essembeh.rtfm.fs.condition.impl.FileOrFolder;
-import org.essembeh.rtfm.fs.condition.impl.FileOrFolder.InodeType;
+import org.essembeh.rtfm.fs.condition.impl.FileOrFolder.ResourceType;
 import org.essembeh.rtfm.fs.condition.impl.VirtualPathMatches;
 import org.essembeh.rtfm.model.gen.configuration.v1.TConditionAttributeExists;
 import org.essembeh.rtfm.model.gen.configuration.v1.TConditionAttributeValueEquals;
@@ -187,7 +187,7 @@ public class ConfigurationReader {
 					out.addCondition(new Extension(extensions, cond.isCaseSensitive()));
 				} else if (child instanceof TConditionFileOrFolder) {
 					TConditionFileOrFolder cond = (TConditionFileOrFolder) child;
-					out.addCondition(new FileOrFolder(InodeType.valueOf(cond.getType())));
+					out.addCondition(new FileOrFolder(ResourceType.valueOf(cond.getType())));
 				} else if (child instanceof TConditionVirtualPathMatches) {
 					TConditionVirtualPathMatches childObject = (TConditionVirtualPathMatches) child;
 					out.addCondition(new VirtualPathMatches(ss(childObject.getPattern())));

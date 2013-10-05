@@ -56,6 +56,9 @@ public abstract class ResourceImpl implements IResource {
 
 	@Override
 	public String getName() {
+		if (virtualPath == VirtualPath.ROOT) {
+			return virtualPath.toString();
+		}
 		return file.getName();
 	}
 

@@ -6,19 +6,19 @@ import org.essembeh.rtfm.fs.content.interfaces.IFolder;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
 public class FileOrFolder implements ICondition {
-	public enum InodeType {
+	public enum ResourceType {
 		FILE, FOLDER
 	};
 
-	private final InodeType type;
+	private final ResourceType type;
 
-	public FileOrFolder(InodeType type) {
+	public FileOrFolder(ResourceType type) {
 		this.type = type;
 	}
 
 	@Override
 	public boolean isTrue(IResource resource) {
-		return (type == InodeType.FILE && resource instanceof IFile) || (type == InodeType.FOLDER && resource instanceof IFolder);
+		return (type == ResourceType.FILE && resource instanceof IFile) || (type == ResourceType.FOLDER && resource instanceof IFolder);
 	}
 
 }

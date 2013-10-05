@@ -15,7 +15,7 @@ import org.essembeh.rtfm.fs.condition.impl.AttributeValueEquals;
 import org.essembeh.rtfm.fs.condition.impl.AttributeValueMatches;
 import org.essembeh.rtfm.fs.condition.impl.Extension;
 import org.essembeh.rtfm.fs.condition.impl.FileOrFolder;
-import org.essembeh.rtfm.fs.condition.impl.FileOrFolder.InodeType;
+import org.essembeh.rtfm.fs.condition.impl.FileOrFolder.ResourceType;
 import org.essembeh.rtfm.fs.condition.impl.VirtualPathMatches;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
@@ -45,7 +45,7 @@ public class ConditionUtils {
 		return new Extension(extensionsList, caseSensitive);
 	}
 
-	public static ICondition fileOrFolder(InodeType type) {
+	public static ICondition fileOrFolder(ResourceType type) {
 		return new FileOrFolder(type);
 	}
 
