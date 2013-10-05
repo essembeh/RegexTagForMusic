@@ -31,6 +31,7 @@ public class ExplorerNodeUtils {
 		root.add(newNode("With error", ConditionUtils.attributeExists(Attributes.ERROR_KEY, true)));
 		if (application.getProject() != null) {
 			//		root.add(fileSystem());
+			root.add(newResources());
 			root.add(byType());
 			root.add(byAttribute("Artist", "music:artist"));
 			root.add(byAttribute("Album", "music:album"));
@@ -65,6 +66,11 @@ public class ExplorerNodeUtils {
 	//		}
 	//		return node;
 	//	}
+
+	private MutableTreeNode newResources() {
+		String date = application.getProject().getScanDate();
+		return newNode("New resources", ConditionUtils.attributeValueEquals(Attributes.DATE_KEY, date));
+	}
 
 	private MutableTreeNode byType() {
 		return byAttribute("Type", Attributes.FILEHANDLER_KEY);

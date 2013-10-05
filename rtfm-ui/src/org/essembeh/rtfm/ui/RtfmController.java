@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.bind.JAXBException;
 
 import org.essembeh.rtfm.app.Application;
@@ -24,8 +25,8 @@ import org.essembeh.rtfm.fs.util.ConditionUtils;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
 import org.essembeh.rtfm.ui.dialog.JobDialogCustom;
 import org.essembeh.rtfm.ui.model.AttributeModel;
-import org.essembeh.rtfm.ui.model.ExplorerNodeUtils;
 import org.essembeh.rtfm.ui.model.ConditionModel;
+import org.essembeh.rtfm.ui.model.ExplorerNodeUtils;
 import org.essembeh.rtfm.ui.model.ResourceModel;
 import org.essembeh.rtfm.ui.model.WorkflowModel;
 import org.essembeh.rtfm.ui.panel.StatusBar;
@@ -156,7 +157,7 @@ public class RtfmController extends RtfmUI {
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setDialogTitle("Select a folder to scan");
 		fileChooser.setCurrentDirectory(getFileChooserFolder());
-		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			try {
 				IProject project = app.scanFolder(fileChooser.getSelectedFile());
 				statusBar.printMessage(TextUtils.plural(project.getRootFolder().countResources(), "resource")
@@ -168,13 +169,14 @@ public class RtfmController extends RtfmUI {
 		}
 	}
 
-	protected void openProject() {// Create a file chooser to select an XML File
+	protected void openProject() {
+		// Create a file chooser to select an XML File
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		// TODO: Filter only Database files (XML files)
+		fileChooser.setFileFilter(new FileNameExtensionFilter("XML library", "xml"));
 		fileChooser.setDialogTitle("Open your library");
 		fileChooser.setCurrentDirectory(getFileChooserFolder());
-		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			try {
 				IProject project = app.loadProject(lastLibrary = fileChooser.getSelectedFile());
 				statusBar.printMessage(TextUtils.plural(project.getRootFolder().countResources(), "resource")
@@ -189,9 +191,10 @@ public class RtfmController extends RtfmUI {
 	protected void saveProject() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fileChooser.setFileFilter(new FileNameExtensionFilter("XML library", "xml"));
 		fileChooser.setDialogTitle("Save your current library");
 		fileChooser.setCurrentDirectory(getFileChooserFolder());
-		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+		if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			try {
 				app.saveProject(fileChooser.getSelectedFile());
 				statusBar.printMessage("Library saved: " + fileChooser.getSelectedFile().getAbsolutePath());

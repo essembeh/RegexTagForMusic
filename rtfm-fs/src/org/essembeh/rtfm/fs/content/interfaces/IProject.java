@@ -1,5 +1,7 @@
 package org.essembeh.rtfm.fs.content.interfaces;
 
+import java.util.List;
+
 import org.essembeh.rtfm.fs.content.VirtualPath;
 
 public interface IProject {
@@ -11,4 +13,8 @@ public interface IProject {
 	IFolder getRootFolder();
 
 	IResource findResource(VirtualPath virtualPath);
+
+	String getScanDate();
+
+	List<IResource> getNewResources();
 }

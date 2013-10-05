@@ -27,9 +27,18 @@ public class ProjectScanner {
 		if (!folder.isDirectory() || !folder.exists()) {
 			throw new IllegalArgumentException("Not a valid folder: " + folder.getAbsolutePath());
 		}
-		IProject out = new ProjectImpl(folder);
+		IProject out = new ProjectImpl(folder, date);
+		updateResource(out.getRootFolder());
 		scanFolder(out.getRootFolder());
 		return out;
+	}
+
+	private IResource updateResource(IResource resource) {
+		resource.getAttributes().setDate(date);
+		for (IScannerExtension e : extensions) {
+			e.postCreation(resource);
+		}
+		return resource;
 	}
 
 	private void scanFolder(IFolder folder) throws ResourceAlreadyExistsException {
@@ -53,11 +62,8 @@ public class ProjectScanner {
 					} else {
 						resource = new FileImpl(file);
 					}
-					resource.getAttributes().setDate(date);
 					folder.addResource(resource);
-					for (IScannerExtension e : extensions) {
-						e.postCreation(resource);
-					}
+					updateResource(resource);
 				}
 			}
 		}
@@ -76,7 +82,7 @@ public class ProjectScanner {
 	public void removeExtension(IScannerExtension extension) {
 		extensions.remove(extension);
 	}
-	
+
 	public String getDate() {
 		return date;
 	}

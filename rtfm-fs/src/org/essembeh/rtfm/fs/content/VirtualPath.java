@@ -84,6 +84,9 @@ public class VirtualPath implements Comparable<VirtualPath> {
 
 	@Override
 	public String toString() {
+		if (ROOT == this) {
+			return SEPARATOR;
+		}
 		return (isAbsolute ? SEPARATOR : "") + StringUtils.join(segments, SEPARATOR)
 				+ (isFolder && segments.length > 0 ? SEPARATOR : "");
 	}
