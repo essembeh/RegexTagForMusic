@@ -19,6 +19,7 @@ import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension;
 import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension.AttributeErrorOption;
 import org.essembeh.rtfm.app.utils.DateUtils;
 import org.essembeh.rtfm.app.utils.JobUtils;
+import org.essembeh.rtfm.app.workflow.IJob;
 import org.essembeh.rtfm.app.workflow.IWorkflow;
 import org.essembeh.rtfm.app.workflow.IWorkflowManager;
 import org.essembeh.rtfm.app.workflow.impl.DefaultJobProgressMonitor;
@@ -91,7 +92,9 @@ public class Application {
 		for (IWorkflow workflow : workflowManager.getWorkflows()) {
 			if (workflow.isAuto()) {
 				try {
-					JobUtils.synExec(workflowManager.createJob(workflow, resources), new DefaultJobProgressMonitor());
+					IJob job = workflowManager.createJob(workflow, resources);
+					JobUtils.synExec(job, new DefaultJobProgressMonitor());
+					job.updateErrorResources();
 				} catch (TaskInstanciationException | InterruptedException e) {
 					logger.error("Cannot run auto workflow: " + workflow, e);
 				}
