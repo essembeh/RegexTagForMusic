@@ -1,6 +1,7 @@
 package org.essembeh.rtfm.app.workflow;
 
-public interface ITask {
+import org.essembeh.rtfm.app.utils.id.Identifiable;
 
-	String getId();
+public interface ITask extends Identifiable {
+
 }

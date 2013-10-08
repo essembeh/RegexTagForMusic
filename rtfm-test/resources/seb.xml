@@ -219,6 +219,16 @@
 				</task>
 			</tasks>
 		</workflow>
+		<workflow id="01-remove-errors" description="Remove error attribute">
+			<conditions logic="AND">
+				<attributeExists name="core:error" />
+			</conditions>
+			<tasks>
+				<task ref-id="attributes-tool">
+					<property name="remove" value="core:error" />
+				</task>
+			</tasks>
+		</workflow>
 		<workflow id="10-tag-eyed3" description="Tag with eyed3">
 			<conditions logic="AND">
 				<attributeValueEquals name="core:mime-type" value="audio/mp3" />

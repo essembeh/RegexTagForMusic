@@ -1,15 +1,12 @@
 package org.essembeh.rtfm.app.workflow.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
-import org.essembeh.rtfm.app.utils.TextUtils;
+import org.essembeh.rtfm.app.utils.id.IdUtils;
 import org.essembeh.rtfm.app.workflow.IExecutable;
 import org.essembeh.rtfm.app.workflow.IJob;
 import org.essembeh.rtfm.app.workflow.ITask;
@@ -21,16 +18,14 @@ import org.essembeh.rtfm.fs.content.interfaces.IResource;
 public class WorkflowManager implements IWorkflowManager {
 
 	private final static Integer DEFAULT_NBTHREADS = 4;
-	private final Map<String, Workflow> workflows;
+	private final List<IWorkflow> workflows;
 
 	public WorkflowManager() {
-		this.workflows = new HashMap<>();
+		this.workflows = new ArrayList<>();
 	}
 
 	public void addWorkflows(List<Workflow> workflows) {
-		for (Workflow workflow : workflows) {
-			this.workflows.put(workflow.getId(), workflow);
-		}
+		this.workflows.addAll(workflows);
 	}
 
 	public void clear() {
@@ -39,23 +34,23 @@ public class WorkflowManager implements IWorkflowManager {
 
 	@Override
 	public List<String> getWorkflowIds() {
-		return TextUtils.toSortedList(workflows.keySet());
+		return Collections.unmodifiableList(IdUtils.getIds(workflows));
 	}
 
 	@Override
 	public IWorkflow getWorkflow(String workflowId) {
-		return workflows.get(workflowId);
+		return IdUtils.getById(workflows, workflowId);
 	}
 
 	@Override
-	public Collection<? extends IWorkflow> getWorkflows() {
-		return workflows.values();
+	public List<IWorkflow> getWorkflows() {
+		return Collections.unmodifiableList(workflows);
 	}
 
 	@Override
-	public Collection<? extends IWorkflow> getCompatibleWorkflows(List<IResource> resources) {
-		List<Workflow> out = new ArrayList<Workflow>();
-		for (Workflow workflow : workflows.values()) {
+	public List<IWorkflow> getCompatibleWorkflows(List<IResource> resources) {
+		List<IWorkflow> out = new ArrayList<>();
+		for (IWorkflow workflow : workflows) {
 			for (IResource resource : resources) {
 				if (workflow.getCondition() == null || workflow.getCondition().isTrue(resource)) {
 					out.add(workflow);
@@ -74,9 +69,8 @@ public class WorkflowManager implements IWorkflowManager {
 	@Override
 	public IJob createJob(IWorkflow workflow, List<IResource> resources, int nbThreads)
 			throws TaskInstanciationException {
-		Workflow workflowImpl = workflows.get(workflow.getId());
-		ICondition condition = workflowImpl.getCondition();
-		List<ImmutablePair<ITask, IExecutable>> executables = workflowImpl.getExecutables();
+		ICondition condition = workflow.getCondition();
+		List<ImmutablePair<ITask, IExecutable>> executables = workflow.getExecutables();
 		IJob out = new MultiTreadJob(condition, executables, resources, nbThreads);
 		return out;
 	}

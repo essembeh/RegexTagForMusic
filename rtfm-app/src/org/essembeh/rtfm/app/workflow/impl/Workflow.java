@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
+import org.essembeh.rtfm.app.utils.id.Identified;
 import org.essembeh.rtfm.app.workflow.IExecutable;
 import org.essembeh.rtfm.app.workflow.ITask;
 import org.essembeh.rtfm.app.workflow.IWorkflow;
 import org.essembeh.rtfm.fs.condition.ICondition;
 
-public class Workflow implements IWorkflow {
+public class Workflow extends Identified implements IWorkflow {
 
-	private final String id;
 	private final String description;
 	private final ICondition condition;
 	private final boolean auto;
@@ -30,7 +29,7 @@ public class Workflow implements IWorkflow {
 	 * @param auto
 	 */
 	public Workflow(String id, String description, ICondition condition, boolean user, boolean auto) {
-		this.id = id;
+		super(id);
 		this.description = description;
 		this.condition = condition;
 		this.auto = auto;
@@ -39,18 +38,8 @@ public class Workflow implements IWorkflow {
 	}
 
 	@Override
-	public String getId() {
-		return id;
-	}
-
-	@Override
 	public String getDescription() {
 		return description;
-	}
-
-	@Override
-	public int compareTo(IWorkflow o) {
-		return ObjectUtils.compare(this.getId(), o.getId());
 	}
 
 	@Override
@@ -72,6 +61,7 @@ public class Workflow implements IWorkflow {
 		customTaskDescriptions.add(customTaskDescription);
 	}
 
+	@Override
 	public List<ImmutablePair<ITask, IExecutable>> getExecutables() throws TaskInstanciationException {
 		List<ImmutablePair<ITask, IExecutable>> out = new ArrayList<>();
 		for (CustomTaskDescription customTaskDescription : customTaskDescriptions) {

@@ -1,8 +1,10 @@
 package org.essembeh.rtfm.app.workflow.impl;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.utils.Configurator;
 import org.essembeh.rtfm.app.utils.InstanceUtils;
+import org.essembeh.rtfm.app.utils.id.Identifiable;
 import org.essembeh.rtfm.app.workflow.IExecutable;
 import org.essembeh.rtfm.app.workflow.ITask;
 
@@ -32,5 +34,10 @@ public class TaskDescription extends Configurator<IExecutable> implements ITask 
 			throw new TaskInstanciationException(this, e);
 		}
 		return getConfiguredObject(executable);
+	}
+
+	@Override
+	public int compareTo(Identifiable o) {
+		return ObjectUtils.compare(id, o.getId());
 	}
 }

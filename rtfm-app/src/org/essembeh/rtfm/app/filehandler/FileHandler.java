@@ -6,28 +6,24 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.essembeh.rtfm.app.filehandler.attribute.IAttributeGenerator;
 import org.essembeh.rtfm.app.filehandler.attribute.SimpleAttributeGenerator;
+import org.essembeh.rtfm.app.utils.id.Identified;
 import org.essembeh.rtfm.fs.condition.ICondition;
 import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
-public class FileHandler {
+public class FileHandler extends Identified {
 
 	/**
 	 * Attributes
 	 */
-	private final String id;
 	private ICondition condition;
 	private final List<IAttributeGenerator> attributes;
 
 	public FileHandler(String id) {
-		this.id = id;
+		super(id);
 		condition = null;
 		attributes = new ArrayList<IAttributeGenerator>();
 		attributes.add(new SimpleAttributeGenerator(Attributes.FILEHANDLER_KEY, id));
-	}
-
-	public String getId() {
-		return id;
 	}
 
 	public void addAttribute(IAttributeGenerator attribute) {
