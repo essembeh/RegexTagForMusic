@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rtfm:configuration xmlns:rtfm="http://rtfm.essembeh.org/Configuration/1"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<!-- Application properties -->
+<rtfm:configuration xmlns:rtfm="http://rtfm.essembeh.org/Configuration/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!-- 
+		Application properties
+	 -->
 	<properties>
 		<property name="fs:ignore.hidden" value="false" />
 		<property name="workflow:job.threads" value="8" />
 		<property name="ui:hidden.attribute" value="" />
 	</properties>
-	<!-- Substitutions are applied only on "pattern" attributes -->
+	
+	<!-- 
+		Substitutions are applied only on "pattern" attributes
+	 -->
 	<substitutions>
 		<substitution key="@ALBUMPREFIX" value="/Albums" />
 		<substitution key="@SEPARATOR" value=" - " />
@@ -17,13 +21,14 @@
 		<substitution key="@TRACKNUMBER" value="\d{2,3}" />
 	</substitutions>
 
-	<!-- File types -->
+	<!-- 
+		File types 
+	 -->
 	<filehandlers>
 		<filehandler id="Album mp3">
 			<conditions logic="AND">
 				<fileOrFilder type="FILE" />
-				<virtualPathMatches
-					pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/@TRACKNUMBER@SEPARATOR@ANYTHING@DOT-EXT" />
+				<virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/@TRACKNUMBER@SEPARATOR@ANYTHING@DOT-EXT" />
 				<extension list="mp3" caseSensitive="true" />
 			</conditions>
 			<attributes>
@@ -31,20 +36,15 @@
 				<attribute name="core:export?" value="true" />
 				<attribute name="music:tagged?" value="false" />
 				<attribute name="music:comment" value="Tagged with RegexTagForMusic" />
-				<regex-attribute name="music:artist"
-					pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
+				<regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
 					group="1" />
-				<regex-attribute name="music:year"
-					pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
+				<regex-attribute name="music:year" pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
 					group="3" optional="true" />
-				<regex-attribute name="music:album"
-					pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
+				<regex-attribute name="music:album" pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
 					group="2" />
-				<regex-attribute name="music:track"
-					pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
+				<regex-attribute name="music:track" pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
 					group="4" />
-				<regex-attribute name="music:title"
-					pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
+				<regex-attribute name="music:title" pattern="@ALBUMPREFIX/(@ANYTHING)/((?:(@YEAR)@SEPARATOR)?@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
 					group="5" />
 			</attributes>
 		</filehandler>
@@ -71,10 +71,8 @@
 				<attribute name="music:comment" value="Tagged with RegexTagForMusic" />
 				<attribute name="music:album" value="#Single" />
 				<attribute name="plop" value="PLOP" />
-				<regex-attribute name="music:artist"
-					pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@DOT-EXT" group="1" />
-				<regex-attribute name="music:title"
-					pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@DOT-EXT" group="2" />
+				<regex-attribute name="music:artist" pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@DOT-EXT" group="1" />
+				<regex-attribute name="music:title" pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@DOT-EXT" group="2" />
 			</attributes>
 		</filehandler>
 		<filehandler id="Saga mp3">
@@ -89,10 +87,8 @@
 				<attribute name="music:tagged?" value="false" />
 				<attribute name="music:comment" value="Tagged with RegexTagForMusic" />
 				<attribute name="music:album" value="#Saga" />
-				<regex-attribute name="music:artist"
-					pattern="/Saga/(@ANYTHING)/(@ANYTHING)@DOT-EXT" group="1" />
-				<regex-attribute name="music:title"
-					pattern="/Saga/(@ANYTHING)/(@ANYTHING)@DOT-EXT" group="2" />
+				<regex-attribute name="music:artist" pattern="/Saga/(@ANYTHING)/(@ANYTHING)@DOT-EXT" group="1" />
+				<regex-attribute name="music:title" pattern="/Saga/(@ANYTHING)/(@ANYTHING)@DOT-EXT" group="2" />
 			</attributes>
 		</filehandler>
 		<filehandler id="Artist folder">
@@ -102,8 +98,7 @@
 			</conditions>
 			<attributes>
 				<attribute name="core:export?" value="false" />
-				<regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/"
-					group="1" />
+				<regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/" group="1" />
 			</attributes>
 		</filehandler>
 		<filehandler id="Album folder">
@@ -114,15 +109,9 @@
 			<attributes>
 				<attribute name="core:export?" value="false" />
 				<attribute name="music:hasCover" value="false" />
-				<regex-attribute name="music:artist"
-					pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/"
-					group="1" />
-				<regex-attribute name="music:year"
-					pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/"
-					group="2" optional="true" />
-				<regex-attribute name="music:album"
-					pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/"
-					group="3" />
+				<regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="1" />
+				<regex-attribute name="music:year" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="2" optional="true" />
+				<regex-attribute name="music:album" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="3" />
 			</attributes>
 		</filehandler>
 		<filehandler id="IGNORED">
@@ -145,20 +134,12 @@
 		</filehandler>
 	</filehandlers>
 
-	<!-- Tasks -->
+	<!-- 
+		Tasks 
+	-->
 	<tasks>
-		<task id="set-non-tagged" classname="org.essembeh.rtfm.exec.tasks.SetAttributes">
-			<property name="music:tagged?" value="false" />
-		</task>
-		<task id="set-tagged" classname="org.essembeh.rtfm.exec.tasks.SetAttributes">
-			<property name="music:tagged?" value="true" />
-		</task>
-		<task id="jaudiotagger-id3v2.4" classname="org.essembeh.rtfm.exec.tasks.JAudioTagger">
-			<property name="version" value="ID3V2_4" />
-		</task>
-		<task id="jaudiotagger-id3v2.3" classname="org.essembeh.rtfm.exec.tasks.JAudioTagger">
-			<property name="version" value="ID3V2_3" />
-		</task>
+		<task id="attributes-tool" classname="org.essembeh.rtfm.exec.tasks.AttributeTool" />
+		<task id="jaudiotagger" classname="org.essembeh.rtfm.exec.tasks.JAudioTagger" />
 		<task id="eyed3-id3v2" classname="org.essembeh.rtfm.exec.tasks.ExternalProcess">
 			<property name="command" value="/usr/bin/eyeD3" />
 			<property name="command" value="--no-color" />
@@ -196,13 +177,15 @@
 			<property name="command" value="${FILE}" />
 			<property name="rc" value="0" />
 		</task>
+		<!--
+			TEST TASKS 
+		 -->
 		<task id="stat" classname="org.essembeh.rtfm.exec.tasks.ExternalProcess">
 			<property name="command" value="/usr/bin/stat" />
 			<property name="command" value="${FILE}" />
 		</task>
 		<task id="env" classname="org.essembeh.rtfm.exec.tasks.ExternalProcess">
 			<property name="command" value="/usr/bin/env" />
-			-
 			<property name="env" value="RTFM_ARTIST=${music:artist}" />
 			<property name="env" value="RTFM_ALBUM=${music:album}" />
 			<property name="env" value="RTFM_YEAR=${music:year}" />
@@ -211,76 +194,88 @@
 			<property name="env" value="RTFM_GENRE=${music:genre}" />
 			<property name="env" value="RTFM_COMMENT=${music:comment}" />
 		</task>
-		<task id="download-cover" classname="org.essembeh.rtfm.exec.tasks.ThrowException">
-			<property name="message" value="Download cover is not yet implemented" />
-		</task>
-		<task id="delete" classname="org.essembeh.rtfm.exec.tasks.Echo">
-			<property name="message" value="remove the file" />
-		</task>
 		<task id="sleep" classname="org.essembeh.rtfm.exec.tasks.ExternalProcess">
 			<property name="command" value="/bin/sleep" />
 			<property name="command" value="1" />
 		</task>
 		<task id="error" classname="org.essembeh.rtfm.exec.tasks.ThrowException">
-			<property name="message" value="foo bar" />
 		</task>
 		<task id="warning" classname="org.essembeh.rtfm.exec.tasks.ExternalProcess">
 			<property name="command" value="/bin/false" />
 		</task>
 	</tasks>
+	
+	<!-- 
+		Workflows
+	 -->
 	<workflows>
 		<workflow id="00-marsk-as-non-tagged" description="Mark as non tagged">
 			<conditions logic="AND">
 				<attributeExists name="music:tagged?" />
 			</conditions>
 			<tasks>
-				<task ref-id="set-non-tagged" />
+				<task ref-id="attributes-tool">
+					<property name="update" value="music:tagged?=false" />
+				</task>
 			</tasks>
 		</workflow>
 		<workflow id="10-tag-eyed3" description="Tag with eyed3">
 			<conditions logic="AND">
-				<attributeValueEquals name="core:mime-type"
-					value="audio/mp3" />
+				<attributeValueEquals name="core:mime-type" value="audio/mp3" />
 			</conditions>
 			<tasks>
 				<task ref-id="eyed3-clean" />
-				<task ref-id="set-non-tagged" />
+				<task ref-id="attributes-tool">
+					<property name="update" value="music:tagged?=false" />
+				</task>
 				<task ref-id="eyed3-id3v2" />
 				<task ref-id="eyed3-v2.4" />
 				<task ref-id="eyed3-utf8" />
-				<task ref-id="set-tagged" />
+				<task ref-id="attributes-tool">
+					<property name="update" value="music:tagged?=true" />
+				</task>
 			</tasks>
 		</workflow>
 		<workflow id="11-tag-jaudiotagger" description="Tag with JAudioTagger">
 			<conditions logic="AND">
-				<attributeValueEquals name="core:mime-type"
-					value="audio/mp3" />
+				<attributeValueEquals name="core:mime-type" value="audio/mp3" />
 			</conditions>
 			<tasks>
-				<task ref-id="set-non-tagged" />
-				<task ref-id="jaudiotagger-id3v2.4" />
-				<task ref-id="set-tagged" />
+				<task ref-id="attributes-tool">
+					<property name="update" value="music:tagged?=false" />
+				</task>
+				<task ref-id="jaudiotagger">
+					<property name="version" value="ID3V2_4" />
+				</task>
+				<task ref-id="attributes-tool">
+					<property name="update" value="music:tagged?=true" />
+				</task>
 			</tasks>
 		</workflow>
 		<workflow id="20-remove-tags" description="Remove tags using eyed3">
 			<conditions logic="AND">
-				<attributeValueEquals name="core:mime-type"
-					value="audio/mp3" />
+				<attributeValueEquals name="core:mime-type" value="audio/mp3" />
 			</conditions>
 			<tasks>
 				<task ref-id="eyed3-clean" />
-				<task ref-id="set-non-tagged" />
+				<task ref-id="attributes-tool">
+					<property name="update" value="music:tagged?=false" />
+				</task>
 			</tasks>
 		</workflow>
 		<workflow id="30-download-cover" description="Download cover">
 			<conditions logic="AND">
-				<attributeValueEquals name="core:filehandler"
-					value="Album folder" />
+				<attributeValueEquals name="core:filehandler" value="Album folder" />
 			</conditions>
 			<tasks>
-				<task ref-id="download-cover" />
+				<task ref-id="error">
+					<property name="message" value="Not yet implemented" />
+				</task>
 			</tasks>
 		</workflow>
+		<!--
+			TEST WORKFLOWS 
+		 -->
 		<workflow id="99-test-OK" description="Test (stat+env)">
 			<conditions logic="AND">
 				<true />
@@ -310,7 +305,9 @@
 				<task ref-id="stat" />
 				<task ref-id="env" />
 				<task ref-id="sleep" />
-				<task ref-id="error" />
+				<task ref-id="error">
+					<property name="message" value="foo" />
+				</task>
 			</tasks>
 		</workflow>
 	</workflows>

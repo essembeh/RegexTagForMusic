@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="task" type="{http://rtfm.essembeh.org/Configuration/1}TReference" maxOccurs="unbounded"/>
+ *                   &lt;element name="task" type="{http://rtfm.essembeh.org/Configuration/1}TTaskRef" maxOccurs="unbounded"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -227,7 +227,7 @@ public class TWorkflow {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="task" type="{http://rtfm.essembeh.org/Configuration/1}TReference" maxOccurs="unbounded"/>
+     *         &lt;element name="task" type="{http://rtfm.essembeh.org/Configuration/1}TTaskRef" maxOccurs="unbounded"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
@@ -243,7 +243,7 @@ public class TWorkflow {
     public static class Tasks {
 
         @XmlElement(required = true)
-        protected List<TReference> task;
+        protected List<TTaskRef> task;
 
         /**
          * Gets the value of the task property.
@@ -263,13 +263,13 @@ public class TWorkflow {
          * 
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link TReference }
+         * {@link TTaskRef }
          * 
          * 
          */
-        public List<TReference> getTask() {
+        public List<TTaskRef> getTask() {
             if (task == null) {
-                task = new ArrayList<TReference>();
+                task = new ArrayList<TTaskRef>();
             }
             return this.task;
         }

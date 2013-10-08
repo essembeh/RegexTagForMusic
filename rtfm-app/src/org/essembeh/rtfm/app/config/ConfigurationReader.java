@@ -15,7 +15,9 @@ import org.essembeh.rtfm.app.filehandler.FileHandler;
 import org.essembeh.rtfm.app.filehandler.attribute.IAttributeGenerator;
 import org.essembeh.rtfm.app.filehandler.attribute.RegexAttributeGenerator;
 import org.essembeh.rtfm.app.filehandler.attribute.SimpleAttributeGenerator;
+import org.essembeh.rtfm.app.utils.IConfigurable;
 import org.essembeh.rtfm.app.utils.StringSubstitutor;
+import org.essembeh.rtfm.app.workflow.impl.CustomTaskDescription;
 import org.essembeh.rtfm.app.workflow.impl.TaskDescription;
 import org.essembeh.rtfm.app.workflow.impl.Workflow;
 import org.essembeh.rtfm.fs.condition.AndCondition;
@@ -45,10 +47,10 @@ import org.essembeh.rtfm.model.gen.configuration.v1.TFileHandler;
 import org.essembeh.rtfm.model.gen.configuration.v1.TFixedAttribute;
 import org.essembeh.rtfm.model.gen.configuration.v1.TGroupLogic;
 import org.essembeh.rtfm.model.gen.configuration.v1.TProperty;
-import org.essembeh.rtfm.model.gen.configuration.v1.TReference;
 import org.essembeh.rtfm.model.gen.configuration.v1.TRegexAttribute;
 import org.essembeh.rtfm.model.gen.configuration.v1.TSubstitution;
 import org.essembeh.rtfm.model.gen.configuration.v1.TTask;
+import org.essembeh.rtfm.model.gen.configuration.v1.TTaskRef;
 import org.essembeh.rtfm.model.gen.configuration.v1.TWorkflow;
 
 public class ConfigurationReader {
@@ -108,24 +110,23 @@ public class ConfigurationReader {
 
 	private Workflow readWorkflow(TWorkflow workflowModel, Map<String, TaskDescription> taskDescriptions)
 			throws UnknownTaskException {
-		Workflow out = new Workflow(workflowModel.getId(), workflowModel.getDescription(), workflowModel.isUser(),
-				workflowModel.isAuto());
-		out.setCondition(readCondition(workflowModel.getConditions()));
-		for (TReference taskReference : workflowModel.getTasks().getTask()) {
+		Workflow out = new Workflow(workflowModel.getId(), workflowModel.getDescription(),
+				readCondition(workflowModel.getConditions()), workflowModel.isUser(), workflowModel.isAuto());
+		for (TTaskRef taskReference : workflowModel.getTasks().getTask()) {
 			TaskDescription taskDescription = taskDescriptions.get(taskReference.getRefId());
 			if (taskDescription == null) {
 				throw new UnknownTaskException(workflowModel.getId(), taskReference.getRefId());
 			}
-			out.addTaskDescription(taskDescription);
+			CustomTaskDescription customTaskDescription = new CustomTaskDescription(taskDescription);
+			readConfigurable(customTaskDescription, taskReference.getProperty());
+			out.addCustomTaskDescription(customTaskDescription);
 		}
 		return out;
 	}
 
 	private TaskDescription readTaskDescription(TTask taskModel) {
 		TaskDescription out = new TaskDescription(taskModel.getId(), taskModel.getClassname());
-		for (TProperty property : taskModel.getProperty()) {
-			out.setProperty(property.getName(), property.getValue());
-		}
+		readConfigurable(out, taskModel.getProperty());
 		return out;
 	}
 
@@ -213,5 +214,13 @@ public class ConfigurationReader {
 
 	private Pattern ss(String input) {
 		return Pattern.compile(stringSubstitutor == null ? input : stringSubstitutor.apply(input));
+	}
+
+	private void readConfigurable(IConfigurable configurable, List<TProperty> properties) {
+		if (properties != null) {
+			for (TProperty p : properties) {
+				configurable.setProperty(p.getName(), p.getValue());
+			}
+		}
 	}
 }

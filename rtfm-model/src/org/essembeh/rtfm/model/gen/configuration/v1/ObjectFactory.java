@@ -155,6 +155,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link TTaskRef }
+     * 
+     */
+    public TTaskRef createTTaskRef() {
+        return new TTaskRef();
+    }
+
+    /**
      * Create an instance of {@link TFileHandler }
      * 
      */

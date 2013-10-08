@@ -13,6 +13,7 @@ import org.essembeh.rtfm.app.utils.StatusUtils;
 import org.essembeh.rtfm.app.workflow.IExecutable;
 import org.essembeh.rtfm.app.workflow.IJob;
 import org.essembeh.rtfm.app.workflow.IJobProgressMonitor;
+import org.essembeh.rtfm.app.workflow.ITask;
 import org.essembeh.rtfm.app.workflow.report.ExecutionStatus;
 import org.essembeh.rtfm.app.workflow.report.Severity;
 import org.essembeh.rtfm.app.workflow.report.SimpleStatus;
@@ -28,13 +29,13 @@ import org.essembeh.rtfm.fs.content.interfaces.IResource;
 public class MultiTreadJob implements IJob {
 
 	private final ICondition condition;
-	private final List<ImmutablePair<TaskDescription, IExecutable>> executables;
+	private final List<ImmutablePair<ITask, IExecutable>> executables;
 	private final int nbThreads;
 	private final List<IResource> resources;
 	private final ExecutionStatus<IJob, ExecutionStatus<IResource, SimpleStatus>> status;
 
 	public MultiTreadJob(	ICondition condition,
-							List<ImmutablePair<TaskDescription, IExecutable>> executables,
+							List<ImmutablePair<ITask, IExecutable>> executables,
 							List<IResource> resources,
 							int nbThreads) {
 		this.condition = condition;
@@ -80,9 +81,9 @@ public class MultiTreadJob implements IJob {
 			status.addStatus(new SimpleStatus(Severity.WARNING, "Resource not supported"));
 		} else {
 			Attributes savedAttributes = resource.getAttributes().copy();
-			for (ImmutablePair<TaskDescription, IExecutable> p : executables) {
+			for (ImmutablePair<ITask, IExecutable> p : executables) {
 				try {
-					int returnCode = p.getValue().execute(resource);
+					int returnCode = p.getRight().execute(resource);
 					status.addStatus(StatusUtils.executableEnd(p.getLeft(), returnCode));
 				} catch (ExecutionException e) {
 					resource.getAttributes().restore(savedAttributes);

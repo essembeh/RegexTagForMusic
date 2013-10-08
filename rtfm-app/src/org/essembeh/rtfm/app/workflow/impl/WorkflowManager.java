@@ -7,11 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.utils.TextUtils;
+import org.essembeh.rtfm.app.workflow.IExecutable;
 import org.essembeh.rtfm.app.workflow.IJob;
+import org.essembeh.rtfm.app.workflow.ITask;
 import org.essembeh.rtfm.app.workflow.IWorkflow;
 import org.essembeh.rtfm.app.workflow.IWorkflowManager;
+import org.essembeh.rtfm.fs.condition.ICondition;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
 public class WorkflowManager implements IWorkflowManager {
@@ -70,7 +74,11 @@ public class WorkflowManager implements IWorkflowManager {
 	@Override
 	public IJob createJob(IWorkflow workflow, List<IResource> resources, int nbThreads)
 			throws TaskInstanciationException {
-		return new MultiTreadJob(workflow.getCondition(), workflow.getExecutables(), resources, nbThreads);
+		Workflow workflowImpl = workflows.get(workflow.getId());
+		ICondition condition = workflowImpl.getCondition();
+		List<ImmutablePair<ITask, IExecutable>> executables = workflowImpl.getExecutables();
+		IJob out = new MultiTreadJob(condition, executables, resources, nbThreads);
+		return out;
 	}
 
 }

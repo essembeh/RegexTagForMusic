@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           xmlns:rtfm="http://rtfm.essembeh.org/Configuration/1" 
-           targetNamespace="http://rtfm.essembeh.org/Configuration/1">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rtfm="http://rtfm.essembeh.org/Configuration/1" targetNamespace="http://rtfm.essembeh.org/Configuration/1">
 	<!-- 
 		CONDITIONS
 	 -->
@@ -53,7 +51,7 @@
 			<xs:element name="attributeValueMatches" type="rtfm:TConditionAttributeValueMatches" />
 			<xs:element name="virtualPathMatches" type="rtfm:TConditionVirtualPathMatches" />
 			<xs:element name="fileOrFilder" type="rtfm:TConditionFileOrFolder" />
-			<xs:element name="extension" type="rtfm:TConditionExtension"/>
+			<xs:element name="extension" type="rtfm:TConditionExtension" />
 			<xs:element name="group" type="rtfm:TConditionGroup" />
 		</xs:choice>
 		<xs:attribute name="logic" type="rtfm:TGroupLogic" use="required" />
@@ -65,17 +63,17 @@
 	<xs:complexType name="TReference">
 		<xs:attribute name="ref-id" type="xs:string" use="required" />
 	</xs:complexType>
-	
+
 	<xs:complexType name="TProperty">
 		<xs:attribute name="name" type="xs:string" use="required" />
 		<xs:attribute name="value" type="xs:string" use="required" />
 	</xs:complexType>
-	
+
 	<xs:complexType name="TSubstitution">
 		<xs:attribute name="key" type="xs:string" use="required" />
 		<xs:attribute name="value" type="xs:string" use="required" />
 	</xs:complexType>
-	
+
 	<xs:complexType name="TSubstitutionList">
 		<xs:sequence>
 			<xs:element name="substitution" type="rtfm:TSubstitution" minOccurs="0" maxOccurs="unbounded" />
@@ -89,7 +87,7 @@
 		<xs:attribute name="name" type="xs:string" use="required" />
 		<xs:attribute name="value" type="xs:string" use="required" />
 	</xs:complexType>
-	
+
 	<xs:complexType name="TRegexAttribute">
 		<xs:attribute name="name" type="xs:string" use="required" />
 		<xs:attribute name="pattern" type="xs:string" use="required" />
@@ -97,14 +95,14 @@
 		<xs:attribute name="optional" type="xs:boolean" use="optional" default="false" />
 		<xs:attribute name="hidden" type="xs:boolean" use="optional" default="false" />
 	</xs:complexType>
-	
+
 	<xs:complexType name="TAttributeList">
 		<xs:sequence>
 			<xs:element name="attribute" type="rtfm:TFixedAttribute" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="regex-attribute" type="rtfm:TRegexAttribute" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:complexType name="TFileHandler">
 		<xs:sequence>
 			<xs:element name="conditions" type="rtfm:TConditionGroup" minOccurs="1" maxOccurs="1" />
@@ -112,7 +110,7 @@
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:string" use="required" />
 	</xs:complexType>
-	
+
 	<xs:complexType name="TFileHandlerList">
 		<xs:sequence>
 			<xs:element name="filehandler" type="rtfm:TFileHandler" minOccurs="0" maxOccurs="unbounded" />
@@ -129,14 +127,23 @@
 		<xs:attribute name="id" type="xs:string" use="required" />
 		<xs:attribute name="classname" type="xs:string" use="required" />
 	</xs:complexType>
-	
+	<xs:complexType name="TTaskRef">
+		<xs:complexContent>
+			<xs:extension base="rtfm:TReference">
+				<xs:sequence>
+					<xs:element name="property" minOccurs="0" maxOccurs="unbounded" type="rtfm:TProperty" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
 	<xs:complexType name="TWorkflow">
 		<xs:sequence>
 			<xs:element name="conditions" type="rtfm:TConditionGroup" minOccurs="1" maxOccurs="1" />
 			<xs:element name="tasks" minOccurs="1" maxOccurs="1">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="task" type="rtfm:TReference" minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element name="task" type="rtfm:TTaskRef" minOccurs="1" maxOccurs="unbounded" />
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -146,14 +153,14 @@
 		<xs:attribute name="user" type="xs:boolean" use="optional" default="true" />
 		<xs:attribute name="auto" type="xs:boolean" use="optional" default="false" />
 	</xs:complexType>
-	
-	
+
+
 	<xs:complexType name="TTaskList">
 		<xs:sequence>
 			<xs:element name="task" type="rtfm:TTask" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:complexType name="TWorkflowList">
 		<xs:sequence>
 			<xs:element name="workflow" type="rtfm:TWorkflow" minOccurs="0" maxOccurs="unbounded" />
@@ -183,5 +190,5 @@
 		Root
 	 -->
 	<xs:element name="configuration" type="rtfm:TConfiguration" />
-	
+
 </xs:schema>

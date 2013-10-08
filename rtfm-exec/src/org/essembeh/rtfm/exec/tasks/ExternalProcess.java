@@ -9,10 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.app.exception.ExecutionException;
-import org.essembeh.rtfm.app.utils.TaskUtils;
 import org.essembeh.rtfm.app.workflow.IExecutable;
 import org.essembeh.rtfm.exec.utils.ProcessUtils;
 import org.essembeh.rtfm.exec.utils.ProcessUtils.STDOUT;
+import org.essembeh.rtfm.exec.utils.PropertyUtils;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
 /**
@@ -37,10 +37,10 @@ public class ExternalProcess implements IExecutable {
 	@Override
 	public void setProperty(String name, String value) {
 		if ("env".equals(name)) {
-			String[] array = value.split("=");
-			if (array.length == 2) {
-				logger.debug("Environment property: " + array[0] + "=" + array[1]);
-				envList.add(Pair.of(array[0], array[1]));
+			Pair<String, String> p = PropertyUtils.stringToPair(value);
+			if (p.getKey() != null && p.getValue() != null) {
+				logger.debug("Environment property: " + p.getKey() + "=" + p.getValue());
+				envList.add(p);
 			} else {
 				logger.warn("Invalid property: " + name + " = " + value);
 			}
@@ -94,14 +94,14 @@ public class ExternalProcess implements IExecutable {
 		List<String> command = new ArrayList<String>();
 		// Args
 		for (String arg : commandList) {
-			command.add(TaskUtils.valuateDynamicEnvironmentVariable(arg, resource));
+			command.add(PropertyUtils.valuateDynamicEnvironmentVariable(arg, resource));
 		}
 		logger.debug("Command to execute: " + StringUtils.join(command, " "));
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		processBuilder.redirectErrorStream(true);
 		for (Pair<String, String> pair : envList) {
 			processBuilder.environment().put(pair.getKey(),
-					TaskUtils.valuateDynamicEnvironmentVariable(pair.getValue(), resource));
+					PropertyUtils.valuateDynamicEnvironmentVariable(pair.getValue(), resource));
 		}
 		int rc = runProcess(processBuilder);
 		return userReturnCode == null ? rc : userReturnCode;

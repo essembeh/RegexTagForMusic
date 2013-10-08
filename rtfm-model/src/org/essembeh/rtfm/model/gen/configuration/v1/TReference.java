@@ -4,6 +4,7 @@ package org.essembeh.rtfm.model.gen.configuration.v1;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -26,6 +27,9 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TReference", namespace = "http://rtfm.essembeh.org/Configuration/1")
+@XmlSeeAlso({
+    TTaskRef.class
+})
 public class TReference {
 
     @XmlAttribute(name = "ref-id", required = true)
