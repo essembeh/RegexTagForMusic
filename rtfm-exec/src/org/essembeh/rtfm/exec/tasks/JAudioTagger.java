@@ -2,8 +2,8 @@ package org.essembeh.rtfm.exec.tasks;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.app.exception.ExecutionException;
-import org.essembeh.rtfm.app.utils.AbstractConfigurable;
 import org.essembeh.rtfm.app.workflow.IExecutable;
+import org.essembeh.rtfm.exec.utils.CommonExecutable;
 import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 import org.jaudiotagger.audio.mp3.MP3File;
@@ -22,7 +22,7 @@ import org.jaudiotagger.tag.id3.ID3v24Tag;
  * @author seb
  * 
  */
-public class JAudioTagger extends AbstractConfigurable implements IExecutable {
+public class JAudioTagger extends CommonExecutable implements IExecutable {
 
 	private final static String PROPERTY_VERSION_KEY = "version";
 
@@ -49,7 +49,7 @@ public class JAudioTagger extends AbstractConfigurable implements IExecutable {
 	}
 
 	@Override
-	public int execute(IResource resource) throws ExecutionException {
+	public int execute0(IResource resource) throws ExecutionException {
 		logger.debug("Step1: Remove tags");
 		removeTag(resource);
 		logger.debug("Step2: Tag");
@@ -123,7 +123,8 @@ public class JAudioTagger extends AbstractConfigurable implements IExecutable {
 		}
 	}
 
-	private void setIfNotNull(AbstractID3v2Tag tag, String value, FieldKey key) throws KeyNotFoundException, FieldDataInvalidException {
+	private void setIfNotNull(AbstractID3v2Tag tag, String value, FieldKey key) throws KeyNotFoundException,
+			FieldDataInvalidException {
 		if (value != null) {
 			tag.setField(key, value);
 		}

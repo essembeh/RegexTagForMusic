@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.essembeh.rtfm.app.exception.ExecutionException;
 import org.essembeh.rtfm.app.utils.StatusUtils;
 import org.essembeh.rtfm.app.workflow.IExecutable;
@@ -29,13 +29,13 @@ import org.essembeh.rtfm.fs.content.interfaces.IResource;
 public class MultiTreadJob implements IJob {
 
 	private final ICondition condition;
-	private final List<ImmutablePair<ITask, IExecutable>> executables;
+	private final List<Pair<ITask, IExecutable>> executables;
 	private final int nbThreads;
 	private final List<IResource> resources;
 	private final ExecutionStatus<IJob, ExecutionStatus<IResource, SimpleStatus>> status;
 
 	public MultiTreadJob(	ICondition condition,
-							List<ImmutablePair<ITask, IExecutable>> executables,
+							List<Pair<ITask, IExecutable>> executables,
 							List<IResource> resources,
 							int nbThreads) {
 		this.condition = condition;
@@ -81,13 +81,17 @@ public class MultiTreadJob implements IJob {
 			status.addStatus(new SimpleStatus(Severity.WARNING, "Resource not supported"));
 		} else {
 			Attributes savedAttributes = resource.getAttributes().copy();
-			for (ImmutablePair<ITask, IExecutable> p : executables) {
+			for (Pair<ITask, IExecutable> p : executables) {
+				SimpleStatus currentStatus = null;
 				try {
 					int returnCode = p.getRight().execute(resource);
-					status.addStatus(StatusUtils.executableEnd(p.getLeft(), returnCode));
+					currentStatus = StatusUtils.executableEnd(p.getLeft(), returnCode);
 				} catch (ExecutionException e) {
+					currentStatus = StatusUtils.executableException(p.getLeft(), e);
+				}
+				status.addStatus(currentStatus);
+				if (currentStatus.getSeverity().isKo()) {
 					resource.getAttributes().restore(savedAttributes);
-					status.addStatus(StatusUtils.executableException(p.getLeft(), e));
 					break;
 				}
 			}

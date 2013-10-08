@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.utils.id.IdUtils;
 import org.essembeh.rtfm.app.workflow.IExecutable;
@@ -70,7 +70,7 @@ public class WorkflowManager implements IWorkflowManager {
 	public IJob createJob(IWorkflow workflow, List<IResource> resources, int nbThreads)
 			throws TaskInstanciationException {
 		ICondition condition = workflow.getCondition();
-		List<ImmutablePair<ITask, IExecutable>> executables = workflow.getExecutables();
+		List<Pair<ITask, IExecutable>> executables = workflow.getExecutables();
 		IJob out = new MultiTreadJob(condition, executables, resources, nbThreads);
 		return out;
 	}

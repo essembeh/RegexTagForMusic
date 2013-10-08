@@ -175,7 +175,7 @@
 			<property name="command" value="--no-color" />
 			<property name="command" value="--remove-all" />
 			<property name="command" value="${FILE}" />
-			<property name="rc" value="0" />
+			<!-- <property name="rc" value="0" /> -->
 		</task>
 		<!--
 			TEST TASKS 

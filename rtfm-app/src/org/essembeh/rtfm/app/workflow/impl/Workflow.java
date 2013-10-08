@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.utils.id.Identified;
 import org.essembeh.rtfm.app.workflow.IExecutable;
@@ -62,8 +63,8 @@ public class Workflow extends Identified implements IWorkflow {
 	}
 
 	@Override
-	public List<ImmutablePair<ITask, IExecutable>> getExecutables() throws TaskInstanciationException {
-		List<ImmutablePair<ITask, IExecutable>> out = new ArrayList<>();
+	public List<Pair<ITask, IExecutable>> getExecutables() throws TaskInstanciationException {
+		List<Pair<ITask, IExecutable>> out = new ArrayList<>();
 		for (CustomTaskDescription customTaskDescription : customTaskDescriptions) {
 			ITask task = customTaskDescription.getTaskDescription();
 			IExecutable executable = customTaskDescription.createInstance();

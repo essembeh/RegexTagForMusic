@@ -2,12 +2,12 @@ package org.essembeh.rtfm.exec.tasks;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.app.utils.AbstractConfigurable;
 import org.essembeh.rtfm.app.workflow.IExecutable;
+import org.essembeh.rtfm.exec.utils.CommonExecutable;
 import org.essembeh.rtfm.exec.utils.PropertyUtils;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
-public class AttributeTool extends AbstractConfigurable implements IExecutable {
+public class AttributeTool extends CommonExecutable implements IExecutable {
 	private static final Logger logger = Logger.getLogger(AttributeTool.class);
 
 	public final static String CREATE = "create";
@@ -15,7 +15,7 @@ public class AttributeTool extends AbstractConfigurable implements IExecutable {
 	public final static String REMOVE = "remove";
 
 	@Override
-	public int execute(IResource resource) {
+	public int execute0(IResource resource) {
 		for (Pair<String, String> p : getProperties()) {
 			if (CREATE.equals(p.getKey())) {
 				Pair<String, String> pair = PropertyUtils.stringToPair(p.getValue());

@@ -5,19 +5,20 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-public abstract class AbstractConfigurable implements IConfigurable {
+public abstract class Configurable implements IConfigurable {
 
 	private final List<Pair<String, String>> properties;
 
-	public AbstractConfigurable() {
+	public Configurable() {
 		properties = new ArrayList<>();
 	}
 
 	@Override
 	public final void setProperty(String key, String value) {
-		properties.add(Pair.of(key, value));
+		properties.add(ImmutablePair.of(key, value));
 	}
 
 	protected List<Pair<String, String>> getProperties() {
@@ -33,4 +34,13 @@ public abstract class AbstractConfigurable implements IConfigurable {
 		return null;
 	}
 
+	protected List<String> getPropertiesByKey(String key) {
+		List<String> out = new ArrayList<>();
+		for (Pair<String, String> p : properties) {
+			if (ObjectUtils.equals(key, p.getKey())) {
+				out.add(p.getValue());
+			}
+		}
+		return out;
+	}
 }
