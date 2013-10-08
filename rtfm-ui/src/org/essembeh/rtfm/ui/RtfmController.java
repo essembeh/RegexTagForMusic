@@ -50,11 +50,11 @@ public class RtfmController extends RtfmUI {
 	private final StatusBar statusBar;
 	private File lastLibrary = null;
 
-	public RtfmController() throws UnknownTaskException, FileNotFoundException, JAXBException {
+	public RtfmController(File defaultConfiguration) throws UnknownTaskException, FileNotFoundException, JAXBException {
 		super();
 
 		app = new Application();
-		app.loadConfiguration(new File("../rtfm-test/resources/seb.xml"));
+		app.loadConfiguration(defaultConfiguration);
 
 		// Model
 		conditionTree.setModel(conditionModel = new ConditionModel(new ExplorerNodeUtils(app), true));
