@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.ui.utils.Image;
+import org.essembeh.rtfm.ui.utils.ImageUtils;
 
 public class DefaultRtfmAction extends AbstractAction {
 
@@ -13,11 +13,11 @@ public class DefaultRtfmAction extends AbstractAction {
 	private static final Logger logger = Logger.getLogger(DefaultRtfmAction.class);
 	private final Runnable runnable;
 
-	public DefaultRtfmAction(String text, Image image) {
+	public DefaultRtfmAction(String text, ImageUtils image) {
 		this(text, image, null);
 	}
 
-	public DefaultRtfmAction(String text, Image image, Runnable runnable) {
+	public DefaultRtfmAction(String text, ImageUtils image, Runnable runnable) {
 		setText(text);
 		setIcon(image);
 		this.runnable = runnable;
@@ -29,7 +29,7 @@ public class DefaultRtfmAction extends AbstractAction {
 		}
 	}
 
-	protected void setIcon(Image image) {
+	protected void setIcon(ImageUtils image) {
 		if (image != null) {
 			try {
 				putValue(SMALL_ICON, image.getCommonIcon());

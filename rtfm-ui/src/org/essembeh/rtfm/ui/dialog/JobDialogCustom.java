@@ -14,7 +14,7 @@ import org.essembeh.rtfm.app.workflow.report.SimpleStatus;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
 import org.essembeh.rtfm.ui.model.JobModel;
-import org.essembeh.rtfm.ui.utils.Image;
+import org.essembeh.rtfm.ui.utils.ImageUtils;
 
 public class JobDialogCustom extends JobDialog {
 
@@ -61,7 +61,7 @@ public class JobDialogCustom extends JobDialog {
 				});
 			}
 		};
-		submitButton.setAction(new DefaultRtfmAction("Submit", Image.DIALOG_YES));
+		submitButton.setAction(new DefaultRtfmAction("Submit", ImageUtils.DIALOG_YES));
 		submitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -80,7 +80,7 @@ public class JobDialogCustom extends JobDialog {
 				cancelButton.setEnabled(false);
 			}
 		});
-		cancelButton.setAction(new DefaultRtfmAction("Close", Image.DIALOG_NO));
+		cancelButton.setAction(new DefaultRtfmAction("Close", ImageUtils.DIALOG_NO));
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

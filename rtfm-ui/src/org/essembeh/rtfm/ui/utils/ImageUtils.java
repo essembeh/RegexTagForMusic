@@ -1,5 +1,6 @@
 package org.essembeh.rtfm.ui.utils;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,29 +10,28 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import org.apache.log4j.Logger;
-import org.jdesktop.swingx.graphics.GraphicsUtilities;
 
-public class Image {
+public class ImageUtils {
 
 	/**
 	 * Commons images
 	 */
-	public final static Image SCAN_FOLDER = new Image("library-scan.png");
-	public final static Image OPEN_LIBRARY = new Image("library-open.png");
-	public final static Image SAVE_LIBRARY = new Image("library-save.png");
-	public final static Image WORKFLOW = new Image("workflow.png");
-	public final static Image ATTRIBUTES = new Image("attributes.png");
-	public final static Image DIALOG_QUESTION = new Image("dialog-question.png");
-	public final static Image DIALOG_INFORMATION = new Image("dialog-information.png");
-	public final static Image DIALOG_WARNING = new Image("dialog-warning.png");
-	public final static Image DIALOG_ERROR = new Image("dialog-error.png");
-	public final static Image DIALOG_YES = new Image("dialog-yes.png");
-	public final static Image DIALOG_NO = new Image("dialog-no.png");
+	public final static ImageUtils SCAN_FOLDER = new ImageUtils("library-scan.png");
+	public final static ImageUtils OPEN_LIBRARY = new ImageUtils("library-open.png");
+	public final static ImageUtils SAVE_LIBRARY = new ImageUtils("library-save.png");
+	public final static ImageUtils WORKFLOW = new ImageUtils("workflow.png");
+	public final static ImageUtils ATTRIBUTES = new ImageUtils("attributes.png");
+	public final static ImageUtils DIALOG_QUESTION = new ImageUtils("dialog-question.png");
+	public final static ImageUtils DIALOG_INFORMATION = new ImageUtils("dialog-information.png");
+	public final static ImageUtils DIALOG_WARNING = new ImageUtils("dialog-warning.png");
+	public final static ImageUtils DIALOG_ERROR = new ImageUtils("dialog-error.png");
+	public final static ImageUtils DIALOG_YES = new ImageUtils("dialog-yes.png");
+	public final static ImageUtils DIALOG_NO = new ImageUtils("dialog-no.png");
 
 	/**
 	 * Logger
 	 */
-	private static Logger logger = Logger.getLogger(Image.class);
+	private static Logger logger = Logger.getLogger(ImageUtils.class);
 
 	/**
 	 * The name of the folder containing the icons
@@ -48,7 +48,7 @@ public class Image {
 	 * 
 	 * @param filename
 	 */
-	public Image(String filename) {
+	public ImageUtils(String filename) {
 		this.filename = ICONS_FOLDER + filename;
 	}
 
@@ -57,7 +57,7 @@ public class Image {
 	 * 
 	 * @param filename
 	 */
-	public Image(Image image) {
+	public ImageUtils(ImageUtils image) {
 		this.filename = image.filename;
 	}
 
@@ -84,8 +84,8 @@ public class Image {
 	 * @return
 	 * @throws IOException
 	 */
-	public BufferedImage getThumbnail(int width, int height) throws IOException {
-		return GraphicsUtilities.createThumbnail(getImage(), width, height);
+	public Image getThumbnail(int width, int height) throws IOException {
+		return getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 	}
 
 	/**

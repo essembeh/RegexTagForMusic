@@ -10,3 +10,5 @@
 # git
 *.patch
 
+# MacOS
+.DS_Store

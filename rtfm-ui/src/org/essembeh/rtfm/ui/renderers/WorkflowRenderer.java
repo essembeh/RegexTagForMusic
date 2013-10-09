@@ -8,7 +8,7 @@ import javax.swing.ListCellRenderer;
 
 import org.essembeh.rtfm.app.workflow.IWorkflow;
 import org.essembeh.rtfm.ui.action.DefaultRtfmAction;
-import org.essembeh.rtfm.ui.utils.Image;
+import org.essembeh.rtfm.ui.utils.ImageUtils;
 
 public class WorkflowRenderer implements ListCellRenderer<Object> {
 
@@ -22,9 +22,9 @@ public class WorkflowRenderer implements ListCellRenderer<Object> {
 		Component out;
 		if (value != null && value instanceof IWorkflow) {
 			final IWorkflow workflow = (IWorkflow) value;
-			out = new JMenuItem(new DefaultRtfmAction(workflow.getDescription(), Image.WORKFLOW));
+			out = new JMenuItem(new DefaultRtfmAction(workflow.getDescription(), ImageUtils.WORKFLOW));
 		} else {
-			out = new JMenuItem(new DefaultRtfmAction(value.toString(), Image.DIALOG_QUESTION));
+			out = new JMenuItem(new DefaultRtfmAction(value.toString(), ImageUtils.DIALOG_QUESTION));
 		}
 		return out;
 	}

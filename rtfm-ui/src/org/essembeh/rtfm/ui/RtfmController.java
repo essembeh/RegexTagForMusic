@@ -33,7 +33,7 @@ import org.essembeh.rtfm.ui.panel.StatusBar;
 import org.essembeh.rtfm.ui.renderers.AlternatibeRenderer;
 import org.essembeh.rtfm.ui.renderers.ResourceRenderer;
 import org.essembeh.rtfm.ui.renderers.WorkflowRenderer;
-import org.essembeh.rtfm.ui.utils.Image;
+import org.essembeh.rtfm.ui.utils.ImageUtils;
 import org.essembeh.rtfm.ui.utils.SelectionTool;
 
 public class RtfmController extends RtfmUI {
@@ -74,26 +74,26 @@ public class RtfmController extends RtfmUI {
 		attributeTable.setDefaultRenderer(Object.class, new AlternatibeRenderer());
 
 		// Add actions
-		actionPanel.add(new JButton(new DefaultRtfmAction("Scan", Image.SCAN_FOLDER, new Runnable() {
+		actionPanel.add(new JButton(new DefaultRtfmAction("Scan", ImageUtils.SCAN_FOLDER, new Runnable() {
 			@Override
 			public void run() {
 				scanFolder();
 			}
 		})));
-		actionPanel.add(new JButton(new DefaultRtfmAction("Open", Image.OPEN_LIBRARY, new Runnable() {
+		actionPanel.add(new JButton(new DefaultRtfmAction("Open", ImageUtils.OPEN_LIBRARY, new Runnable() {
 			@Override
 			public void run() {
 				openProject();
 			}
 		})));
-		actionPanel.add(new JButton(new DefaultRtfmAction("Save", Image.SAVE_LIBRARY, new Runnable() {
+		actionPanel.add(new JButton(new DefaultRtfmAction("Save", ImageUtils.SAVE_LIBRARY, new Runnable() {
 			@Override
 			public void run() {
 				saveProject();
 			}
 		})));
 
-		actionPanel.add(showHideAttributesButton = new JButton(new DefaultRtfmAction("Attributes", Image.ATTRIBUTES,
+		actionPanel.add(showHideAttributesButton = new JButton(new DefaultRtfmAction("Attributes", ImageUtils.ATTRIBUTES,
 				new Runnable() {
 					@Override
 					public void run() {
