@@ -13,6 +13,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.bind.JAXBException;
 
 import org.essembeh.rtfm.app.Application;
+import org.essembeh.rtfm.app.config.RtfmProperties;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.exception.UnknownTaskException;
 import org.essembeh.rtfm.app.utils.TextUtils;
@@ -36,6 +37,8 @@ import org.essembeh.rtfm.ui.renderers.WorkflowRenderer;
 import org.essembeh.rtfm.ui.utils.ImageUtils;
 import org.essembeh.rtfm.ui.utils.SelectionTool;
 
+import com.google.inject.Inject;
+
 public class RtfmController extends RtfmUI {
 
 	private static final long serialVersionUID = -6158596439845992908L;
@@ -50,11 +53,10 @@ public class RtfmController extends RtfmUI {
 	private final StatusBar statusBar;
 	private File lastLibrary = null;
 
-	public RtfmController(File defaultConfiguration) throws UnknownTaskException, FileNotFoundException, JAXBException {
+	@Inject
+	public RtfmController(Application application, RtfmProperties properties) {
 		super();
-
-		app = new Application();
-		app.loadConfiguration(defaultConfiguration);
+		this.app = application;
 
 		// Model
 		conditionTree.setModel(conditionModel = new ConditionModel(new ExplorerNodeUtils(app), true));
@@ -93,8 +95,8 @@ public class RtfmController extends RtfmUI {
 			}
 		})));
 
-		actionPanel.add(showHideAttributesButton = new JButton(new DefaultRtfmAction("Attributes", ImageUtils.ATTRIBUTES,
-				new Runnable() {
+		actionPanel.add(showHideAttributesButton = new JButton(new DefaultRtfmAction("Attributes",
+				ImageUtils.ATTRIBUTES, new Runnable() {
 					@Override
 					public void run() {
 						setAttributesPanelVisible(!splitPaneCenterRight.getRightComponent().isVisible());
@@ -122,6 +124,10 @@ public class RtfmController extends RtfmUI {
 		setAttributesPanelVisible(false);
 		contentPane.add(statusBar = new StatusBar(), BorderLayout.SOUTH);
 
+	}
+
+	public void loadConfigurationFile(File conf) throws UnknownTaskException, FileNotFoundException, JAXBException {
+		app.loadConfiguration(conf);
 	}
 
 	protected void executeWorkflow(IWorkflow workflow) {

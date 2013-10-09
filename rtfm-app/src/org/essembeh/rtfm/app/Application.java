@@ -36,6 +36,8 @@ import org.essembeh.rtfm.fs.io.ProjectScanner;
 import org.essembeh.rtfm.fs.io.ProjectWriter;
 import org.essembeh.rtfm.model.JaxbReader;
 
+import com.google.inject.Inject;
+
 public class Application {
 
 	// Log4j logger
@@ -46,11 +48,12 @@ public class Application {
 	private final RtfmProperties properties;
 	private final List<FileHandler> fileHandlers;
 
-	public Application() {
-		project = null;
-		workflowManager = new WorkflowManager();
-		properties = new RtfmProperties();
+	@Inject
+	public Application(WorkflowManager workflowManager, RtfmProperties properties) {
+		this.properties = properties;
+		this.workflowManager = workflowManager;
 		fileHandlers = new ArrayList<>();
+		project = null;
 	}
 
 	public void loadConfiguration(File configurationFile) throws FileNotFoundException, JAXBException,

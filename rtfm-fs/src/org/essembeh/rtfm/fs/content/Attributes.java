@@ -119,4 +119,12 @@ public class Attributes {
 			attributes.putAll(in.attributes);
 		}
 	}
+
+	public boolean isTrue(String key) {
+		return BooleanUtils.isTrue(BooleanUtils.toBooleanObject(getValue(key)));
+	}
+
+	public boolean isFalse(String key) {
+		return BooleanUtils.isFalse(BooleanUtils.toBooleanObject(getValue(key)));
+	}
 }

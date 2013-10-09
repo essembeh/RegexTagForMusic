@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.essembeh.rtfm.app.config.RtfmProperties;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.utils.id.IdUtils;
 import org.essembeh.rtfm.app.workflow.IExecutable;
@@ -15,12 +16,16 @@ import org.essembeh.rtfm.app.workflow.IWorkflowManager;
 import org.essembeh.rtfm.fs.condition.ICondition;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
+import com.google.inject.Inject;
+
 public class WorkflowManager implements IWorkflowManager {
 
-	private final static Integer DEFAULT_NBTHREADS = 4;
 	private final List<IWorkflow> workflows;
+	private final RtfmProperties properties;
 
-	public WorkflowManager() {
+	@Inject
+	public WorkflowManager(RtfmProperties properties) {
+		this.properties = properties;
 		this.workflows = new ArrayList<>();
 	}
 
@@ -63,7 +68,7 @@ public class WorkflowManager implements IWorkflowManager {
 
 	@Override
 	public IJob createJob(IWorkflow workflow, List<IResource> resources) throws TaskInstanciationException {
-		return createJob(workflow, resources, DEFAULT_NBTHREADS);
+		return createJob(workflow, resources, properties.getThreadCount());
 	}
 
 	@Override

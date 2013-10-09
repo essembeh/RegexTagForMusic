@@ -5,6 +5,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/rtfm-model"/>
 	<classpathentry kind="lib" path="/rtfm-dependencies/libraries/apache-log4j-1.2.17/log4j-1.2.17.jar"/>
 	<classpathentry kind="lib" path="/rtfm-dependencies/libraries/commons-io-2.4/commons-io-2.4.jar"/>
-	<classpathentry kind="lib" path="/rtfm-dependencies/libraries/commons-lang3-3.1/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/rtfm-dependencies/libraries/commons-lang3-3.1/commons-lang3-3.1.jar" sourcepath="/rtfm-dependencies/libraries/commons-lang3-3.1/commons-lang3-3.1-src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

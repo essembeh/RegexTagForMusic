@@ -6,7 +6,7 @@
 	<properties>
 		<property name="fs:ignore.hidden" value="false" />
 		<property name="workflow:job.threads" value="8" />
-		<property name="ui:hidden.attribute" value="" />
+		<property name="ui:hidden.attribute" value="ui:hide?" />
 	</properties>
 	
 	<!-- 
@@ -70,7 +70,6 @@
 				<attribute name="music:tagged?" value="false" />
 				<attribute name="music:comment" value="Tagged with RegexTagForMusic" />
 				<attribute name="music:album" value="#Single" />
-				<attribute name="plop" value="PLOP" />
 				<regex-attribute name="music:artist" pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@DOT-EXT" group="1" />
 				<regex-attribute name="music:title" pattern="/Singles/(@ANYTHING)@SEPARATOR(@ANYTHING)@DOT-EXT" group="2" />
 			</attributes>

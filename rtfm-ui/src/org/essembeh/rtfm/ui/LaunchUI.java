@@ -6,7 +6,12 @@ import java.io.FileNotFoundException;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.essembeh.rtfm.app.ApplicationModule;
+import org.essembeh.rtfm.app.config.RtfmProperties;
 import org.essembeh.rtfm.app.exception.UnknownTaskException;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 public class LaunchUI {
 
@@ -21,8 +26,11 @@ public class LaunchUI {
 			String homePath = System.getProperty("user.home");
 			defaultConfiguration = new File(homePath, ".rtfm/default.xml");
 		}
-		RtfmController ui = new RtfmController(defaultConfiguration);
-		ui.pack();
-		ui.setVisible(true);
+		RtfmProperties rtfmProperties = new RtfmProperties();
+		Injector injector = Guice.createInjector(new ApplicationModule(rtfmProperties), new UiModule(rtfmProperties));
+		RtfmController controller = injector.getInstance(RtfmController.class);
+		controller.loadConfigurationFile(defaultConfiguration);
+		controller.pack();
+		controller.setVisible(true);
 	}
 }
