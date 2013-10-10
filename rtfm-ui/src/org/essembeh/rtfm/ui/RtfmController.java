@@ -192,7 +192,7 @@ public class RtfmController extends RtfmUI {
 				IProject project = app.loadProject(lastLibrary = fileChooser.getSelectedFile());
 				statusBar.printMessage(TextUtils.plural(project.getRootFolder().countResources(), "resource")
 						+ " found");
-			} catch (FileSystemException | FileNotFoundException | JAXBException e) {
+			} catch (Exception e) {
 				statusBar.printError(e.getMessage());
 			}
 			conditionModel.refresh();
@@ -209,7 +209,7 @@ public class RtfmController extends RtfmUI {
 			try {
 				app.saveProject(lastLibrary = fileChooser.getSelectedFile());
 				statusBar.printMessage("Library saved: " + fileChooser.getSelectedFile().getAbsolutePath());
-			} catch (FileNotFoundException | JAXBException e) {
+			} catch (Exception e) {
 				statusBar.printError(e.getMessage());
 			}
 		}

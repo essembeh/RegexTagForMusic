@@ -115,7 +115,16 @@
 		</filehandler>
 		<filehandler id="IGNORED">
 			<conditions logic="OR">
+				<virtualPathMatches pattern="/Albums/" />
+				<virtualPathMatches pattern="/Singles/" />
+				<virtualPathMatches pattern="/Saga/" />
+				<virtualPathMatches pattern="/Classic/.*" />
+				<virtualPathMatches pattern="/Classic/.*" />
+				<virtualPathMatches pattern="/Electro/.*" />
+				<virtualPathMatches pattern="/Kids/.*" />
+				<virtualPathMatches pattern="/Radio/.*" />
 				<virtualPathMatches pattern="/tmp/.*" />
+				<virtualPathMatches pattern="/@ANYTHING\.xml" />
 				<virtualPathMatches pattern=".*/\.DS_Store" />
 			</conditions>
 			<attributes>

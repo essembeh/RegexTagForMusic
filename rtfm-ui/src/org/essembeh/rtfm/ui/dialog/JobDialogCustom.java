@@ -44,6 +44,7 @@ public class JobDialogCustom extends JobDialog {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						jobModel.updateStatus(s);
+						progressBar.setValue(progressBar.getValue() + 1);
 					}
 				});
 			}
@@ -53,6 +54,7 @@ public class JobDialogCustom extends JobDialog {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						progressBar.setValue(progressBar.getMaximum());
+						job.updateErrorResources();
 						cancelButton.setEnabled(true);
 						int totalTime = (int) (status.getDuration() / 1000);
 						statusValue.setText("Job executed on " + TextUtils.plural(job.getResources().size(), "file")
