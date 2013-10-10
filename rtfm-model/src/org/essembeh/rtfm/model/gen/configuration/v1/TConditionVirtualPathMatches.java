@@ -15,9 +15,9 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="TConditionVirtualPathMatches">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;extension base="{http://rtfm.essembeh.org/Configuration/1}TConditionBase">
  *       &lt;attribute name="pattern" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -26,7 +26,9 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TConditionVirtualPathMatches", namespace = "http://rtfm.essembeh.org/Configuration/1")
-public class TConditionVirtualPathMatches {
+public class TConditionVirtualPathMatches
+    extends TConditionBase
+{
 
     @XmlAttribute(name = "pattern", required = true)
     protected String pattern;

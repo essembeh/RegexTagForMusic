@@ -14,8 +14,8 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="TConditionFalse">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *     &lt;/restriction>
+ *     &lt;extension base="{http://rtfm.essembeh.org/Configuration/1}TConditionBase">
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -24,7 +24,9 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TConditionFalse", namespace = "http://rtfm.essembeh.org/Configuration/1")
-public class TConditionFalse {
+public class TConditionFalse
+    extends TConditionBase
+{
 
 
 }

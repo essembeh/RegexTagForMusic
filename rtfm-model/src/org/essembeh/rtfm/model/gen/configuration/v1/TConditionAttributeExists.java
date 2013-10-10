@@ -15,10 +15,10 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="TConditionAttributeExists">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;extension base="{http://rtfm.essembeh.org/Configuration/1}TConditionBase">
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="exists" type="{http://www.w3.org/2001/XMLSchema}boolean" default="true" />
- *     &lt;/restriction>
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -27,7 +27,9 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TConditionAttributeExists", namespace = "http://rtfm.essembeh.org/Configuration/1")
-public class TConditionAttributeExists {
+public class TConditionAttributeExists
+    extends TConditionBase
+{
 
     @XmlAttribute(name = "name", required = true)
     protected String name;

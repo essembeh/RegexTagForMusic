@@ -30,10 +30,12 @@ import org.essembeh.rtfm.fs.condition.impl.AttributeValueMatches;
 import org.essembeh.rtfm.fs.condition.impl.Extension;
 import org.essembeh.rtfm.fs.condition.impl.FileOrFolder;
 import org.essembeh.rtfm.fs.condition.impl.FileOrFolder.ResourceType;
+import org.essembeh.rtfm.fs.condition.impl.Not;
 import org.essembeh.rtfm.fs.condition.impl.VirtualPathMatches;
 import org.essembeh.rtfm.model.gen.configuration.v1.TConditionAttributeExists;
 import org.essembeh.rtfm.model.gen.configuration.v1.TConditionAttributeValueEquals;
 import org.essembeh.rtfm.model.gen.configuration.v1.TConditionAttributeValueMatches;
+import org.essembeh.rtfm.model.gen.configuration.v1.TConditionBase;
 import org.essembeh.rtfm.model.gen.configuration.v1.TConditionExtension;
 import org.essembeh.rtfm.model.gen.configuration.v1.TConditionFalse;
 import org.essembeh.rtfm.model.gen.configuration.v1.TConditionFileOrFolder;
@@ -165,37 +167,42 @@ public class ConfigurationReader {
 			} else {
 				out = new AndCondition();
 			}
-			for (Object child : model.getTrueOrFalseOrAttributeExists()) {
+			for (TConditionBase child : model.getTrueOrFalseOrAttributeExists()) {
 				if (child instanceof TConditionTrue) {
-					out.addCondition(new AlwaysTrue());
+					out.addCondition(createInverse(new AlwaysTrue(), child));
 				} else if (child instanceof TConditionFalse) {
-					out.addCondition(new AlwaysFalse());
+					out.addCondition(createInverse(new AlwaysFalse(), child));
 				} else if (child instanceof TConditionAttributeExists) {
 					TConditionAttributeExists cond = (TConditionAttributeExists) child;
-					out.addCondition(new AttributeExists(cond.getName(), cond.isExists()));
+					out.addCondition(createInverse(new AttributeExists(cond.getName(), cond.isExists()), child));
 				} else if (child instanceof TConditionAttributeValueEquals) {
 					TConditionAttributeValueEquals cond = (TConditionAttributeValueEquals) child;
-					out.addCondition(new AttributeValueEquals(cond.getName(), cond.getValue()));
+					out.addCondition(createInverse(new AttributeValueEquals(cond.getName(), cond.getValue()), child));
 				} else if (child instanceof TConditionAttributeValueMatches) {
 					TConditionAttributeValueMatches cond = (TConditionAttributeValueMatches) child;
-					out.addCondition(new AttributeValueMatches(cond.getName(), ss(cond.getPattern())));
+					out.addCondition(createInverse(new AttributeValueMatches(cond.getName(), ss(cond.getPattern())),
+							child));
 				} else if (child instanceof TConditionExtension) {
 					TConditionExtension cond = (TConditionExtension) child;
 					String[] extensions = cond.getList().split(" ");
-					out.addCondition(new Extension(extensions, cond.isCaseSensitive()));
+					out.addCondition(createInverse(new Extension(extensions, cond.isCaseSensitive()), child));
 				} else if (child instanceof TConditionFileOrFolder) {
 					TConditionFileOrFolder cond = (TConditionFileOrFolder) child;
-					out.addCondition(new FileOrFolder(ResourceType.valueOf(cond.getType())));
+					out.addCondition(createInverse(new FileOrFolder(ResourceType.valueOf(cond.getType())), child));
 				} else if (child instanceof TConditionVirtualPathMatches) {
 					TConditionVirtualPathMatches childObject = (TConditionVirtualPathMatches) child;
-					out.addCondition(new VirtualPathMatches(ss(childObject.getPattern())));
+					out.addCondition(createInverse(new VirtualPathMatches(ss(childObject.getPattern())), child));
 				} else if (child instanceof TConditionGroup) {
 					TConditionGroup cond = (TConditionGroup) child;
-					out.addCondition(readCondition(cond));
+					out.addCondition(createInverse(readCondition(cond), child));
 				}
 			}
 		}
 		return out;
+	}
+
+	private ICondition createInverse(ICondition c, TConditionBase model) {
+		return model.isInverse() ? new Not(c) : c;
 	}
 
 	private IAttributeGenerator readAttributeGenerator(TRegexAttribute model) {

@@ -66,27 +66,19 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link TConditionBase }
+     * 
+     */
+    public TConditionBase createTConditionBase() {
+        return new TConditionBase();
+    }
+
+    /**
      * Create an instance of {@link TConditionTrue }
      * 
      */
     public TConditionTrue createTConditionTrue() {
         return new TConditionTrue();
-    }
-
-    /**
-     * Create an instance of {@link TRegexAttribute }
-     * 
-     */
-    public TRegexAttribute createTRegexAttribute() {
-        return new TRegexAttribute();
-    }
-
-    /**
-     * Create an instance of {@link TTaskList }
-     * 
-     */
-    public TTaskList createTTaskList() {
-        return new TTaskList();
     }
 
     /**
@@ -98,11 +90,83 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link TTaskList }
+     * 
+     */
+    public TTaskList createTTaskList() {
+        return new TTaskList();
+    }
+
+    /**
      * Create an instance of {@link TConditionAttributeValueEquals }
      * 
      */
     public TConditionAttributeValueEquals createTConditionAttributeValueEquals() {
         return new TConditionAttributeValueEquals();
+    }
+
+    /**
+     * Create an instance of {@link TTaskRef }
+     * 
+     */
+    public TTaskRef createTTaskRef() {
+        return new TTaskRef();
+    }
+
+    /**
+     * Create an instance of {@link TConditionAttributeExists }
+     * 
+     */
+    public TConditionAttributeExists createTConditionAttributeExists() {
+        return new TConditionAttributeExists();
+    }
+
+    /**
+     * Create an instance of {@link TFileHandler }
+     * 
+     */
+    public TFileHandler createTFileHandler() {
+        return new TFileHandler();
+    }
+
+    /**
+     * Create an instance of {@link TReference }
+     * 
+     */
+    public TReference createTReference() {
+        return new TReference();
+    }
+
+    /**
+     * Create an instance of {@link TProperty }
+     * 
+     */
+    public TProperty createTProperty() {
+        return new TProperty();
+    }
+
+    /**
+     * Create an instance of {@link TFileHandlerList }
+     * 
+     */
+    public TFileHandlerList createTFileHandlerList() {
+        return new TFileHandlerList();
+    }
+
+    /**
+     * Create an instance of {@link TTask }
+     * 
+     */
+    public TTask createTTask() {
+        return new TTask();
+    }
+
+    /**
+     * Create an instance of {@link TRegexAttribute }
+     * 
+     */
+    public TRegexAttribute createTRegexAttribute() {
+        return new TRegexAttribute();
     }
 
     /**
@@ -114,19 +178,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TSubstitutionList }
-     * 
-     */
-    public TSubstitutionList createTSubstitutionList() {
-        return new TSubstitutionList();
-    }
-
-    /**
      * Create an instance of {@link TConditionFalse }
      * 
      */
     public TConditionFalse createTConditionFalse() {
         return new TConditionFalse();
+    }
+
+    /**
+     * Create an instance of {@link TSubstitutionList }
+     * 
+     */
+    public TSubstitutionList createTSubstitutionList() {
+        return new TSubstitutionList();
     }
 
     /**
@@ -146,30 +210,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TTaskRef }
-     * 
-     */
-    public TTaskRef createTTaskRef() {
-        return new TTaskRef();
-    }
-
-    /**
-     * Create an instance of {@link TFileHandler }
-     * 
-     */
-    public TFileHandler createTFileHandler() {
-        return new TFileHandler();
-    }
-
-    /**
-     * Create an instance of {@link TConditionAttributeExists }
-     * 
-     */
-    public TConditionAttributeExists createTConditionAttributeExists() {
-        return new TConditionAttributeExists();
-    }
-
-    /**
      * Create an instance of {@link TSubstitution }
      * 
      */
@@ -178,43 +218,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TReference }
-     * 
-     */
-    public TReference createTReference() {
-        return new TReference();
-    }
-
-    /**
      * Create an instance of {@link TWorkflowList }
      * 
      */
     public TWorkflowList createTWorkflowList() {
         return new TWorkflowList();
-    }
-
-    /**
-     * Create an instance of {@link TFileHandlerList }
-     * 
-     */
-    public TFileHandlerList createTFileHandlerList() {
-        return new TFileHandlerList();
-    }
-
-    /**
-     * Create an instance of {@link TProperty }
-     * 
-     */
-    public TProperty createTProperty() {
-        return new TProperty();
-    }
-
-    /**
-     * Create an instance of {@link TTask }
-     * 
-     */
-    public TTask createTTask() {
-        return new TTask();
     }
 
     /**

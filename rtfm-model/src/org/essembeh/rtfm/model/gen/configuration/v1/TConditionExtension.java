@@ -15,10 +15,10 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="TConditionExtension">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;extension base="{http://rtfm.essembeh.org/Configuration/1}TConditionBase">
  *       &lt;attribute name="list" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="caseSensitive" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
- *     &lt;/restriction>
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -27,7 +27,9 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TConditionExtension", namespace = "http://rtfm.essembeh.org/Configuration/1")
-public class TConditionExtension {
+public class TConditionExtension
+    extends TConditionBase
+{
 
     @XmlAttribute(name = "list", required = true)
     protected String list;

@@ -3,38 +3,73 @@
 	<!-- 
 		CONDITIONS
 	 -->
+	<xs:complexType name="TConditionBase">
+		<xs:attribute name="inverse" type="xs:boolean" default="false" use="optional" />
+	</xs:complexType>
 	<xs:complexType name="TConditionTrue">
+		<xs:complexContent>
+			<xs:extension base="rtfm:TConditionBase">
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="TConditionFalse">
+		<xs:complexContent>
+			<xs:extension base="rtfm:TConditionBase">
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="TConditionAttributeExists">
-		<xs:attribute name="name" type="xs:string" use="required" />
-		<xs:attribute name="exists" type="xs:boolean" use="optional" default="true" />
+		<xs:complexContent>
+			<xs:extension base="rtfm:TConditionBase">
+				<xs:attribute name="name" type="xs:string" use="required" />
+				<xs:attribute name="exists" type="xs:boolean" use="optional" default="true" />
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="TConditionAttributeValueEquals">
-		<xs:attribute name="name" type="xs:string" use="required" />
-		<xs:attribute name="value" type="xs:string" use="required" />
+		<xs:complexContent>
+			<xs:extension base="rtfm:TConditionBase">
+				<xs:attribute name="name" type="xs:string" use="required" />
+				<xs:attribute name="value" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="TConditionAttributeValueMatches">
-		<xs:attribute name="name" type="xs:string" use="required" />
-		<xs:attribute name="pattern" type="xs:string" use="required" />
+		<xs:complexContent>
+			<xs:extension base="rtfm:TConditionBase">
+				<xs:attribute name="name" type="xs:string" use="required" />
+				<xs:attribute name="pattern" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="TConditionExtension">
-		<xs:attribute name="list" type="xs:string" use="required" />
-		<xs:attribute name="caseSensitive" type="xs:boolean" default="false" use="optional" />
+		<xs:complexContent>
+			<xs:extension base="rtfm:TConditionBase">
+				<xs:attribute name="list" type="xs:string" use="required" />
+				<xs:attribute name="caseSensitive" type="xs:boolean" default="false" use="optional" />
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="TConditionFileOrFolder">
-		<xs:attribute name="type" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="FILE" />
-					<xs:enumeration value="FOLDER" />
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:complexContent>
+			<xs:extension base="rtfm:TConditionBase">
+				<xs:attribute name="type" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="FILE" />
+							<xs:enumeration value="FOLDER" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="TConditionVirtualPathMatches">
-		<xs:attribute name="pattern" type="xs:string" use="required" />
+		<xs:complexContent>
+			<xs:extension base="rtfm:TConditionBase">
+				<xs:attribute name="pattern" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:simpleType name="TGroupLogic">
 		<xs:restriction base="xs:string">
@@ -43,18 +78,22 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="TConditionGroup">
-		<xs:choice minOccurs="1" maxOccurs="unbounded">
-			<xs:element name="true" type="rtfm:TConditionTrue" />
-			<xs:element name="false" type="rtfm:TConditionFalse" />
-			<xs:element name="attributeExists" type="rtfm:TConditionAttributeExists" />
-			<xs:element name="attributeValueEquals" type="rtfm:TConditionAttributeValueEquals" />
-			<xs:element name="attributeValueMatches" type="rtfm:TConditionAttributeValueMatches" />
-			<xs:element name="virtualPathMatches" type="rtfm:TConditionVirtualPathMatches" />
-			<xs:element name="fileOrFilder" type="rtfm:TConditionFileOrFolder" />
-			<xs:element name="extension" type="rtfm:TConditionExtension" />
-			<xs:element name="group" type="rtfm:TConditionGroup" />
-		</xs:choice>
-		<xs:attribute name="logic" type="rtfm:TGroupLogic" use="required" />
+		<xs:complexContent>
+			<xs:extension base="rtfm:TConditionBase">
+				<xs:choice minOccurs="1" maxOccurs="unbounded">
+					<xs:element name="true" type="rtfm:TConditionTrue" />
+					<xs:element name="false" type="rtfm:TConditionFalse" />
+					<xs:element name="attributeExists" type="rtfm:TConditionAttributeExists" />
+					<xs:element name="attributeValueEquals" type="rtfm:TConditionAttributeValueEquals" />
+					<xs:element name="attributeValueMatches" type="rtfm:TConditionAttributeValueMatches" />
+					<xs:element name="virtualPathMatches" type="rtfm:TConditionVirtualPathMatches" />
+					<xs:element name="fileOrFilder" type="rtfm:TConditionFileOrFolder" />
+					<xs:element name="extension" type="rtfm:TConditionExtension" />
+					<xs:element name="group" type="rtfm:TConditionGroup" />
+				</xs:choice>
+				<xs:attribute name="logic" type="rtfm:TGroupLogic" use="required" />
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	
 	<!-- 

@@ -15,10 +15,10 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="TConditionAttributeValueMatches">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;extension base="{http://rtfm.essembeh.org/Configuration/1}TConditionBase">
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="pattern" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -27,7 +27,9 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TConditionAttributeValueMatches", namespace = "http://rtfm.essembeh.org/Configuration/1")
-public class TConditionAttributeValueMatches {
+public class TConditionAttributeValueMatches
+    extends TConditionBase
+{
 
     @XmlAttribute(name = "name", required = true)
     protected String name;

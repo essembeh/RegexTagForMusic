@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="TConditionGroup">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;extension base="{http://rtfm.essembeh.org/Configuration/1}TConditionBase">
  *       &lt;choice maxOccurs="unbounded">
  *         &lt;element name="true" type="{http://rtfm.essembeh.org/Configuration/1}TConditionTrue"/>
  *         &lt;element name="false" type="{http://rtfm.essembeh.org/Configuration/1}TConditionFalse"/>
@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="group" type="{http://rtfm.essembeh.org/Configuration/1}TConditionGroup"/>
  *       &lt;/choice>
  *       &lt;attribute name="logic" use="required" type="{http://rtfm.essembeh.org/Configuration/1}TGroupLogic" />
- *     &lt;/restriction>
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -43,7 +43,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "TConditionGroup", namespace = "http://rtfm.essembeh.org/Configuration/1", propOrder = {
     "trueOrFalseOrAttributeExists"
 })
-public class TConditionGroup {
+public class TConditionGroup
+    extends TConditionBase
+{
 
     @XmlElements({
         @XmlElement(name = "true", type = TConditionTrue.class),
@@ -56,7 +58,7 @@ public class TConditionGroup {
         @XmlElement(name = "extension", type = TConditionExtension.class),
         @XmlElement(name = "group", type = TConditionGroup.class)
     })
-    protected List<Object> trueOrFalseOrAttributeExists;
+    protected List<TConditionBase> trueOrFalseOrAttributeExists;
     @XmlAttribute(name = "logic", required = true)
     protected TGroupLogic logic;
 
@@ -90,9 +92,9 @@ public class TConditionGroup {
      * 
      * 
      */
-    public List<Object> getTrueOrFalseOrAttributeExists() {
+    public List<TConditionBase> getTrueOrFalseOrAttributeExists() {
         if (trueOrFalseOrAttributeExists == null) {
-            trueOrFalseOrAttributeExists = new ArrayList<Object>();
+            trueOrFalseOrAttributeExists = new ArrayList<TConditionBase>();
         }
         return this.trueOrFalseOrAttributeExists;
     }
