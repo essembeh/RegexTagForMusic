@@ -45,7 +45,7 @@
 	<xs:complexType name="TConditionGroup">
 		<xs:choice minOccurs="1" maxOccurs="unbounded">
 			<xs:element name="true" type="rtfm:TConditionTrue" />
-			<xs:element name="false" type="rtfm:TConditionTrue" />
+			<xs:element name="false" type="rtfm:TConditionFalse" />
 			<xs:element name="attributeExists" type="rtfm:TConditionAttributeExists" />
 			<xs:element name="attributeValueEquals" type="rtfm:TConditionAttributeValueEquals" />
 			<xs:element name="attributeValueMatches" type="rtfm:TConditionAttributeValueMatches" />

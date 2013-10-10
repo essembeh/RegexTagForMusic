@@ -69,7 +69,7 @@ public class RtfmController extends RtfmUI {
 
 		// Model
 		conditionTree.setModel(conditionModel = new ConditionModel(new ExplorerNodeUtils(app), true));
-		resourceTable.setModel(resourceModel = new ResourceModel(app, conditionTree));
+		resourceTable.setModel(resourceModel = new ResourceModel(app, conditionTree, properties));
 		attributeTable.setModel(attributesModel = new AttributeModel(resourceModel, resourceTable, conditionModel));
 
 		//	 Size & style

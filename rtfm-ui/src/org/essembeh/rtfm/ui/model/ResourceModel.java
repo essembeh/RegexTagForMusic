@@ -12,9 +12,12 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.TableModel;
 
+import org.apache.commons.lang3.StringUtils;
 import org.essembeh.rtfm.app.Application;
+import org.essembeh.rtfm.app.config.RtfmProperties;
 import org.essembeh.rtfm.fs.condition.ICondition;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.ConditionUtils;
 import org.essembeh.rtfm.ui.utils.SelectionTool;
 
 public class ResourceModel extends AbstractModel<TableModelListener> implements TableModel {
@@ -23,9 +26,11 @@ public class ResourceModel extends AbstractModel<TableModelListener> implements 
 	private final static Class<?>[] CLASSES = { String.class, IResource.class };
 
 	private final List<IResource> content = new ArrayList<>();
+	private final RtfmProperties properties;
 
-	public ResourceModel(Application app, final JTree explorerTree) {
+	public ResourceModel(Application app, final JTree explorerTree, RtfmProperties properties) {
 		super(app);
+		this.properties = properties;
 		explorerTree.getModel().addTreeModelListener(new TreeModelListener() {
 
 			@Override
@@ -58,7 +63,8 @@ public class ResourceModel extends AbstractModel<TableModelListener> implements 
 
 	public void refresh(ICondition c) {
 		if (app.getProject() != null) {
-			List<IResource> newContent = app.getProject().getRootFolder().getFilteredResources(c);
+			List<IResource> newContent = app.getProject().getRootFolder()
+					.getFilteredResources(ConditionUtils.and(c, getUiFilter()));
 			if (!content.equals(newContent)) {
 				content.clear();
 				content.addAll(newContent);
@@ -126,5 +132,14 @@ public class ResourceModel extends AbstractModel<TableModelListener> implements 
 
 	public List<IResource> getContent() {
 		return content;
+	}
+
+	private ICondition getUiFilter() {
+		ICondition out = null;
+		String uiHiddenAttribute = properties.getUiHiddenAttribute();
+		if (!StringUtils.isEmpty(uiHiddenAttribute)) {
+			out = ConditionUtils.not(ConditionUtils.attributeValueEquals(uiHiddenAttribute, "true"));
+		}
+		return out;
 	}
 }

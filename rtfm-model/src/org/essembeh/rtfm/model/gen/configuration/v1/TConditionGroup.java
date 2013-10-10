@@ -3,12 +3,11 @@ package org.essembeh.rtfm.model.gen.configuration.v1;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementRefs;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -23,7 +22,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;choice maxOccurs="unbounded">
  *         &lt;element name="true" type="{http://rtfm.essembeh.org/Configuration/1}TConditionTrue"/>
- *         &lt;element name="false" type="{http://rtfm.essembeh.org/Configuration/1}TConditionTrue"/>
+ *         &lt;element name="false" type="{http://rtfm.essembeh.org/Configuration/1}TConditionFalse"/>
  *         &lt;element name="attributeExists" type="{http://rtfm.essembeh.org/Configuration/1}TConditionAttributeExists"/>
  *         &lt;element name="attributeValueEquals" type="{http://rtfm.essembeh.org/Configuration/1}TConditionAttributeValueEquals"/>
  *         &lt;element name="attributeValueMatches" type="{http://rtfm.essembeh.org/Configuration/1}TConditionAttributeValueMatches"/>
@@ -46,18 +45,18 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class TConditionGroup {
 
-    @XmlElementRefs({
-        @XmlElementRef(name = "fileOrFilder", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "false", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "attributeValueMatches", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "virtualPathMatches", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "attributeExists", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "true", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "attributeValueEquals", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "group", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "extension", type = JAXBElement.class, required = false)
+    @XmlElements({
+        @XmlElement(name = "true", type = TConditionTrue.class),
+        @XmlElement(name = "false", type = TConditionFalse.class),
+        @XmlElement(name = "attributeExists", type = TConditionAttributeExists.class),
+        @XmlElement(name = "attributeValueEquals", type = TConditionAttributeValueEquals.class),
+        @XmlElement(name = "attributeValueMatches", type = TConditionAttributeValueMatches.class),
+        @XmlElement(name = "virtualPathMatches", type = TConditionVirtualPathMatches.class),
+        @XmlElement(name = "fileOrFilder", type = TConditionFileOrFolder.class),
+        @XmlElement(name = "extension", type = TConditionExtension.class),
+        @XmlElement(name = "group", type = TConditionGroup.class)
     })
-    protected List<JAXBElement<?>> trueOrFalseOrAttributeExists;
+    protected List<Object> trueOrFalseOrAttributeExists;
     @XmlAttribute(name = "logic", required = true)
     protected TGroupLogic logic;
 
@@ -79,21 +78,21 @@ public class TConditionGroup {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link JAXBElement }{@code <}{@link TConditionTrue }{@code >}
-     * {@link JAXBElement }{@code <}{@link TConditionFileOrFolder }{@code >}
-     * {@link JAXBElement }{@code <}{@link TConditionAttributeValueMatches }{@code >}
-     * {@link JAXBElement }{@code <}{@link TConditionVirtualPathMatches }{@code >}
-     * {@link JAXBElement }{@code <}{@link TConditionTrue }{@code >}
-     * {@link JAXBElement }{@code <}{@link TConditionAttributeExists }{@code >}
-     * {@link JAXBElement }{@code <}{@link TConditionAttributeValueEquals }{@code >}
-     * {@link JAXBElement }{@code <}{@link TConditionExtension }{@code >}
-     * {@link JAXBElement }{@code <}{@link TConditionGroup }{@code >}
+     * {@link TConditionTrue }
+     * {@link TConditionFalse }
+     * {@link TConditionAttributeExists }
+     * {@link TConditionAttributeValueEquals }
+     * {@link TConditionAttributeValueMatches }
+     * {@link TConditionVirtualPathMatches }
+     * {@link TConditionFileOrFolder }
+     * {@link TConditionExtension }
+     * {@link TConditionGroup }
      * 
      * 
      */
-    public List<JAXBElement<?>> getTrueOrFalseOrAttributeExists() {
+    public List<Object> getTrueOrFalseOrAttributeExists() {
         if (trueOrFalseOrAttributeExists == null) {
-            trueOrFalseOrAttributeExists = new ArrayList<JAXBElement<?>>();
+            trueOrFalseOrAttributeExists = new ArrayList<Object>();
         }
         return this.trueOrFalseOrAttributeExists;
     }

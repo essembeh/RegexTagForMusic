@@ -18,7 +18,7 @@ import org.essembeh.rtfm.ui.model.ResourceModel;
 public class SelectionTool {
 
 	public static ICondition getSelectedCondition(JTree conditionTree) {
-		MultipleCondition condition = ConditionUtils.andCondition();
+		MultipleCondition condition = ConditionUtils.and();
 		TreePath[] selectedPaths = conditionTree.getSelectionPaths();
 		if (selectedPaths != null) {
 			for (TreePath treePath : selectedPaths) {

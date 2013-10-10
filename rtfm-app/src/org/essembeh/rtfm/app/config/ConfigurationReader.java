@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.xml.bind.JAXBElement;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.app.exception.MissingTaskException;
@@ -167,8 +165,7 @@ public class ConfigurationReader {
 			} else {
 				out = new AndCondition();
 			}
-			for (JAXBElement<?> sub : model.getTrueOrFalseOrAttributeExists()) {
-				Object child = sub.getValue();
+			for (Object child : model.getTrueOrFalseOrAttributeExists()) {
 				if (child instanceof TConditionTrue) {
 					out.addCondition(new AlwaysTrue());
 				} else if (child instanceof TConditionFalse) {

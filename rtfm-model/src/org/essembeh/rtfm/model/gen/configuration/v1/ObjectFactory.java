@@ -25,15 +25,6 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _Configuration_QNAME = new QName("http://rtfm.essembeh.org/Configuration/1", "configuration");
-    private final static QName _TConditionGroupExtension_QNAME = new QName("", "extension");
-    private final static QName _TConditionGroupAttributeValueEquals_QNAME = new QName("", "attributeValueEquals");
-    private final static QName _TConditionGroupAttributeExists_QNAME = new QName("", "attributeExists");
-    private final static QName _TConditionGroupVirtualPathMatches_QNAME = new QName("", "virtualPathMatches");
-    private final static QName _TConditionGroupFalse_QNAME = new QName("", "false");
-    private final static QName _TConditionGroupTrue_QNAME = new QName("", "true");
-    private final static QName _TConditionGroupGroup_QNAME = new QName("", "group");
-    private final static QName _TConditionGroupFileOrFilder_QNAME = new QName("", "fileOrFilder");
-    private final static QName _TConditionGroupAttributeValueMatches_QNAME = new QName("", "attributeValueMatches");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.essembeh.rtfm.model.gen.configuration.v1
@@ -257,87 +248,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://rtfm.essembeh.org/Configuration/1", name = "configuration")
     public JAXBElement<TConfiguration> createConfiguration(TConfiguration value) {
         return new JAXBElement<TConfiguration>(_Configuration_QNAME, TConfiguration.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TConditionExtension }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "extension", scope = TConditionGroup.class)
-    public JAXBElement<TConditionExtension> createTConditionGroupExtension(TConditionExtension value) {
-        return new JAXBElement<TConditionExtension>(_TConditionGroupExtension_QNAME, TConditionExtension.class, TConditionGroup.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TConditionAttributeValueEquals }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "attributeValueEquals", scope = TConditionGroup.class)
-    public JAXBElement<TConditionAttributeValueEquals> createTConditionGroupAttributeValueEquals(TConditionAttributeValueEquals value) {
-        return new JAXBElement<TConditionAttributeValueEquals>(_TConditionGroupAttributeValueEquals_QNAME, TConditionAttributeValueEquals.class, TConditionGroup.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TConditionAttributeExists }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "attributeExists", scope = TConditionGroup.class)
-    public JAXBElement<TConditionAttributeExists> createTConditionGroupAttributeExists(TConditionAttributeExists value) {
-        return new JAXBElement<TConditionAttributeExists>(_TConditionGroupAttributeExists_QNAME, TConditionAttributeExists.class, TConditionGroup.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TConditionVirtualPathMatches }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "virtualPathMatches", scope = TConditionGroup.class)
-    public JAXBElement<TConditionVirtualPathMatches> createTConditionGroupVirtualPathMatches(TConditionVirtualPathMatches value) {
-        return new JAXBElement<TConditionVirtualPathMatches>(_TConditionGroupVirtualPathMatches_QNAME, TConditionVirtualPathMatches.class, TConditionGroup.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TConditionTrue }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "false", scope = TConditionGroup.class)
-    public JAXBElement<TConditionTrue> createTConditionGroupFalse(TConditionTrue value) {
-        return new JAXBElement<TConditionTrue>(_TConditionGroupFalse_QNAME, TConditionTrue.class, TConditionGroup.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TConditionTrue }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "true", scope = TConditionGroup.class)
-    public JAXBElement<TConditionTrue> createTConditionGroupTrue(TConditionTrue value) {
-        return new JAXBElement<TConditionTrue>(_TConditionGroupTrue_QNAME, TConditionTrue.class, TConditionGroup.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TConditionGroup }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "group", scope = TConditionGroup.class)
-    public JAXBElement<TConditionGroup> createTConditionGroupGroup(TConditionGroup value) {
-        return new JAXBElement<TConditionGroup>(_TConditionGroupGroup_QNAME, TConditionGroup.class, TConditionGroup.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TConditionFileOrFolder }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "fileOrFilder", scope = TConditionGroup.class)
-    public JAXBElement<TConditionFileOrFolder> createTConditionGroupFileOrFilder(TConditionFileOrFolder value) {
-        return new JAXBElement<TConditionFileOrFolder>(_TConditionGroupFileOrFilder_QNAME, TConditionFileOrFolder.class, TConditionGroup.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TConditionAttributeValueMatches }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "attributeValueMatches", scope = TConditionGroup.class)
-    public JAXBElement<TConditionAttributeValueMatches> createTConditionGroupAttributeValueMatches(TConditionAttributeValueMatches value) {
-        return new JAXBElement<TConditionAttributeValueMatches>(_TConditionGroupAttributeValueMatches_QNAME, TConditionAttributeValueMatches.class, TConditionGroup.class, value);
     }
 
 }

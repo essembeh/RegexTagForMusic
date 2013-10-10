@@ -16,10 +16,15 @@ import org.essembeh.rtfm.fs.condition.impl.AttributeValueMatches;
 import org.essembeh.rtfm.fs.condition.impl.Extension;
 import org.essembeh.rtfm.fs.condition.impl.FileOrFolder;
 import org.essembeh.rtfm.fs.condition.impl.FileOrFolder.ResourceType;
+import org.essembeh.rtfm.fs.condition.impl.Not;
 import org.essembeh.rtfm.fs.condition.impl.VirtualPathMatches;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 
 public class ConditionUtils {
+
+	public static ICondition not(ICondition c) {
+		return new Not(c);
+	}
 
 	public static ICondition alwaysFalse() {
 		return new AlwaysFalse();
@@ -53,7 +58,7 @@ public class ConditionUtils {
 		return new VirtualPathMatches(regexOnPath);
 	}
 
-	public static MultipleCondition andCondition(ICondition... conditions) {
+	public static MultipleCondition and(ICondition... conditions) {
 		AndCondition out = new AndCondition();
 		for (ICondition condition : conditions) {
 			out.addCondition(condition);
@@ -61,7 +66,7 @@ public class ConditionUtils {
 		return out;
 	}
 
-	public static MultipleCondition orCondition(ICondition... conditions) {
+	public static MultipleCondition or(ICondition... conditions) {
 		OrCondition out = new OrCondition();
 		for (ICondition condition : conditions) {
 			out.addCondition(condition);

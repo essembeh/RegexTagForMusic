@@ -4,7 +4,7 @@
 
 	<!--  PROPERTIES -->
 	<property name="src" value="src/" />
-	<property name="lib" value="libraries/" />
+	<property name="lib" value="../rtfm-dependencies/libraries/" />
 	<property name="res" value="resources/" />
 
 	<!-- CLASSPATHS -->
