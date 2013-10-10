@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.essembeh.rtfm.app.config.ConfigurationReader;
 import org.essembeh.rtfm.app.config.RtfmProperties;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
-import org.essembeh.rtfm.app.exception.UnknownTaskException;
+import org.essembeh.rtfm.app.exception.MissingTaskException;
 import org.essembeh.rtfm.app.filehandler.FileHandler;
 import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension;
 import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension.AttributeErrorOption;
@@ -57,7 +57,7 @@ public class Application {
 	}
 
 	public void loadConfiguration(File configurationFile) throws FileNotFoundException, JAXBException,
-			UnknownTaskException {
+			MissingTaskException {
 		logger.info("Loading configuration: " + configurationFile.getAbsolutePath());
 		// Clear
 		workflowManager.clear();

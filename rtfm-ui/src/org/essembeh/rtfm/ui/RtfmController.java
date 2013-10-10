@@ -15,7 +15,7 @@ import javax.xml.bind.JAXBException;
 import org.essembeh.rtfm.app.Application;
 import org.essembeh.rtfm.app.config.RtfmProperties;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
-import org.essembeh.rtfm.app.exception.UnknownTaskException;
+import org.essembeh.rtfm.app.exception.MissingTaskException;
 import org.essembeh.rtfm.app.utils.TextUtils;
 import org.essembeh.rtfm.app.workflow.IJob;
 import org.essembeh.rtfm.app.workflow.IWorkflow;
@@ -126,7 +126,7 @@ public class RtfmController extends RtfmUI {
 
 	}
 
-	public void loadConfigurationFile(File conf) throws UnknownTaskException, FileNotFoundException, JAXBException {
+	public void loadConfigurationFile(File conf) throws MissingTaskException, FileNotFoundException, JAXBException {
 		app.loadConfiguration(conf);
 	}
 

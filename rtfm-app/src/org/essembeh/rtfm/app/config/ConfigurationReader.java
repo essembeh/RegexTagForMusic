@@ -10,7 +10,7 @@ import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
-import org.essembeh.rtfm.app.exception.UnknownTaskException;
+import org.essembeh.rtfm.app.exception.MissingTaskException;
 import org.essembeh.rtfm.app.filehandler.FileHandler;
 import org.essembeh.rtfm.app.filehandler.attribute.IAttributeGenerator;
 import org.essembeh.rtfm.app.filehandler.attribute.RegexAttributeGenerator;
@@ -90,7 +90,7 @@ public class ConfigurationReader {
 		return out;
 	}
 
-	public List<Workflow> readWorkflows() throws UnknownTaskException {
+	public List<Workflow> readWorkflows() throws MissingTaskException {
 		List<Workflow> out = new ArrayList<>();
 		Map<String, TaskDescription> taskDescriptions = new HashMap<>();
 		if (model.getTasks() != null) {
@@ -109,13 +109,13 @@ public class ConfigurationReader {
 	}
 
 	private Workflow readWorkflow(TWorkflow workflowModel, Map<String, TaskDescription> taskDescriptions)
-			throws UnknownTaskException {
+			throws MissingTaskException {
 		Workflow out = new Workflow(workflowModel.getId(), workflowModel.getDescription(),
 				readCondition(workflowModel.getConditions()), workflowModel.isUser(), workflowModel.isAuto());
 		for (TTaskRef taskReference : workflowModel.getTasks().getTask()) {
 			TaskDescription taskDescription = taskDescriptions.get(taskReference.getRefId());
 			if (taskDescription == null) {
-				throw new UnknownTaskException(workflowModel.getId(), taskReference.getRefId());
+				throw new MissingTaskException(workflowModel.getId(), taskReference.getRefId());
 			}
 			CustomTaskDescription customTaskDescription = new CustomTaskDescription(taskDescription);
 			readConfigurable(customTaskDescription, taskReference.getProperty());

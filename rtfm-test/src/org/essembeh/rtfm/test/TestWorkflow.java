@@ -7,8 +7,8 @@ import java.util.concurrent.Semaphore;
 import javax.xml.bind.JAXBException;
 
 import org.essembeh.rtfm.app.Application;
+import org.essembeh.rtfm.app.exception.MissingTaskException;
 import org.essembeh.rtfm.app.exception.TaskInstanciationException;
-import org.essembeh.rtfm.app.exception.UnknownTaskException;
 import org.essembeh.rtfm.app.workflow.IJob;
 import org.essembeh.rtfm.app.workflow.IWorkflow;
 import org.essembeh.rtfm.app.workflow.IWorkflowManager;
@@ -65,15 +65,13 @@ public class TestWorkflow {
 		System.out.println("-------------------------------");
 	}
 
-	public static void main(String[] args) throws UnknownTaskException, FileNotFoundException, JAXBException,
+	public static void main(String[] args) throws MissingTaskException, FileNotFoundException, JAXBException,
 			FileSystemException, TaskInstanciationException, InterruptedException {
-		File configurationFile = new File("resources/seb.xml");
-		File rootFolder = new File("resources/roots/seb");
+		File rootFolder = new File("resources/roots/seb.folder");
 		File save1 = new File("save1.xml");
 
 		System.out.println("Load app");
-		Application app = new Application();
-		app.loadConfiguration(configurationFile);
+		Application app = AppFactory.createApplication();
 
 		System.out.println("Scan folder");
 		IProject project = app.scanFolder(rootFolder);

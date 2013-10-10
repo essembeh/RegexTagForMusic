@@ -8,7 +8,7 @@ import javax.xml.bind.JAXBException;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.app.ApplicationModule;
 import org.essembeh.rtfm.app.config.RtfmProperties;
-import org.essembeh.rtfm.app.exception.UnknownTaskException;
+import org.essembeh.rtfm.app.exception.MissingTaskException;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -17,7 +17,7 @@ public class LaunchUI {
 
 	private final static Logger LOGGER = Logger.getLogger(LaunchUI.class);
 
-	public static void main(String[] args) throws UnknownTaskException, FileNotFoundException, JAXBException {
+	public static void main(String[] args) throws MissingTaskException, FileNotFoundException, JAXBException {
 		File defaultConfiguration;
 		if (args.length > 0) {
 			LOGGER.info("Using custom configurationfile:" + args[0]);
