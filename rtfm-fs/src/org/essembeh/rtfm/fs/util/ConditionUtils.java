@@ -53,12 +53,20 @@ public class ConditionUtils {
 		return new VirtualPathMatches(regexOnPath);
 	}
 
-	public static MultipleCondition andCondition() {
-		return new AndCondition();
+	public static MultipleCondition andCondition(ICondition... conditions) {
+		AndCondition out = new AndCondition();
+		for (ICondition condition : conditions) {
+			out.addCondition(condition);
+		}
+		return out;
 	}
 
-	public static MultipleCondition orCondition() {
-		return new OrCondition();
+	public static MultipleCondition orCondition(ICondition... conditions) {
+		OrCondition out = new OrCondition();
+		for (ICondition condition : conditions) {
+			out.addCondition(condition);
+		}
+		return out;
 	}
 
 	public static List<IResource> filter(List<IResource> in, ICondition filter) {

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
@@ -12,10 +13,11 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.bind.JAXBException;
 
+import org.apache.log4j.Logger;
 import org.essembeh.rtfm.app.Application;
 import org.essembeh.rtfm.app.config.RtfmProperties;
-import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.exception.MissingTaskException;
+import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.utils.TextUtils;
 import org.essembeh.rtfm.app.workflow.IJob;
 import org.essembeh.rtfm.app.workflow.IWorkflow;
@@ -44,19 +46,26 @@ public class RtfmController extends RtfmUI {
 	private static final long serialVersionUID = -6158596439845992908L;
 	private static final File DEFAULT_FOLDER = new File(".");
 
-	private final JButton showHideAttributesButton;
+	private final static Logger LOGGER = Logger.getLogger(RtfmController.class);
+
 	private final Application app;
+	private final ConfigurationTool configurationTool;
+	private File lastLibrary;
+
 	private final ConditionModel conditionModel;
 	private final ResourceModel resourceModel;
 	private final AttributeModel attributesModel;
 	private final WorkflowModel workflowModel;
+
+	private final JButton showHideAttributesButton;
 	private final StatusBar statusBar;
-	private File lastLibrary = null;
 
 	@Inject
-	public RtfmController(Application application, RtfmProperties properties) {
+	public RtfmController(Application application, ConfigurationTool configurationTool, RtfmProperties properties) {
 		super();
 		this.app = application;
+		this.configurationTool = configurationTool;
+		this.lastLibrary = null;
 
 		// Model
 		conditionTree.setModel(conditionModel = new ConditionModel(new ExplorerNodeUtils(app), true));
@@ -124,10 +133,6 @@ public class RtfmController extends RtfmUI {
 		setAttributesPanelVisible(false);
 		contentPane.add(statusBar = new StatusBar(), BorderLayout.SOUTH);
 
-	}
-
-	public void loadConfigurationFile(File conf) throws MissingTaskException, FileNotFoundException, JAXBException {
-		app.loadConfiguration(conf);
 	}
 
 	protected void executeWorkflow(IWorkflow workflow) {
@@ -202,7 +207,7 @@ public class RtfmController extends RtfmUI {
 		fileChooser.setCurrentDirectory(getFileChooserFolder());
 		if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			try {
-				app.saveProject(fileChooser.getSelectedFile());
+				app.saveProject(lastLibrary = fileChooser.getSelectedFile());
 				statusBar.printMessage("Library saved: " + fileChooser.getSelectedFile().getAbsolutePath());
 			} catch (FileNotFoundException | JAXBException e) {
 				statusBar.printError(e.getMessage());
@@ -211,8 +216,34 @@ public class RtfmController extends RtfmUI {
 	}
 
 	private File getFileChooserFolder() {
-		return lastLibrary != null ? lastLibrary : (app.getProject() != null ? app.getProject().getRootFolder()
-				.getFile() : DEFAULT_FOLDER);
+		File out = DEFAULT_FOLDER;
+		if (lastLibrary != null) {
+			out = lastLibrary;
+		} else if (app.getProject() != null) {
+			out = app.getProject().getRootFolder().getFile();
+		}
+		return out;
+	}
 
+	public void loadDefaultConfiguration() {
+		try {
+			File f;
+			if ((f = configurationTool.getCustomConfigurationFile()) != null) {
+				LOGGER.info("Reading custom configuration: " + f.getAbsolutePath());
+				app.loadConfiguration(new FileInputStream(f));
+				statusBar.printMessage("Custom configuration loaded: " + f.getAbsolutePath());
+			} else if ((f = configurationTool.getUserConfigurationFile()) != null) {
+				LOGGER.info("Reading user configuration: " + f.getAbsolutePath());
+				app.loadConfiguration(new FileInputStream(f));
+				statusBar.printMessage("User configuration loaded: " + f.getAbsolutePath());
+			} else {
+				LOGGER.info("Reading embedded configuration");
+				app.loadConfiguration(configurationTool.getEmbeddedConfiguration());
+				statusBar.printMessage("User embedded configuration");
+			}
+		} catch (MissingTaskException | FileNotFoundException | JAXBException e) {
+			statusBar.printError("Cannot load configuration");
+			LOGGER.error("Cannot load configuration", e);
+		}
 	}
 }

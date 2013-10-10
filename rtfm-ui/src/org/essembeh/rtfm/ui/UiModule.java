@@ -1,20 +1,21 @@
 package org.essembeh.rtfm.ui;
-import org.essembeh.rtfm.app.config.RtfmProperties;
 
-import com.google.inject.AbstractModule;
+import org.essembeh.rtfm.app.ApplicationModule;
 
-public class UiModule extends AbstractModule {
+import com.google.inject.name.Names;
 
-	private final RtfmProperties mainProperties;
+public class UiModule extends ApplicationModule {
 
-	public UiModule(RtfmProperties mainProperties) {
+	private final String customConfigurationFileArg;
+
+	public UiModule(String[] args) {
 		super();
-		this.mainProperties = mainProperties;
+		customConfigurationFileArg = args.length > 0 ? args[0] : "";
 	}
 
 	@Override
 	protected void configure() {
-		bind(RtfmProperties.class).toInstance(mainProperties);
+		super.configure();
+		bind(String.class).annotatedWith(Names.named("customConfigurationFile")).toInstance(customConfigurationFileArg);
 	}
-
 }

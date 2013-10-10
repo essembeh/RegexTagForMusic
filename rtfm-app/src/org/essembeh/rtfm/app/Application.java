@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import javax.xml.bind.JAXBException;
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.app.config.ConfigurationReader;
 import org.essembeh.rtfm.app.config.RtfmProperties;
-import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.exception.MissingTaskException;
+import org.essembeh.rtfm.app.exception.TaskInstanciationException;
 import org.essembeh.rtfm.app.filehandler.FileHandler;
 import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension;
 import org.essembeh.rtfm.app.filehandler.FileHandlerScannerExtension.AttributeErrorOption;
@@ -56,16 +57,15 @@ public class Application {
 		project = null;
 	}
 
-	public void loadConfiguration(File configurationFile) throws FileNotFoundException, JAXBException,
-			MissingTaskException {
-		logger.info("Loading configuration: " + configurationFile.getAbsolutePath());
+	public void loadConfiguration(InputStream configurationStream) throws JAXBException, MissingTaskException {
+		logger.debug("Loading configuration from stream");
 		// Clear
 		workflowManager.clear();
 		fileHandlers.clear();
 		properties.clear();
 		// Load
 		ConfigurationReader configurationReader = new ConfigurationReader(
-				JaxbReader.readConfiguration(new FileInputStream(configurationFile)));
+				JaxbReader.readConfiguration(configurationStream));
 		List<Workflow> workflowList = configurationReader.readWorkflows();
 		List<FileHandler> fileHandlerList = configurationReader.readFileHandlers();
 		// Update

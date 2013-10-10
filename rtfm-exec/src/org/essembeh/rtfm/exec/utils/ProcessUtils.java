@@ -1,13 +1,11 @@
 package org.essembeh.rtfm.exec.utils;
 
 import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -49,7 +47,7 @@ public class ProcessUtils {
 			} catch (IOException e) {
 				logger.error(e.getMessage());
 			} finally {
-				closeCloseable(br);
+				IOUtils.closeQuietly(br);
 			}
 		}
 		return out.toString();
@@ -62,43 +60,10 @@ public class ProcessUtils {
 	 */
 	public static void end(Process p) {
 		if (p != null) {
-			closeCloseable(p.getOutputStream());
-			closeCloseable(p.getInputStream());
-			closeCloseable(p.getErrorStream());
+			IOUtils.closeQuietly(p.getOutputStream());
+			IOUtils.closeQuietly(p.getInputStream());
+			IOUtils.closeQuietly(p.getErrorStream());
 			p.destroy();
 		}
-	}
-
-	/**
-	 * Close the closeable if not null. Does not throw any exception.
-	 * 
-	 * @param c
-	 */
-	public static void closeCloseable(Closeable c) {
-		if (c != null) {
-			try {
-				c.close();
-			} catch (IOException e) {
-				// Do nothing
-			}
-		}
-	}
-
-	/**
-	 * 
-	 * @param scriptName
-	 * @return
-	 * @throws FileNotFoundException
-	 */
-	public static String retrieveBinaryFullPath(String scriptName) throws FileNotFoundException {
-		File script = FileTools.getResourceAsFile(scriptName);
-		String binaryPath = null;
-		if (!script.canExecute()) {
-			logger.error("The binary is not executable: " + scriptName);
-		} else {
-			binaryPath = script.getAbsolutePath();
-			logger.debug("Found script: " + binaryPath);
-		}
-		return binaryPath;
 	}
 }
