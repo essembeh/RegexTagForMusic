@@ -3,12 +3,13 @@
 /*/bin/
 
 # tests files
-/rtfm-test/*xml
 /rtfm-test/resources/roots/*.folder
-/rtfm-ui/*xml
 
 # git
 *.patch
 
 # MacOS
 .DS_Store
+
+# Maven
+/*/target
