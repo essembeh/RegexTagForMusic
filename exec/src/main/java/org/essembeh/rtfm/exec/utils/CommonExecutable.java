@@ -11,7 +11,7 @@ public abstract class CommonExecutable extends Configurable implements IExecutab
 
 	static protected Logger logger = Logger.getLogger(CommonExecutable.class);
 
-	public final static String RC_KEY = "rc";
+	public final static String RC_KEY = "force-rc";
 
 	public CommonExecutable() {
 	}

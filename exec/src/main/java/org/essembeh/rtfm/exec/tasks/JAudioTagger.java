@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.essembeh.rtfm.core.exception.ExecutionException;
 import org.essembeh.rtfm.core.workflow.IExecutable;
 import org.essembeh.rtfm.exec.utils.CommonExecutable;
-import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
@@ -73,13 +73,12 @@ public class JAudioTagger extends CommonExecutable implements IExecutable {
 		}
 		try {
 			logger.debug("Generating tag content");
-			Attributes attributes = resource.getAttributes();
-			setIfNotNull(id3, attributes.getValue(attributeArtist), FieldKey.ARTIST);
-			setIfNotNull(id3, attributes.getValue(attributeAlbum), FieldKey.ALBUM);
-			setIfNotNull(id3, attributes.getValue(attributeYear), FieldKey.YEAR);
-			setIfNotNull(id3, attributes.getValue(attributeTitle), FieldKey.TITLE);
-			setIfNotNull(id3, attributes.getValue(attributeTrack), FieldKey.TRACK);
-			setIfNotNull(id3, attributes.getValue(attributeComment), FieldKey.COMMENT);
+			setIfNotNull(id3, AttributesHelper.get(resource, attributeArtist), FieldKey.ARTIST);
+			setIfNotNull(id3, AttributesHelper.get(resource, attributeAlbum), FieldKey.ALBUM);
+			setIfNotNull(id3, AttributesHelper.get(resource, attributeYear), FieldKey.YEAR);
+			setIfNotNull(id3, AttributesHelper.get(resource, attributeTitle), FieldKey.TITLE);
+			setIfNotNull(id3, AttributesHelper.get(resource, attributeTrack), FieldKey.TRACK);
+			setIfNotNull(id3, AttributesHelper.get(resource, attributeComment), FieldKey.COMMENT);
 		} catch (Exception e) {
 			logger.error("Error creating ID3Tag");
 			throw new ExecutionException(e.getMessage());

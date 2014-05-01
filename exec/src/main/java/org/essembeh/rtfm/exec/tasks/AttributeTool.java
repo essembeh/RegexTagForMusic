@@ -6,6 +6,7 @@ import org.essembeh.rtfm.core.workflow.IExecutable;
 import org.essembeh.rtfm.exec.utils.CommonExecutable;
 import org.essembeh.rtfm.exec.utils.PropertyUtils;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 
 public class AttributeTool extends CommonExecutable implements IExecutable {
 	private static final Logger logger = Logger.getLogger(AttributeTool.class);
@@ -22,23 +23,23 @@ public class AttributeTool extends CommonExecutable implements IExecutable {
 				String attributeName = pair.getKey();
 				String attributeValue = PropertyUtils.valuateDynamicEnvironmentVariable(pair.getValue(), resource);
 				logger.debug(String.format("Create attribute: %s = %s", attributeName, attributeValue));
-				resource.getAttributes().setValue(attributeName, attributeValue);
+				AttributesHelper.set(resource, attributeName, attributeValue);
 			} else if (UPDATE.equals(p.getKey())) {
 				Pair<String, String> pair = PropertyUtils.stringToPair(p.getValue());
 				String attributeName = pair.getKey();
 				String attributeValue = PropertyUtils.valuateDynamicEnvironmentVariable(pair.getValue(), resource);
-				if (resource.getAttributes().contains(attributeName)) {
+				if (resource.getAttributes().containsKey(attributeName)) {
 					logger.debug(String.format("Update attribute: %s = %s", attributeName, attributeValue));
-					resource.getAttributes().setValue(attributeName, attributeValue);
+					AttributesHelper.set(resource, attributeName, attributeValue);
 				} else {
 					logger.debug(String.format("Cannot update missing attribute: %s = %s", attributeName,
 							attributeValue));
 				}
 			} else if (REMOVE.equals(p.getKey())) {
 				String attributeName = p.getValue();
-				if (resource.getAttributes().contains(attributeName)) {
+				if (resource.getAttributes().containsKey(attributeName)) {
 					logger.debug(String.format("Remove attribute: %s", attributeName));
-					resource.getAttributes().delete(attributeName);
+					AttributesHelper.delete(resource, attributeName);
 				} else {
 					logger.debug(String.format("Cannot remove missing attribute: %s", attributeName));
 				}

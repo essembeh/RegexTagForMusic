@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class IdUtils {
 
@@ -27,7 +27,7 @@ public class IdUtils {
 
 	public static <T extends Identifiable> T getById(List<T> list, String id) {
 		for (T t : list) {
-			if (ObjectUtils.equals(t.getId(), id)) {
+			if (StringUtils.equals(t.getId(), id)) {
 				return t;
 			}
 		}

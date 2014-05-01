@@ -16,7 +16,7 @@ public class AttributeExists implements ICondition {
 
 	@Override
 	public boolean isTrue(IResource resource) {
-		return !(resource.getAttributes().contains(attributeName) ^ exists);
+		return !(resource.getAttributes().containsKey(attributeName) ^ exists);
 	}
 
 	@Override

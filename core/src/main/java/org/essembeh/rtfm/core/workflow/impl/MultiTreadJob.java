@@ -3,6 +3,7 @@ package org.essembeh.rtfm.core.workflow.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,8 +19,8 @@ import org.essembeh.rtfm.core.workflow.report.ExecutionStatus;
 import org.essembeh.rtfm.core.workflow.report.Severity;
 import org.essembeh.rtfm.core.workflow.report.SimpleStatus;
 import org.essembeh.rtfm.fs.condition.ICondition;
-import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 
 /**
  * 
@@ -80,7 +81,7 @@ public class MultiTreadJob implements IJob {
 		if (condition != null && !condition.isTrue(resource)) {
 			status.addStatus(new SimpleStatus(Severity.WARNING, "Resource not supported"));
 		} else {
-			Attributes savedAttributes = resource.getAttributes().copy();
+			Map<String, String> savedAttributes = AttributesHelper.cloneAttributes(resource);
 			for (Pair<ITask, IExecutable> p : executables) {
 				SimpleStatus currentStatus = null;
 				try {
@@ -91,7 +92,7 @@ public class MultiTreadJob implements IJob {
 				}
 				status.addStatus(currentStatus);
 				if (currentStatus.getSeverity().isKo()) {
-					resource.getAttributes().restore(savedAttributes);
+					AttributesHelper.resetAttributes(resource, savedAttributes);
 					break;
 				}
 			}
@@ -104,7 +105,7 @@ public class MultiTreadJob implements IJob {
 		for (ExecutionStatus<IResource, SimpleStatus> s : status.getList()) {
 			IResource resource = s.getObject();
 			if (s.getSeverity().isKo()) {
-				resource.getAttributes().updateError(s.getMessage());
+				AttributesHelper.updateError(resource, s.getMessage());
 			}
 		}
 	}

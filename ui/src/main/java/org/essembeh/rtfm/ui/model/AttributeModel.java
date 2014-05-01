@@ -14,6 +14,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.apache.log4j.Logger;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 import org.essembeh.rtfm.ui.utils.SelectionTool;
 
 public class AttributeModel extends AbstractTableModel {
@@ -132,7 +133,7 @@ public class AttributeModel extends AbstractTableModel {
 			logger.info("Update attribute: " + attributeName + ", with value: " + aValue);
 			for (IResource r : selectedResources) {
 				logger.debug("Update file: " + r);
-				r.getAttributes().updateValue(attributeName, aValue.toString());
+				AttributesHelper.update(r, attributeName, aValue.toString());
 			}
 			refresh();
 			filterModel.refresh();

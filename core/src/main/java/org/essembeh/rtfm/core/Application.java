@@ -27,7 +27,6 @@ import org.essembeh.rtfm.core.workflow.impl.DefaultJobProgressMonitor;
 import org.essembeh.rtfm.core.workflow.impl.Workflow;
 import org.essembeh.rtfm.core.workflow.impl.WorkflowManager;
 import org.essembeh.rtfm.fs.condition.impl.AttributeValueEquals;
-import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.interfaces.IProject;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 import org.essembeh.rtfm.fs.exception.FileSystemException;
@@ -35,6 +34,7 @@ import org.essembeh.rtfm.fs.io.NoHiddenFilesScannerExtension;
 import org.essembeh.rtfm.fs.io.ProjectReaderScannerExtension;
 import org.essembeh.rtfm.fs.io.ProjectScanner;
 import org.essembeh.rtfm.fs.io.ProjectWriter;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 import org.essembeh.rtfm.model.JaxbReader;
 
 import com.google.inject.Inject;
@@ -78,7 +78,7 @@ public class Application {
 		ProjectScanner out = new ProjectScanner(DateUtils.now());
 		// Hidden files
 		if (properties.ignoreHiddenResources()) {
-			out.addExtension(new NoHiddenFilesScannerExtension());
+			out.addExtension(new NoHiddenFilesScannerExtension(true));
 		}
 		// File handlers
 		FileHandlerScannerExtension extension = new FileHandlerScannerExtension(fileHandlers);
@@ -90,7 +90,7 @@ public class Application {
 	private void executeAutomaticWorkflows(IProject project, String scanDate) {
 		// Search new files
 		List<IResource> resources = project.getRootFolder().getFilteredResources(
-				new AttributeValueEquals(Attributes.DATE_KEY, scanDate));
+				new AttributeValueEquals(AttributesHelper.DATE_KEY, scanDate));
 
 		for (IWorkflow workflow : workflowManager.getWorkflows()) {
 			if (workflow.isAuto()) {

@@ -3,130 +3,125 @@
 	<!-- 
 		Application properties
 	 -->
-	<properties>
-		<property name="fs:ignore.hidden" value="false" />
-		<property name="workflow:job.threads" value="4" />
-		<property name="ui:hidden.attribute" value="ui:hide?" />
-	</properties>
+    <properties>
+        <property name="fs:ignore.hidden"     value="false" />
+        <property name="workflow:job.threads" value="4" />
+        <property name="ui:hidden.attribute"  value="ui:hide?" />
+    </properties>
 	
 	<!-- 
 		Substitutions are applied only on "pattern" attributes
 	 -->
-	<substitutions>
-		<substitution key="@ALBUMPREFIX" value="" />
-		<substitution key="@SEPARATOR" value=" - " />
-		<substitution key="@ANYTHING" value="[^/]+" />
-		<substitution key="@DOT-EXT" value="\.[a-zA-Z0-9]+" />
-		<substitution key="@YEAR" value="[12]\d{3}" />
-		<substitution key="@TRACKNUMBER" value="\d{2}" />
-	</substitutions>
+    <substitutions>
+        <substitution key="@ALBUMPREFIX" value="" />
+        <substitution key="@SEPARATOR"   value=" - " />
+        <substitution key="@ANYTHING"    value="[^/]+" />
+        <substitution key="@DOT-EXT"     value="\.[a-zA-Z0-9]+" />
+        <substitution key="@YEAR"        value="[12]\d{3}" />
+        <substitution key="@TRACKNUMBER" value="\d{2}" />
+    </substitutions>
 
 	<!-- 
 		File types 
 	 -->
-	<filehandlers>
-		<filehandler id="Album mp3">
-			<conditions logic="AND">
-				<fileOrFilder type="FILE" />
-				<virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/@TRACKNUMBER@SEPARATOR@ANYTHING@DOT-EXT" />
-				<extension list="mp3" caseSensitive="true" />
-			</conditions>
-			<attributes>
-				<attribute name="core:mime-type" value="audio/mp3" />
-				<attribute name="core:export?" value="true" />
-				<attribute name="music:tagged?" value="false" />
-				<attribute name="music:comment" value="Tagged with RegexTagForMusic" />
-				<regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
-					group="1" />
-				<regex-attribute name="music:year" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
-					group="2" optional="true" />
-				<regex-attribute name="music:album" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
-					group="3" />
-				<regex-attribute name="music:track" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
-					group="4" />
-				<regex-attribute name="music:title" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT"
-					group="5" />
-			</attributes>
-		</filehandler>
-		<filehandler id="Cover">
-			<conditions logic="AND">
-				<fileOrFilder type="FILE" />
-				<virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/cover@DOT-EXT" />
-				<extension list="jpg png" caseSensitive="false" />
-			</conditions>
-			<attributes>
-				<attribute name="core:export?" value="true" />
-			</attributes>
-		</filehandler>
-		<filehandler id="Artist folder">
-			<conditions logic="AND">
-				<fileOrFilder type="FOLDER" />
-				<virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/" />
-			</conditions>
-			<attributes>
-				<attribute name="core:export?" value="true" />
-				<regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/" group="1" />
-			</attributes>
-		</filehandler>
-		<filehandler id="Album folder">
-			<conditions logic="AND">
-				<fileOrFilder type="FOLDER" />
-				<virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/" />
-			</conditions>
-			<attributes>
-				<attribute name="core:export?" value="true" />
-				<attribute name="music:hasCover" value="false" />
-				<regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="1" />
-				<regex-attribute name="music:year" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="2" optional="true" />
-				<regex-attribute name="music:album" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="3" />
-			</attributes>
-		</filehandler>
-		<filehandler id="IGNORED">
-			<conditions logic="OR">
-				<virtualPathMatches pattern=".*/\.DS_Store" />
-			</conditions>
-			<attributes>
-				<attribute name="ui:hide?" value="true" />
-				<attribute name="core:export?" value="false" />
-			</attributes>
-		</filehandler>
-		<filehandler id="UNKNOWN">
-			<conditions logic="AND">
-				<true />
-			</conditions>
-			<attributes>
-				<attribute name="core:export?" value="false" />
-			</attributes>
-		</filehandler>
-	</filehandlers>
+    <filehandlers>
+        <filehandler id="Album mp3">
+            <conditions logic="AND">
+                <fileOrFilder type="FILE" />
+                <virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/@TRACKNUMBER@SEPARATOR@ANYTHING@DOT-EXT" />
+                <extension list="mp3" caseSensitive="true" />
+            </conditions>
+            <attributes>
+                <attribute name="core:mime-type" value="audio/mp3" />
+                <attribute name="core:export?"   value="true" />
+                <attribute name="music:tagged?"  value="false" />
+                <attribute name="music:comment"  value="Tagged with RegexTagForMusic" />
+                <regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="1" />
+                <regex-attribute name="music:year"   pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="2" optional="true" />
+                <regex-attribute name="music:album"  pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="3" />
+                <regex-attribute name="music:track"  pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="4" />
+                <regex-attribute name="music:title"  pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/(@TRACKNUMBER)@SEPARATOR(@ANYTHING)@DOT-EXT" group="5" />
+            </attributes>
+        </filehandler>
+        <filehandler id="Cover">
+            <conditions logic="AND">
+                <fileOrFilder type="FILE" />
+                <virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/cover@DOT-EXT" />
+                <extension list="jpg png" caseSensitive="false" />
+            </conditions>
+            <attributes>
+                <attribute name="core:export?" value="true" />
+            </attributes>
+        </filehandler>
+        <filehandler id="Artist folder">
+            <conditions logic="AND">
+                <fileOrFilder type="FOLDER" />
+                <virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/" />
+            </conditions>
+            <attributes>
+                <attribute name="core:export?" value="true" />
+                <regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/" group="1" />
+            </attributes>
+        </filehandler>
+        <filehandler id="Album folder">
+            <conditions logic="AND">
+                <fileOrFilder type="FOLDER" />
+                <virtualPathMatches pattern="@ALBUMPREFIX/@ANYTHING/@ANYTHING/" />
+            </conditions>
+            <attributes>
+                <attribute name="core:export?"   value="true" />
+                <attribute name="music:hasCover" value="false" />
+                <regex-attribute name="music:artist" pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="1" />
+                <regex-attribute name="music:year"   pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="2" optional="true" />
+                <regex-attribute name="music:album"  pattern="@ALBUMPREFIX/(@ANYTHING)/(?:(@YEAR)@SEPARATOR)?(@ANYTHING)/" group="3" />
+            </attributes>
+        </filehandler>
+        <filehandler id="IGNORED">
+            <conditions logic="OR">
+                <virtualPathMatches pattern=".*/\.DS_Store" />
+            </conditions>
+            <attributes>
+                <attribute name="ui:hide?"     value="true" />
+                <attribute name="core:export?" value="false" />
+            </attributes>
+        </filehandler>
+        <filehandler id="UNKNOWN">
+            <conditions logic="AND">
+                <true />
+            </conditions>
+            <attributes>
+                <attribute name="core:export?" value="false" />
+            </attributes>
+        </filehandler>
+    </filehandlers>
 
 	<!-- 
 		Tasks 
 	-->
-	<tasks>
-		<task id="attributes-tool" classname="org.essembeh.rtfm.exec.tasks.AttributeTool" />
-		<task id="jaudiotagger" classname="org.essembeh.rtfm.exec.tasks.JAudioTagger" />
-	</tasks>
+    <tasks>
+        <task id="attributes-tool" classname="org.essembeh.rtfm.exec.tasks.AttributeTool" />
+        <task id="jaudiotagger"    classname="org.essembeh.rtfm.exec.tasks.JAudioTagger" />
+    </tasks>
 	
 	<!-- 
 		Workflows
 	 -->
-	<workflows>
-		<workflow id="11-tag-jaudiotagger" description="Tag with JAudioTagger">
-			<conditions logic="AND">
-				<attributeValueEquals name="core:mime-type" value="audio/mp3" />
-			</conditions>
-			<tasks>
-				<task ref-id="attributes-tool">
-					<property name="update" value="music:tagged?=false" />
-				</task>
-				<task ref-id="jaudiotagger">
-					<property name="version" value="ID3V2_4" />
-				</task>
-				<task ref-id="attributes-tool">
-					<property name="update" value="music:tagged?=true" />
-				</task>
-			</tasks>
-		</workflow>
-	</workflows>
+    <workflows>
+        <workflow id="11-tag-jaudiotagger" description="Tag with JAudioTagger">
+            <conditions logic="AND">
+                <attributeValueEquals name="core:mime-type" value="audio/mp3" />
+            </conditions>
+            <tasks>
+                <task ref-id="attributes-tool">
+                    <property name="update" value="music:tagged?=false" />
+                </task>
+                <task ref-id="jaudiotagger">
+                    <property name="version" value="ID3V2_4" />
+                </task>
+                <task ref-id="attributes-tool">
+                    <property name="update" value="music:tagged?=true" />
+                </task>
+            </tasks>
+        </workflow>
+    </workflows>
 </rtfm:configuration>

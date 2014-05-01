@@ -1,6 +1,8 @@
 package org.essembeh.rtfm.fs.content;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.essembeh.rtfm.fs.content.interfaces.IFolder;
@@ -9,7 +11,7 @@ import org.essembeh.rtfm.fs.content.interfaces.IResource;
 public abstract class ResourceImpl implements IResource {
 
 	private final File file;
-	private final Attributes attributes;
+	private final Map<String, String> attributes;
 	private VirtualPath virtualPath;
 	private IFolder parentFolder;
 
@@ -21,7 +23,7 @@ public abstract class ResourceImpl implements IResource {
 		this.file = file;
 		this.virtualPath = virtualPath;
 		this.parentFolder = null;
-		this.attributes = new Attributes();
+		this.attributes = new HashMap<>();
 	}
 
 	@Override
@@ -30,7 +32,8 @@ public abstract class ResourceImpl implements IResource {
 		if (parentFolder == null) {
 			this.virtualPath = VirtualPath.ROOT;
 		} else {
-			this.virtualPath = new VirtualPath(parentFolder.getVirtualPath(), file);
+			this.virtualPath = new VirtualPath(parentFolder.getVirtualPath(),
+					file);
 		}
 	}
 
@@ -45,7 +48,7 @@ public abstract class ResourceImpl implements IResource {
 	}
 
 	@Override
-	public Attributes getAttributes() {
+	public Map<String, String> getAttributes() {
 		return attributes;
 	}
 
@@ -69,6 +72,6 @@ public abstract class ResourceImpl implements IResource {
 
 	@Override
 	public String toString() {
-		return ObjectUtils.toString(virtualPath, "unknown");
+		return virtualPath.toString();
 	}
 }

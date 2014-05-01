@@ -12,6 +12,7 @@ import org.essembeh.rtfm.fs.content.interfaces.IProject;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 import org.essembeh.rtfm.fs.exception.FileSystemException;
 import org.essembeh.rtfm.fs.exception.ResourceAlreadyExistsException;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 
 public class ProjectScanner {
 
@@ -34,7 +35,7 @@ public class ProjectScanner {
 	}
 
 	private IResource updateResource(IResource resource) {
-		resource.getAttributes().setDate(date);
+		AttributesHelper.setDate(resource, date);
 		for (IScannerExtension e : extensions) {
 			e.postCreation(resource);
 		}

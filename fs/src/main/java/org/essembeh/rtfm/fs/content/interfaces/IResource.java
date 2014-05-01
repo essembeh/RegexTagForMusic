@@ -1,8 +1,8 @@
 package org.essembeh.rtfm.fs.content.interfaces;
 
 import java.io.File;
+import java.util.Map;
 
-import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.VirtualPath;
 
 public interface IResource extends Comparable<IResource> {
@@ -11,11 +11,11 @@ public interface IResource extends Comparable<IResource> {
 
 	VirtualPath getVirtualPath();
 
-	Attributes getAttributes();
-
 	IFolder getParentFolder();
 
 	String getName();
 
 	void setParentFolder(IFolder parentFolder);
+
+	Map<String, String> getAttributes();
 }

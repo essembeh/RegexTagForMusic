@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,7 +27,7 @@ public abstract class Configurable implements IConfigurable {
 
 	protected String getFirstProperty(String name) {
 		for (Pair<String, String> p : properties) {
-			if (ObjectUtils.equals(name, p.getKey())) {
+			if (StringUtils.equals(name, p.getKey())) {
 				return p.getValue();
 			}
 		}
@@ -37,7 +37,7 @@ public abstract class Configurable implements IConfigurable {
 	protected List<String> getPropertiesByKey(String key) {
 		List<String> out = new ArrayList<>();
 		for (Pair<String, String> p : properties) {
-			if (ObjectUtils.equals(key, p.getKey())) {
+			if (StringUtils.equals(key, p.getKey())) {
 				out.add(p.getValue());
 			}
 		}

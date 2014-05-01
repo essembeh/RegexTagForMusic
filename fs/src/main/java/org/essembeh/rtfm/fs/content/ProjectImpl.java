@@ -7,6 +7,7 @@ import org.essembeh.rtfm.fs.condition.impl.AttributeValueEquals;
 import org.essembeh.rtfm.fs.content.interfaces.IFolder;
 import org.essembeh.rtfm.fs.content.interfaces.IProject;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 
 public class ProjectImpl implements IProject {
 
@@ -51,6 +52,6 @@ public class ProjectImpl implements IProject {
 
 	@Override
 	public List<IResource> getNewResources() {
-		return rootFolder.getFilteredResources(new AttributeValueEquals(Attributes.DATE_KEY, scanDate));
+		return rootFolder.getFilteredResources(new AttributeValueEquals(AttributesHelper.DATE_KEY, scanDate));
 	}
 }

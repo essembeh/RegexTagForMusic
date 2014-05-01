@@ -11,9 +11,9 @@ import javax.swing.tree.TreeNode;
 
 import org.essembeh.rtfm.core.Application;
 import org.essembeh.rtfm.fs.condition.ICondition;
-import org.essembeh.rtfm.fs.content.Attributes;
 import org.essembeh.rtfm.fs.content.interfaces.IFolder;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 import org.essembeh.rtfm.fs.util.ConditionUtils;
 
 public class ExplorerNodeUtils {
@@ -30,7 +30,7 @@ public class ExplorerNodeUtils {
 		root.removeAllChildren();
 		root.add(newNode("All files", ConditionUtils.alwaysTrue()));
 		root.add(newNode("Non tagged", ConditionUtils.attributeValueEquals("music:tagged?", "false")));
-		root.add(newNode("With error", ConditionUtils.attributeExists(Attributes.ERROR_KEY, true)));
+		root.add(newNode("With error", ConditionUtils.attributeExists(AttributesHelper.ERROR_KEY, true)));
 		if (application.getProject() != null) {
 			root.add(newResources());
 			root.add(fileSystem());
@@ -67,18 +67,18 @@ public class ExplorerNodeUtils {
 
 	private MutableTreeNode newResources() {
 		String date = application.getProject().getScanDate();
-		return newNode("New resources", ConditionUtils.attributeValueEquals(Attributes.DATE_KEY, date));
+		return newNode("New resources", ConditionUtils.attributeValueEquals(AttributesHelper.DATE_KEY, date));
 	}
 
 	private MutableTreeNode byType() {
-		return byAttribute("Type", Attributes.FILEHANDLER_KEY);
+		return byAttribute("Type", AttributesHelper.FILEHANDLER_KEY);
 	}
 
 	private MutableTreeNode byAttribute(String nodeName, String attributeName) {
 		DefaultMutableTreeNode root = newNode(nodeName);
 		List<String> values = new ArrayList<String>();
 		for (IResource r : application.getProject().getRootFolder().getAllResources()) {
-			String attributeValue = r.getAttributes().getValue(attributeName);
+			String attributeValue = AttributesHelper.get(r, attributeName);
 			if (attributeValue != null && !values.contains(attributeValue)) {
 				values.add(attributeValue);
 			}

@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 
 public class PropertyUtils {
 
@@ -25,8 +26,8 @@ public class PropertyUtils {
 		StringBuffer out = new StringBuffer();
 		while (matcher.find()) {
 			String key = matcher.group(1);
-			String value = FILENAME_KEY.equals(key) ? resource.getFile().getAbsolutePath() : resource.getAttributes()
-					.getValue(key, "");
+			String value = FILENAME_KEY.equals(key) ? resource.getFile().getAbsolutePath() : AttributesHelper.get(
+					resource, key, "");
 			matcher.appendReplacement(out, value);
 		}
 		matcher.appendTail(out);

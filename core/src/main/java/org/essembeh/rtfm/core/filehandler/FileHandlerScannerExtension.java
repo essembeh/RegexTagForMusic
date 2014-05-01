@@ -8,6 +8,7 @@ import org.essembeh.rtfm.core.exception.AttributeException;
 import org.essembeh.rtfm.core.filehandler.attribute.IAttributeGenerator;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
 import org.essembeh.rtfm.fs.io.IScannerExtension;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 
 public class FileHandlerScannerExtension implements IScannerExtension {
 
@@ -40,15 +41,15 @@ public class FileHandlerScannerExtension implements IScannerExtension {
 					try {
 						String value = attributeGenerator.getValue(resource);
 						if (value != null) {
-							resource.getAttributes().setValue(attributeGenerator.getName(), value);
+							AttributesHelper.set(resource, attributeGenerator.getName(), value);
 						}
 					} catch (AttributeException e) {
 						switch (attributeErrorOption) {
 						case UPDATE_ERROR_ATTRIBUTE:
-							resource.getAttributes().updateError(e.getMessage());
+							AttributesHelper.updateError(resource, e);
 							break;
 						case CREATE_EMPTY_ATTRIBUTE:
-							resource.getAttributes().setValue(attributeGenerator.getName(), "");
+							AttributesHelper.set(resource, attributeGenerator.getName(), "");
 						default:
 							// case DO_NOTHING
 							break;

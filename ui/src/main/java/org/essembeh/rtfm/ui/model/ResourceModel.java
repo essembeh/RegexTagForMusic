@@ -17,6 +17,7 @@ import org.essembeh.rtfm.core.Application;
 import org.essembeh.rtfm.core.config.RtfmProperties;
 import org.essembeh.rtfm.fs.condition.ICondition;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 import org.essembeh.rtfm.fs.util.ConditionUtils;
 import org.essembeh.rtfm.ui.utils.SelectionTool;
 
@@ -111,7 +112,7 @@ public class ResourceModel extends AbstractModel<TableModelListener> implements 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		IResource r = content.get(rowIndex);
 		if (columnIndex == 0) {
-			return r.getAttributes().getFilehandler();
+			return AttributesHelper.getFilehandler(r);
 		}
 		return r;
 	}

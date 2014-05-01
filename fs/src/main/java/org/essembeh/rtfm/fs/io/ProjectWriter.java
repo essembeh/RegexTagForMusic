@@ -1,15 +1,13 @@
 package org.essembeh.rtfm.fs.io;
 
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
 import org.essembeh.rtfm.fs.content.interfaces.IFolder;
 import org.essembeh.rtfm.fs.content.interfaces.IProject;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 import org.essembeh.rtfm.model.JaxbUtils;
 import org.essembeh.rtfm.model.filesystem.ObjectFactory;
 import org.essembeh.rtfm.model.filesystem.TAttributeList;
@@ -37,7 +35,7 @@ public class ProjectWriter {
 
 	private void resourceToModel(IResource resource, TResourceList resources) {
 		TResourceList.Resource resourceModel = FACTORY.createTResourceListResource();
-		if (isExportable(resource)) {
+		if (AttributesHelper.isExportable(resource)) {
 			resourceModel.setVirtualpath(resource.getVirtualPath().toString());
 			resourceModel.setAttributes(resourceToAttributes(resource));
 			resources.getResource().add(resourceModel);
@@ -49,19 +47,13 @@ public class ProjectWriter {
 		}
 	}
 
-	private boolean isExportable(IResource resource) {
-		return resource.getAttributes().isExportable();
-	}
-
 	private TAttributeList resourceToAttributes(IResource resource) {
-		if (resource.getAttributes().count() > 0) {
+		if (resource.getAttributes().size() > 0) {
 			TAttributeList out = FACTORY.createTAttributeList();
-			List<String> attributeNames = new ArrayList<>(resource.getAttributes().keySet());
-			Collections.sort(attributeNames);
-			for (String attributeName : attributeNames) {
+			for (String attributeName : AttributesHelper.sortedKeys(resource)) {
 				TAttributeList.Attribute attributeModel = FACTORY.createTAttributeListAttribute();
 				attributeModel.setName(attributeName);
-				attributeModel.setValue(resource.getAttributes().getValue(attributeName));
+				attributeModel.setValue(AttributesHelper.get(resource, attributeName));
 				out.getAttribute().add(attributeModel);
 			}
 			return out;

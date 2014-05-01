@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.essembeh.rtfm.fs.condition.ICondition;
 import org.essembeh.rtfm.fs.content.interfaces.IResource;
+import org.essembeh.rtfm.fs.util.AttributesHelper;
 
 public class AttributeValueMatches implements ICondition {
 
@@ -18,8 +19,8 @@ public class AttributeValueMatches implements ICondition {
 
 	@Override
 	public boolean isTrue(IResource resource) {
-		if (resource.getAttributes().contains(attributeName)) {
-			return regexOnValue.matcher(resource.getAttributes().getValue(attributeName)).matches();
+		if (resource.getAttributes().containsKey(attributeName)) {
+			return regexOnValue.matcher(AttributesHelper.get(resource, attributeName)).matches();
 		}
 		return false;
 	}
