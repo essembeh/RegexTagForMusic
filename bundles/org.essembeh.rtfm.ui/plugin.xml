@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.essembeh.rtfm.ui.rtfm"
+            name="RegexTagForMusic">
+      </category>
+      <wizard
+            category="org.essembeh.rtfm.ui.rtfm"
+            class="org.essembeh.rtfm.ui.wizards.config.NewConfigurationWizard"
+            icon="icons/sample.gif"
+            id="org.essembeh.rtfm.ui.wizards.NewConfigurationWizard"
+            name="Create Configuration">
+      </wizard>
+      <wizard
+            category="org.essembeh.rtfm.ui.rtfm"
+            class="org.essembeh.rtfm.ui.wizards.library.NewLibraryWizard"
+            icon="icons/sample.gif"
+            id="org.essembeh.rtfm.ui.wizards.NewLibraryWizard"
+            name="New Library">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.essembeh.rtfm.ui.commands.category"
+            name="Sample Category">
+      </category>
+      <command
+            categoryId="org.essembeh.rtfm.ui.commands.category"
+            id="org.essembeh.rtfm.ui.commands.sampleCommand"
+            name="Sample Command">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.essembeh.rtfm.ui.handlers.SampleHandler"
+            commandId="org.essembeh.rtfm.ui.commands.sampleCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.essembeh.rtfm.ui.commands.sampleCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+6">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="org.essembeh.rtfm.ui.menus.sampleMenu"
+               label="Sample Menu"
+               mnemonic="M">
+            <command
+                  commandId="org.essembeh.rtfm.ui.commands.sampleCommand"
+                  id="org.essembeh.rtfm.ui.menus.sampleCommand"
+                  mnemonic="S">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="org.essembeh.rtfm.ui.toolbars.sampleToolbar">
+            <command
+                  commandId="org.essembeh.rtfm.ui.commands.sampleCommand"
+                  icon="icons/sample.gif"
+                  id="org.essembeh.rtfm.ui.toolbars.sampleCommand"
+                  tooltip="Say hello world">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.essembeh.rtfm.ui.editors.LibraryEditor"
+            contributorClass="org.essembeh.rtfm.ui.editors.LibraryEditorContributor"
+            extensions="library"
+            icon="icons/sample.gif"
+            id="org.essembeh.rtfm.ui.editors.LibraryEditor"
+            name="Library Editor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.essembeh.rtfm.model.rtfm.Node"
+            class="org.essembeh.rtfm.ui.adapters.NodeAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.views.properties.IPropertySource">
+         </adapter>
+      </factory>
+   </extension>
+
+</plugin>

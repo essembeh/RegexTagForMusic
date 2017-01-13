@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.essembeh.rtfm.model/src-gen" editDirectory="/org.essembeh.rtfm.model.edit/src-gen"
+    editorDirectory="/org.essembeh.rtfm.model.editor/src-gen" modelPluginID="org.essembeh.rtfm.model"
+    modelName="Rtfm" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    testsDirectory="/org.essembeh.rtfm.model.tests/src-gen" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
+  <foreignModel>rtfm.ecore</foreignModel>
+  <genPackages prefix="Rtfm" basePackage="org.essembeh.rtfm.model" disposableProviderFactory="true"
+      ecorePackage="rtfm.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="rtfm.ecore#//AttributeFactoryStrategy">
+      <genEnumLiterals ecoreEnumLiteral="rtfm.ecore#//AttributeFactoryStrategy/CREATE_OR_UPDATE"/>
+      <genEnumLiterals ecoreEnumLiteral="rtfm.ecore#//AttributeFactoryStrategy/CREATE_ONLY"/>
+      <genEnumLiterals ecoreEnumLiteral="rtfm.ecore#//AttributeFactoryStrategy/UPDATE_ONLY"/>
+      <genEnumLiterals ecoreEnumLiteral="rtfm.ecore#//AttributeFactoryStrategy/CREATE_OR_APPEND"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="rtfm.ecore#//File"/>
+    <genDataTypes ecoreDataType="rtfm.ecore#//IProgressMonitor"/>
+    <genDataTypes ecoreDataType="rtfm.ecore#//IPath"/>
+    <genDataTypes ecoreDataType="rtfm.ecore#//IOException"/>
+    <genDataTypes ecoreDataType="rtfm.ecore#//IStatus"/>
+    <genDataTypes ecoreDataType="rtfm.ecore#//URI"/>
+    <genDataTypes ecoreDataType="rtfm.ecore#//InterruptedException"/>
+    <genDataTypes ecoreDataType="rtfm.ecore#//Iterable"/>
+    <genClasses ecoreClass="rtfm.ecore#//Configuration">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference rtfm.ecore#//Configuration/fileHandlers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rtfm.ecore#//Configuration/workflows"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rtfm.ecore#//Configuration/substitutions"/>
+      <genOperations ecoreOperation="rtfm.ecore#//Configuration/updateAttributes">
+        <genParameters ecoreParameter="rtfm.ecore#//Configuration/updateAttributes/library"/>
+        <genParameters ecoreParameter="rtfm.ecore#//Configuration/updateAttributes/monitor"/>
+      </genOperations>
+      <genOperations ecoreOperation="rtfm.ecore#//Configuration/resolvePattern">
+        <genParameters ecoreParameter="rtfm.ecore#//Configuration/resolvePattern/pattern"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="rtfm.ecore#//Library">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rtfm.ecore#//Library/root"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//Library/path"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//Library/configurationUri"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//Library/lastScan"/>
+      <genOperations ecoreOperation="rtfm.ecore#//Library/scan">
+        <genParameters ecoreParameter="rtfm.ecore#//Library/scan/monitor"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="rtfm.ecore#//Node">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//Node/name"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference rtfm.ecore#//Node/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rtfm.ecore#//Node/content"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rtfm.ecore#//Node/attributes"/>
+      <genOperations ecoreOperation="rtfm.ecore#//Node/getPath"/>
+      <genOperations ecoreOperation="rtfm.ecore#//Node/getVirtualPath"/>
+      <genOperations ecoreOperation="rtfm.ecore#//Node/getResource"/>
+      <genOperations ecoreOperation="rtfm.ecore#//Node/find">
+        <genParameters ecoreParameter="rtfm.ecore#//Node/find/path"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="rtfm.ecore#//StringEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//StringEntry/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//StringEntry/value"/>
+    </genClasses>
+    <genClasses ecoreClass="rtfm.ecore#//FileHandler">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//FileHandler/name"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference rtfm.ecore#//FileHandler/configuration"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//FileHandler/pattern"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rtfm.ecore#//FileHandler/factories"/>
+      <genOperations ecoreOperation="rtfm.ecore#//FileHandler/accept">
+        <genParameters ecoreParameter="rtfm.ecore#//FileHandler/accept/virtualPath"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="rtfm.ecore#//AbstractAttributeFactory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//AbstractAttributeFactory/name"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference rtfm.ecore#//AbstractAttributeFactory/fileHandler"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//AbstractAttributeFactory/strategy"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//AbstractAttributeFactory/optional"/>
+      <genOperations ecoreOperation="rtfm.ecore#//AbstractAttributeFactory/getAttributeValue">
+        <genParameters ecoreParameter="rtfm.ecore#//AbstractAttributeFactory/getAttributeValue/virtualPath"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="rtfm.ecore#//FixedAttributeFactory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//FixedAttributeFactory/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//FixedAttributeFactory/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="rtfm.ecore#//RegexAttributeFactory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//RegexAttributeFactory/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//RegexAttributeFactory/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="rtfm.ecore#//Workflow">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//Workflow/name"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference rtfm.ecore#//Workflow/configuration"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//Workflow/pattern"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rtfm.ecore#//Workflow/tasks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//Workflow/filters"/>
+      <genOperations ecoreOperation="rtfm.ecore#//Workflow/execute">
+        <genParameters ecoreParameter="rtfm.ecore#//Workflow/execute/nodes"/>
+        <genParameters ecoreParameter="rtfm.ecore#//Workflow/execute/monitor"/>
+      </genOperations>
+      <genOperations ecoreOperation="rtfm.ecore#//Workflow/accept">
+        <genParameters ecoreParameter="rtfm.ecore#//Workflow/accept/node"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="rtfm.ecore#//Task">
+      <genOperations ecoreOperation="rtfm.ecore#//Task/execute">
+        <genParameters ecoreParameter="rtfm.ecore#//Task/execute/node"/>
+        <genParameters ecoreParameter="rtfm.ecore#//Task/execute/monitor"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="rtfm.ecore#//ExternalProcess">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//ExternalProcess/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//ExternalProcess/executable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//ExternalProcess/arguments"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rtfm.ecore#//ExternalProcess/env"/>
+    </genClasses>
+    <genClasses ecoreClass="rtfm.ecore#//AttributeTool">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rtfm.ecore#//AttributeTool/attributesToUpdate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rtfm.ecore#//AttributeTool/attributesToDelete"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

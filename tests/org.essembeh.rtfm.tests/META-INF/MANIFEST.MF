@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: RtfmTests
+Bundle-SymbolicName: org.essembeh.rtfm.tests;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.essembeh.rtfm.tests.RtfmTestsActivator
+Require-Bundle: org.eclipse.core.runtime,
+ org.essembeh.rtfm.model,
+ org.junit,
+ org.apache.commons.io,
+ org.apache.commons.lang3,
+ org.essembeh.rtfm.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="rtfm" sequenceNumber="28">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="4.5.1.M20150904-0015"/>
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.6.200.v20150602-1417"/>
+<unit id="org.eclipse.equinox.executable" version="3.6.200.v20150602-1417"/>
+<unit id="org.eclipse.platform.sdk" version="4.5.1.M20150904-0015"/>
+<unit id="org.eclipse.platform.ide" version="4.5.1.M20150904-0015"/>
+<unit id="org.eclipse.jdt.source.feature.group" version="3.11.1.v20150904-0015"/>
+<unit id="org.eclipse.jdt.feature.group" version="3.11.1.v20150904-0015"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.5"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.commons.codec.source" version="1.6.0.v201305230611"/>
+<unit id="org.apache.commons.codec" version="1.6.0.v201305230611"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20151221205849/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.commons.io.source" version="2.2.0.v201405211200"/>
+<unit id="org.apache.commons.io" version="2.2.0.v201405211200"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20151221205849/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.commons.collections" version="3.2.2.v201511171945"/>
+<unit id="org.apache.commons.collections.source" version="3.2.2.v201511171945"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20151221205849/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="com.google.gson.source" version="2.2.4.v201311231704"/>
+<unit id="com.google.gson" version="2.2.4.v201311231704"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20151221205849/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.11.1.v20150806-0404"/>
+<repository location="http://download.eclipse.org/releases/mars"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.commons.compress" version="1.6.0.v201310281400"/>
+<unit id="org.apache.commons.compress.source" version="1.6.0.v201310281400"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20151221205849/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.commons.lang3.source" version="3.1.0.v201403281430"/>
+<unit id="org.apache.commons.lang3" version="3.1.0.v201403281430"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20151221205849/repository/"/>
+</location>
+</locations>
+<environment>
+<os>linux</os>
+<ws>gtk</ws>
+<arch>x86_64</arch>
+<nl>fr_FR</nl>
+</environment>
+<launcherArgs>
+<vmArgs>-Dosgi.requiredJavaVersion=1.7 -Dosgi.requiredJavaVersion=1.7 -Dosgi.requiredJavaVersion=1.7 -XX:MaxPermSize=256m -Xms256m -Xmx1024m -Doomph.update.url=http://download.eclipse.org/oomph/updates/milestone/latest -Doomph.redirection.index.redirection=index:/-&gt;http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/</vmArgs>
+</launcherArgs>
+</target>

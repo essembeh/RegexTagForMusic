@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated rtfm -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.essembeh.rtfm.model.rtfm.presentation.RtfmModelWizardID"
+            name="%_UI_RtfmModelWizard_label"
+            class="org.essembeh.rtfm.model.rtfm.presentation.RtfmModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/RtfmModelFile.gif">
+         <description>%_UI_RtfmModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated rtfm -->
+      <editor
+            id="org.essembeh.rtfm.model.rtfm.presentation.RtfmEditorID"
+            name="%_UI_RtfmEditor_label"
+            icon="icons/full/obj16/RtfmModelFile.gif"
+            extensions="rtfm"
+            class="org.essembeh.rtfm.model.rtfm.presentation.RtfmEditor"
+            contributorClass="org.essembeh.rtfm.model.rtfm.presentation.RtfmActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

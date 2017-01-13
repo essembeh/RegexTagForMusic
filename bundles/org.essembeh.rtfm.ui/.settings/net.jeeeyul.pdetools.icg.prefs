@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+generate-class=SharedImages
+generate-package=org.essembeh.rtfm.ui
+generate-src-folder=src
+image-file-extensions=jpg, gif, png
+monitoring-folder=icons

@@ -1,15 +1,5 @@
-# Eclipse
-/*/.settings/
-/*/bin/
+/bundles/org.essembeh.rtfm.*/bin/
+/tests/org.essembeh.rtfm.*/bin/
 
-# tests files
-/rtfm-test/resources/roots/*.folder
+/*/*/target/
 
-# git
-*.patch
-
-# MacOS
-.DS_Store
-
-# Maven
-/*/target
