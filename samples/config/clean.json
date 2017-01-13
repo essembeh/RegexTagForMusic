@@ -1,0 +1,18 @@
+{
+	"substitutions": {
+	},
+	"commands": {
+		"eyed3-clean": [ "/usr/bin/eyeD3", "--no-color", "--remove-all", "${FILE}" ],
+		"delete": [ "rm", "${FILE}" ]
+	},
+	"types": {
+		"mp3": {
+			"pattern": "(?<FILE>.*\\.mp3)",
+			"workflow": [ "eyed3-clean" ]
+		},
+		"junk": {
+			"pattern": "(?<FILE>.*/\\.DS_Store)",
+			"workflow": [ "delete" ]
+		}
+	}
+}

@@ -1,0 +1,53 @@
+{
+	"commands": {
+		"eyed3-clean": [
+			"/usr/bin/eyeD3",
+			"--no-color",
+			"--remove-all",
+			"${FILE}"
+		],
+		"eyed3-tag": [
+			"/usr/bin/eyeD3",
+			"--no-color",
+			"--artist=${ARTIST}",
+			"--album=${ALBUM}",
+			"--year=${YEAR}",
+			"--track=${TRACK}",
+			"--title=${TITLE}",
+			"--comment=::Tagged with rtfm",
+			"${FILE}"
+		],
+		"eyed3-utf8": [
+			"/usr/bin/eyeD3",
+			"--no-color",
+			"--set-encoding=utf8",
+			"--force-update",
+			"${FILE}"
+		],
+		"delete": [
+			"rm",
+			"${FILE}"
+		]
+	},
+	"types": {
+		"album": {
+			"pattern": "(?<FILE>.*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>(?:(?<YEAR>[12]\\d{3}) - )?[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3)",
+			"variables": { "YEAR": "" },
+			"workflow": [ "eyed3-clean", "eyed3-tag" ]
+		},
+		"single": {
+			"pattern": "(?<FILE>.*/Singles/(?<ARTIST>[^/]+) - (?<TITLE>[^/]+)\\.mp3)",
+			"variables": { "ALBUM": "#Single", "YEAR": "", "TRACK": "" },
+			"workflow": [ "eyed3-clean", "eyed3-tag" ]
+		},
+		"saga": {
+			"pattern": "(?<FILE>.*/Saga/(?<ARTIST>[^/]+)/(?<TITLE>[^/]+)\\.mp3)",
+			"variables": { "ALBUM": "#Saga", "YEAR": "", "TRACK": "" },
+			"workflow": [ "eyed3-clean", "eyed3-tag" ]
+		},
+		"junk": {
+			"pattern": "(?<FILE>.*/\\.DS_Store)",
+			"workflow": [ "delete" ]
+		}
+	}
+}

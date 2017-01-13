@@ -1,15 +1,1 @@
-# Eclipse
-/*/.settings/
-/*/bin/
-
-# tests files
-/rtfm-test/resources/roots/*.folder
-
-# git
-*.patch
-
-# MacOS
-.DS_Store
-
-# Maven
-/*/target
+/*/target/

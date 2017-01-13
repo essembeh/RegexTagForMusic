@@ -2,18 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.essembeh.rtfm</groupId>
-  <artifactId>product</artifactId>
-  <version>2.4</version>
+  <artifactId>app</artifactId>
+  <version>4.0.0</version>
   <packaging>pom</packaging>
   <properties>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
   <modules>
-    <module>model</module>
-    <module>fs</module>
-    <module>core</module>
-    <module>exec</module>
-    <module>ui</module>
+    <module>rtfm-cli</module>
+    <module>rtfm-releng</module>
   </modules>
 </project>
