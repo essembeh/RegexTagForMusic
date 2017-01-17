@@ -2,31 +2,28 @@ package org.essembeh.rtfm.cli.app;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.lang3.tuple.Triple;
 import org.essembeh.rtfm.cli.config.Configuration;
 import org.essembeh.rtfm.cli.config.Handler;
-import org.essembeh.rtfm.cli.resolver.VariableResolver;
-import org.essembeh.rtfm.cli.resolver.VariableUtils;
-import org.essembeh.rtfm.cli.utils.WorkflowExecutionException;
+import org.essembeh.rtfm.cli.resolver.BuiltinVariables;
+import org.essembeh.rtfm.cli.resolver.VariableSubstitutor;
 
 public class App {
 
 	private final Configuration configuration;
-	private final Logger logger;
 
 	boolean resolveEnv = false;
 	boolean dryRun = false;
 
-	public App(Configuration configuration, Logger logger) {
+	public App(Configuration configuration) {
 		this.configuration = configuration;
-		this.logger = logger;
 	}
 
 	public boolean dryRun() {
@@ -45,46 +42,58 @@ public class App {
 		this.resolveEnv = resolveEnv;
 	}
 
-	public boolean process(Path in) {
-		boolean out = true;
-		String fullpath = in.normalize().toString();
-		try {
-			String filehandlerId = null;
-			for (Entry<String, Handler> e : configuration.getTypes().entrySet()) {
-				Matcher matcher = Pattern.compile(e.getValue().getPattern()).matcher(fullpath);
-				if (matcher.matches()) {
-					filehandlerId = e.getKey();
-					logger.debug("[%s] %s ", filehandlerId, fullpath);
-					executeWorkflow(e.getValue(), matcher);
-					logger.info("Finished %s (%s)", fullpath, filehandlerId);
-					break;
-				}
-			}
-			if (filehandlerId == null) {
-				logger.error("Ignore %s", fullpath);
-			}
-		} catch (WorkflowExecutionException | IOException | InterruptedException | IllegalStateException e) {
-			logger.error("Error with: " + fullpath);
-			logger.dump(e);
-			out = false;
-		}
-		return out;
+	private Matcher testHandler(Handler handler, String path) {
+		Matcher out = Pattern.compile(handler.getPattern()).matcher(path);
+		return out.matches() ? out : null;
 	}
 
-	private void executeWorkflow(Handler fileHandler, Matcher matcher) throws IOException, InterruptedException, WorkflowExecutionException {
-		StrSubstitutor resolver = VariableUtils.createResolver(new VariableResolver(matcher, fileHandler.getVariables(), resolveEnv));
-		if (fileHandler.getWorkflow().stream().filter(s -> !configuration.getCommands().containsKey(s)).findFirst().isPresent()) {
-			throw new IllegalStateException("Invalid workflow: " + StringUtils.join(fileHandler.getWorkflow(), ", "));
+	private Optional<Triple<String, Handler, Matcher>> findHandler(String path) {
+		for (Entry<String, Handler> e : configuration.getTypes().entrySet()) {
+			Matcher m = testHandler(e.getValue(), path);
+			if (m != null) {
+				return Optional.of(Triple.of(e.getKey(), e.getValue(), m));
+			}
 		}
-		ProcessExecutor executor = new ProcessExecutor(logger, dryRun);
+		return Optional.empty();
+	}
+
+	public void process(Path in, ICallback callback) {
+		String fullpath = BuiltinVariables.PATH.resolve(in);
+		try {
+			Optional<Triple<String, Handler, Matcher>> handler = findHandler(fullpath);
+			if (handler.isPresent()) {
+				callback.fileHandled(fullpath, handler.get().getLeft());
+				executeWorkflow(in, handler.get().getMiddle(), handler.get().getRight(), callback);
+			} else {
+				callback.unknownType(fullpath);
+			}
+		} catch (Exception e) {
+			callback.workflowException(e);
+		} finally {
+			callback.done();
+		}
+	}
+
+	protected void executeWorkflow(Path in, Handler fileHandler, Matcher matcher, ICallback callback) throws IOException, InterruptedException {
+		VariableSubstitutor resolver = new VariableSubstitutor(in, matcher, fileHandler.getVariables(), resolveEnv);
+		callback.workflowBegins(fileHandler.getWorkflow());
 		for (String commandId : fileHandler.getWorkflow()) {
 			List<String> rawCommand = configuration.getCommands().get(commandId);
-			List<String> resolvedCommand = rawCommand.stream().map(resolver::replace).collect(Collectors.toList());
-			logger.debug("  Resolution: %s", rawCommand);
-			logger.debug("              %s", resolvedCommand);
-			int rc = executor.run(resolvedCommand);
-			logger.debug("  Command %s exited with %d", commandId, rc);
-			WorkflowExecutionException.check(commandId, rc);
+			callback.commandBegins(commandId, rawCommand);
+			List<String> resolvedCommand = new ArrayList<>();
+			for (String rawString : rawCommand) {
+				String resolvedString = resolver.replace(rawString);
+				if (!resolver.isComplete(resolvedString)) {
+					throw new IllegalStateException("Cannot resolve variable from: " + resolvedString);
+				}
+				resolvedCommand.add(resolvedString);
+			}
+			callback.commandResolved(commandId, resolvedCommand);
+			ProcessStatus status = dryRun ? ProcessStatus.dryRun(resolvedCommand) : ProcessStatus.execute(resolvedCommand);
+			callback.commandEnds(commandId, status);
+			if (status.getReturnCode() != 0) {
+				break;
+			}
 		}
 	}
 }

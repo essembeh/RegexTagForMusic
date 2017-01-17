@@ -4,7 +4,7 @@
 			"/usr/bin/eyeD3",
 			"--no-color",
 			"--remove-all",
-			"${FILE}"
+			"${path}"
 		],
 		"eyed3-tag": [
 			"/usr/bin/eyeD3",
@@ -15,39 +15,63 @@
 			"--track=${TRACK}",
 			"--title=${TITLE}",
 			"--comment=::Tagged with rtfm",
-			"${FILE}"
+			"${path}"
 		],
 		"eyed3-utf8": [
 			"/usr/bin/eyeD3",
 			"--no-color",
 			"--set-encoding=utf8",
 			"--force-update",
-			"${FILE}"
+			"${path}"
 		],
 		"delete": [
 			"rm",
-			"${FILE}"
+			"${path}"
 		]
 	},
 	"types": {
 		"album": {
-			"pattern": "(?<FILE>.*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>(?:(?<YEAR>[12]\\d{3}) - )?[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3)",
-			"variables": { "YEAR": "" },
-			"workflow": [ "eyed3-clean", "eyed3-tag" ]
+			"pattern": ".*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>(?:(?<YEAR>[12]\\d{3}) - )?[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
+			"variables": {
+				"YEAR": ""
+			},
+			"workflow": [
+				"eyed3-clean",
+				"eyed3-tag",
+				"eyed3-utf8"
+			]
 		},
 		"single": {
-			"pattern": "(?<FILE>.*/Singles/(?<ARTIST>[^/]+) - (?<TITLE>[^/]+)\\.mp3)",
-			"variables": { "ALBUM": "#Single", "YEAR": "", "TRACK": "" },
-			"workflow": [ "eyed3-clean", "eyed3-tag" ]
+			"pattern": ".*/Singles/(?<ARTIST>[^/]+) - (?<TITLE>[^/]+)\\.mp3",
+			"variables": {
+				"ALBUM": "#Single",
+				"YEAR": "",
+				"TRACK": ""
+			},
+			"workflow": [
+				"eyed3-clean",
+				"eyed3-tag",
+				"eyed3-utf8"
+			]
 		},
 		"saga": {
-			"pattern": "(?<FILE>.*/Saga/(?<ARTIST>[^/]+)/(?<TITLE>[^/]+)\\.mp3)",
-			"variables": { "ALBUM": "#Saga", "YEAR": "", "TRACK": "" },
-			"workflow": [ "eyed3-clean", "eyed3-tag" ]
+			"pattern": ".*/Saga/(?<ARTIST>[^/]+)/(?<TITLE>[^/]+)\\.mp3",
+			"variables": {
+				"ALBUM": "#Saga",
+				"YEAR": "",
+				"TRACK": ""
+			},
+			"workflow": [
+				"eyed3-clean",
+				"eyed3-tag",
+				"eyed3-utf8"
+			]
 		},
 		"junk": {
-			"pattern": "(?<FILE>.*/\\.DS_Store)",
-			"workflow": [ "delete" ]
+			"pattern": ".*/\\.DS_Store",
+			"workflow": [
+				"delete"
+			]
 		}
 	}
 }
