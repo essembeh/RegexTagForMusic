@@ -26,7 +26,7 @@ public class ConsoleReport implements ICallback {
 	@Override
 	public void commandEnds(String commandId, ProcessStatus status) {
 		if (status.getReturnCode() != 0) {
-			System.out.println("\tERROR " + commandId + "exited with " + status.getReturnCode());
+			System.out.println("\tERROR " + commandId + " exited with " + status.getReturnCode());
 		}
 	}
 

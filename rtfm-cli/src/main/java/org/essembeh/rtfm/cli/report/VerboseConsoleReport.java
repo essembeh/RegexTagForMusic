@@ -68,9 +68,11 @@ public class VerboseConsoleReport implements ICallback {
 
 	@Override
 	public void commandEnds(String commandId, ProcessStatus status) {
-		print(Level.INFO, 2, "Return: %d", status.getReturnCode());
 		if (status.getReturnCode() != 0) {
+			print(Level.ERROR, 2, "Return: %d", status.getReturnCode());
 			status.getStdout().forEach(l -> print(Level.DEBUG, 2, l));
+		} else {
+			print(Level.INFO, 2, "Return: %d", status.getReturnCode());
 		}
 	}
 }
