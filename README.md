@@ -1,6 +1,6 @@
 # Presentation
 
-RegexTagForMusic is a tool to run *dynamically* build commands on files using *regular expressions*. In other words, if the path matches a regex, you can use any matching group or variables to build & run commands.
+RegexTagForMusic is a tool to run *dynamically* built commands on files using *regular expressions*. In other words, if the path matches a regex, you can use any matching group or variables to build & run commands.
 
 
 I originally developed *RegexTagForMusic* to automatize tagging my music using [eyeD3](http://eyed3.nicfit.net/). ID3 tags are some metadata just like the way you store your files on your filesystem so I wanted a way to synchronize tags *from* the filesystem:
@@ -111,17 +111,24 @@ The application will search for a configuration file:
 * or try to read `~/.config/rtfm.json`
 
 
-## Section: *commands*
-
-This is a map (key/value) where you declare all commands you will run on files.
-
-A command contains:
-* An array of strings, defining the command to be executed using the Java `java.lang.ProcessBuilder` API.
-
-You can use variables like `${path}` or `${FOO}`, they will be resolved at runtime.
-
 ## Section: *types*
-
+```json
+{
+  "types": {
+    "myType": {
+      "pattern": ".*/(?<MYGROUP1>\\d+)/(?<MYGROUP2>\\w+)",
+      "variables": {
+        "myVar1": "Foo",
+        "myVar2": "Bar"
+      },
+      "workflow": [
+        "myCommandId1",
+        "myCommandId2"
+      ]
+    }
+  }
+}
+```
 This is a map (key/value) where you define all kind of file you want to process.
 
 A *type* contains:
@@ -130,6 +137,30 @@ A *type* contains:
 * A *workflow*, an array of *command* identifiers defined in *commands* section.
 
 *Nota Bene:* You will have to escape the backslashes like in *Java*. For example, if you want to match a digit using `\d` you have to write `\\d`.
+
+
+## Section: *commands*
+```json
+{
+  "commands": {
+    "myCommandId1": [
+      "echo",
+      "a static string",
+      "another string with named-capturing group ${MYGROUP1}",
+      "and now a type variable ${myVar1}"
+      "a builtin variable ${path}",
+      "another builtin variable ${extension}"
+    ]
+  }
+}
+```
+This is a map (key/value) where you declare all commands you will run on files.
+
+A command contains:
+* An array of strings, defining the command to be executed using the Java `java.lang.ProcessBuilder` API.
+
+You can use variables like `${path}` or `${FOO}`, they will be resolved at runtime.
+
 
 # Variable resolution
 
@@ -141,7 +172,7 @@ If you declare a variable `${FOO}` in a command, it will be resolved at runtime 
 * Try to find a variable named *FOO* in the *variables* section of the *type* in the configuration file
 * If the argument `--env` is passed, then try to find an environment variable named *FOO* (using `System.getenv(String)` API)
 
-Builtin variables values for file names `~/test/foo.mp3`:
+Builtin variables values for file `~/test/foo.mp3`:
 * `path` = `/home/seb/test/foo.mp3`
 * `dirname` = `/home/seb/test`
 * `basename` = `foo.mp3`

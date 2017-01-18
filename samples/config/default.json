@@ -1,35 +1,35 @@
 {
-	"commands": {
-		"eyed3-clean": [
-			"/usr/bin/eyeD3",
-			"--no-color",
-			"--remove-all",
-			"${path}"
-		],
-		"eyed3-tag": [
-			"/usr/bin/eyeD3",
-			"--no-color",
-			"--artist=${ARTIST}",
-			"--album=${ALBUM}",
-			"--year=${YEAR}",
-			"--track=${TRACK}",
-			"--title=${TITLE}",
-			"${path}"
-		]
-	},
-	"types": {
-		"cover": {
-			"pattern": ".*/cover.jpg"
-		},
-		"mp3": {
-			"pattern": ".*/(?<ARTIST>[^/]+)/(?:(?<YEAR>[12]\\d{3}) - )?(?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
-			"variables": {
-				"YEAR": ""
-			},
-			"workflow": [
-				"eyed3-clean",
-				"eyed3-tag"
-			]
-		}
-	}
+  "commands": {
+    "eyed3-clean": [
+      "/usr/bin/eyeD3",
+      "--no-color",
+      "--remove-all",
+      "${path}"
+    ],
+    "eyed3-tag": [
+      "/usr/bin/eyeD3",
+      "--no-color",
+      "--artist=${ARTIST}",
+      "--album=${ALBUM}",
+      "--year=${YEAR}",
+      "--track=${TRACK}",
+      "--title=${TITLE}",
+      "${path}"
+    ]
+  },
+  "types": {
+    "cover": {
+      "pattern": ".*/cover.jpg"
+    },
+    "mp3": {
+      "pattern": ".*/(?<ARTIST>[^/]+)/(?:(?<YEAR>[12]\\d{3}) - )?(?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
+      "variables": {
+        "YEAR": ""
+      },
+      "workflow": [
+        "eyed3-clean",
+        "eyed3-tag"
+      ]
+    }
+  }
 }

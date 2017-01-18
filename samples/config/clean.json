@@ -1,31 +1,29 @@
 {
-	"substitutions": {
-		
-	},
-	"commands": {
-		"eyed3-clean": [
-			"/usr/bin/eyeD3",
-			"--no-color",
-			"--remove-all",
-			"${path}"
-		],
-		"delete": [
-			"rm",
-			"${path}"
-		]
-	},
-	"types": {
-		"mp3": {
-			"pattern": ".*\\.mp3",
-			"workflow": [
-				"eyed3-clean"
-			]
-		},
-		"junk": {
-			"pattern": ".*/\\.DS_Store",
-			"workflow": [
-				"delete"
-			]
-		}
-	}
+  "substitutions": {},
+  "commands": {
+    "eyed3-clean": [
+      "/usr/bin/eyeD3",
+      "--no-color",
+      "--remove-all",
+      "${path}"
+    ],
+    "delete": [
+      "rm",
+      "${path}"
+    ]
+  },
+  "types": {
+    "mp3": {
+      "pattern": ".*\\.mp3",
+      "workflow": [
+        "eyed3-clean"
+      ]
+    },
+    "junk": {
+      "pattern": ".*/\\.DS_Store",
+      "workflow": [
+        "delete"
+      ]
+    }
+  }
 }
