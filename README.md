@@ -61,10 +61,10 @@ $ ./rtfm-app/target/rtfm.sh --config samples/config/default.json samples/config/
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Bob/The Album/02 - Track.mp3
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Alice/2000 - First Album/03 - Track.mp3
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Alice/2000 - First Album/01 - Track.mp3
-UNKNOWN /home/seb/RegexTagForMusic/samples/config/default/Alice/2000 - First Album/cover.jpg
+[cover] /home/seb/RegexTagForMusic/samples/config/default/Alice/2000 - First Album/cover.jpg
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Alice/2000 - First Album/02 - Track.mp3
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Alice/2001 - Second Album/201 - Track.mp3
-UNKNOWN /home/seb/RegexTagForMusic/samples/config/default/Alice/2001 - Second Album/cover.jpg
+[cover] /home/seb/RegexTagForMusic/samples/config/default/Alice/2001 - Second Album/cover.jpg
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Alice/2001 - Second Album/102 - Track.mp3
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Alice/2001 - Second Album/202 - Track.mp3
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Alice/2001 - Second Album/101 - Track.mp3

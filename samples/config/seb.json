@@ -41,6 +41,9 @@
 				"eyed3-utf8"
 			]
 		},
+		"cover": {
+			"pattern": ".*/Albums/[^/]+/[^/]+/cover.jpg"
+		},
 		"single": {
 			"pattern": ".*/Singles/(?<ARTIST>[^/]+) - (?<TITLE>[^/]+)\\.mp3",
 			"variables": {

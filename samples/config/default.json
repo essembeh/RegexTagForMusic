@@ -18,6 +18,9 @@
 		]
 	},
 	"types": {
+		"cover": {
+			"pattern": ".*/cover.jpg"
+		},
 		"mp3": {
 			"pattern": ".*/(?<ARTIST>[^/]+)/(?:(?<YEAR>[12]\\d{3}) - )?(?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
 			"variables": {
