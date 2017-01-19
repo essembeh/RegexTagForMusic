@@ -12,9 +12,9 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.essembeh.rtfm.cli.app.App;
-import org.essembeh.rtfm.cli.app.DefaultCallback;
-import org.essembeh.rtfm.cli.app.ICallback;
 import org.essembeh.rtfm.cli.app.ProcessStatus;
+import org.essembeh.rtfm.cli.callback.DefaultCallback;
+import org.essembeh.rtfm.cli.callback.ICallback;
 import org.essembeh.rtfm.cli.config.Configuration;
 import org.essembeh.rtfm.cli.utils.ConfigurationLoader;
 import org.junit.Assert;
@@ -65,7 +65,7 @@ public class SamplesTest {
 		Assert.assertTrue(Files.isRegularFile(config));
 		Assert.assertTrue(Files.isDirectory(root));
 
-		Configuration configuration = ConfigurationLoader.loadConfiguration(config.toFile());
+		Configuration configuration = ConfigurationLoader.loadConfiguration(config);
 		App app = new App(configuration);
 		ICallback callback = new DefaultCallback() {
 			@Override

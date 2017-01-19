@@ -1,6 +1,8 @@
-package org.essembeh.rtfm.cli.app;
+package org.essembeh.rtfm.cli.callback;
 
 import java.util.List;
+
+import org.essembeh.rtfm.cli.app.ProcessStatus;
 
 public interface ICallback {
 

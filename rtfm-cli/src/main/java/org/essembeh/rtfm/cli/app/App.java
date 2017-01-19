@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Triple;
+import org.essembeh.rtfm.cli.callback.ICallback;
 import org.essembeh.rtfm.cli.config.Configuration;
 import org.essembeh.rtfm.cli.config.Handler;
 import org.essembeh.rtfm.cli.resolver.BuiltinVariables;

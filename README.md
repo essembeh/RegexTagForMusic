@@ -84,17 +84,30 @@ track: 102
 ## Options
 
 ```
--c,--config <arg>   Custom configuration file
--e,--env            Use env to resolve variables
--f,--folders        Also process folders (NB: folders path will end with
-                    /)
--h,--help           Display help
--n,--dry-run        Dry-run mode, do not execute commands
--v,--verbose        Display more information
+usage: rtfm
+	-c,--config <arg>        Custom configuration file
+	-e,--env                 Use env to resolve variables
+	-f,--folders             Also process folders (NB: folders path will end with /)
+	-h,--help                Display help
+	-i,--ignore-list <arg>   Use ignore list
+	-n,--dry-run             Dry-run mode, do not execute commands
+	-v,--verbose             Display more information
 ```
-*Nota Bene:* If you use the `--folders` option, the full path on which regex will be tested will end with a *trailing slash*. This is a convenient way to differentiate files from folder when you write your regular expressions.
+
+### Option: *--folders*
+
+If you use the `--folders` option, the full path on which regex will be tested will end with a *trailing slash*. This is a convenient way to differentiate files from folder when you write your regular expressions.
 
 For example, `/test/foo` folder will match `/test/\\w+/` and *not* `/test/\\w+` (Note the trailing `/`)
+
+### Option: *--ignore-list*
+
+This option takes one argument, a file containing all files to be ignored.
+
+The format is simple, it is a text file, one full path per line.
+All files contained in this *ignore list*  won't be processed at all (won't appear in logs).
+
+At the end of the execution, all files processed without error will be written in this file, to increment the list of files already done.
 
 # Configuration
 

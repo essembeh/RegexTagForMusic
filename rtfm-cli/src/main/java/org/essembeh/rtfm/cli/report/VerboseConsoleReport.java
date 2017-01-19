@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.essembeh.rtfm.cli.app.ICallback;
 import org.essembeh.rtfm.cli.app.ProcessStatus;
+import org.essembeh.rtfm.cli.callback.ICallback;
 
 public class VerboseConsoleReport implements ICallback {
 

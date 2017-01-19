@@ -1,10 +1,11 @@
 package org.essembeh.rtfm.cli.utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.essembeh.rtfm.cli.config.Configuration;
@@ -15,23 +16,20 @@ public class ConfigurationLoader {
 
 	private static final String RTFM_CONFIGURATION = "RTFM_CONFIG";
 
-	public static Configuration getConfiguration(String customConfiguration) throws IOException {
-		File out;
-		if (StringUtils.isNotBlank(System.getenv(RTFM_CONFIGURATION))) {
-			out = Paths.get(System.getenv(RTFM_CONFIGURATION)).toFile();
-		} else if (StringUtils.isNotBlank(customConfiguration)) {
-			out = Paths.get(customConfiguration).toFile();
+	public static Configuration getConfiguration(Optional<Path> customConfig) throws IOException {
+		Path config;
+		if (customConfig.isPresent()) {
+			config = customConfig.get();
+		} else if (StringUtils.isNotBlank(System.getenv(RTFM_CONFIGURATION))) {
+			config = Paths.get(System.getenv(RTFM_CONFIGURATION));
 		} else {
-			out = Paths.get(System.getProperty("user.home"), ".config", "rtfm.json").toFile();
+			config = Paths.get(System.getProperty("user.home"), ".config", "rtfm.json");
 		}
-		return loadConfiguration(out);
+		return loadConfiguration(config);
 	}
 
-	public static Configuration loadConfiguration(File in) throws IOException {
-		if (!in.isFile()) {
-			throw new FileNotFoundException("Cannot find configuration file: " + in.getAbsolutePath());
-		}
-		try (FileReader reader = new FileReader(in)) {
+	public static Configuration loadConfiguration(Path config) throws IOException {
+		try (BufferedReader reader = Files.newBufferedReader(config)) {
 			Configuration out = new Gson().fromJson(reader, Configuration.class);
 			return out;
 		}

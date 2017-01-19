@@ -2,8 +2,8 @@ package org.essembeh.rtfm.cli.report;
 
 import java.util.List;
 
-import org.essembeh.rtfm.cli.app.ICallback;
 import org.essembeh.rtfm.cli.app.ProcessStatus;
+import org.essembeh.rtfm.cli.callback.ICallback;
 
 public class ConsoleReport implements ICallback {
 

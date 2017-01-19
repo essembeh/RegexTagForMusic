@@ -25,7 +25,7 @@ public class SebConfigTest {
 	public static final String PATH_SINGLE = String.format("/foo/bar/Singles/%s - %s.mp3", ARTIST, TITLE);
 
 	protected Configuration getConfig() throws IOException {
-		return ConfigurationLoader.loadConfiguration(Paths.get("../samples/config/seb.json").toFile());
+		return ConfigurationLoader.loadConfiguration(Paths.get("../samples/config/seb.json"));
 	}
 
 	@Test

@@ -3,7 +3,9 @@ package org.essembeh.rtfm.cli.app;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -20,6 +22,7 @@ public class AppOptions {
 	public static final String DRYRUN = "n";
 	public static final String CONFIG = "c";
 	public static final String FOLDERS = "f";
+	public static final String IGNORE_LIST = "i";
 
 	private static final Options OPTIONS = new Options();
 	static {
@@ -29,6 +32,7 @@ public class AppOptions {
 		OPTIONS.addOption(DRYRUN, "dry-run", false, "Dry-run mode, do not execute commands");
 		OPTIONS.addOption(CONFIG, "config", true, "Custom configuration file");
 		OPTIONS.addOption(FOLDERS, "folders", false, "Also process folders (NB: folders path will end with " + File.separator + ")");
+		OPTIONS.addOption(IGNORE_LIST, "ignore-list", true, "Use ignore list");
 	}
 
 	public static AppOptions parse(String... args) throws ParseException {
@@ -40,6 +44,13 @@ public class AppOptions {
 
 	public AppOptions(CommandLine commandLine) {
 		this.commandLine = commandLine;
+	}
+
+	protected Optional<String> getOptionValue(String option) {
+		if (commandLine.hasOption(option)) {
+			return Optional.of(commandLine.getOptionValue(option));
+		}
+		return Optional.empty();
 	}
 
 	public boolean displayHelp() {
@@ -67,8 +78,12 @@ public class AppOptions {
 		return commandLine.getArgList();
 	}
 
-	public String getCustomConfiguration() {
-		return commandLine.hasOption(CONFIG) ? commandLine.getOptionValue(CONFIG) : null;
+	public Optional<Path> getCustomConfiguration() {
+		return getOptionValue(CONFIG).map(Paths::get);
+	}
+
+	public Optional<Path> getIgnoreList() {
+		return getOptionValue(IGNORE_LIST).map(Paths::get);
 	}
 
 	public boolean processFolders() {
