@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/essembeh/RegexTagForMusic.svg?branch=master)](https://travis-ci.org/essembeh/RegexTagForMusic)
+
 # Presentation
 
 RegexTagForMusic is a tool to run *dynamically* built commands on files using *regular expressions*. In other words, if the path matches a regex, you can use any matching group or variables to build & run commands.
