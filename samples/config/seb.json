@@ -1,13 +1,13 @@
 {
   "commands": {
     "eyed3-clean": [
-      "/usr/bin/eyeD3",
+      "eyeD3",
       "--no-color",
       "--remove-all",
       "${path}"
     ],
     "eyed3-tag": [
-      "/usr/bin/eyeD3",
+      "eyeD3",
       "--no-color",
       "--artist=${ARTIST}",
       "--album=${ALBUM}",
@@ -18,7 +18,7 @@
       "${path}"
     ],
     "eyed3-utf8": [
-      "/usr/bin/eyeD3",
+      "eyeD3",
       "--no-color",
       "--set-encoding=utf8",
       "--force-update",

@@ -2,7 +2,7 @@
   "substitutions": {},
   "commands": {
     "eyed3-clean": [
-      "/usr/bin/eyeD3",
+      "eyeD3",
       "--no-color",
       "--remove-all",
       "${path}"

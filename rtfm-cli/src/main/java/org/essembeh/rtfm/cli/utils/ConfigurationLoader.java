@@ -27,7 +27,7 @@ public class ConfigurationLoader {
 		return loadConfiguration(out);
 	}
 
-	private static Configuration loadConfiguration(File in) throws IOException {
+	public static Configuration loadConfiguration(File in) throws IOException {
 		if (!in.isFile()) {
 			throw new FileNotFoundException("Cannot find configuration file: " + in.getAbsolutePath());
 		}

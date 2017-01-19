@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Triple;
 import org.essembeh.rtfm.cli.config.Configuration;
@@ -55,6 +57,10 @@ public class App {
 			}
 		}
 		return Optional.empty();
+	}
+
+	public void process(Stream<Path> stream, Function<Path, ICallback> callbackFactory) {
+		stream.forEach(p -> process(p, callbackFactory.apply(p)));
 	}
 
 	public void process(Path in, ICallback callback) {

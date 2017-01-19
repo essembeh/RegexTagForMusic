@@ -26,7 +26,7 @@ public class Launcher {
 			app.setDryRun(options.dryrun());
 			app.setResolveEnv(options.useEnv());
 			for (String arg : options.getArgs()) {
-				Files.walk(Paths.get(arg), FileVisitOption.FOLLOW_LINKS).filter(options::filterFolders).forEach(file -> app.process(file, consoleReport));
+				app.process(Files.walk(Paths.get(arg), FileVisitOption.FOLLOW_LINKS).filter(options::filterFolders), p -> consoleReport);
 			}
 		}
 	}

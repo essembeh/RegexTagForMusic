@@ -16,7 +16,7 @@ import org.junit.Test;
 
 public class VariableResolverTest {
 
-	private static final String FULLPATH = "/foo/bar/Album/Alice/2013 - First Album/12 - My Track.mp3";
+	private static final String FULLPATH = "/foo/bar/Albums/Alice/2013 - First Album/12 - My Track.mp3";
 	private static final Path FILE = Paths.get(FULLPATH);
 	private static final String PATTERN = "(?<FILE>.*/(?<ARTIST>[^/]+)/(?:(?<YEAR>[12]\\d{3}) - )?(?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3)";
 	private static Matcher matcher;
@@ -59,7 +59,7 @@ public class VariableResolverTest {
 	public void testBuiltin() throws Exception {
 		VariableResolver resolver = new VariableResolver(FILE, matcher, new HashMap<String, String>(), false);
 		Assert.assertEquals(ResourceUtils.getFullPath(FILE), resolver.lookup(BuiltinVariables.PATH.getVarName()));
-		Assert.assertEquals("/foo/bar/Album/Alice/2013 - First Album", resolver.lookup(BuiltinVariables.DIRNAME.getVarName()));
+		Assert.assertEquals("/foo/bar/Albums/Alice/2013 - First Album", resolver.lookup(BuiltinVariables.DIRNAME.getVarName()));
 		Assert.assertEquals("12 - My Track.mp3", resolver.lookup(BuiltinVariables.BASENAME.getVarName()));
 		Assert.assertEquals("12 - My Track", resolver.lookup(BuiltinVariables.FILENAME.getVarName()));
 		Assert.assertEquals("mp3", resolver.lookup(BuiltinVariables.EXTENSION.getVarName()));
