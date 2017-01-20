@@ -106,10 +106,10 @@ For example, `/test/foo` folder will match `/test/\\w+/` and *not* `/test/\\w+` 
 
 The purpose of the database is to skip some workflows if they have already been executed on some files.
 
-This argument is optionak, takes one argument, a file containing all files to be ignored. 
+This argument is optionak, takes one argument, a file containing all files to be ignored.
 
 The format is simple, it is a json file containing
-- A `Object` named *data* 
+- A `Object` named *data*
   - Key: `String`, the full path of the file
   - Value: an `Object` named *workflows*
     - Key: `String`, the workflow identifier
@@ -125,7 +125,7 @@ At the end of the execution, all files processed without error will be written i
 
 The configuration file contains:
 - The *commands* you want to execute
-- The *workflows* which can customize *commands* and execute them on matching files 
+- The *workflows* which can customize *commands* and execute them on matching files
 
 
 This is done with a *json* file, see the [configuration file](samples/config/default.json) for default music *layout* (see [*samples*](#samples)).
@@ -153,12 +153,12 @@ The application will search for a configuration file:
   }
 }
 ```
-This is a `Map<String, Workflow>̀  where you define all kind of file you want to process.
+This is a `Map<String, Workflow>` where you define all kind of file you want to process.
 
 A `Workflow` contains:
 - *pattern*: a `String` which will be compiled using Java `java.util.regex.Pattern` API.
 - *variables*: a `Map<String, String>` of workflow specific variables (see *variable resolution*).
-- *execute*: an `List<String>̀` of *command identifiers* defined in *commands* section.
+- *execute*: an `List<String>` of *command identifiers* defined in *commands* section.
 
 *Nota Bene:* You will have to escape the backslashes like in *Java*. For example, if you want to match a digit using `\d` you have to write `\\d`.
 
@@ -178,7 +178,7 @@ A `Workflow` contains:
   }
 }
 ```
-This is a `Map<String, List<String>>̀  used to declare all commands you will run on files.
+This is a `Map<String, List<String>`  used to declare all commands you will run on files.
 
 A command is just a list of string  to be executed using the Java `java.lang.ProcessBuilder` API.
 
