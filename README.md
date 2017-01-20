@@ -6,10 +6,10 @@ RegexTagForMusic is a tool to run *dynamically* built commands (*workflows*) on 
 
 
 I originally developed *RegexTagForMusic* to automatize tagging my music using [eyeD3](http://eyed3.nicfit.net/). ID3 tags are some metadata just like the way you store your files on your filesystem so I wanted a way to synchronize tags *from* the filesystem:
-* the *album field* is the parent folder of the file
-* the *artist field* is the parent folder of the *album* folder
-* the *tracknumber field* is the first digit of the filename
-* the *title field* is the rest of the filename
+- the *album field* is the parent folder of the file
+- the *artist field* is the parent folder of the *album* folder
+- the *tracknumber field* is the first digit of the filename
+- the *title field* is the rest of the filename
 
 # Using
 
@@ -109,11 +109,11 @@ The purpose of the database is to skip some workflows if they have already been 
 This argument is optionak, takes one argument, a file containing all files to be ignored. 
 
 The format is simple, it is a json file containing
-* A `Object` named *data* 
-.* Key: `String`, the full path of the file
-.* Value: an `Object` named *workflows*
-..*Key: ̀ String`, the workflow identifier
-..*Value: `String`, the execution date
+- A `Object` named *data* 
+  - Key: `String`, the full path of the file
+  - Value: an `Object` named *workflows*
+    - Key: `String`, the workflow identifier
+	- Value: `String`, the execution date
 
 
 .Done full path per line.
@@ -124,15 +124,15 @@ At the end of the execution, all files processed without error will be written i
 # Configuration
 
 The configuration file contains:
-* The *commands* you want to execute
-* The *workflows* which can customize *commands* and execute them on matching files 
+- The *commands* you want to execute
+- The *workflows* which can customize *commands* and execute them on matching files 
 
 
 This is done with a *json* file, see the [configuration file](samples/config/default.json) for default music *layout* (see [*samples*](#samples)).
 The application will search for a configuration file:
-* using `--config <FILE>` arguments
-* using `RTFM_CONFIG` environment variable
-* or try to read `~/.config/rtfm.json`
+- using `--config <FILE>` arguments
+- using `RTFM_CONFIG` environment variable
+- or try to read `~/.config/rtfm.json`
 
 
 ## Section: *workflows*
@@ -156,9 +156,9 @@ The application will search for a configuration file:
 This is a `Map<String, Workflow>̀  where you define all kind of file you want to process.
 
 A `Workflow` contains:
-* *pattern*: a `String` which will be compiled using Java `java.util.regex.Pattern` API.
-* *variables*: a `Map<String, String>` of workflow specific variables (see *variable resolution*).
-* *execute*: an `List<String>̀  of *command identifiers* defined in *commands* section.
+- *pattern*: a `String` which will be compiled using Java `java.util.regex.Pattern` API.
+- *variables*: a `Map<String, String>` of workflow specific variables (see *variable resolution*).
+- *execute*: an `List<String>̀` of *command identifiers* defined in *commands* section.
 
 *Nota Bene:* You will have to escape the backslashes like in *Java*. For example, if you want to match a digit using `\d` you have to write `\\d`.
 
@@ -190,17 +190,17 @@ You can use variables like `${path}` or `${FOO}`, they will be resolved at runti
 The key feature is the variable resolution.
 
 If you declare a variable `${FOO}` in a command, it will be resolved at runtime as follow:
-* Search a *named-capturing group* of the *pattern* named *FOO* ([@see Javadoc]( https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html))
-* Search in builtin variables: `${path}`, `${dirname}`, `${basename}`, `${filename}`, `${extension}`
-* Try to find a variable named *FOO* in the *variables* section of the *workflow* in the configuration file
-* If the option `--env` is passed, then try to find an environment variable named *FOO* (using `System.getenv(String)` API)
+- Search a *named-capturing group* of the *pattern* named *FOO* ([@see Javadoc]( https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html))
+- Search in builtin variables: `${path}`, `${dirname}`, `${basename}`, `${filename}`, `${extension}`
+- Try to find a variable named *FOO* in the *variables* section of the *workflow* in the configuration file
+- If the option `--env` is passed, then try to find an environment variable named *FOO* (using `System.getenv(String)` API)
 
 Builtin variables values for file `~/test/foo.mp3`:
-* `path` = `/home/seb/test/foo.mp3`
-* `dirname` = `/home/seb/test`
-* `basename` = `foo.mp3`
-* `filename` = `foo`
-* `extension` = `mp3`
+- `path` = `/home/seb/test/foo.mp3`
+- `dirname` = `/home/seb/test`
+- `basename` = `foo.mp3`
+- `filename` = `foo`
+- `extension` = `mp3`
 
 If a variable cannot be resolved, it will raise an error, the workflow is aborted and the next file is processed.
 
