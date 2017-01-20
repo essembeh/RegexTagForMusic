@@ -14,6 +14,10 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+/**
+ * @author seb
+ *
+ */
 public class AppOptions {
 
 	public static final String HELP = "h";
@@ -22,7 +26,7 @@ public class AppOptions {
 	public static final String DRYRUN = "n";
 	public static final String CONFIG = "c";
 	public static final String FOLDERS = "f";
-	public static final String IGNORE_LIST = "i";
+	public static final String DATABASE = "d";
 
 	private static final Options OPTIONS = new Options();
 	static {
@@ -32,7 +36,7 @@ public class AppOptions {
 		OPTIONS.addOption(DRYRUN, "dry-run", false, "Dry-run mode, do not execute commands");
 		OPTIONS.addOption(CONFIG, "config", true, "Custom configuration file");
 		OPTIONS.addOption(FOLDERS, "folders", false, "Also process folders (NB: folders path will end with " + File.separator + ")");
-		OPTIONS.addOption(IGNORE_LIST, "ignore-list", true, "Use ignore list");
+		OPTIONS.addOption(DATABASE, "database", true, "Use database");
 	}
 
 	public static AppOptions parse(String... args) throws ParseException {
@@ -82,8 +86,8 @@ public class AppOptions {
 		return getOptionValue(CONFIG).map(Paths::get);
 	}
 
-	public Optional<Path> getIgnoreList() {
-		return getOptionValue(IGNORE_LIST).map(Paths::get);
+	public Optional<Path> getDatabase() {
+		return getOptionValue(DATABASE).map(Paths::get);
 	}
 
 	public boolean processFolders() {

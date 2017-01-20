@@ -1,11 +1,9 @@
 package org.essembeh.rtfm.cli.report;
 
-import java.util.List;
-
 import org.essembeh.rtfm.cli.app.ProcessStatus;
-import org.essembeh.rtfm.cli.callback.ICallback;
+import org.essembeh.rtfm.cli.app.callback.DefaultCallback;
 
-public class ConsoleReport implements ICallback {
+public class ConsoleReport extends DefaultCallback {
 
 	@Override
 	public void unknownType(String fullpath) {
@@ -18,8 +16,8 @@ public class ConsoleReport implements ICallback {
 	}
 
 	@Override
-	public void workflowException(Exception e) {
-		System.out.println("\tEXCEPTION");
+	public void workflowException(String workflowId, Exception e) {
+		System.out.println("\tEXCEPTION in workflow " + workflowId);
 		e.printStackTrace(System.out);
 	}
 
@@ -28,21 +26,5 @@ public class ConsoleReport implements ICallback {
 		if (status.getReturnCode() != 0) {
 			System.out.println("\tERROR " + commandId + " exited with " + status.getReturnCode());
 		}
-	}
-
-	@Override
-	public void workflowBegins(List<String> workflow) {
-	}
-
-	@Override
-	public void commandBegins(String commandId, List<String> resolvedCommand) {
-	}
-
-	@Override
-	public void commandResolved(String commandId, List<String> resolvedCommand) {
-	}
-
-	@Override
-	public void done() {
 	}
 }

@@ -2,7 +2,7 @@
 
 # Presentation
 
-RegexTagForMusic is a tool to run *dynamically* built commands on files using *regular expressions*. In other words, if the path matches a regex, you can use any matching group or variables to build & run commands.
+RegexTagForMusic is a tool to run *dynamically* built commands (*workflows*) on files using *regular expressions*. In other words, if the path matches a regex, you can use any matching group or variables to build & run commands.
 
 
 I originally developed *RegexTagForMusic* to automatize tagging my music using [eyeD3](http://eyed3.nicfit.net/). ID3 tags are some metadata just like the way you store your files on your filesystem so I wanted a way to synchronize tags *from* the filesystem:
@@ -88,10 +88,10 @@ track: 102
 ```
 usage: rtfm
 	-c,--config <arg>        Custom configuration file
+	-d,--database <arg>      Use database
 	-e,--env                 Use env to resolve variables
 	-f,--folders             Also process folders (NB: folders path will end with /)
 	-h,--help                Display help
-	-i,--ignore-list <arg>   Use ignore list
 	-n,--dry-run             Dry-run mode, do not execute commands
 	-v,--verbose             Display more information
 ```
@@ -102,11 +102,21 @@ If you use the `--folders` option, the full path on which regex will be tested w
 
 For example, `/test/foo` folder will match `/test/\\w+/` and *not* `/test/\\w+` (Note the trailing `/`)
 
-### Option: *--ignore-list*
+### Option: *--database*
 
-This option takes one argument, a file containing all files to be ignored.
+The purpose of the database is to skip some workflows if they have already been executed on some files.
 
-The format is simple, it is a text file, one full path per line.
+This argument is optionak, takes one argument, a file containing all files to be ignored. 
+
+The format is simple, it is a json file containing
+* A `Object` named *data* 
+.* Key: `String`, the full path of the file
+.* Value: an `Object` named *workflows*
+..*Key: ̀ String`, the workflow identifier
+..*Value: `String`, the execution date
+
+
+.Done full path per line.
 All files contained in this *ignore list*  won't be processed at all (won't appear in logs).
 
 At the end of the execution, all files processed without error will be written in this file, to increment the list of files already done.
@@ -114,9 +124,8 @@ At the end of the execution, all files processed without error will be written i
 # Configuration
 
 The configuration file contains:
-* The *types* of file you want to process
-* The commands to execute on files which match patterns
-* The way variables will be resolved using *named capturing groups*
+* The *commands* you want to execute
+* The *workflows* which can customize *commands* and execute them on matching files 
 
 
 This is done with a *json* file, see the [configuration file](samples/config/default.json) for default music *layout* (see [*samples*](#samples)).
@@ -126,17 +135,17 @@ The application will search for a configuration file:
 * or try to read `~/.config/rtfm.json`
 
 
-## Section: *types*
+## Section: *workflows*
 ```json
 {
-  "types": {
-    "myType": {
+  "workflows": {
+    "myWorkflow": {
       "pattern": ".*/(?<MYGROUP1>\\d+)/(?<MYGROUP2>\\w+)",
       "variables": {
         "myVar1": "Foo",
         "myVar2": "Bar"
       },
-      "workflow": [
+      "execute": [
         "myCommandId1",
         "myCommandId2"
       ]
@@ -144,12 +153,12 @@ The application will search for a configuration file:
   }
 }
 ```
-This is a map (key/value) where you define all kind of file you want to process.
+This is a `Map<String, Workflow>̀  where you define all kind of file you want to process.
 
-A *type* contains:
-* A *pattern* which will be compiled using Java `java.util.regex.Pattern` API.
-* A map of *variables*
-* A *workflow*, an array of *command* identifiers defined in *commands* section.
+A `Workflow` contains:
+* *pattern*: a `String` which will be compiled using Java `java.util.regex.Pattern` API.
+* *variables*: a `Map<String, String>` of workflow specific variables (see *variable resolution*).
+* *execute*: an `List<String>̀  of *command identifiers* defined in *commands* section.
 
 *Nota Bene:* You will have to escape the backslashes like in *Java*. For example, if you want to match a digit using `\d` you have to write `\\d`.
 
@@ -162,17 +171,16 @@ A *type* contains:
       "echo",
       "a static string",
       "another string with named-capturing group ${MYGROUP1}",
-      "and now a type variable ${myVar1}"
+      "and now a workflow variable ${myVar1}"
       "a builtin variable ${path}",
       "another builtin variable ${extension}"
     ]
   }
 }
 ```
-This is a map (key/value) where you declare all commands you will run on files.
+This is a `Map<String, List<String>>̀  used to declare all commands you will run on files.
 
-A command contains:
-* An array of strings, defining the command to be executed using the Java `java.lang.ProcessBuilder` API.
+A command is just a list of string  to be executed using the Java `java.lang.ProcessBuilder` API.
 
 You can use variables like `${path}` or `${FOO}`, they will be resolved at runtime.
 
@@ -182,10 +190,10 @@ You can use variables like `${path}` or `${FOO}`, they will be resolved at runti
 The key feature is the variable resolution.
 
 If you declare a variable `${FOO}` in a command, it will be resolved at runtime as follow:
-* Some builtin variables: `${path}`, `${dirname}`, `${basename}`, `${filename}`, `${extension}`
 * Search a *named-capturing group* of the *pattern* named *FOO* ([@see Javadoc]( https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html))
-* Try to find a variable named *FOO* in the *variables* section of the *type* in the configuration file
-* If the argument `--env` is passed, then try to find an environment variable named *FOO* (using `System.getenv(String)` API)
+* Search in builtin variables: `${path}`, `${dirname}`, `${basename}`, `${filename}`, `${extension}`
+* Try to find a variable named *FOO* in the *variables* section of the *workflow* in the configuration file
+* If the option `--env` is passed, then try to find an environment variable named *FOO* (using `System.getenv(String)` API)
 
 Builtin variables values for file `~/test/foo.mp3`:
 * `path` = `/home/seb/test/foo.mp3`

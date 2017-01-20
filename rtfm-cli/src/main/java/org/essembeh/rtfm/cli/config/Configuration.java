@@ -1,5 +1,7 @@
 package org.essembeh.rtfm.cli.config;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,18 +10,19 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.essembeh.rtfm.cli.utils.JsonUtils;
 
 public class Configuration {
 
 	private final Map<String, List<String>> commands = new HashMap<>();
-	private final Map<String, Handler> types = new HashMap<>();
+	private final Map<String, Workflow> workflows = new HashMap<>();
 
 	public Map<String, List<String>> getCommands() {
 		return commands;
 	}
 
-	public Map<String, Handler> getTypes() {
-		return types;
+	public Map<String, Workflow> getWorkflows() {
+		return workflows;
 	}
 
 	@Override
@@ -28,11 +31,16 @@ public class Configuration {
 	}
 
 	public void check() {
-		for (Entry<String, Handler> e : getTypes().entrySet()) {
-			List<String> unknownCommands = e.getValue().getWorkflow().stream().filter(commandId -> !getCommands().containsKey(commandId)).collect(Collectors.toList());
+		for (Entry<String, Workflow> e : getWorkflows().entrySet()) {
+			List<String> unknownCommands = e.getValue().getExecute().stream().filter(commandId -> !getCommands().containsKey(commandId))
+					.collect(Collectors.toList());
 			if (!unknownCommands.isEmpty()) {
-				throw new IllegalStateException("Type " + e.getKey() + " use unknown commands: " + unknownCommands);
+				throw new IllegalStateException("Workflow " + e.getKey() + " use unknown commands: " + unknownCommands);
 			}
 		}
+	}
+
+	public static Configuration load(Path in) throws IOException {
+		return JsonUtils.load(in, Configuration.class);
 	}
 }

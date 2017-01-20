@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,10 +12,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.essembeh.rtfm.cli.app.App;
 import org.essembeh.rtfm.cli.app.ProcessStatus;
-import org.essembeh.rtfm.cli.callback.DefaultCallback;
-import org.essembeh.rtfm.cli.callback.ICallback;
+import org.essembeh.rtfm.cli.app.callback.DefaultCallback;
+import org.essembeh.rtfm.cli.app.callback.ICallback;
 import org.essembeh.rtfm.cli.config.Configuration;
-import org.essembeh.rtfm.cli.utils.ConfigurationLoader;
+import org.essembeh.rtfm.cli.utils.Constants;
+import org.essembeh.rtfm.cli.utils.JunitUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,20 +33,18 @@ public class SamplesTest {
 
 	@Test
 	public void testDefault() throws Exception {
-		testConfiguration(Paths.get("../samples/config/default.json"), Paths.get("../samples/config/default"), Paths.get("../samples/config/clean.json"));
+		testConfiguration(Constants.DEFAULT_CONFIG, Constants.DEFAULT_ROOT);
 	}
 
 	@Test
 	public void testSeb() throws Exception {
-		testConfiguration(Paths.get("../samples/config/seb.json"), Paths.get("../samples/config/seb"), Paths.get("../samples/config/clean.json"));
+		testConfiguration(Constants.SEB_CONFIG, Constants.SEB_ROOT);
 	}
 
-	protected void testConfiguration(Path config, Path sampleTree, Path resetConfig) throws Exception {
+	protected void testConfiguration(Path config, Path sampleTree) throws Exception {
 		Assert.assertTrue(Files.isDirectory(sampleTree));
-		Path root = Files.createTempDirectory("rtfm-test-" + sampleTree.getFileName().toString());
+		Path root = JunitUtils.copyConfigTree(sampleTree);
 		try {
-			FileUtils.copyDirectory(sampleTree.toFile(), root.toFile());
-
 			Map<Path, String> checksums = new HashMap<>();
 			Files.walk(root).filter(p -> "mp3".equals(FilenameUtils.getExtension(p.toString()))).forEach(p -> checksums.put(p, getChecksum(p)));
 			Assert.assertFalse(checksums.isEmpty());
@@ -54,7 +52,7 @@ public class SamplesTest {
 			runConfig(config, root, true);
 			checksums.forEach((path, checksum) -> Assert.assertNotEquals(checksum, getChecksum(path)));
 
-			runConfig(resetConfig, root, false);
+			runConfig(Constants.CLEAN_CONFIG, root, false);
 			checksums.forEach((path, checksum) -> Assert.assertEquals(checksum, getChecksum(path)));
 		} finally {
 			FileUtils.deleteDirectory(root.toFile());
@@ -65,12 +63,17 @@ public class SamplesTest {
 		Assert.assertTrue(Files.isRegularFile(config));
 		Assert.assertTrue(Files.isDirectory(root));
 
-		Configuration configuration = ConfigurationLoader.loadConfiguration(config);
+		Configuration configuration = Configuration.load(config);
 		App app = new App(configuration);
 		ICallback callback = new DefaultCallback() {
 			@Override
-			public void workflowException(Exception e) {
+			public void workflowException(String id, Exception e) {
 				Assert.fail(e.getMessage());
+			}
+
+			@Override
+			public void workflowEnds(String workflowId, boolean complete) {
+				Assert.assertTrue(complete);
 			}
 
 			@Override

@@ -29,13 +29,13 @@
       "${path}"
     ]
   },
-  "types": {
+  "workflows": {
     "album": {
       "pattern": ".*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>(?:(?<YEAR>[12]\\d{3}) - )?[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
       "variables": {
         "YEAR": ""
       },
-      "workflow": [
+      "execute": [
         "eyed3-clean",
         "eyed3-tag",
         "eyed3-utf8"
@@ -51,7 +51,7 @@
         "YEAR": "",
         "TRACK": ""
       },
-      "workflow": [
+      "execute": [
         "eyed3-clean",
         "eyed3-tag",
         "eyed3-utf8"
@@ -64,7 +64,7 @@
         "YEAR": "",
         "TRACK": ""
       },
-      "workflow": [
+      "execute": [
         "eyed3-clean",
         "eyed3-tag",
         "eyed3-utf8"
@@ -72,7 +72,7 @@
     },
     "junk": {
       "pattern": ".*/\\.DS_Store",
-      "workflow": [
+      "execute": [
         "delete"
       ]
     }

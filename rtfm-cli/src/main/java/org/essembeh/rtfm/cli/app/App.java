@@ -3,6 +3,7 @@ package org.essembeh.rtfm.cli.app;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -11,17 +12,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.tuple.Triple;
-import org.essembeh.rtfm.cli.callback.ICallback;
+import org.essembeh.rtfm.cli.app.callback.ICallback;
 import org.essembeh.rtfm.cli.config.Configuration;
-import org.essembeh.rtfm.cli.config.Handler;
+import org.essembeh.rtfm.cli.config.Workflow;
+import org.essembeh.rtfm.cli.db.Database;
 import org.essembeh.rtfm.cli.resolver.BuiltinVariables;
 import org.essembeh.rtfm.cli.resolver.VariableSubstitutor;
 
 public class App {
 
 	private final Configuration configuration;
-
+	private Database database = new Database();
 	boolean resolveEnv = false;
 	boolean dryRun = false;
 
@@ -45,46 +46,42 @@ public class App {
 		this.resolveEnv = resolveEnv;
 	}
 
-	private Matcher testHandler(Handler handler, String path) {
-		Matcher out = Pattern.compile(handler.getPattern()).matcher(path);
-		return out.matches() ? out : null;
-	}
-
-	private Optional<Triple<String, Handler, Matcher>> findHandler(String path) {
-		for (Entry<String, Handler> e : configuration.getTypes().entrySet()) {
-			Matcher m = testHandler(e.getValue(), path);
-			if (m != null) {
-				return Optional.of(Triple.of(e.getKey(), e.getValue(), m));
-			}
-		}
-		return Optional.empty();
-	}
-
 	public void process(Stream<Path> stream, Function<Path, ICallback> callbackFactory) {
 		stream.forEach(p -> process(p, callbackFactory.apply(p)));
 	}
 
 	public void process(Path in, ICallback callback) {
 		String fullpath = BuiltinVariables.PATH.resolve(in);
-		try {
-			Optional<Triple<String, Handler, Matcher>> handler = findHandler(fullpath);
-			if (handler.isPresent()) {
-				callback.fileHandled(fullpath, handler.get().getLeft());
-				executeWorkflow(in, handler.get().getMiddle(), handler.get().getRight(), callback);
-			} else {
-				callback.unknownType(fullpath);
+		int matchingTypes = 0;
+		for (Entry<String, Workflow> entry : configuration.getWorkflows().entrySet()) {
+			Matcher m = Pattern.compile(entry.getValue().getPattern()).matcher(fullpath);
+			if (m.matches()) {
+				matchingTypes++;
+				Optional<Date> lastExecution = database.getExecutionDate(in, entry.getKey());
+				if (lastExecution.isPresent()) {
+					callback.fileSkipped(fullpath, entry.getKey(), lastExecution.get());
+				} else {
+					callback.fileHandled(fullpath, entry.getKey());
+					try {
+						executeWorkflow(entry.getKey(), entry.getValue(), in, m, callback);
+					} catch (Exception e) {
+						callback.workflowException(entry.getKey(), e);
+					}
+				}
 			}
-		} catch (Exception e) {
-			callback.workflowException(e);
-		} finally {
-			callback.done();
 		}
+		if (matchingTypes == 0) {
+			callback.unknownType(fullpath);
+		}
+		callback.done(fullpath);
 	}
 
-	protected void executeWorkflow(Path in, Handler fileHandler, Matcher matcher, ICallback callback) throws IOException, InterruptedException {
+	protected void executeWorkflow(String workflowId, Workflow fileHandler, Path in, Matcher matcher, ICallback callback)
+			throws IOException, InterruptedException {
 		VariableSubstitutor resolver = new VariableSubstitutor(in, matcher, fileHandler.getVariables(), resolveEnv);
-		callback.workflowBegins(fileHandler.getWorkflow());
-		for (String commandId : fileHandler.getWorkflow()) {
+		callback.workflowBegins(workflowId, fileHandler.getExecute());
+		boolean complete = true;
+		for (String commandId : fileHandler.getExecute()) {
 			List<String> rawCommand = configuration.getCommands().get(commandId);
 			callback.commandBegins(commandId, rawCommand);
 			List<String> resolvedCommand = new ArrayList<>();
@@ -99,8 +96,25 @@ public class App {
 			ProcessStatus status = dryRun ? ProcessStatus.dryRun(resolvedCommand) : ProcessStatus.execute(resolvedCommand);
 			callback.commandEnds(commandId, status);
 			if (status.getReturnCode() != 0) {
+				complete = false;
 				break;
 			}
 		}
+		if (complete) {
+			database.logWorkflowSuccess(in, workflowId);
+		}
+		callback.workflowEnds(workflowId, complete);
+	}
+
+	public void loadDatabase(Path path) throws IOException {
+		this.database.load(path);
+	}
+
+	public void saveDatabase(Path output) throws IOException {
+		this.database.save(output);
+	}
+
+	public Database getDatabase() {
+		return database;
 	}
 }

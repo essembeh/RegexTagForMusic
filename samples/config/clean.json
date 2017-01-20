@@ -12,16 +12,16 @@
       "${path}"
     ]
   },
-  "types": {
+  "workflows": {
     "mp3": {
       "pattern": ".*\\.mp3",
-      "workflow": [
+      "execute": [
         "eyed3-clean"
       ]
     },
     "junk": {
       "pattern": ".*/\\.DS_Store",
-      "workflow": [
+      "execute": [
         "delete"
       ]
     }

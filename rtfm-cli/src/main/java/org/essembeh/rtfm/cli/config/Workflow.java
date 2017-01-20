@@ -10,10 +10,10 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class Handler {
+public class Workflow {
 
 	private String pattern;
-	private final List<String> workflow = new ArrayList<>();
+	private final List<String> execute = new ArrayList<>();
 	private final Map<String, String> variables = new HashMap<>();
 
 	public String getPattern() {
@@ -24,8 +24,8 @@ public class Handler {
 		this.pattern = pattern;
 	}
 
-	public List<String> getWorkflow() {
-		return workflow;
+	public List<String> getExecute() {
+		return execute;
 	}
 
 	public Map<String, String> getVariables() {
