@@ -44,13 +44,7 @@ public class DefaultCallback implements ICallback {
 	}
 
 	@Override
-	public void commandBegins(String commandId, List<String> rawCommand) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void commandResolved(String commandId, List<String> resolvedCommand) {
+	public void commandBegins(String commandId, List<String> rawCommand, List<String> resolvedCommand) {
 		// TODO Auto-generated method stub
 
 	}

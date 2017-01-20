@@ -19,9 +19,7 @@ public interface ICallback {
 
 	void workflowException(String workflowId, Exception e);
 
-	void commandBegins(String commandId, List<String> rawCommand);
-
-	void commandResolved(String commandId, List<String> resolvedCommand);
+	void commandBegins(String commandId, List<String> rawCommand, List<String> resolvedCommand);
 
 	void commandEnds(String commandId, ProcessStatus result);
 

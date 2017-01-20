@@ -2,22 +2,25 @@ package org.essembeh.rtfm.cli.app;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.essembeh.rtfm.cli.app.callback.ICallback;
 import org.essembeh.rtfm.cli.config.Configuration;
 import org.essembeh.rtfm.cli.config.Workflow;
 import org.essembeh.rtfm.cli.db.Database;
 import org.essembeh.rtfm.cli.resolver.BuiltinVariables;
-import org.essembeh.rtfm.cli.resolver.VariableSubstitutor;
+import org.essembeh.rtfm.cli.resolver.VariablesUtils;
 
 public class App {
 
@@ -78,21 +81,27 @@ public class App {
 
 	protected void executeWorkflow(String workflowId, Workflow fileHandler, Path in, Matcher matcher, ICallback callback)
 			throws IOException, InterruptedException {
-		VariableSubstitutor resolver = new VariableSubstitutor(in, matcher, fileHandler.getVariables(), resolveEnv);
 		callback.workflowBegins(workflowId, fileHandler.getExecute());
+		StrSubstitutor resolver = VariablesUtils.createVariableResolver(in, matcher, fileHandler.getVariables(), resolveEnv);
+
+		// Resolution
+		Map<String, List<String>> resolvedCommands = new HashMap<>();
+		//@formatter:off
+		fileHandler.getExecute().forEach(id -> 
+				resolvedCommands.put(
+					id,
+					configuration.getCommands().get(id).stream()
+						.map(resolver::replace)
+						.map(s -> VariablesUtils.checkUnresolved(s, id))
+						.collect(Collectors.toList())));
+		//@formatter:on
+
+		// Execution
 		boolean complete = true;
 		for (String commandId : fileHandler.getExecute()) {
 			List<String> rawCommand = configuration.getCommands().get(commandId);
-			callback.commandBegins(commandId, rawCommand);
-			List<String> resolvedCommand = new ArrayList<>();
-			for (String rawString : rawCommand) {
-				String resolvedString = resolver.replace(rawString);
-				if (!resolver.isComplete(resolvedString)) {
-					throw new IllegalStateException("Cannot resolve variable from: " + resolvedString);
-				}
-				resolvedCommand.add(resolvedString);
-			}
-			callback.commandResolved(commandId, resolvedCommand);
+			List<String> resolvedCommand = resolvedCommands.get(commandId);
+			callback.commandBegins(commandId, rawCommand, resolvedCommand);
 			ProcessStatus status = dryRun ? ProcessStatus.dryRun(resolvedCommand) : ProcessStatus.execute(resolvedCommand);
 			callback.commandEnds(commandId, status);
 			if (status.getReturnCode() != 0) {

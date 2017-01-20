@@ -17,8 +17,7 @@ public class ConsoleReport extends DefaultCallback {
 
 	@Override
 	public void workflowException(String workflowId, Exception e) {
-		System.out.println("\tEXCEPTION in workflow " + workflowId);
-		e.printStackTrace(System.out);
+		System.out.println(String.format("\tEXCEPTION in workflow %s: %s", workflowId, e.getMessage()));
 	}
 
 	@Override

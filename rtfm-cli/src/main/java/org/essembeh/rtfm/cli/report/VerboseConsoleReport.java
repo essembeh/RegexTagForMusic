@@ -64,7 +64,7 @@ public class VerboseConsoleReport implements ICallback {
 
 	@Override
 	public void workflowException(String id, Exception e) {
-		print(Level.ERROR, 2, "Exception in workflow %s: %s", id, e.getMessage());
+		print(Level.ERROR, 1, "Exception in workflow %s: %s", id, e.getMessage());
 		e.printStackTrace(System.out);
 	}
 
@@ -73,14 +73,9 @@ public class VerboseConsoleReport implements ICallback {
 	}
 
 	@Override
-	public void commandBegins(String commandId, List<String> rawCommand) {
-		print(Level.INFO, 1, "Command: %s %s", commandId, rawCommand);
-	}
-
-	@Override
-	public void commandResolved(String commandId, List<String> resolvedCommand) {
+	public void commandBegins(String commandId, List<String> rawCommand, List<String> resolvedCommand) {
+		print(Level.INFO, 1, "Command %s: %s", commandId, rawCommand);
 		print(Level.INFO, 2, "Execute: %s", toString(resolvedCommand));
-
 	}
 
 	@Override

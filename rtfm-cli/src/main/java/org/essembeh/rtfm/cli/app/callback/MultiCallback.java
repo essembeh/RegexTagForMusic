@@ -46,13 +46,8 @@ public class MultiCallback implements ICallback {
 	}
 
 	@Override
-	public void commandBegins(String commandId, List<String> rawCommand) {
-		callbacks.forEach(c -> c.commandBegins(commandId, rawCommand));
-	}
-
-	@Override
-	public void commandResolved(String commandId, List<String> resolvedCommand) {
-		callbacks.forEach(c -> c.commandResolved(commandId, resolvedCommand));
+	public void commandBegins(String commandId, List<String> rawCommand, List<String> resolvedCommand) {
+		callbacks.forEach(c -> c.commandBegins(commandId, rawCommand, resolvedCommand));
 	}
 
 	@Override
