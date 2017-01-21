@@ -210,7 +210,7 @@ If a variable cannot be resolved, it will raise an error, the workflow is aborte
 
 The [default configuration](samples/config/default.json) will be able to tag music stored like:
 ```shell
-.
+samples/config/default/
 ├── Alice
 │   ├── 2000 - First Album
 │   │   ├── 01 - Track.mp3
@@ -230,31 +230,33 @@ The [default configuration](samples/config/default.json) will be able to tag mus
         ├── 01 - Track.mp3
         ├── 02 - Track.mp3
         └── 03 - Track.mp3
+
+5 directories, 14 files
 ```
 
 The [seb configuration](samples/config/seb.json) corresponds to the way I store my music:
 ```shell
-.
+samples/config/seb/
 ├── Albums
 │   ├── Alice
-│   │   ├── 2000 - First Album
-│   │   │   ├── 01 - Track.mp3
-│   │   │   ├── 02 - Track.mp3
-│   │   │   ├── 03 - Track.mp3
+│   │   ├── First Album (2000)
+│   │   │   ├── 01 Track.mp3
+│   │   │   ├── 02 Track.mp3
+│   │   │   ├── 03 Track.mp3
 │   │   │   └── cover.jpg
-│   │   └── 2001 - Second Album
-│   │       ├── 101 - Track.mp3
-│   │       ├── 102 - Track.mp3
-│   │       ├── 103 - Track.mp3
-│   │       ├── 201 - Track.mp3
-│   │       ├── 202 - Track.mp3
-│   │       ├── 203 - Track.mp3
+│   │   └── Second Album (2001)
+│   │       ├── 101 Track.mp3
+│   │       ├── 102 Track.mp3
+│   │       ├── 103 Track.mp3
+│   │       ├── 201 Track.mp3
+│   │       ├── 202 Track.mp3
+│   │       ├── 203 Track.mp3
 │   │       └── cover.jpg
 │   └── Bob
 │       └── The Album
-│           ├── 01 - Track.mp3
-│           ├── 02 - Track.mp3
-│           └── 03 - Track.mp3
+│           ├── 01 Track.mp3
+│           ├── 02 Track.mp3
+│           └── 03 Track.mp3
 ├── Saga
 │   └── Foo Bar
 │       ├── Episode 01.mp3
@@ -264,4 +266,6 @@ The [seb configuration](samples/config/seb.json) corresponds to the way I store 
 └── Singles
     ├── Harry (feat. Sally) - Just a Song.mp3
     └── John Doe - Single.mp3
+
+9 directories, 20 files
 ```

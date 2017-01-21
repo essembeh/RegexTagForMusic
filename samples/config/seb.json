@@ -6,13 +6,32 @@
       "--remove-all",
       "${path}"
     ],
-    "eyed3-tag": [
+    "eyed3-album-with-year": [
       "eyeD3",
       "--no-color",
       "--artist=${ARTIST}",
       "--album=${ALBUM}",
       "--year=${YEAR}",
       "--track=${TRACK}",
+      "--title=${TITLE}",
+      "--comment=::Tagged with rtfm",
+      "${path}"
+    ],
+    "eyed3-album-without-year": [
+      "eyeD3",
+      "--no-color",
+      "--artist=${ARTIST}",
+      "--album=${ALBUM}",
+      "--track=${TRACK}",
+      "--title=${TITLE}",
+      "--comment=::Tagged with rtfm",
+      "${path}"
+    ],
+    "eyed3-non-album": [
+      "eyeD3",
+      "--no-color",
+      "--artist=${ARTIST}",
+      "--album=${ALBUM}",
       "--title=${TITLE}",
       "--comment=::Tagged with rtfm",
       "${path}"
@@ -30,14 +49,19 @@
     ]
   },
   "workflows": {
-    "album": {
-      "pattern": ".*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>(?:(?<YEAR>[12]\\d{3}) - )?[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
-      "variables": {
-        "YEAR": ""
-      },
+    "album-with-year": {
+      "pattern": ".*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>[^/]+) \\((?<YEAR>[12]\\d{3})\\)/(?<TRACK>\\d{2,3}) (?<TITLE>[^/]+)\\.mp3",
       "execute": [
         "eyed3-clean",
-        "eyed3-tag",
+        "eyed3-album-with-year",
+        "eyed3-utf8"
+      ]
+    },
+    "album-without-year": {
+      "pattern": ".*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) (?<TITLE>[^/]+)\\.mp3",
+      "execute": [
+        "eyed3-clean",
+        "eyed3-album-without-year",
         "eyed3-utf8"
       ]
     },
@@ -47,26 +71,22 @@
     "single": {
       "pattern": ".*/Singles/(?<ARTIST>[^/]+) - (?<TITLE>[^/]+)\\.mp3",
       "variables": {
-        "ALBUM": "#Single",
-        "YEAR": "",
-        "TRACK": ""
+        "ALBUM": "#Single"
       },
       "execute": [
         "eyed3-clean",
-        "eyed3-tag",
+        "eyed3-non-album",
         "eyed3-utf8"
       ]
     },
     "saga": {
       "pattern": ".*/Saga/(?<ARTIST>[^/]+)/(?<TITLE>[^/]+)\\.mp3",
       "variables": {
-        "ALBUM": "#Saga",
-        "YEAR": "",
-        "TRACK": ""
+        "ALBUM": "#Saga"
       },
       "execute": [
         "eyed3-clean",
-        "eyed3-tag",
+        "eyed3-non-album",
         "eyed3-utf8"
       ]
     },
