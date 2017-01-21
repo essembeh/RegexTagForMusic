@@ -31,6 +31,7 @@ public class App {
 
 	public App(Configuration configuration) {
 		this.configuration = configuration;
+		configuration.check();
 	}
 
 	public boolean dryRun() {
@@ -89,7 +90,7 @@ public class App {
 		StrSubstitutor resolver = VariablesUtils.createVariableResolver(in, matcher, workflow.getVariables(), resolveEnv);
 		List<ProcessHelper> processHelpers = new ArrayList<>();
 		for (String commandId : workflow.getExecute()) {
-			List<String> rawCommand = configuration.getCommands().get(workflowId);
+			List<String> rawCommand = configuration.getCommands().get(commandId);
 			ProcessHelper processHelper = new ProcessHelper(commandId, rawCommand, VariablesUtils.resolveCommand(commandId, resolver, rawCommand));
 			processHelpers.add(processHelper);
 		}

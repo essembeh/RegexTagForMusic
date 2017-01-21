@@ -12,7 +12,12 @@ public class MultiCallback implements ICallback {
 	private final List<ICallback> callbacks = new ArrayList<>();
 
 	public MultiCallback(ICallback... callbacks) {
+		add(callbacks);
+	}
+
+	public MultiCallback add(ICallback... callbacks) {
 		this.callbacks.addAll(Arrays.asList(callbacks));
+		return this;
 	}
 
 	@Override

@@ -5,10 +5,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 
 public class ProcessHelper {
+
+	public static String escapeCommand(List<String> command, char escape) {
+		return command.stream().map(s -> {
+			if (s.contains(" ")) {
+				return String.format("%c%s%c", escape, s, escape);
+			}
+			return s;
+		}).collect(Collectors.joining(" "));
+	}
 
 	public class Status {
 		private final Optional<Integer> returnCode;

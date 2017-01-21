@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -31,13 +30,12 @@ public class Configuration {
 	}
 
 	public void check() {
-		for (Entry<String, Workflow> e : getWorkflows().entrySet()) {
-			List<String> unknownCommands = e.getValue().getExecute().stream().filter(commandId -> !getCommands().containsKey(commandId))
-					.collect(Collectors.toList());
+		getWorkflows().forEach((id, w) -> {
+			List<String> unknownCommands = w.getExecute().stream().filter(commandId -> !getCommands().containsKey(commandId)).collect(Collectors.toList());
 			if (!unknownCommands.isEmpty()) {
-				throw new IllegalStateException("Workflow " + e.getKey() + " use unknown commands: " + unknownCommands);
+				throw new IllegalStateException("Workflow " + id + " use unknown commands: " + unknownCommands);
 			}
-		}
+		});
 	}
 
 	public static Configuration load(Path in) throws IOException {

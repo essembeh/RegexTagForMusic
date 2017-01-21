@@ -3,9 +3,9 @@ package org.essembeh.rtfm.cli.report;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.essembeh.rtfm.cli.app.ProcessHelper;
 import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 import org.essembeh.rtfm.cli.app.callback.ICallback;
 
@@ -17,15 +17,6 @@ public class VerboseConsoleReport implements ICallback {
 		INFO,
 		DEBUG,
 		ERROR
-	}
-
-	private static String toString(List<String> command) {
-		return command.stream().map(s -> {
-			if (s.contains(" ")) {
-				return String.format("'%s'", s);
-			}
-			return s;
-		}).collect(Collectors.joining(" "));
 	}
 
 	private void print(Level level, int indent, String format, Object... args) {
@@ -75,12 +66,14 @@ public class VerboseConsoleReport implements ICallback {
 	@Override
 	public void commandBegins(String commandId, List<String> rawCommand, List<String> resolvedCommand) {
 		print(Level.INFO, 1, "Command %s: %s", commandId, rawCommand);
-		print(Level.INFO, 2, "Execute: %s", toString(resolvedCommand));
+		print(Level.INFO, 2, "Execute: %s", ProcessHelper.escapeCommand(resolvedCommand, '"'));
 	}
 
 	@Override
 	public void commandEnds(String commandId, Status status) {
-		if (status.getReturnCode() != 0) {
+		if (status.isDryRun()) {
+			print(Level.ERROR, 2, "Dry-run mode");
+		} else if (status.getReturnCode() != 0) {
 			print(Level.ERROR, 2, "Return: %d", status.getReturnCode());
 			status.getStdout().forEach(l -> print(Level.DEBUG, 2, l));
 		} else {

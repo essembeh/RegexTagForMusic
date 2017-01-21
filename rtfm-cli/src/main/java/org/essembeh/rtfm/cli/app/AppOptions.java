@@ -28,6 +28,7 @@ public class AppOptions {
 	public static final String FOLDERS = "f";
 	public static final String DATABASE = "d";
 	public static final String ALL_WORKFLOWS = "a";
+	public static final String SCRIPT = "s";
 
 	private static final Options OPTIONS = new Options();
 	static {
@@ -39,6 +40,7 @@ public class AppOptions {
 		OPTIONS.addOption(FOLDERS, "folders", false, "Also process folders (NB: folders path will end with " + File.separator + ")");
 		OPTIONS.addOption(DATABASE, "database", true, "Use database");
 		OPTIONS.addOption(ALL_WORKFLOWS, "all", false, "Execute all matching workflows");
+		OPTIONS.addOption(SCRIPT, "script", true, "Generate script");
 	}
 
 	public static AppOptions parse(String... args) throws ParseException {
@@ -62,6 +64,7 @@ public class AppOptions {
 	public boolean displayHelp() {
 		if (commandLine.hasOption(HELP)) {
 			HelpFormatter formatter = new HelpFormatter();
+			formatter.setWidth(100);
 			formatter.printHelp("rtfm", OPTIONS);
 			return true;
 		}
@@ -90,6 +93,10 @@ public class AppOptions {
 
 	public Optional<Path> getDatabase() {
 		return getOptionValue(DATABASE).map(Paths::get);
+	}
+
+	public Optional<Path> getScript() {
+		return getOptionValue(SCRIPT).map(Paths::get);
 	}
 
 	public boolean processFolders() {

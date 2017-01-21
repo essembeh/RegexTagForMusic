@@ -87,14 +87,15 @@ track: 102
 
 ```
 usage: rtfm
-	-1,--first               Execute only first matching workflow
-	-c,--config <arg>        Custom configuration file
-	-d,--database <arg>      Use database
-	-e,--env                 Use env to resolve variables
-	-f,--folders             Also process folders (NB: folders path will end with /)
-	-h,--help                Display help
-	-n,--dry-run             Dry-run mode, do not execute commands
-	-v,--verbose             Display more information
+ -a,--all              Execute all matching workflows
+ -c,--config <arg>     Custom configuration file
+ -d,--database <arg>   Use database
+ -e,--env              Use env to resolve variables
+ -f,--folders          Also process folders (NB: folders path will end with /)
+ -h,--help             Display help
+ -n,--dry-run          Dry-run mode, do not execute commands
+ -s,--script <arg>     Generate script
+ -v,--verbose          Display more information
 ```
 
 ### Option: *--folders*
