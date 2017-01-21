@@ -28,6 +28,7 @@ public class App {
 	private Database database = new Database();
 	boolean resolveEnv = false;
 	boolean dryRun = false;
+	private boolean firstWorkflow = false;
 
 	public App(Configuration configuration) {
 		this.configuration = configuration;
@@ -79,26 +80,29 @@ public class App {
 		callback.done(fullpath);
 	}
 
-	protected void executeWorkflow(String workflowId, Workflow fileHandler, Path in, Matcher matcher, ICallback callback)
+	protected void executeWorkflow(String workflowId, Workflow workflow, Path in, Matcher matcher, ICallback callback)
 			throws IOException, InterruptedException {
-		callback.workflowBegins(workflowId, fileHandler.getExecute());
-		StrSubstitutor resolver = VariablesUtils.createVariableResolver(in, matcher, fileHandler.getVariables(), resolveEnv);
+		callback.workflowBegins(workflowId, workflow.getExecute());
+		StrSubstitutor resolver = VariablesUtils.createVariableResolver(in, matcher, workflow.getVariables(), resolveEnv);
 
 		// Resolution
 		Map<String, List<String>> resolvedCommands = new HashMap<>();
-		//@formatter:off
-		fileHandler.getExecute().forEach(id -> 
-				resolvedCommands.put(
-					id,
-					configuration.getCommands().get(id).stream()
+		for (String commandId : workflow.getExecute()) {
+			//@formatter:off
+			resolvedCommands.put(
+					commandId, 
+					configuration.getCommands().get(commandId).stream()
 						.map(resolver::replace)
-						.map(s -> VariablesUtils.checkUnresolved(s, id))
-						.collect(Collectors.toList())));
-		//@formatter:on
-
+						.map(s -> VariablesUtils.checkUnresolved(s, commandId))
+						.collect(Collectors.toList()));
+			//@formatter:on
+			if (firstWorkflow) {
+				break;
+			}
+		}
 		// Execution
 		boolean complete = true;
-		for (String commandId : fileHandler.getExecute()) {
+		for (String commandId : workflow.getExecute()) {
 			List<String> rawCommand = configuration.getCommands().get(commandId);
 			List<String> resolvedCommand = resolvedCommands.get(commandId);
 			callback.commandBegins(commandId, rawCommand, resolvedCommand);
@@ -106,6 +110,9 @@ public class App {
 			callback.commandEnds(commandId, status);
 			if (status.getReturnCode() != 0) {
 				complete = false;
+				break;
+			}
+			if (firstWorkflow) {
 				break;
 			}
 		}
@@ -125,5 +132,9 @@ public class App {
 
 	public Database getDatabase() {
 		return database;
+	}
+
+	public void setExecuteOnlyFirstWorkflow(boolean executeOnlyFirstWorkflow) {
+		this.firstWorkflow = executeOnlyFirstWorkflow;
 	}
 }

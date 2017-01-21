@@ -87,6 +87,7 @@ track: 102
 
 ```
 usage: rtfm
+	-1,--first               Execute only first matching workflow
 	-c,--config <arg>        Custom configuration file
 	-d,--database <arg>      Use database
 	-e,--env                 Use env to resolve variables
