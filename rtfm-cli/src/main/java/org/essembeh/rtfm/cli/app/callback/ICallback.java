@@ -3,7 +3,7 @@ package org.essembeh.rtfm.cli.app.callback;
 import java.util.Date;
 import java.util.List;
 
-import org.essembeh.rtfm.cli.app.ProcessStatus;
+import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 
 public interface ICallback {
 
@@ -21,7 +21,7 @@ public interface ICallback {
 
 	void commandBegins(String commandId, List<String> rawCommand, List<String> resolvedCommand);
 
-	void commandEnds(String commandId, ProcessStatus result);
+	void commandEnds(String commandId, Status status);
 
 	void done(String fullpath);
 

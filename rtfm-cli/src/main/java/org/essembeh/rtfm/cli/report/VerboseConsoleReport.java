@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.essembeh.rtfm.cli.app.ProcessStatus;
+import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 import org.essembeh.rtfm.cli.app.callback.ICallback;
 
 public class VerboseConsoleReport implements ICallback {
@@ -79,7 +79,7 @@ public class VerboseConsoleReport implements ICallback {
 	}
 
 	@Override
-	public void commandEnds(String commandId, ProcessStatus status) {
+	public void commandEnds(String commandId, Status status) {
 		if (status.getReturnCode() != 0) {
 			print(Level.ERROR, 2, "Return: %d", status.getReturnCode());
 			status.getStdout().forEach(l -> print(Level.DEBUG, 2, l));

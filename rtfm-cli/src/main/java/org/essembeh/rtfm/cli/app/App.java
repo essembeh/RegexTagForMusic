@@ -2,19 +2,18 @@ package org.essembeh.rtfm.cli.app;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.text.StrSubstitutor;
+import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 import org.essembeh.rtfm.cli.app.callback.ICallback;
 import org.essembeh.rtfm.cli.config.Configuration;
 import org.essembeh.rtfm.cli.config.Workflow;
@@ -28,7 +27,7 @@ public class App {
 	private Database database = new Database();
 	boolean resolveEnv = false;
 	boolean dryRun = false;
-	private boolean firstWorkflow = false;
+	private boolean executeAllWorkflows = false;
 
 	public App(Configuration configuration) {
 		this.configuration = configuration;
@@ -72,6 +71,9 @@ public class App {
 						callback.workflowException(entry.getKey(), e);
 					}
 				}
+				if (!executeAllWorkflows) {
+					break;
+				}
 			}
 		}
 		if (matchingTypes == 0) {
@@ -83,36 +85,22 @@ public class App {
 	protected void executeWorkflow(String workflowId, Workflow workflow, Path in, Matcher matcher, ICallback callback)
 			throws IOException, InterruptedException {
 		callback.workflowBegins(workflowId, workflow.getExecute());
-		StrSubstitutor resolver = VariablesUtils.createVariableResolver(in, matcher, workflow.getVariables(), resolveEnv);
-
 		// Resolution
-		Map<String, List<String>> resolvedCommands = new HashMap<>();
+		StrSubstitutor resolver = VariablesUtils.createVariableResolver(in, matcher, workflow.getVariables(), resolveEnv);
+		List<ProcessHelper> processHelpers = new ArrayList<>();
 		for (String commandId : workflow.getExecute()) {
-			//@formatter:off
-			resolvedCommands.put(
-					commandId, 
-					configuration.getCommands().get(commandId).stream()
-						.map(resolver::replace)
-						.map(s -> VariablesUtils.checkUnresolved(s, commandId))
-						.collect(Collectors.toList()));
-			//@formatter:on
-			if (firstWorkflow) {
-				break;
-			}
+			List<String> rawCommand = configuration.getCommands().get(workflowId);
+			ProcessHelper processHelper = new ProcessHelper(commandId, rawCommand, VariablesUtils.resolveCommand(commandId, resolver, rawCommand));
+			processHelpers.add(processHelper);
 		}
 		// Execution
 		boolean complete = true;
-		for (String commandId : workflow.getExecute()) {
-			List<String> rawCommand = configuration.getCommands().get(commandId);
-			List<String> resolvedCommand = resolvedCommands.get(commandId);
-			callback.commandBegins(commandId, rawCommand, resolvedCommand);
-			ProcessStatus status = dryRun ? ProcessStatus.dryRun(resolvedCommand) : ProcessStatus.execute(resolvedCommand);
-			callback.commandEnds(commandId, status);
-			if (status.getReturnCode() != 0) {
+		for (ProcessHelper processHelper : processHelpers) {
+			callback.commandBegins(processHelper.getCommandId(), processHelper.getRawCommand(), processHelper.getResolvedCommand());
+			Status status = processHelper.execute(dryRun);
+			callback.commandEnds(processHelper.getCommandId(), status);
+			if (!status.isOk()) {
 				complete = false;
-				break;
-			}
-			if (firstWorkflow) {
 				break;
 			}
 		}
@@ -134,7 +122,7 @@ public class App {
 		return database;
 	}
 
-	public void setExecuteOnlyFirstWorkflow(boolean executeOnlyFirstWorkflow) {
-		this.firstWorkflow = executeOnlyFirstWorkflow;
+	public void setExecuteAllWorkflows(boolean executeAllWorkflows) {
+		this.executeAllWorkflows = executeAllWorkflows;
 	}
 }

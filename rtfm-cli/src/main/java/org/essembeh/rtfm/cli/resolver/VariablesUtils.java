@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.text.StrLookup;
 import org.apache.commons.lang3.text.StrMatcher;
@@ -40,5 +41,9 @@ public class VariablesUtils {
 			throw new IllegalStateException(String.format("Cannot resolve %s in command %s", unresolved, commandId));
 		}
 		return in;
+	}
+
+	public static List<String> resolveCommand(String commandId, StrSubstitutor substitutor, List<String> in) {
+		return in.stream().map(substitutor::replace).map(s -> VariablesUtils.checkUnresolved(s, commandId)).collect(Collectors.toList());
 	}
 }

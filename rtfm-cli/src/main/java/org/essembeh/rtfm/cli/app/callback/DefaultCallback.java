@@ -3,7 +3,7 @@ package org.essembeh.rtfm.cli.app.callback;
 import java.util.Date;
 import java.util.List;
 
-import org.essembeh.rtfm.cli.app.ProcessStatus;
+import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 
 public class DefaultCallback implements ICallback {
 
@@ -50,7 +50,7 @@ public class DefaultCallback implements ICallback {
 	}
 
 	@Override
-	public void commandEnds(String commandId, ProcessStatus result) {
+	public void commandEnds(String commandId, Status status) {
 		// TODO Auto-generated method stub
 
 	}

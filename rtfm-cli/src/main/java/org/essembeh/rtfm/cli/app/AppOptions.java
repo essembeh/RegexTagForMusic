@@ -27,7 +27,7 @@ public class AppOptions {
 	public static final String CONFIG = "c";
 	public static final String FOLDERS = "f";
 	public static final String DATABASE = "d";
-	public static final String FIRST_WORKLOW = "1";
+	public static final String ALL_WORKFLOWS = "a";
 
 	private static final Options OPTIONS = new Options();
 	static {
@@ -38,7 +38,7 @@ public class AppOptions {
 		OPTIONS.addOption(CONFIG, "config", true, "Custom configuration file");
 		OPTIONS.addOption(FOLDERS, "folders", false, "Also process folders (NB: folders path will end with " + File.separator + ")");
 		OPTIONS.addOption(DATABASE, "database", true, "Use database");
-		OPTIONS.addOption(FIRST_WORKLOW, "first", false, "Execute only first matching workflow");
+		OPTIONS.addOption(ALL_WORKFLOWS, "all", false, "Execute all matching workflows");
 	}
 
 	public static AppOptions parse(String... args) throws ParseException {
@@ -100,7 +100,7 @@ public class AppOptions {
 		return processFolders() || !Files.isDirectory(in);
 	}
 
-	public boolean executeOnlyFirstWorkflow() {
-		return commandLine.hasOption(FIRST_WORKLOW);
+	public boolean executeAllWorkflows() {
+		return commandLine.hasOption(ALL_WORKFLOWS);
 	}
 }

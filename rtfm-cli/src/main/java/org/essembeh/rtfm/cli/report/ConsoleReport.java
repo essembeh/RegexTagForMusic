@@ -1,6 +1,6 @@
 package org.essembeh.rtfm.cli.report;
 
-import org.essembeh.rtfm.cli.app.ProcessStatus;
+import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 import org.essembeh.rtfm.cli.app.callback.DefaultCallback;
 
 public class ConsoleReport extends DefaultCallback {
@@ -21,7 +21,7 @@ public class ConsoleReport extends DefaultCallback {
 	}
 
 	@Override
-	public void commandEnds(String commandId, ProcessStatus status) {
+	public void commandEnds(String commandId, Status status) {
 		if (status.getReturnCode() != 0) {
 			System.out.println("\tERROR " + commandId + " exited with " + status.getReturnCode());
 		}

@@ -11,7 +11,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.essembeh.rtfm.cli.app.App;
-import org.essembeh.rtfm.cli.app.ProcessStatus;
+import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 import org.essembeh.rtfm.cli.app.callback.DefaultCallback;
 import org.essembeh.rtfm.cli.app.callback.ICallback;
 import org.essembeh.rtfm.cli.config.Configuration;
@@ -77,9 +77,9 @@ public class SamplesTest {
 			}
 
 			@Override
-			public void commandEnds(String commandId, ProcessStatus result) {
-				Assert.assertFalse(result.isDryRun());
-				Assert.assertEquals(0, result.getReturnCode());
+			public void commandEnds(String commandId, Status status) {
+				Assert.assertFalse(status.isDryRun());
+				Assert.assertEquals(0, status.getReturnCode());
 			}
 
 			@Override

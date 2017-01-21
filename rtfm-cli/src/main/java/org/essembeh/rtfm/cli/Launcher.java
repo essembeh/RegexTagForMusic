@@ -31,7 +31,7 @@ public class Launcher {
 			}
 			app.setDryRun(options.dryrun());
 			app.setResolveEnv(options.useEnv());
-			app.setExecuteOnlyFirstWorkflow(options.executeOnlyFirstWorkflow());
+			app.setExecuteAllWorkflows(options.executeAllWorkflows());
 			for (String arg : options.getArgs()) {
 				app.process(Files.walk(Paths.get(arg), FileVisitOption.FOLLOW_LINKS).filter(options::filterFolders), p -> consoleReport);
 			}

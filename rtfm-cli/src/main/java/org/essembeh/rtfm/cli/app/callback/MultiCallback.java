@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.essembeh.rtfm.cli.app.ProcessStatus;
+import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 
 public class MultiCallback implements ICallback {
 
@@ -51,8 +51,8 @@ public class MultiCallback implements ICallback {
 	}
 
 	@Override
-	public void commandEnds(String commandId, ProcessStatus result) {
-		callbacks.forEach(c -> c.commandEnds(commandId, result));
+	public void commandEnds(String commandId, Status status) {
+		callbacks.forEach(c -> c.commandEnds(commandId, status));
 	}
 
 	@Override
