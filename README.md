@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/essembeh/RegexTagForMusic.svg?branch=master)](https://travis-ci.org/essembeh/RegexTagForMusic)
 
+
 # Presentation
 
 RegexTagForMusic is a tool to run *dynamically* built commands (*workflows*) on files using *regular expressions*. In other words, if the path matches a regex, you can use any matching group or variables to build & run commands.
@@ -10,6 +11,7 @@ I originally developed *RegexTagForMusic* to automatize tagging my music using [
 - the *artist field* is the parent folder of the *album* folder
 - the *tracknumber field* is the first digit of the filename
 - the *title field* is the rest of the filename
+
 
 # Using
 
@@ -53,6 +55,7 @@ $ sudo chmod +x /opt/local/RegexTagForMusic/rtfm.sh
 $ sudo ln -s /opt/local/RegexTagForMusic/rtfm.sh /usr/local/bin/rtfm
 ```
 
+
 ## Test it
 
 You can try to tag the *default* music folder using the *default* configuration file:
@@ -83,68 +86,11 @@ title: Track            artist: Alice
 album: Second Album             year: 2001
 track: 102
 ```
+
+
 ## Options
 
-```
-usage: rtfm
- -a,--all              Execute all matching workflows
- -c,--config <arg>     Custom configuration file
- -d,--database <arg>   Use database
- -e,--env              Use env to resolve variables
- -f,--folders          Also process folders (NB: folders path will end with /)
- -h,--help             Display help
- -j,--threads <arg>    use n threads
- -n,--dry-run          Dry-run mode, do not execute commands
- -s,--script <arg>     Generate script
- -v,--verbose          Display more information
-```
-
-### *--all*
-
-By default, only the first matching workflow is executed.
-For example if you have 3 workflows, *A*, *B* and *C*, if your file matches *B* and *C*, only *B* will be executed.
-With `--all`, *B* and *C* will be executed.
-
-### *--config*
-
-To force a custom configuration file.
-
-The application will search for a configuration file:
-- using `--config <FILE>` arguments
-- using `RTFM_CONFIG` environment variable
-- or try to read `~/.config/rtfm.json`
-
-### *--database*
-
-This argument is optional, takes one *file* containing all files to be ignored (Gzipped Json file).
-
-The purpose of the database is to skip some workflows if they have already been executed *sucessfully* on some files.
-At the end of the execution, all files processed without error will be written in this file, to increment the list of files already done.
-
-### *--env*
-
-To use *environment variables* to resolve variables.
-
-### *--folders*
-
-By default, if you give a folder as argument, it will be it will be browsed recursively but only files will be processed. *Workflows* are not executed on folders.
-
-Using this option, the *files and folders* will be processed.
-And there is a trick in case of folders, the full path on which regex will be tested will end with a *trailing slash*. This is a convenient way to differentiate files from folder when you write your regular expressions.
-
-For example, `/test/foo` folder will match `/test/\\w+/` and *not* `/test/\\w+` (Note the trailing `/`)
-
-### *--thread*
-
-You can process *n* files simultaneously. When used, every log line will be prefixed by an identifier.
-
-### *--dry-run*
-
-No command will be executed, variables will be resolved, but nothing will be executed. This can be usefull using `--script`.
-
-### *--script*
-
-Write a script file containing *every command* resolved by the application. This can be usefull to replay executions without running *rtfm* or to review what will be executed before execution.
+See [USAGE.md](USAGE.md)
 
 
 # Configuration
@@ -186,6 +132,7 @@ A `Workflow` contains:
 
 
 ## Section: *commands*
+
 ```json
 {
   "commands": {
@@ -217,6 +164,7 @@ If you declare a variable `${FOO}` in a command, it will be resolved at runtime 
 - Try to find a variable named *FOO* in the *variables* section of the *workflow* in the configuration file
 - If the option `--env` is passed, then try to find an environment variable named *FOO* (using `System.getenv(String)` API)
 
+
 ## Builtin variables
 You can use some of builtin variables.
 
@@ -229,62 +177,7 @@ For example, if the file path is `~/test/foo.mp3`, here are the builtin variable
 
 If a variable cannot be resolved, it will raise an error, the workflow is aborted and the next file is processed.
 
+
 # Samples
 
-The [default configuration](samples/config/default.json) will be able to tag music stored like ([see tree ](samples/config/default/)):
-```shell
-.
-├── Alice
-│   ├── 2000 - First Album
-│   │   ├── 01 - Track.mp3
-│   │   ├── 02 - Track.mp3
-│   │   ├── 03 - Track.mp3
-│   │   └── cover.jpg
-│   └── 2001 - Second Album
-│       ├── 101 - Track.mp3
-│       ├── 102 - Track.mp3
-│       ├── 103 - Track.mp3
-│       ├── 201 - Track.mp3
-│       ├── 202 - Track.mp3
-│       ├── 203 - Track.mp3
-│       └── cover.jpg
-└── Bob
-    └── The Album
-        ├── 01 - Track.mp3
-        ├── 02 - Track.mp3
-        └── 03 - Track.mp3
-```
-
-The [seb configuration](samples/config/seb.json) corresponds to the way I store my music ([see tree ](samples/config/seb/)):
-```shell
-.
-├── Albums
-│   ├── Alice
-│   │   ├── 2000 - First Album
-│   │   │   ├── 01 - Track.mp3
-│   │   │   ├── 02 - Track.mp3
-│   │   │   ├── 03 - Track.mp3
-│   │   │   └── cover.jpg
-│   │   └── 2001 - Second Album
-│   │       ├── 101 - Track.mp3
-│   │       ├── 102 - Track.mp3
-│   │       ├── 103 - Track.mp3
-│   │       ├── 201 - Track.mp3
-│   │       ├── 202 - Track.mp3
-│   │       ├── 203 - Track.mp3
-│   │       └── cover.jpg
-│   └── Bob
-│       └── The Album
-│           ├── 01 - Track.mp3
-│           ├── 02 - Track.mp3
-│           └── 03 - Track.mp3
-├── Saga
-│   └── Foo Bar
-│       ├── Episode 01.mp3
-│       ├── Episode 02.mp3
-│       ├── Episode 03.mp3
-│       └── Extra Song.mp3
-└── Singles
-    ├── Harry (feat. Sally) - Just a Song.mp3
-    └── John Doe - Single.mp3
-```
+[See SAMPLES.md](SAMPLES.md)
