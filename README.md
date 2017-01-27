@@ -93,35 +93,59 @@ usage: rtfm
  -e,--env              Use env to resolve variables
  -f,--folders          Also process folders (NB: folders path will end with /)
  -h,--help             Display help
+ -j,--threads <arg>    use n threads
  -n,--dry-run          Dry-run mode, do not execute commands
  -s,--script <arg>     Generate script
  -v,--verbose          Display more information
 ```
 
-### Option: *--folders*
+### *--all*
 
-If you use the `--folders` option, the full path on which regex will be tested will end with a *trailing slash*. This is a convenient way to differentiate files from folder when you write your regular expressions.
+By default, only the first matching workflow is executed.
+For example if you have 3 workflows, *A*, *B* and *C*, if your file matches *B* and *C*, only *B* will be executed.
+With `--all`, *B* and *C* will be executed.
+
+### *--config*
+
+To force a custom configuration file.
+
+The application will search for a configuration file:
+- using `--config <FILE>` arguments
+- using `RTFM_CONFIG` environment variable
+- or try to read `~/.config/rtfm.json`
+
+### *--database*
+
+This argument is optional, takes one *file* containing all files to be ignored (Gzipped Json file).
+
+The purpose of the database is to skip some workflows if they have already been executed *sucessfully* on some files.
+At the end of the execution, all files processed without error will be written in this file, to increment the list of files already done.
+
+### *--env*
+
+To use *environment variables* to resolve variables.
+
+### *--folders*
+
+By default, if you give a folder as argument, it will be it will be browsed recursively but only files will be processed. *Workflows* are not executed on folders.
+
+Using this option, the *files and folders* will be processed.
+And there is a trick in case of folders, the full path on which regex will be tested will end with a *trailing slash*. This is a convenient way to differentiate files from folder when you write your regular expressions.
 
 For example, `/test/foo` folder will match `/test/\\w+/` and *not* `/test/\\w+` (Note the trailing `/`)
 
-### Option: *--database*
+### *--thread*
 
-The purpose of the database is to skip some workflows if they have already been executed on some files.
+You can process *n* files simultaneously. When used, every log line will be prefixed by an identifier.
 
-This argument is optionak, takes one argument, a file containing all files to be ignored.
+### *--dry-run*
 
-The format is simple, it is a json file containing
-- A `Object` named *data*
-  - Key: `String`, the full path of the file
-  - Value: an `Object` named *workflows*
-    - Key: `String`, the workflow identifier
-	- Value: `String`, the execution date
+No command will be executed, variables will be resolved, but nothing will be executed. This can be usefull using `--script`.
 
+### *--script*
 
-.Done full path per line.
-All files contained in this *ignore list*  won't be processed at all (won't appear in logs).
+Write a script file containing *every command* resolved by the application. This can be usefull to replay executions without running *rtfm* or to review what will be executed before execution.
 
-At the end of the execution, all files processed without error will be written in this file, to increment the list of files already done.
 
 # Configuration
 
@@ -131,10 +155,6 @@ The configuration file contains:
 
 
 This is done with a *json* file, see the [configuration file](samples/config/default.json) for default music *layout* (see [*samples*](#samples)).
-The application will search for a configuration file:
-- using `--config <FILE>` arguments
-- using `RTFM_CONFIG` environment variable
-- or try to read `~/.config/rtfm.json`
 
 
 ## Section: *workflows*
@@ -197,7 +217,10 @@ If you declare a variable `${FOO}` in a command, it will be resolved at runtime 
 - Try to find a variable named *FOO* in the *variables* section of the *workflow* in the configuration file
 - If the option `--env` is passed, then try to find an environment variable named *FOO* (using `System.getenv(String)` API)
 
-Builtin variables values for file `~/test/foo.mp3`:
+## Builtin variables
+You can use some of builtin variables.
+
+For example, if the file path is `~/test/foo.mp3`, here are the builtin variables:
 - `path` = `/home/seb/test/foo.mp3`
 - `dirname` = `/home/seb/test`
 - `basename` = `foo.mp3`
@@ -208,7 +231,7 @@ If a variable cannot be resolved, it will raise an error, the workflow is aborte
 
 # Samples
 
-The [default configuration](samples/config/default.json) will be able to tag music stored like:
+The [default configuration](samples/config/default.json) will be able to tag music stored like ([see tree ](samples/config/default/)):
 ```shell
 .
 ├── Alice
@@ -232,7 +255,7 @@ The [default configuration](samples/config/default.json) will be able to tag mus
         └── 03 - Track.mp3
 ```
 
-The [seb configuration](samples/config/seb.json) corresponds to the way I store my music:
+The [seb configuration](samples/config/seb.json) corresponds to the way I store my music ([see tree ](samples/config/seb/)):
 ```shell
 .
 ├── Albums

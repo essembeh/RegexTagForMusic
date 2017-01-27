@@ -1,5 +1,6 @@
 package org.essembeh.rtfm.cli.report;
 
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -7,9 +8,9 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.essembeh.rtfm.cli.app.ProcessHelper;
 import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
-import org.essembeh.rtfm.cli.app.callback.ICallback;
+import org.essembeh.rtfm.cli.app.callback.DefaultCallback;
 
-public class VerboseConsoleReport implements ICallback {
+public class VerboseCallback extends DefaultCallback {
 
 	private static final String INDENT = "   ";
 
@@ -19,36 +20,39 @@ public class VerboseConsoleReport implements ICallback {
 		ERROR
 	}
 
+	private final ConsoleWriter consoleWriter;
+
+	public VerboseCallback(Path fullpath, ConsoleWriter consoleWriter) {
+		super(fullpath);
+		this.consoleWriter = consoleWriter;
+	}
+
 	private void print(Level level, int indent, String format, Object... args) {
-		System.out.println("[" + level + "] " + StringUtils.repeat(INDENT, indent) + String.format(format, args));
+		consoleWriter.printLine("[" + level + "] " + StringUtils.repeat(INDENT, indent) + String.format(format, args));
 	}
 
 	@Override
-	public void fileSkipped(String fullpath, String workflowId, Date lastExecution) {
+	public void fileSkipped(String workflowId, Date lastExecution) {
 		print(Level.INFO, 0, "Skip workflow %s, last execution %s", workflowId, SimpleDateFormat.getDateTimeInstance().format(lastExecution));
 	}
 
 	@Override
-	public void unknownType(String fullpath) {
-		print(Level.INFO, 0, "Unknown: %s", fullpath);
+	public void unknownType() {
+		print(Level.INFO, 0, "Unknown: %s", getFullpath());
 	}
 
 	@Override
-	public void fileHandled(String fullpath, String filehandlerId) {
-		print(Level.INFO, 0, "Found: [%s] %s", filehandlerId, fullpath);
+	public void workflowStart(String workflowId, List<String> commands) {
+		print(Level.INFO, 0, "Found: [%s] %s", workflowId, getFullpath());
+		print(Level.INFO, 1, "Workflow %s: %s", workflowId, commands);
 	}
 
 	@Override
-	public void workflowBegins(String id, List<String> commands) {
-		print(Level.INFO, 1, "Workflow starts: %s %s", id, commands);
-	}
-
-	@Override
-	public void workflowEnds(String id, boolean complete) {
+	public void workflowDone(String workflowId, boolean complete) {
 		if (complete) {
-			print(Level.INFO, 1, "Workflow ends: %s", id);
+			print(Level.INFO, 1, "Workflow ends: %s", workflowId);
 		} else {
-			print(Level.ERROR, 1, "Workflow ends with error: %s", id);
+			print(Level.ERROR, 1, "Workflow ends with error: %s", workflowId);
 		}
 
 	}
@@ -60,10 +64,6 @@ public class VerboseConsoleReport implements ICallback {
 	}
 
 	@Override
-	public void done(String fullpath) {
-	}
-
-	@Override
 	public void commandBegins(String commandId, List<String> rawCommand, List<String> resolvedCommand) {
 		print(Level.INFO, 1, "Command %s: %s", commandId, rawCommand);
 		print(Level.INFO, 2, "Execute: %s", ProcessHelper.escapeCommand(resolvedCommand, '"'));
@@ -72,7 +72,7 @@ public class VerboseConsoleReport implements ICallback {
 	@Override
 	public void commandEnds(String commandId, Status status) {
 		if (status.isDryRun()) {
-			print(Level.ERROR, 2, "Dry-run mode");
+			print(Level.INFO, 2, "Dry-run mode");
 		} else if (status.getReturnCode() != 0) {
 			print(Level.ERROR, 2, "Return: %d", status.getReturnCode());
 			status.getStdout().forEach(l -> print(Level.DEBUG, 2, l));

@@ -19,6 +19,7 @@ import org.apache.commons.cli.ParseException;
  *
  */
 public class AppOptions {
+	private static final int DEFAULT_THREADS = 1;
 
 	public static final String HELP = "h";
 	public static final String VERBOSE = "v";
@@ -29,6 +30,7 @@ public class AppOptions {
 	public static final String DATABASE = "d";
 	public static final String ALL_WORKFLOWS = "a";
 	public static final String SCRIPT = "s";
+	public static final String THREADS = "j";
 
 	private static final Options OPTIONS = new Options();
 	static {
@@ -41,6 +43,7 @@ public class AppOptions {
 		OPTIONS.addOption(DATABASE, "database", true, "Use database");
 		OPTIONS.addOption(ALL_WORKFLOWS, "all", false, "Execute all matching workflows");
 		OPTIONS.addOption(SCRIPT, "script", true, "Generate script");
+		OPTIONS.addOption(THREADS, "threads", true, "use n threads");
 	}
 
 	public static AppOptions parse(String... args) throws ParseException {
@@ -61,14 +64,14 @@ public class AppOptions {
 		return Optional.empty();
 	}
 
-	public boolean displayHelp() {
-		if (commandLine.hasOption(HELP)) {
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.setWidth(100);
-			formatter.printHelp("rtfm", OPTIONS);
-			return true;
-		}
-		return false;
+	public boolean canProcess() {
+		return !commandLine.hasOption(HELP);
+	}
+
+	public void displayHelp() {
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.setWidth(100);
+		formatter.printHelp("rtfm", OPTIONS);
 	}
 
 	public boolean verbose() {
@@ -109,5 +112,9 @@ public class AppOptions {
 
 	public boolean executeAllWorkflows() {
 		return commandLine.hasOption(ALL_WORKFLOWS);
+	}
+
+	public int getThreads() {
+		return getOptionValue(THREADS).map(Integer::parseInt).orElse(DEFAULT_THREADS);
 	}
 }

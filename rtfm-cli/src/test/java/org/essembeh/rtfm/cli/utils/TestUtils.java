@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 
-public class JunitUtils {
+public class TestUtils {
 	@FunctionalInterface
 	public interface RunnableWithException {
 		void run() throws Exception;

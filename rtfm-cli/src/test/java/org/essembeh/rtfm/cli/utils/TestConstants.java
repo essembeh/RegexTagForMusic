@@ -3,7 +3,7 @@ package org.essembeh.rtfm.cli.utils;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public interface Constants {
+public interface TestConstants {
 	String SAMPLES_PREFIX = "../samples/config";
 
 	Path DEFAULT_CONFIG = Paths.get(SAMPLES_PREFIX, "default.json");

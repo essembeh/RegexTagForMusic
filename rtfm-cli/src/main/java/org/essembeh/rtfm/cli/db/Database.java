@@ -3,17 +3,19 @@ package org.essembeh.rtfm.cli.db;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.essembeh.rtfm.cli.utils.JsonUtils;
 import org.essembeh.rtfm.cli.utils.ResourceUtils;
 
+import com.google.gson.JsonParseException;
+
 public class Database {
 
 	public static class DatabaseEntry {
-		private final Map<String, Date> workflows = new HashMap<>();
+		private final Map<String, Date> workflows = new ConcurrentHashMap<>();
 
 		public Optional<Date> getExecutionDate(String workflowId) {
 			return Optional.ofNullable(workflows.get(workflowId));
@@ -24,7 +26,7 @@ public class Database {
 		}
 	}
 
-	private final Map<String, DatabaseEntry> files = new HashMap<>();
+	private final Map<String, DatabaseEntry> files = new ConcurrentHashMap<>();
 
 	public Optional<DatabaseEntry> getEntry(Path in) {
 		return Optional.ofNullable(files.get(ResourceUtils.getFullPath(in)));
@@ -47,11 +49,17 @@ public class Database {
 	}
 
 	public void load(Path in) throws IOException {
-		files.putAll(JsonUtils.load(in, Database.class).files);
+		Database db = null;
+		try {
+			db = JsonUtils.load(in, Database.class);
+		} catch (JsonParseException e) {
+			db = JsonUtils.loadGzip(in, Database.class);
+		}
+		files.putAll(db.files);
 	}
 
 	public void save(Path out) throws IOException {
-		JsonUtils.save(this, out);
+		JsonUtils.saveGzip(this, out);
 	}
 
 }

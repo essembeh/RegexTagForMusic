@@ -1,7 +1,6 @@
 package org.essembeh.rtfm.cli.app.callback;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -9,40 +8,45 @@ import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 
 public class MultiCallback implements ICallback {
 
-	private final List<ICallback> callbacks = new ArrayList<>();
-
-	public MultiCallback(ICallback... callbacks) {
-		add(callbacks);
+	public static MultiCallback with(ICallback... callbacks) {
+		MultiCallback out = new MultiCallback();
+		return out.add(callbacks);
 	}
 
+	private final List<ICallback> callbacks = new ArrayList<>();
+
 	public MultiCallback add(ICallback... callbacks) {
-		this.callbacks.addAll(Arrays.asList(callbacks));
+		for (ICallback i : callbacks) {
+			if (i != null) {
+				this.callbacks.add(i);
+			}
+		}
 		return this;
 	}
 
 	@Override
-	public void unknownType(String fullpath) {
-		callbacks.forEach(c -> c.unknownType(fullpath));
+	public void start(String fullpath) {
+		callbacks.forEach(c -> c.start(fullpath));
 	}
 
 	@Override
-	public void fileSkipped(String fullpath, String workflowId, Date lastExecution) {
-		callbacks.forEach(c -> c.fileSkipped(fullpath, workflowId, lastExecution));
+	public void unknownType() {
+		callbacks.forEach(ICallback::unknownType);
 	}
 
 	@Override
-	public void fileHandled(String fullpath, String workflowId) {
-		callbacks.forEach(c -> c.fileHandled(fullpath, workflowId));
+	public void fileSkipped(String workflowId, Date lastExecution) {
+		callbacks.forEach(c -> c.fileSkipped(workflowId, lastExecution));
 	}
 
 	@Override
-	public void workflowBegins(String workflowId, List<String> commands) {
-		callbacks.forEach(c -> c.workflowBegins(workflowId, commands));
+	public void workflowStart(String workflowId, List<String> commands) {
+		callbacks.forEach(c -> c.workflowStart(workflowId, commands));
 	}
 
 	@Override
-	public void workflowEnds(String workflowId, boolean complete) {
-		callbacks.forEach(c -> c.workflowEnds(workflowId, complete));
+	public void workflowDone(String workflowId, boolean complete) {
+		callbacks.forEach(c -> c.workflowDone(workflowId, complete));
 	}
 
 	@Override
@@ -61,7 +65,7 @@ public class MultiCallback implements ICallback {
 	}
 
 	@Override
-	public void done(String fullpath) {
-		callbacks.forEach(c -> c.done(fullpath));
+	public void done() {
+		callbacks.forEach(ICallback::done);
 	}
 }

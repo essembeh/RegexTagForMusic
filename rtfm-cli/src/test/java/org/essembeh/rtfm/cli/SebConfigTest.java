@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import org.essembeh.rtfm.cli.config.Configuration;
 import org.essembeh.rtfm.cli.config.Workflow;
 import org.essembeh.rtfm.cli.resolver.VariableResolver;
-import org.essembeh.rtfm.cli.utils.Constants;
+import org.essembeh.rtfm.cli.utils.TestConstants;
 import org.essembeh.rtfm.cli.utils.ResourceUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class SebConfigTest {
 	public static final String PATH_SINGLE = String.format("/foo/bar/Singles/%s - %s.mp3", ARTIST, TITLE);
 
 	protected Configuration getConfig() throws IOException {
-		return Configuration.load(Constants.SEB_CONFIG);
+		return Configuration.load(TestConstants.SEB_CONFIG);
 	}
 
 	@Test

@@ -7,15 +7,15 @@ import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 
 public interface ICallback {
 
-	void unknownType(String fullpath);
+	void start(String fullpath);
 
-	void fileSkipped(String fullpath, String workflowId, Date lastExecution);
+	void unknownType();
 
-	void fileHandled(String fullpath, String workflowId);
+	void fileSkipped(String workflowId, Date lastExecution);
 
-	void workflowBegins(String workflowId, List<String> commands);
+	void workflowStart(String workflowId, List<String> commands);
 
-	void workflowEnds(String workflowId, boolean complete);
+	void workflowDone(String workflowId, boolean complete);
 
 	void workflowException(String workflowId, Exception e);
 
@@ -23,6 +23,6 @@ public interface ICallback {
 
 	void commandEnds(String commandId, Status status);
 
-	void done(String fullpath);
+	void done();
 
 }

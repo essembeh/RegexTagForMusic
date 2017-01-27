@@ -29,17 +29,17 @@ public class AppTest {
 			App app = new App(configuration);
 			Assert.assertFalse(app.getDatabase().getExecutionDate(input, "test").isPresent());
 			AtomicBoolean skipped = new AtomicBoolean(false);
-			app.process(input, new DefaultCallback() {
+			app.process(input, new DefaultCallback(input) {
 				@Override
-				public void fileSkipped(String fullpath, String workflowId, Date lastExecution) {
+				public void fileSkipped(String workflowId, Date lastExecution) {
 					skipped.set(true);
 				}
 			});
 			Assert.assertFalse(skipped.get());
 			Assert.assertTrue(app.getDatabase().getExecutionDate(input, "test").isPresent());
-			app.process(input, new DefaultCallback() {
+			app.process(input, new DefaultCallback(input) {
 				@Override
-				public void fileSkipped(String fullpath, String workflowId, Date lastExecution) {
+				public void fileSkipped(String workflowId, Date lastExecution) {
 					skipped.set(true);
 				}
 			});
@@ -51,9 +51,9 @@ public class AppTest {
 			app.loadDatabase(db);
 			AtomicBoolean skipped = new AtomicBoolean(false);
 			Assert.assertTrue(app.getDatabase().getExecutionDate(input, "test").isPresent());
-			app.process(input, new DefaultCallback() {
+			app.process(input, new DefaultCallback(input) {
 				@Override
-				public void fileSkipped(String fullpath, String workflowId, Date lastExecution) {
+				public void fileSkipped(String workflowId, Date lastExecution) {
 					skipped.set(true);
 				}
 			});

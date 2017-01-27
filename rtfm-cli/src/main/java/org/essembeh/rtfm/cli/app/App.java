@@ -7,10 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
@@ -50,12 +48,18 @@ public class App {
 		this.resolveEnv = resolveEnv;
 	}
 
-	public void process(Stream<Path> stream, Function<Path, ICallback> callbackFactory) {
-		stream.forEach(p -> process(p, callbackFactory.apply(p)));
+	public Runnable processLater(Path in, ICallback callback) {
+		return new Runnable() {
+			@Override
+			public void run() {
+				process(in, callback);
+			}
+		};
 	}
 
 	public void process(Path in, ICallback callback) {
 		String fullpath = BuiltinVariables.PATH.resolve(in);
+		callback.start(fullpath);
 		int matchingTypes = 0;
 		for (Entry<String, Workflow> entry : configuration.getWorkflows().entrySet()) {
 			Matcher m = Pattern.compile(entry.getValue().getPattern()).matcher(fullpath);
@@ -63,9 +67,8 @@ public class App {
 				matchingTypes++;
 				Optional<Date> lastExecution = database.getExecutionDate(in, entry.getKey());
 				if (lastExecution.isPresent()) {
-					callback.fileSkipped(fullpath, entry.getKey(), lastExecution.get());
+					callback.fileSkipped(entry.getKey(), lastExecution.get());
 				} else {
-					callback.fileHandled(fullpath, entry.getKey());
 					try {
 						executeWorkflow(entry.getKey(), entry.getValue(), in, m, callback);
 					} catch (Exception e) {
@@ -78,14 +81,14 @@ public class App {
 			}
 		}
 		if (matchingTypes == 0) {
-			callback.unknownType(fullpath);
+			callback.unknownType();
 		}
-		callback.done(fullpath);
+		callback.done();
 	}
 
 	protected void executeWorkflow(String workflowId, Workflow workflow, Path in, Matcher matcher, ICallback callback)
 			throws IOException, InterruptedException {
-		callback.workflowBegins(workflowId, workflow.getExecute());
+		callback.workflowStart(workflowId, workflow.getExecute());
 		// Resolution
 		StrSubstitutor resolver = VariablesUtils.createVariableResolver(in, matcher, workflow.getVariables(), resolveEnv);
 		List<ProcessHelper> processHelpers = new ArrayList<>();
@@ -108,7 +111,7 @@ public class App {
 		if (complete) {
 			database.logWorkflowSuccess(in, workflowId);
 		}
-		callback.workflowEnds(workflowId, complete);
+		callback.workflowDone(workflowId, complete);
 	}
 
 	public void loadDatabase(Path path) throws IOException {

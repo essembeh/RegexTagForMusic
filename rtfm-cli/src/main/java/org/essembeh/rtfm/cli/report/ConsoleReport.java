@@ -1,29 +1,21 @@
 package org.essembeh.rtfm.cli.report;
 
-import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
-import org.essembeh.rtfm.cli.app.callback.DefaultCallback;
+import java.nio.file.Path;
 
-public class ConsoleReport extends DefaultCallback {
+import org.essembeh.rtfm.cli.app.callback.ICallback;
 
-	@Override
-	public void unknownType(String fullpath) {
-		System.out.println("UNKNOWN " + fullpath);
+public class ConsoleReport {
+
+	private final boolean verbose;
+	private final int threads;
+
+	public ConsoleReport(boolean verbose, int threads) {
+		this.verbose = verbose;
+		this.threads = threads;
 	}
 
-	@Override
-	public void fileHandled(String fullpath, String filehandlerId) {
-		System.out.println(String.format("[%s] %s", filehandlerId, fullpath));
-	}
-
-	@Override
-	public void workflowException(String workflowId, Exception e) {
-		System.out.println(String.format("\tEXCEPTION in workflow %s: %s", workflowId, e.getMessage()));
-	}
-
-	@Override
-	public void commandEnds(String commandId, Status status) {
-		if (status.getReturnCode() != 0) {
-			System.out.println("\tERROR " + commandId + " exited with " + status.getReturnCode());
-		}
+	public ICallback createCallback(Path in) {
+		ConsoleWriter consoleWriter = ConsoleWriter.create(in, threads > 1);
+		return verbose ? new VerboseCallback(in, consoleWriter) : new QuietCallback(in, consoleWriter);
 	}
 }

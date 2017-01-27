@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -15,8 +16,8 @@ import org.essembeh.rtfm.cli.app.ProcessHelper.Status;
 import org.essembeh.rtfm.cli.app.callback.DefaultCallback;
 import org.essembeh.rtfm.cli.app.callback.ICallback;
 import org.essembeh.rtfm.cli.config.Configuration;
-import org.essembeh.rtfm.cli.utils.Constants;
-import org.essembeh.rtfm.cli.utils.JunitUtils;
+import org.essembeh.rtfm.cli.utils.TestConstants;
+import org.essembeh.rtfm.cli.utils.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,17 +34,17 @@ public class SamplesTest {
 
 	@Test
 	public void testDefault() throws Exception {
-		testConfiguration(Constants.DEFAULT_CONFIG, Constants.DEFAULT_ROOT);
+		testConfiguration(TestConstants.DEFAULT_CONFIG, TestConstants.DEFAULT_ROOT);
 	}
 
 	@Test
 	public void testSeb() throws Exception {
-		testConfiguration(Constants.SEB_CONFIG, Constants.SEB_ROOT);
+		testConfiguration(TestConstants.SEB_CONFIG, TestConstants.SEB_ROOT);
 	}
 
 	protected void testConfiguration(Path config, Path sampleTree) throws Exception {
 		Assert.assertTrue(Files.isDirectory(sampleTree));
-		Path root = JunitUtils.copyConfigTree(sampleTree);
+		Path root = TestUtils.copyConfigTree(sampleTree);
 		try {
 			Map<Path, String> checksums = new HashMap<>();
 			Files.walk(root).filter(p -> "mp3".equals(FilenameUtils.getExtension(p.toString()))).forEach(p -> checksums.put(p, getChecksum(p)));
@@ -52,7 +53,7 @@ public class SamplesTest {
 			runConfig(config, root, true);
 			checksums.forEach((path, checksum) -> Assert.assertNotEquals(checksum, getChecksum(path)));
 
-			runConfig(Constants.CLEAN_CONFIG, root, false);
+			runConfig(TestConstants.CLEAN_CONFIG, root, false);
 			checksums.forEach((path, checksum) -> Assert.assertEquals(checksum, getChecksum(path)));
 		} finally {
 			FileUtils.deleteDirectory(root.toFile());
@@ -65,30 +66,37 @@ public class SamplesTest {
 
 		Configuration configuration = Configuration.load(config);
 		App app = new App(configuration);
-		ICallback callback = new DefaultCallback() {
-			@Override
-			public void workflowException(String id, Exception e) {
-				Assert.fail(e.getMessage());
-			}
+		Function<Path, ICallback> callbackGenerator = new Function<Path, ICallback>() {
 
 			@Override
-			public void workflowEnds(String workflowId, boolean complete) {
-				Assert.assertTrue(complete);
-			}
+			public ICallback apply(Path in) {
+				return new DefaultCallback(in) {
+					@Override
+					public void workflowException(String id, Exception e) {
+						Assert.fail(e.getMessage());
+					}
 
-			@Override
-			public void commandEnds(String commandId, Status status) {
-				Assert.assertFalse(status.isDryRun());
-				Assert.assertEquals(0, status.getReturnCode());
-			}
+					@Override
+					public void workflowDone(String workflowId, boolean complete) {
+						Assert.assertTrue(complete);
+					}
 
-			@Override
-			public void unknownType(String fullpath) {
-				if (failOnUnknown) {
-					Assert.fail(fullpath);
-				}
+					@Override
+					public void commandEnds(String commandId, Status status) {
+						Assert.assertFalse(status.isDryRun());
+						Assert.assertEquals(0, status.getReturnCode());
+					}
+
+					@Override
+					public void unknownType() {
+						if (failOnUnknown) {
+							Assert.fail(getPath().toString());
+						}
+					}
+				};
 			}
 		};
-		app.process(Files.walk(root).filter(Files::isRegularFile), p -> callback);
+		Files.walk(root).filter(Files::isRegularFile).forEach(p -> app.process(p, callbackGenerator.apply(p)));
 	}
+
 }
