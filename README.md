@@ -41,18 +41,11 @@ $ mvn clean install
 ```
 Run the all-in-one jar
 ```shell
-$ java -jar rtfm-app/target/rtfm-app-*-jar-with-dependencies.jar --help
+$ java -jar rtfm-cli/target/rtfm-cli-*-jar-with-dependencies.jar --help
 ```
 Or the shell script
 ```
-$ ./rtfm-app/target/rtfm.sh --help
-```
-And if you want to install it on your system
-```shell
-$ sudo mkdir -p /opt/local/RegexTagForMusic
-$ sudo cp rtfm-app/target/rtfm-app-*-jar-with-dependencies.jar tfm-app/target/rtfm.sh /opt/local/RegexTagForMusic
-$ sudo chmod +x /opt/local/RegexTagForMusic/rtfm.sh
-$ sudo ln -s /opt/local/RegexTagForMusic/rtfm.sh /usr/local/bin/rtfm
+$ ./rtfm-cli/target/rtfm.sh --help
 ```
 
 
@@ -60,7 +53,7 @@ $ sudo ln -s /opt/local/RegexTagForMusic/rtfm.sh /usr/local/bin/rtfm
 
 You can try to tag the *default* music folder using the *default* configuration file:
 ```shell
-$ ./rtfm-app/target/rtfm.sh --config samples/config/default.json samples/config/default/
+$ ./rtfm-cli/target/rtfm.sh --config samples/config/default.json samples/config/default/
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Bob/The Album/03 - Track.mp3
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Bob/The Album/01 - Track.mp3
 [mp3] /home/seb/RegexTagForMusic/samples/config/default/Bob/The Album/02 - Track.mp3

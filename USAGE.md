@@ -34,11 +34,12 @@ The application will search for a configuration file:
 
 ## *--database*
 
-This argument is optional, takes one *file* containing all files to be ignored (Gzipped Json file).
+This argument is optional, takes one *file* containing all files to be ignored.
 
 The purpose of the database is to skip some workflows if they have already been executed *sucessfully* on some files.
 At the end of the execution, all files processed without error will be written in this file, to increment the list of files already done.
 
+*Nota:* if the filename has `json` extension, format should be plain JSON. Any other extension, format should be Json+Gzip.
 
 ## *--env*
 

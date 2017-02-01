@@ -6,7 +6,7 @@
   <version>4.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
+    <module>rtfm-core</module>
     <module>rtfm-cli</module>
-    <module>rtfm-app</module>
   </modules>
 </project>
