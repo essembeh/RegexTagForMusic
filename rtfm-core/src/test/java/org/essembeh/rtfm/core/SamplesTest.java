@@ -6,7 +6,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -34,15 +38,25 @@ public class SamplesTest {
 
 	@Test
 	public void testDefault() throws Exception {
-		testConfiguration(TestConstants.DEFAULT_CONFIG, TestConstants.DEFAULT_ROOT);
+		testConfiguration(TestConstants.DEFAULT_CONFIG, TestConstants.DEFAULT_ROOT, 1);
+	}
+
+	@Test
+	public void testDefaultMultiThread() throws Exception {
+		testConfiguration(TestConstants.DEFAULT_CONFIG, TestConstants.DEFAULT_ROOT, 4);
 	}
 
 	@Test
 	public void testSeb() throws Exception {
-		testConfiguration(TestConstants.SEB_CONFIG, TestConstants.SEB_ROOT);
+		testConfiguration(TestConstants.SEB_CONFIG, TestConstants.SEB_ROOT, 1);
 	}
 
-	protected void testConfiguration(Path config, Path sampleTree) throws Exception {
+	@Test
+	public void testSebMultiThread() throws Exception {
+		testConfiguration(TestConstants.SEB_CONFIG, TestConstants.SEB_ROOT, 4);
+	}
+
+	protected void testConfiguration(Path config, Path sampleTree, int thread) throws Exception {
 		Assert.assertTrue(Files.isDirectory(sampleTree));
 		Path root = TestUtils.copyConfigTree(sampleTree);
 		try {
@@ -50,17 +64,17 @@ public class SamplesTest {
 			Files.walk(root).filter(p -> "mp3".equals(FilenameUtils.getExtension(p.toString()))).forEach(p -> checksums.put(p, getChecksum(p)));
 			Assert.assertFalse(checksums.isEmpty());
 
-			runConfig(config, root, true);
+			runConfig(config, root, true, thread);
 			checksums.forEach((path, checksum) -> Assert.assertNotEquals(checksum, getChecksum(path)));
 
-			runConfig(TestConstants.CLEAN_CONFIG, root, false);
+			runConfig(TestConstants.CLEAN_CONFIG, root, false, thread);
 			checksums.forEach((path, checksum) -> Assert.assertEquals(checksum, getChecksum(path)));
 		} finally {
 			FileUtils.deleteDirectory(root.toFile());
 		}
 	}
 
-	protected void runConfig(Path config, Path root, boolean failOnUnknown) throws Exception {
+	protected void runConfig(Path config, Path root, boolean failOnUnknown, int thread) throws Exception {
 		Assert.assertTrue(Files.isRegularFile(config));
 		Assert.assertTrue(Files.isDirectory(root));
 
@@ -96,7 +110,14 @@ public class SamplesTest {
 				};
 			}
 		};
-		Files.walk(root).filter(Files::isRegularFile).forEach(p -> app.process(p, callbackGenerator.apply(p)));
+		Stream<Path> stream = Files.walk(root).filter(Files::isRegularFile);
+		if (thread > 1) {
+			ExecutorService executor = Executors.newFixedThreadPool(thread);
+			stream.forEach(p -> executor.execute(app.processLater(p, callbackGenerator.apply(p))));
+			executor.shutdown();
+			executor.awaitTermination(1, TimeUnit.MINUTES);
+		} else {
+			stream.forEach(p -> app.process(p, callbackGenerator.apply(p)));
+		}
 	}
-
 }
