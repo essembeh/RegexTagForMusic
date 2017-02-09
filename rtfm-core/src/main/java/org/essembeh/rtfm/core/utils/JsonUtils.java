@@ -20,17 +20,18 @@ public class JsonUtils {
 	public static final Gson GSON = new Gson();
 
 	public static <T> T load(Path input, Class<T> clazz) throws IOException {
-		if (input.getFileName().endsWith(JSON_EXTENSION)) {
+		if (input.toString().endsWith(JSON_EXTENSION)) {
 			return loadJson(input, clazz);
 		}
 		return loadGzip(input, clazz);
 	}
 
 	public static void save(Object object, Path output) throws IOException {
-		if (output.getFileName().endsWith(JSON_EXTENSION)) {
+		if (output.toString().endsWith(JSON_EXTENSION)) {
 			saveJson(object, output);
+		} else {
+			saveGzip(object, output);
 		}
-		saveGzip(object, output);
 	}
 
 	public static <T> T loadJson(Path input, Class<T> clazz) throws IOException {
