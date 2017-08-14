@@ -11,9 +11,15 @@
       "--no-color",
       "--artist=${ARTIST}",
       "--album=${ALBUM}",
-      "--year=${YEAR}",
-      "--track=${TRACK}",
       "--title=${TITLE}",
+      "--track=${TRACK}",
+      "--comment=Tagged with rtfm",
+      "${path}"
+    ],
+    "eyed3-tag-year": [
+      "eyeD3",
+      "--no-color",
+      "--release-year=${YEAR}",
       "${path}"
     ]
   },
@@ -21,11 +27,16 @@
     "cover": {
       "pattern": ".*/cover.jpg"
     },
-    "mp3": {
-      "pattern": ".*/(?<ARTIST>[^/]+)/(?:(?<YEAR>[12]\\d{3}) - )?(?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
-      "variables": {
-        "YEAR": ""
-      },
+    "mp3-with-year": {
+      "pattern": ".*/(?<ARTIST>[^/]+)/(?<YEAR>[12]\\d{3}) - (?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
+      "execute": [
+        "eyed3-clean",
+        "eyed3-tag",
+        "eyed3-tag-year"
+      ]
+    },
+    "mp3-without-year": {
+      "pattern": ".*/(?<ARTIST>[^/]+)/(?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
       "execute": [
         "eyed3-clean",
         "eyed3-tag"

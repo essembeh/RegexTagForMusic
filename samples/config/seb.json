@@ -11,16 +11,26 @@
       "--no-color",
       "--artist=${ARTIST}",
       "--album=${ALBUM}",
-      "--year=${YEAR}",
-      "--track=${TRACK}",
       "--title=${TITLE}",
-      "--comment=::Tagged with rtfm",
+      "--comment=Tagged with rtfm",
+      "${path}"
+    ],
+    "eyed3-tag-track": [
+      "eyeD3",
+      "--no-color",
+      "--track=${TRACK}",
+      "${path}"
+    ],
+    "eyed3-tag-year": [
+      "eyeD3",
+      "--no-color",
+      "--release-year=${YEAR}",
       "${path}"
     ],
     "eyed3-utf8": [
       "eyeD3",
       "--no-color",
-      "--set-encoding=utf8",
+      "--encoding=utf8",
       "--force-update",
       "${path}"
     ],
@@ -30,26 +40,32 @@
     ]
   },
   "workflows": {
-    "album": {
-      "pattern": ".*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>(?:(?<YEAR>[12]\\d{3}) - )?[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
-      "variables": {
-        "YEAR": ""
-      },
+    "album-with-year": {
+      "pattern": ".*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>(?<YEAR>[12]\\d{3}) - [^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
       "execute": [
         "eyed3-clean",
         "eyed3-tag",
+        "eyed3-tag-track",
+        "eyed3-tag-year",
+        "eyed3-utf8"
+      ]
+    },
+    "album-without-year": {
+      "pattern": ".*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
+      "execute": [
+        "eyed3-clean",
+        "eyed3-tag",
+        "eyed3-tag-track",
         "eyed3-utf8"
       ]
     },
     "cover": {
-      "pattern": ".*/Albums/[^/]+/[^/]+/cover.jpg"
+      "pattern": ".*/Albums/[^/]+/[^/]+/cover.(jpg|png)"
     },
     "single": {
       "pattern": ".*/Singles/(?<ARTIST>[^/]+) - (?<TITLE>[^/]+)\\.mp3",
       "variables": {
-        "ALBUM": "#Single",
-        "YEAR": "",
-        "TRACK": ""
+        "ALBUM": "#Single"
       },
       "execute": [
         "eyed3-clean",
@@ -60,9 +76,7 @@
     "saga": {
       "pattern": ".*/Saga/(?<ARTIST>[^/]+)/(?<TITLE>[^/]+)\\.mp3",
       "variables": {
-        "ALBUM": "#Saga",
-        "YEAR": "",
-        "TRACK": ""
+        "ALBUM": "#Saga"
       },
       "execute": [
         "eyed3-clean",
