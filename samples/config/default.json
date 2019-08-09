@@ -1,46 +1,29 @@
 {
-  "commands": {
-    "eyed3-clean": [
-      "eyeD3",
-      "--no-color",
-      "--remove-all",
-      "${path}"
-    ],
-    "eyed3-tag": [
-      "eyeD3",
-      "--no-color",
-      "--artist=${ARTIST}",
-      "--album=${ALBUM}",
-      "--title=${TITLE}",
-      "--track=${TRACK}",
-      "--comment=Tagged with rtfm",
-      "${path}"
-    ],
-    "eyed3-tag-year": [
-      "eyeD3",
-      "--no-color",
-      "--release-year=${YEAR}",
-      "${path}"
-    ]
-  },
-  "workflows": {
+  "filters": {
+    "mp3": {
+      "pattern": "(.*/)?(?P<ARTIST>[^/]+)/((?P<YEAR>[12][0-9]{3}) - )?(?P<ALBUM>[^/]+)/(?P<TRACK>[0-9]{2,3}) - (?P<TITLE>[^/]+)\\.mp3",
+      "properties": {
+        "eyed3": true,
+        "eyed3.artist": {
+          "group": "ARTIST"
+        },
+        "eyed3.album": {
+          "group": "ALBUM"
+        },
+        "eyed3.year": {
+          "group": "YEAR"
+        },
+        "eyed3.track": {
+          "group": "TRACK"
+        },
+        "eyed3.title": {
+          "group": "TITLE"
+        },
+        "eyed3.comment": "Tagged with rtfm"
+      }
+    },
     "cover": {
-      "pattern": ".*/cover.jpg"
-    },
-    "mp3-with-year": {
-      "pattern": ".*/(?<ARTIST>[^/]+)/(?<YEAR>[12]\\d{3}) - (?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
-      "execute": [
-        "eyed3-clean",
-        "eyed3-tag",
-        "eyed3-tag-year"
-      ]
-    },
-    "mp3-without-year": {
-      "pattern": ".*/(?<ARTIST>[^/]+)/(?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
-      "execute": [
-        "eyed3-clean",
-        "eyed3-tag"
-      ]
+      "pattern": "(.*/)?[^/]+/[^/]+/cover.(jpg|png)"
     }
   }
 }

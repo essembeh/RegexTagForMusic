@@ -1,94 +1,57 @@
 {
-  "commands": {
-    "eyed3-clean": [
-      "eyeD3",
-      "--no-color",
-      "--remove-all",
-      "${path}"
-    ],
-    "eyed3-tag": [
-      "eyeD3",
-      "--no-color",
-      "--artist=${ARTIST}",
-      "--album=${ALBUM}",
-      "--title=${TITLE}",
-      "--comment=Tagged with rtfm",
-      "${path}"
-    ],
-    "eyed3-tag-track": [
-      "eyeD3",
-      "--no-color",
-      "--track=${TRACK}",
-      "${path}"
-    ],
-    "eyed3-tag-year": [
-      "eyeD3",
-      "--no-color",
-      "--release-year=${YEAR}",
-      "${path}"
-    ],
-    "eyed3-utf8": [
-      "eyeD3",
-      "--no-color",
-      "--encoding=utf8",
-      "--force-update",
-      "${path}"
-    ],
-    "delete": [
-      "rm",
-      "${path}"
-    ]
-  },
-  "workflows": {
-    "album-with-year": {
-      "pattern": ".*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>(?<YEAR>[12]\\d{3}) - [^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
-      "execute": [
-        "eyed3-clean",
-        "eyed3-tag",
-        "eyed3-tag-track",
-        "eyed3-tag-year",
-        "eyed3-utf8"
-      ]
-    },
-    "album-without-year": {
-      "pattern": ".*/Albums/(?<ARTIST>[^/]+)/(?<ALBUM>[^/]+)/(?<TRACK>\\d{2,3}) - (?<TITLE>[^/]+)\\.mp3",
-      "execute": [
-        "eyed3-clean",
-        "eyed3-tag",
-        "eyed3-tag-track",
-        "eyed3-utf8"
-      ]
+  "filters": {
+    "album": {
+      "pattern": "(Albums|Classic)/(?P<ARTIST>[^/]+)/(?P<ALBUM>(?:(?P<YEAR>[12]\\d{3}) - )?[^/]+)/(?P<TRACK>[0-9]{2,3}) - (?P<TITLE>[^/]+)\\.mp3",
+      "properties": {
+        "eyed3": true,
+        "eyed3.artist": {
+          "group": "ARTIST"
+        },
+        "eyed3.album": {
+          "group": "ALBUM"
+        },
+        "eyed3.year": {
+          "group": "YEAR"
+        },
+        "eyed3.track": {
+          "group": "TRACK"
+        },
+        "eyed3.title": {
+          "group": "TITLE"
+        },
+        "eyed3.comment": "Tagged with rtfm"
+      }
     },
     "cover": {
-      "pattern": ".*/Albums/[^/]+/[^/]+/cover.(jpg|png)"
+      "pattern": "(Albums|Classic)/[^/]+/[^/]+/cover.(jpg|png)"
     },
     "single": {
-      "pattern": ".*/Singles/(?<ARTIST>[^/]+) - (?<TITLE>[^/]+)\\.mp3",
-      "variables": {
-        "ALBUM": "#Single"
-      },
-      "execute": [
-        "eyed3-clean",
-        "eyed3-tag",
-        "eyed3-utf8"
-      ]
+      "pattern": "Singles/(?P<ARTIST>[^/]+) - (?P<TITLE>[^/]+)\\.mp3",
+      "properties": {
+        "eyed3": true,
+        "eyed3.artist": {
+          "group": "ARTIST"
+        },
+        "eyed3.title": {
+          "group": "TITLE"
+        },
+        "eyed3.album": "#Single",
+        "eyed3.comment": "Tagged with rtfm"
+      }
     },
     "saga": {
-      "pattern": ".*/Saga/(?<ARTIST>[^/]+)/(?<TITLE>[^/]+)\\.mp3",
-      "variables": {
-        "ALBUM": "#Saga"
-      },
-      "execute": [
-        "eyed3-clean",
-        "eyed3-tag",
-        "eyed3-utf8"
-      ]
-    },
-    "junk": {
-      "pattern": ".*/\\.DS_Store",
-      "execute": [
-        "delete"
-      ]
+      "pattern": "Saga/(?P<ARTIST>[^/]+)/(?P<TITLE>[^/]+)\\.mp3",
+      "properties": {
+        "eyed3": true,
+        "eyed3.artist": {
+          "group": "ARTIST"
+        },
+        "eyed3.title": {
+          "group": "TITLE"
+        },
+        "eyed3.album": "#Saga",
+        "eyed3.comment": "Tagged with rtfm"
+      }
     }
   }
 }
