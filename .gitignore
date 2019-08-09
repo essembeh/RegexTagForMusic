@@ -1,2 +1,20 @@
-/*/target/
-/0*.patch
+# Dev tools
+/venv
+
+# Python
+__pycache__
+*.pyc
+/src/*.egg-info/
+/build/
+/dist/
+
+# Generated
+/flake8/
+/coverage/
+/tests.xml
+/.coverage
+
+# Vscodium
+/.vscode/*
+!/.vscode/settings.json
+
